@@ -114,4 +114,4 @@ export default {
       purpose: 'maskable',
     },
   ],
-}
+};

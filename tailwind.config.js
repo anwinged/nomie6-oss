@@ -52,4 +52,4 @@ module.exports = {
     textColor: ['hover', 'responsive', 'focus', 'dark'],
   },
   plugins: [require('@tailwindcss/line-clamp'), require('@tailwindcss/typography')],
-}
+};
