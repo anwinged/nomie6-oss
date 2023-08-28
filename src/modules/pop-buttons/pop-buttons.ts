@@ -1,12 +1,4 @@
-import {
-  CalendarOutline,
-  CreateOutline,
-  EyeSolid,
-  PencilOutline,
-  PinSolid,
-  PulseOutline,
-  SparklesOutline,
-} from '../../components/icon/nicons';
+import { CalendarOutline, CreateOutline, EyeSolid, PulseOutline, SparklesOutline } from '../../components/icon/nicons';
 
 import type NLog from '../../domains/nomie-log/nomie-log';
 import type { PopMenuButton } from '../../components/pop-menu/usePopmenu';
@@ -21,7 +13,7 @@ import { openTrendingModal } from '../../domains/trending/TrendingModalStore';
 import { showTrackablePopmenu } from '../../domains/board/boardActions';
 import { wait } from '../../utils/tick/tick';
 import MagnetOutlineSvelte from '../../n-icons/MagnetOutline.svelte';
-import { LedgerStore, saveLog } from '../../domains/ledger/LedgerStore';
+import { LedgerStore } from '../../domains/ledger/LedgerStore';
 
 const dateFormats = getDateFormats();
 

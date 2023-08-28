@@ -1,4 +1,4 @@
-import type { IStorage } from '../../domains/storage/storage';
+import type { IStorage } from '../storage/storage';
 import NLog from '../nomie-log/nomie-log';
 import { wait } from '../../utils/tick/tick';
 import type LedgerTools from './ledger-tools';

@@ -8,7 +8,7 @@ import { Lang } from '../../store/lang';
 import { wait } from '../../utils/tick/tick';
 import { deleteAllFromCache } from '../ledger/ledger-cache';
 
-import { getRawPrefs, Prefs, saveStorageType } from '../preferences/Preferences';
+import { getRawPrefs, saveStorageType } from '../preferences/Preferences';
 import { trackEvent } from '../usage/stat-ping';
 
 type selectNewStorageProps = {
@@ -55,9 +55,6 @@ export const switchStorage = async (type, ignoreConfirm: boolean = false) => {
  */
 export const useStorageSelectMenu = async (props: selectNewStorageProps) => {
   const prefs = getRawPrefs();
-  const permissions = {};
-
-  // perfs.betaFeatures
 
   let buttons = StorageEngines.map((storageEngine) => {
     let disabled: boolean = false;

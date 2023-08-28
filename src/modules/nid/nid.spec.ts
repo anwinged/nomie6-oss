@@ -1,5 +1,6 @@
 import nid from './nid';
 import { it, describe, expect } from 'vitest';
+
 // Nomie ID
 describe('modules/nid', function () {
   it('empty nid generator', () => {

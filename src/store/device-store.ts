@@ -46,6 +46,7 @@ const getDeviceSize = function (width: number) {
   } else if (width > sizes.xl) {
     return 'xl';
   }
+  return 'xl';
 };
 
 const fontSizes = {

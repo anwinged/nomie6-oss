@@ -107,6 +107,7 @@ const InitOfflineQueueStore = () => {
       return true;
     } catch (e) {
       alert(e.message);
+      return false;
     }
   }
 

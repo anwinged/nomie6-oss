@@ -1,22 +1,26 @@
-export default class Log {
-  label: any;
+export default class Logger {
+  label: string;
   render: boolean;
-  constructor(label, render = true) {
+
+  constructor(label: string, render: boolean = true) {
     this.label = label;
     this.render = render;
   }
-  success(title, v1?: any) {
+
+  success(title: string, v1?: any) {
     if (this.render) {
       console.log('✅ ✅ ✅ ✅ ' + this.label);
       this.showArgs('✅ ', arguments);
       console.log('');
     }
   }
-  log(title, v1?) {
+
+  log(title: string, v1?) {
     if (this.render) {
       this.showArgs(`${this.label} ↠`, arguments);
     }
   }
+
   error(e) {
     console.log('📛 📛 📛 📛 📛 📛 ');
     console.log('📛 ' + this.label);
@@ -32,6 +36,7 @@ export default class Log {
     console.log('👯👯👯👯👯👯👯👯👯👯👯👯👯👯👯👯👯');
     console.log('');
   }
+
   showArgs(emoji, args) {
     if (args) {
       for (let i = 0; i < args.length; i++) {

@@ -12,7 +12,6 @@ import type { Trackable } from './Trackable.class';
 import TrackerClass from '../../modules/tracker/TrackerClass';
 import { TrackerStore } from '../tracker/TrackerStore';
 import { showToast } from '../../components/toast/ToastStore';
-import type { PermissionsState } from '../my-account/PermissionsStore';
 
 type ITrackables = {
   [key: string]: Trackable;

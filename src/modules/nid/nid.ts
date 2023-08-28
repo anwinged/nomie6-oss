@@ -1,10 +1,12 @@
 /**
  * nid - nomie id
- * A small utility class to generate a unique-ish ID with a set length.
- * Since nomie runs locally, a collision will be unlikedly
  *
+ * A small utility class to generate a unique-ish ID with a set length.
+ * Since nomie runs locally, a collision will be unlikely.
  */
+
 import { Md5 } from 'ts-md5/dist/md5';
+
 export default (a1?: string | number, a2?: string | number): string => {
   let str: string = `${new Date().getTime() + Math.random()}`;
   let defaultLen: number = 32;

@@ -74,7 +74,6 @@
    */
   let todayCheckPeriod = 1000 * 60 * 2
   let todayCheckFormat = 'YYYY-MM-DD'
-  // let todayKey = dayjs().format(todayCheckFormat)
   let todayKey = dayjs().format(todayCheckFormat)
 
   let loading = true
@@ -195,25 +194,27 @@
     loading = false
   }
 
-  let pluginsInitizlied: boolean = false
+  let pluginsInitialized: boolean = false
 
   onMount(async () => {
     await boot()
 
     // Initialize the Plugins
     PluginStore.init({})
-    pluginsInitizlied = true
+    pluginsInitialized = true
 
     LedgerStore.hook('onLogSaved', (res) => {
       setTimeout(() => {
         checkGoals('on-log-save')
       }, 3500)
     })
+
     LedgerStore.hook('onLogsDeleted', (res) => {
       setTimeout(() => {
         checkGoals('on-log-deleted')
       }, 3500)
     })
+
     if (document.location.pathname.search('/modal') > -1) {
       document.location.href = '/'
     }

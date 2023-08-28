@@ -70,7 +70,7 @@ export const PouchDBEngine: IStorage = {
     this.syncing = true;
     if (change.direction == 'pull') {
       // It's an update
-      let docs = change.change.docs.forEach((doc) => {
+      change.change.docs.forEach((doc) => {
         if (changeListeners.hasOwnProperty(doc._id)) {
           changeListeners[doc._id].forEach((func) => {
             func(doc.data);

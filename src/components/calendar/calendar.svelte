@@ -13,7 +13,7 @@
   import dayjs from 'dayjs'
 
   // Utils & modules
-  import Logger from '../../utils/log/log'
+  import Logger from '../../utils/log/logger'
   import calcTrackerScore from '../../modules/scoring/score-tracker'
 
   // Components

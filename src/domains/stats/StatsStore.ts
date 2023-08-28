@@ -17,7 +17,7 @@ function createStatsStore() {
     showModal: false,
     date: dayjs(),
   };
-  const { subscribe, set, update } = writable(stateBase);
+  const { subscribe, update } = writable(stateBase);
 
   return {
     subscribe,
@@ -32,8 +32,6 @@ export const StatsStore = createStatsStore();
 
 /**
  * Open the Stats Modal
- * @param ele
- * @param date
  */
 export const openStats = async (trackable: Trackable | string, date?: Dayjs) => {
   // Convert either string or trackable to trackable

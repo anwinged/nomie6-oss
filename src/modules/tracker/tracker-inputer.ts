@@ -1,9 +1,6 @@
-import extractor from '../../utils/extract/extract';
-import Tracker from './TrackerClass';
 import type TrackerClass from './TrackerClass';
 import type { ITrackers } from '../import/import';
 import is from '../../utils/is/is';
-import { useTrackerInputModal } from '../../domains/tracker/input/TrackerInputStore';
 
 export type ITrackerInputerGetOptions = {
   value?: number;

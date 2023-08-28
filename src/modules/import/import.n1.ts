@@ -122,7 +122,6 @@ function getLogs(fileData: any): Array<NLog> {
       let note;
       // Sert tracker to whatever the old parent tag is
       let tracker = trackers[oldTrackers[event.parent].tag]; // this doesn't work like that.
-      let tag = tracker.tag;
       // If it's a tick - then no value
       if (tracker.type === 'tick') {
         note = `#${tracker.tag}`;

@@ -6,16 +6,13 @@
 
 // Vendors
 
-import { getStorageType, saveStorageType } from '../../domains/preferences/Preferences';
+import { getStorageType, saveStorageType } from '../preferences/Preferences';
 import { Interact } from '../../store/interact';
 import { switchToLocal } from '../settings/settings-functions';
-
-// import DumbStorage from './engines/storage.dumb'
 
 import { LocalForageEngine } from './engines/localforage/engine.localforage';
 import { PouchDBEngine } from './engines/pouchdb/engine.pouchdb';
 import { SideStore } from './side-storage';
-// import { S3Engine } from "./engines/engine.s3";
 
 const STORAGE_TYPE_PATH = 'n6/storage-type';
 
@@ -36,6 +33,7 @@ export type StorageEngineType = {
   engine: IStorage | Storage;
   advanced?: boolean;
 };
+
 export const StorageEngines: Array<StorageEngineType> = [
   {
     id: 'local',

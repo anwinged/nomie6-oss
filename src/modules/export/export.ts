@@ -14,13 +14,12 @@ import type NLog from '../../domains/nomie-log/nomie-log';
 import NPaths from '../../paths';
 import { PeopleStore } from '../../domains/people/PeopleStore';
 // Modules
-
 import type { UniboardType } from '../../domains/board/UniboardStore';
+import { getBoardsFromStorage } from '../../domains/board/UniboardStore';
 // stores
 import config from '../../config/appConfig';
 //vendors
 import dayjs from 'dayjs';
-import { getBoardsFromStorage } from '../../domains/board/UniboardStore';
 import { getDashboards } from '../../domains/dashboard2/DashStore';
 import { LocationStore } from '../../domains/locations/LocationStore';
 import Storage from '../../domains/storage/storage';
@@ -77,16 +76,13 @@ export default class Export {
       this.backup.people = people || {};
 
       this.fireChange('Dashboards...');
-      let dashboards = await getDashboards();
-      this.backup.dashboards = dashboards;
+      this.backup.dashboards = await getDashboards();
 
       this.fireChange('Goals...');
-      let goals = await GoalStore.rawState();
-      this.backup.goals = goals;
+      this.backup.goals = await GoalStore.rawState();
 
       this.fireChange('Context...');
-      let context = await ContextStore.rawState();
-      this.backup.context = context;
+      this.backup.context = await ContextStore.rawState();
 
       this.fireChange('Locations...');
       let locations = await LocationStore.rawState();
@@ -101,8 +97,7 @@ export default class Export {
       }
       // Get Boards
       this.fireChange('Boards...');
-      let boards = await this.getBoards();
-      this.backup.boards = boards;
+      this.backup.boards = await this.getBoards();
       // Get Events
       this.fireChange('Events...');
       let events = await this.getEvents();
@@ -145,8 +140,10 @@ export default class Export {
         [],
         arr.map((element) => (Array.isArray(element) ? flatten(element) : element))
       );
+
     // get all books
     const failures: Array<string> = [];
+
     return new Promise(async (resolve, reject) => {
       let books = await LedgerStore.listBooks();
 

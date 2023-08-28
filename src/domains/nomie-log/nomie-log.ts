@@ -34,7 +34,7 @@ export type NomieLogType = {
  * It's been called a record since Nomie 1, but a log is a better name
  * you'll see i've used the term both thoughout - 🤦‍♂️
  */
-export class NLog {
+export class NLog implements NomieLogType {
   public _dirty?: boolean;
   public _id?: string;
   public note?: string;
@@ -63,26 +63,26 @@ export class NLog {
 
     /**
      * Nomie uses the End date as the primary time.
-     * Currently as of 4.4.1 there is no active use of start..
+     * Currently, as of 4.4.1 there is no active use of start.
      */
 
     this.end = starter.end ? new Date(starter.end) : new Date();
     this.start = starter.start ? new Date(starter.start) : new Date(this.end.getTime() - 1000);
 
     this.pinned = starter.pinned ? true : false;
+
     // Score Calculation
     // This Might be a bad idea - but i'm doing it anyways
     // If a score is set, use it - if not, calculate it.
     // If a score is 0 or not set
-    //starter.score ||
     this.score = starter.score;
 
     // Get location
     this.lat = starter.lat || null;
     this.lng = starter.lng || null;
     this.location = starter.location || '';
-    // Add current timezone offset
 
+    // Add current timezone offset
     this.offset = starter.offset || new Date().getTimezoneOffset();
 
     // Get if this has been edited

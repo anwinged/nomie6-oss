@@ -5,7 +5,7 @@ import UnisearchModal from './unisearch-modal.svelte';
 import { getTrackablesFromStorage } from '../trackable/TrackableStore';
 import { closeModal, openModal } from '../../components/backdrop/BackdropStore2';
 import { toTrackableArray } from '../trackable/trackable-utils';
-import { unisearchCommands } from './unisearch-commands';
+import { uniSearchCommands } from './uni-search-commands';
 import { writable } from 'svelte/store';
 import { trackEvent } from '../usage/stat-ping';
 
@@ -66,7 +66,7 @@ export const openUnisearch = (term?: string) => {
 export const getUnisearchResults = async (term: string): Promise<UnisearchResultsType> => {
   let exactTrackable = undefined;
   if (!term) return { commands: [], trackables: [], logs: [], exactTrackable: undefined };
-  const commands = unisearchCommands.filter((b) => {
+  const commands = uniSearchCommands.filter((b) => {
     return JSON.stringify(b).toLowerCase().search(term.toLowerCase()) > -1;
   });
   const known = await getTrackablesFromStorage();

@@ -181,7 +181,6 @@
     // Get Pouch ENgine
     pouchEngine = Storage.getEngine()
     // Get Remote Settings
-    //@ts-ignore
     state.remote = pouchEngine.getRemote()
     // Wait for it to be ready
     pouchEngine.onReady(() => {

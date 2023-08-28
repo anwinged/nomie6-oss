@@ -6,12 +6,12 @@ import NLog from '../nomie-log/nomie-log';
 import type { PopMenuButton } from '../../components/pop-menu/usePopmenu';
 import { Trackable } from '../trackable/Trackable.class';
 import { TrackerLibrary } from '../library/tracker-library';
-import { addNewPerson, getAddPersonButton } from '../board/boardActions';
+import { getAddPersonButton } from '../board/boardActions';
 import { generateBackup } from '../backup/BackupStore';
 import { openTrackableEditor } from '../trackable/trackable-editor/TrackableEditorStore';
 import { closeUnisearch } from './UnisearchStore';
 
-export const unisearchCommands: Array<PopMenuButton> = [
+export const uniSearchCommands: Array<PopMenuButton> = [
   {
     title: 'Create Custom tracker',
     description: 'Create and Add a new tracker! ',

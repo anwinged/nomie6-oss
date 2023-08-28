@@ -71,7 +71,7 @@ type promptProps = {
   message?: string;
   title?: string;
   value?: any;
-  valueType?: 'textarea' | 'input';
+  valueType?: 'textarea' | 'input' | 'datetime';
   cancel?: any;
   placeholder?: string;
   onInteract?: Function;

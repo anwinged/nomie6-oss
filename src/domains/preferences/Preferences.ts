@@ -1,5 +1,5 @@
-import { SideStore } from '../../domains/storage/side-storage';
-import type { StorageTypes } from '../../domains/storage/storage';
+import { SideStore } from '../storage/side-storage';
+import type { StorageTypes } from '../storage/storage';
 import { writable } from 'svelte/store';
 
 import { showToast } from '../../components/toast/ToastStore';

@@ -6,7 +6,7 @@ import NLog from '../nomie-log/nomie-log';
 import dayjs from 'dayjs';
 
 import type { Dayjs } from 'dayjs';
-import type { IStorage } from '../../domains/storage/storage';
+import type { IStorage } from '../storage/storage';
 
 import type { LedgerImporter } from './ledger-importer';
 import type { Trackable } from '../trackable/Trackable.class';

@@ -9,5 +9,6 @@ export default function copy(str: string) {
     return true;
   } catch (e) {
     alert(e.message);
+    return false;
   }
 }

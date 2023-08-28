@@ -1,5 +1,4 @@
 import { writable } from 'svelte/store';
-import { getElementPosition } from '../../modules/html-elements/position';
 import nid from '../../modules/nid/nid';
 import { DropdownMenuStore } from './dropdown-menu.store';
 import type { PopMenuButton } from '../pop-menu/usePopmenu';

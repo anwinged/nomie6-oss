@@ -1,8 +1,8 @@
-import Storage from './engines/storage.dumb';
 import { it, describe, expect } from 'vitest';
 import { smartMerge } from './smart-merge';
+
 describe('modules/smart-merge', function () {
-  it('should get should merge arrays', () => {
+  it('should merge arrays', () => {
     let array1 = [
       {
         id: '12345',
