@@ -16,9 +16,9 @@ let move = [
     src: 'node_modules/esri-leaflet-geocoder/dist/**/*',
     dest: 'vendors/leaflet/geocoder',
   },
-]
+];
 
-console.log('Moving Vendor Resources....')
+console.log('Moving Vendor Resources....');
 
 // let copyp = (to, from) => {
 //   return new Promise((resolve, reject) => {
