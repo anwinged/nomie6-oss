@@ -63,7 +63,9 @@ describe('utils/extractor', function () {
     expect(parsed[2].remainder).toEqual("'s");
   });
 
-  it('should parse 60,000 complicated notes in less than 5 seconds', () => {
+  // Skip, cause depends on environment configuration
+  // @todo Replace by benchmark
+  it.skip('should parse 60,000 complicated notes in less than 5 seconds', () => {
     let notes = [];
     let parsed = tester({
       name: 'baseline',
