@@ -1,6 +1,6 @@
-import Tracker from './TrackerClass'
-import calcTrackerScore from '../scoring/score-tracker'
-import { it, describe, expect } from 'vitest'
+import Tracker from './TrackerClass';
+import calcTrackerScore from '../scoring/score-tracker';
+import { it, describe, expect } from 'vitest';
 
 const mood = new Tracker({
   tag: 'mood',
@@ -31,11 +31,11 @@ const mood = new Tracker({
   goal: null,
   one_tap: false,
   label: 'Mood',
-})
+});
 
 describe('Calculate Tracker Score', () => {
   it('should calculate a dynamic score', () => {
-    let score = calcTrackerScore(6, mood)
-    expect(score).toEqual(1)
-  })
-})
+    let score = calcTrackerScore(6, mood);
+    expect(score).toEqual(1);
+  });
+});

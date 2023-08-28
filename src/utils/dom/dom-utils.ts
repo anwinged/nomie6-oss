@@ -1,28 +1,28 @@
 export function toElement(_ele: Element): Element {
   if (_ele instanceof Element) {
-    return _ele
+    return _ele;
   } else {
-    return window.document.body
+    return window.document.body;
   }
 }
 
 export type PositionMap = {
-  readonly x: number
-  readonly y: number
-  readonly height: number
-  readonly width: number
-  readonly top: number
-  readonly topP: number
-  readonly left: number
-  readonly leftP: number
-  readonly element?: Element
-  readonly dir: 'x' | 'y' | undefined
-}
+  readonly x: number;
+  readonly y: number;
+  readonly height: number;
+  readonly width: number;
+  readonly top: number;
+  readonly topP: number;
+  readonly left: number;
+  readonly leftP: number;
+  readonly element?: Element;
+  readonly dir: 'x' | 'y' | undefined;
+};
 
 export function getElementPositionMap(_ele?: Element): PositionMap {
   if (_ele) {
-    const element = toElement(_ele)
-    const bounding = element.getBoundingClientRect()
+    const element = toElement(_ele);
+    const bounding = element.getBoundingClientRect();
     return {
       x: bounding.x,
       y: bounding.y,
@@ -34,7 +34,7 @@ export function getElementPositionMap(_ele?: Element): PositionMap {
       leftP: (Math.abs(bounding.left) - window.innerWidth) / Math.abs(bounding.left),
       element,
       dir: bounding.x > bounding.y ? 'x' : 'y',
-    }
+    };
   } else {
     // Didn't find the element default to this
     return {
@@ -48,6 +48,6 @@ export function getElementPositionMap(_ele?: Element): PositionMap {
       leftP: 0,
       element: undefined,
       dir: undefined,
-    }
+    };
   }
 }

@@ -5,37 +5,37 @@
  * dashboard payload from storage
  */
 
-import type { Dayjs } from 'dayjs'
-import dayjs from 'dayjs'
+import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 
-import nid from '../../modules/nid/nid'
-import { objectHash } from '../../modules/object-hash/object-hash'
+import nid from '../../modules/nid/nid';
+import { objectHash } from '../../modules/object-hash/object-hash';
 
-import type { WidgetPayloadType } from './widget/widget-class'
-import { WidgetClass } from './widget/widget-class'
+import type { WidgetPayloadType } from './widget/widget-class';
+import { WidgetClass } from './widget/widget-class';
 
 export type DashboardPayload = {
-  label: string
-  widgets: Array<WidgetPayloadType>
-  id: string
-  created?: string
-}
+  label: string;
+  widgets: Array<WidgetPayloadType>;
+  id: string;
+  created?: string;
+};
 
 export class DashboardClass {
-  label: string
-  widgets: Array<WidgetClass>
-  id: string
-  created: Date
+  label: string;
+  widgets: Array<WidgetClass>;
+  id: string;
+  created: Date;
 
   constructor(starter: DashboardPayload | DashboardClass) {
-    this.id = starter.id || nid()
-    this.widgets = (starter.widgets || []).map((widgetPayload: WidgetPayloadType) => new WidgetClass(widgetPayload))
-    this.created = starter.created ? new Date(starter.created) : new Date()
-    this.label = starter.label || 'Unnamed'
+    this.id = starter.id || nid();
+    this.widgets = (starter.widgets || []).map((widgetPayload: WidgetPayloadType) => new WidgetClass(widgetPayload));
+    this.created = starter.created ? new Date(starter.created) : new Date();
+    this.label = starter.label || 'Unnamed';
   }
 
   get hash(): string {
-    return objectHash(this.widgets)
+    return objectHash(this.widgets);
   }
 
   /**
@@ -44,21 +44,21 @@ export class DashboardClass {
    * for said timeframe
    */
   get timeframe(): { start: Dayjs; end: Dayjs } {
-    let earliest: Dayjs = dayjs().add(100, 'years')
-    let latest: Dayjs = dayjs().subtract(100, 'years')
+    let earliest: Dayjs = dayjs().add(100, 'years');
+    let latest: Dayjs = dayjs().subtract(100, 'years');
 
     this.widgets.forEach((w: WidgetClass) => {
       if (w.timeframe.start.toDate().getTime() < earliest?.toDate()?.getTime()) {
-        earliest = w.timeframe?.start
+        earliest = w.timeframe?.start;
       }
       if (w.timeframe?.end.toDate()?.getTime() > latest?.toDate()?.getTime()) {
-        latest = w.timeframe?.end
+        latest = w.timeframe?.end;
       }
-    })
+    });
 
     return {
       start: earliest,
       end: latest,
-    }
+    };
   }
 }

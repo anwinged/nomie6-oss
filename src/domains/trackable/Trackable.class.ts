@@ -1,14 +1,13 @@
-import { ContextClass } from '../context/context-class'
-import { strToColor } from '../../components/dymoji/dymoji'
-import isNumber from 'lodash/isNumber'
-import math from '../../utils/math/math'
-import Person from '../people/Person.class'
-import TrackerClass from '../../modules/tracker/TrackerClass'
-import is from '../../utils/is/is'
-import { parseNumber } from '../../utils/parseNumber/parseNumber'
+import { ContextClass } from '../context/context-class';
+import { strToColor } from '../../components/dymoji/dymoji';
+import isNumber from 'lodash/isNumber';
+import math from '../../utils/math/math';
+import Person from '../people/Person.class';
+import TrackerClass from '../../modules/tracker/TrackerClass';
+import is from '../../utils/is/is';
+import { parseNumber } from '../../utils/parseNumber/parseNumber';
 
-
-export type TrackableTypes = 'person' | 'tracker' | 'context'
+export type TrackableTypes = 'person' | 'tracker' | 'context';
 
 /**
  * `TrackableType` is an object with a `type` property that is a `TrackableTypes` enum, and an optional
@@ -25,44 +24,44 @@ export type TrackableTypes = 'person' | 'tracker' | 'context'
  * @property {number} value - The value of the trackable.
  */
 export type TrackableType = {
-  type: TrackableTypes
-  id?: string
-  person?: Person
-  tracker?: TrackerClass
-  context?: string
-  ctx?: ContextClass
-  value?: number
-}
+  type: TrackableTypes;
+  id?: string;
+  person?: Person;
+  tracker?: TrackerClass;
+  context?: string;
+  ctx?: ContextClass;
+  value?: number;
+};
 
 /* `Trackable` is a class that represents a `Person`, `Tracker`, or `Context` and is used to track a
 value */
 export class Trackable {
-  type: TrackableTypes
-  id: string
-  person?: Person
-  tracker?: TrackerClass
-  context?: string
-  ctx?: ContextClass
-  value?: number
+  type: TrackableTypes;
+  id: string;
+  person?: Person;
+  tracker?: TrackerClass;
+  context?: string;
+  ctx?: ContextClass;
+  value?: number;
 
   constructor(starter: TrackableType) {
-    this.type = starter.type
+    this.type = starter.type;
     if (starter.type == 'tracker') {
-      this.tracker = starter.tracker instanceof TrackerClass ? starter.tracker : new TrackerClass(starter.tracker)
-      this.id = starter.id || `#${(this.tracker || {}).tag}`
+      this.tracker = starter.tracker instanceof TrackerClass ? starter.tracker : new TrackerClass(starter.tracker);
+      this.id = starter.id || `#${(this.tracker || {}).tag}`;
     } else if (starter.type === 'person') {
       this.person = starter.person
         ? starter.person instanceof Person
           ? starter.person
           : new Person(starter.person)
-        : undefined
-      this.id = starter.id || `@(this.person || {}).username`
+        : undefined;
+      this.id = starter.id || `@(this.person || {}).username`;
     } else if (starter.type === 'context') {
-      this.context = starter.context
-      this.id = starter.id
-      this.ctx = new ContextClass(starter.ctx || this.context)
+      this.context = starter.context;
+      this.id = starter.id;
+      this.ctx = new ContextClass(starter.ctx || this.context);
     }
-    this.value = starter.value
+    this.value = starter.value;
   }
 
   /**
@@ -72,11 +71,11 @@ export class Trackable {
   get label(): string {
     switch (this.type) {
       case 'tracker':
-        return `${this.tracker.label || ''}`
+        return `${this.tracker.label || ''}`;
       case 'person':
-        return `${this.person.displayName || ''}`
+        return `${this.person.displayName || ''}`;
       case 'context':
-        return `${this.ctx.label || ''}`
+        return `${this.ctx.label || ''}`;
     }
   }
 
@@ -87,13 +86,13 @@ export class Trackable {
   get prefix(): string {
     switch (this.type) {
       case 'tracker':
-        return `#`
+        return `#`;
       case 'person':
-        return `@`
+        return `@`;
       case 'context':
-        return `+`
+        return `+`;
       default:
-        return ''
+        return '';
     }
   }
 
@@ -105,11 +104,11 @@ export class Trackable {
    */
   set avatar(src: string) {
     if (this.type == 'tracker') {
-      this.tracker.avatar = src
+      this.tracker.avatar = src;
     } else if (this.type == 'person') {
-      this.person.avatar = src
+      this.person.avatar = src;
     } else if (this.type == 'context') {
-      this.ctx.avatar = src
+      this.ctx.avatar = src;
     }
   }
 
@@ -121,11 +120,11 @@ export class Trackable {
    */
   set emoji(src: string) {
     if (this.type == 'tracker') {
-      this.tracker.emoji = src
+      this.tracker.emoji = src;
     } else if (this.type == 'person') {
-      this.person.emoji = src
+      this.person.emoji = src;
     } else if (this.type == 'context') {
-      this.ctx.emoji = src
+      this.ctx.emoji = src;
     }
   }
 
@@ -138,11 +137,11 @@ export class Trackable {
    */
   set tag(src: string) {
     if (this.type == 'tracker') {
-      this.tracker.tag = src
+      this.tracker.tag = src;
     } else if (this.type == 'person') {
-      this.person.username = src
+      this.person.username = src;
     } else if (this.type == 'context') {
-      this.ctx.tag = src
+      this.ctx.tag = src;
     }
   }
 
@@ -155,11 +154,11 @@ export class Trackable {
    */
   set label(src: string) {
     if (this.type == 'tracker') {
-      this.tracker.label = src
+      this.tracker.label = src;
     } else if (this.type == 'person') {
-      this.person.displayName = src
+      this.person.displayName = src;
     } else if (this.type == 'context') {
-      this.ctx.label = src
+      this.ctx.label = src;
     }
   }
 
@@ -171,11 +170,11 @@ export class Trackable {
    */
   set color(src: string) {
     if (this.type == 'tracker') {
-      this.tracker.color = src
+      this.tracker.color = src;
     } else if (this.type == 'person') {
-      this.person.color = src
+      this.person.color = src;
     } else if (this.type == 'context') {
-      this.ctx.color = src
+      this.ctx.color = src;
     }
   }
 
@@ -187,13 +186,13 @@ export class Trackable {
    */
   get avatar(): string | undefined {
     if (this.type == 'tracker') {
-      return this.tracker.avatar
+      return this.tracker.avatar;
     } else if (this.type == 'person') {
-      return this.person.avatar
+      return this.person.avatar;
     } else if (this.type == 'context') {
-      return this.ctx.avatar
+      return this.ctx.avatar;
     }
-    return undefined
+    return undefined;
   }
 
   /**
@@ -203,13 +202,13 @@ export class Trackable {
    */
   get emoji(): string | undefined {
     if (this.type == 'tracker') {
-      return this.tracker.emoji
+      return this.tracker.emoji;
     } else if (this.type == 'person') {
-      return this.person.emoji
+      return this.person.emoji;
     } else if (this.type === 'context') {
-      return this.ctx.emoji
+      return this.ctx.emoji;
     }
-    return undefined
+    return undefined;
   }
 
   /**
@@ -220,13 +219,13 @@ export class Trackable {
    */
   get canSave(): boolean {
     if (this.type == 'tracker') {
-      return this.tracker.label && this.tracker.type && this.tracker.tag ? true : false
+      return this.tracker.label && this.tracker.type && this.tracker.tag ? true : false;
     } else if (this.type == 'person') {
-      return this.person.username ? true : false
+      return this.person.username ? true : false;
     } else if (this.type === 'context') {
-      return this.ctx.label ? true : false
+      return this.ctx.label ? true : false;
     }
-    return false
+    return false;
   }
 
   /**
@@ -236,11 +235,11 @@ export class Trackable {
   get defaultValue(): number {
     switch (this.type) {
       case 'tracker':
-        return this.tracker.default !== undefined ? this.tracker.default : 1
+        return this.tracker.default !== undefined ? this.tracker.default : 1;
       case 'person':
-        return 1
+        return 1;
       case 'context':
-        return 1
+        return 1;
     }
   }
 
@@ -253,9 +252,9 @@ export class Trackable {
    */
   formatValue(value: number, unit?: boolean) {
     if (this.tracker) {
-      return this.tracker.displayValue(value, unit)
+      return this.tracker.displayValue(value, unit);
     }
-    return value
+    return value;
   }
 
   /**
@@ -265,9 +264,9 @@ export class Trackable {
    * @returns The sum of the values in the array.
    */
   tallyValues(values: Array<number>): number {
-    const filtered = values.filter((v: any) => !isNaN(v))
-    if (this.tracker?.math === 'mean') return math.average(filtered)
-    return math.sum(filtered)
+    const filtered = values.filter((v: any) => !isNaN(v));
+    if (this.tracker?.math === 'mean') return math.average(filtered);
+    return math.sum(filtered);
   }
 
   /**
@@ -280,13 +279,13 @@ export class Trackable {
   get color(): string {
     switch (this.type) {
       case 'tracker':
-        return this.tracker?.color || strToColor(`#${this.tracker.tag}`)
+        return this.tracker?.color || strToColor(`#${this.tracker.tag}`);
       case 'person':
-        return this.person?.color || strToColor(`@${this.person.username}`)
+        return this.person?.color || strToColor(`@${this.person.username}`);
       case 'context':
-        return this.ctx?.color || strToColor(`+${this.context}`)
+        return this.ctx?.color || strToColor(`+${this.context}`);
       default:
-        return strToColor(`unknown-${this.id}`)
+        return strToColor(`unknown-${this.id}`);
     }
   }
 
@@ -296,25 +295,25 @@ export class Trackable {
    * @returns The tag and value of the note.
    */
   public getNoteValue(val?: number, expand: boolean = true): string {
-    const tag = this.tag
-    const value = val || this.value || this.defaultValue || NaN
-    if(this.type == 'tracker') {
+    const tag = this.tag;
+    const value = val || this.value || this.defaultValue || NaN;
+    if (this.type == 'tracker') {
       let parts = [];
-      if(!isNaN(value) && is.truthy(value)) {
-        parts.push(`${tag}(${value})`)
+      if (!isNaN(value) && is.truthy(value)) {
+        parts.push(`${tag}(${value})`);
       } else {
-        parts.push(`${tag}`)
+        parts.push(`${tag}`);
       }
 
       // Should we expand this note with the includes?
-      if(expand) {
+      if (expand) {
         parts.push(this.tracker.getIncluded(parseNumber(value)));
       }
       return parts.join(' ');
     } else {
-      if (isNumber(value) && this.type !== 'person') return `${tag}(${value})`
+      if (isNumber(value) && this.type !== 'person') return `${tag}(${value})`;
     }
-    return tag
+    return tag;
   }
 
   /**
@@ -324,13 +323,13 @@ export class Trackable {
    */
   get tag(): string | undefined {
     if (this.type == 'tracker') {
-      return this.tracker.tag ? `#${this.tracker.tag}` : undefined
+      return this.tracker.tag ? `#${this.tracker.tag}` : undefined;
     } else if (this.type == 'person') {
-      return this.person.username ? `@${this.person.username}` : undefined
+      return this.person.username ? `@${this.person.username}` : undefined;
     } else if (this.type === 'context') {
-      return this.ctx.tag ? `+${this.ctx.tag}` : undefined
+      return this.ctx.tag ? `+${this.ctx.tag}` : undefined;
     }
-    return undefined
+    return undefined;
   }
 
   /**
@@ -339,7 +338,7 @@ export class Trackable {
    * @returns The tagWithValue function is being returned.
    */
   public tagWithValue(v?: number | string) {
-    if (!v) return this.tag
-    return `${this.tag}(${v})`
+    if (!v) return this.tag;
+    return `${this.tag}(${v})`;
   }
 }

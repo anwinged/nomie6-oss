@@ -1,7 +1,7 @@
-import type NLog from '../../domains/nomie-log/nomie-log'
-import time from '../../utils/time/time'
-import dayjs from 'dayjs'
-import math from '../math/math'
+import type NLog from '../../domains/nomie-log/nomie-log';
+import time from '../../utils/time/time';
+import dayjs from 'dayjs';
+import math from '../math/math';
 
 /**
  * Incomplete
@@ -10,33 +10,33 @@ import math from '../math/math'
  */
 
 export interface ILogTime {
-  start: number
-  end: number
-  hours?: number
-  percent?: number
+  start: number;
+  end: number;
+  hours?: number;
+  percent?: number;
 }
-export type ILogTimes = Array<ILogTime>
+export type ILogTimes = Array<ILogTime>;
 export default function TrackerLogsToTime(trackerTag: string, logs: Array<NLog>): ILogTimes {
-  let times: Array<ILogTime> = []
-  let dates = {}
+  let times: Array<ILogTime> = [];
+  let dates = {};
   logs.forEach((log: NLog) => {
-    let trackerFound = log.trackers.find((t) => t.id == trackerTag)
+    let trackerFound = log.trackers.find((t) => t.id == trackerTag);
     if (trackerFound) {
-      let end = dayjs(log.end)
-      let endDateString = end.format('YYYY-MM-DD')
-      dates[endDateString] = dates[endDateString] || []
+      let end = dayjs(log.end);
+      let endDateString = end.format('YYYY-MM-DD');
+      dates[endDateString] = dates[endDateString] || [];
 
       if (!dates[endDateString].end || dates[endDateString].end > log.end) {
-        dates[endDateString].end = log.end
+        dates[endDateString].end = log.end;
       }
-      let start = dayjs(log.end).subtract(trackerFound.value, 'second').toDate().getTime()
+      let start = dayjs(log.end).subtract(trackerFound.value, 'second').toDate().getTime();
       if (!dates[endDateString].start || dates[endDateString].start > start) {
-        dates[endDateString].start = start
+        dates[endDateString].start = start;
       }
     } else {
-      console.error('Tracker not found?', log)
+      console.error('Tracker not found?', log);
     }
-  })
+  });
 
   times = Object.keys(dates).map((dateString) => {
     return {
@@ -48,14 +48,14 @@ export default function TrackerLogsToTime(trackerTag: string, logs: Array<NLog>)
       startTime: dayjs(dates[dateString].start).format('HHmm'),
       endTime: dayjs(dates[dateString].end).format('HHmm'),
       percent: 0,
-    }
-  })
-  let hours = times.map((t) => t.hours)
-  let percentages = math.percentile(hours)
+    };
+  });
+  let hours = times.map((t) => t.hours);
+  let percentages = math.percentile(hours);
   times = times.map((t, i) => {
-    t.percent = percentages[i]
-    return t
-  })
+    t.percent = percentages[i];
+    return t;
+  });
 
-  return times
+  return times;
 }

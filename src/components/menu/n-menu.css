@@ -34,7 +34,6 @@
 }
 .n-menu .pop-button.active .description {
   @apply leading-tight  text-primary-100;
-  
 }
 .n-menu .pop-button.disabled,
 .n-menu .pop-button:disabled {

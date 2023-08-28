@@ -1,26 +1,26 @@
-import nid from '../../../modules/nid/nid'
-import { WidgetDate } from './widget-date-class'
-import type { WidgetDateConfig } from './widget-date-class'
+import nid from '../../../modules/nid/nid';
+import { WidgetDate } from './widget-date-class';
+import type { WidgetDateConfig } from './widget-date-class';
 
 export type WidgetTimeFrameConfig = {
-  id?: TimeFramesType
-  label?: string
-  start?: WidgetDateConfig
-  end?: WidgetDateConfig
-  dayCount?: number
-}
+  id?: TimeFramesType;
+  label?: string;
+  start?: WidgetDateConfig;
+  end?: WidgetDateConfig;
+  dayCount?: number;
+};
 
 export class WidgetTimeFrame {
-  id?: string
-  label?: string
-  start: WidgetDate
-  end: WidgetDate
+  id?: string;
+  label?: string;
+  start: WidgetDate;
+  end: WidgetDate;
 
   constructor(payload: WidgetTimeFrameConfig = {}) {
-    this.label = payload.label
-    this.start = new WidgetDate(payload.start)
-    this.end = new WidgetDate(payload.end)
-    this.id = payload.id || nid()
+    this.label = payload.label;
+    this.start = new WidgetDate(payload.start);
+    this.end = new WidgetDate(payload.end);
+    this.id = payload.id || nid();
   }
 
   /**
@@ -30,8 +30,8 @@ export class WidgetTimeFrame {
   public getLabel(): string {
     let defaultDate = this.start.date
       ? `${this.start.date.format('MMM DD')} to ${this.end.date.format('MMM DD YYYY')}`
-      : 'Unknown'
-    return this.label || defaultDate
+      : 'Unknown';
+    return this.label || defaultDate;
   }
 }
 
@@ -51,7 +51,7 @@ export type TimeFramesType =
   | 'this-month'
   | 'this-year'
   | 'last-month'
-  | string
+  | string;
 
 /**
  * Actual Time Frames
@@ -190,4 +190,4 @@ export const timeFrames: Array<WidgetTimeFrameConfig> = [
       endOf: 'month',
     },
   },
-]
+];

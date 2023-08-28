@@ -1,23 +1,23 @@
-import localforage from 'localforage'
-import type { IStorage } from '../../storage'
+import localforage from 'localforage';
+import type { IStorage } from '../../storage';
 
-let listeners = []
+let listeners = [];
 
 export const LocalForageEngine: IStorage = {
   onReady(func) {
     // No need to setup just call the function
     if (listeners.indexOf(func) == -1) {
-      listeners.push(func)
+      listeners.push(func);
     }
   },
   basePath(path) {
-    return path
+    return path;
   },
   fireReady() {
     listeners.forEach((func) => {
-      func()
-    })
-    listeners = []
+      func();
+    });
+    listeners = [];
   },
   async init() {
     /**
@@ -29,27 +29,27 @@ export const LocalForageEngine: IStorage = {
         await navigator.storage.persist();
       }
     }
-    return this.fireReady()
+    return this.fireReady();
   },
   async getProfile() {
     return {
       username: 'Local User',
-    }
+    };
   },
   async put(path, content) {
-    return localforage.setItem(path, JSON.stringify(content))
+    return localforage.setItem(path, JSON.stringify(content));
   },
   async get(path) {
     return localforage.getItem(path).then((content: any) => {
-      return content ? JSON.parse(content) : null
-    })
+      return content ? JSON.parse(content) : null;
+    });
   },
   async list() {
     return localforage.keys().then((keys) => {
-      return keys
-    })
+      return keys;
+    });
   },
   async delete(path) {
-    return localforage.removeItem(path)
+    return localforage.removeItem(path);
   },
-}
+};

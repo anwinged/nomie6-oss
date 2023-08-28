@@ -1,20 +1,20 @@
-import type { Trackable } from '../Trackable.class'
-import TrackableVisualModal from './trackable-visual-modal.svelte'
-import { openModal } from '../../../components/backdrop/BackdropStore2'
-import { writable } from 'svelte/store'
-import type { TrackableVisualType } from '../trackable-utils'
+import type { Trackable } from '../Trackable.class';
+import TrackableVisualModal from './trackable-visual-modal.svelte';
+import { openModal } from '../../../components/backdrop/BackdropStore2';
+import { writable } from 'svelte/store';
+import type { TrackableVisualType } from '../trackable-utils';
 
 type TrackableVisualStoreType = {
-  trackable: Trackable
-  onComplete: Function
-  onCancel: Function
-}
+  trackable: Trackable;
+  onComplete: Function;
+  onCancel: Function;
+};
 
-export const TrackableVisualStore = writable<TrackableVisualStoreType | undefined>(undefined)
+export const TrackableVisualStore = writable<TrackableVisualStoreType | undefined>(undefined);
 
 export const closeTrackableVisuals = () => {
-  TrackableVisualStore.update((s) => undefined)
-}
+  TrackableVisualStore.update((s) => undefined);
+};
 
 export const openTrackableVisuals = async (trackable: Trackable): Promise<TrackableVisualType | undefined> => {
   return new Promise((resolve) => {
@@ -24,13 +24,13 @@ export const openTrackableVisuals = async (trackable: Trackable): Promise<Tracka
       componentProps: {
         trackable,
         onComplete(res: TrackableVisualType) {
-          resolve(res)
+          resolve(res);
         },
         onCancel() {
-          resolve(undefined)
+          resolve(undefined);
         },
       },
-    })
+    });
     // TrackableVisualStore.update((s) => {
     //   return {
     //     trackable: trackable,
@@ -42,5 +42,5 @@ export const openTrackableVisuals = async (trackable: Trackable): Promise<Tracka
     //     },
     //   }
     // })
-  })
-}
+  });
+};

@@ -1,15 +1,15 @@
-import { writable } from 'svelte/store'
+import { writable } from 'svelte/store';
 
-import type { PopMenuButton } from '../pop-menu/usePopmenu'
+import type { PopMenuButton } from '../pop-menu/usePopmenu';
 
 interface DropdownState {
-  visible: boolean
-  caller?: Element
-  buttons: Array<PopMenuButton>
-  onClick?: Function
-  onCancel?: Function
-  title?: string
-  emoji?: string
+  visible: boolean;
+  caller?: Element;
+  buttons: Array<PopMenuButton>;
+  onClick?: Function;
+  onCancel?: Function;
+  title?: string;
+  emoji?: string;
 }
 
 function createDropdownMenu() {
@@ -17,16 +17,16 @@ function createDropdownMenu() {
     visible: false,
     buttons: [],
     caller: undefined,
-  }
-  const { subscribe, set, update } = writable(state)
+  };
+  const { subscribe, set, update } = writable(state);
 
   async function present(buttons: Array<PopMenuButton>, caller?: Element) {
     update((state) => {
-      state.buttons = buttons
-      state.caller = caller
-      state.visible = true
-      return state
-    })
+      state.buttons = buttons;
+      state.caller = caller;
+      state.visible = true;
+      return state;
+    });
   }
 
   // function ok() {
@@ -43,25 +43,25 @@ function createDropdownMenu() {
   function cancel() {
     update((state) => {
       if (state.onCancel) {
-        state.onCancel()
+        state.onCancel();
       }
-      state.visible = false
-      state.onClick = undefined
-      state.onCancel = undefined
-      return state
-    })
+      state.visible = false;
+      state.onClick = undefined;
+      state.onCancel = undefined;
+      return state;
+    });
   }
 
   function close() {
     update((state) => {
-      state.visible = false
-      state.title = undefined
-      state.buttons = []
-      state.emoji = undefined
-      state.onCancel = undefined
-      state.onClick = undefined
-      return state
-    })
+      state.visible = false;
+      state.title = undefined;
+      state.buttons = [];
+      state.emoji = undefined;
+      state.onCancel = undefined;
+      state.onClick = undefined;
+      return state;
+    });
   }
 
   return {
@@ -71,7 +71,7 @@ function createDropdownMenu() {
     cancel,
     present,
     close,
-  }
+  };
 }
 
-export const DropdownMenuStore = createDropdownMenu()
+export const DropdownMenuStore = createDropdownMenu();

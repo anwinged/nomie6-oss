@@ -1,8 +1,8 @@
-import type { IStorage } from '../../storage'
-import { Interact } from '../../../../store/interact'
-import { Lang } from '../../../../store/lang'
-import PouchDB from 'pouchdb'
-import Remote from '../../../../modules/remote/remote'
+import type { IStorage } from '../../storage';
+import { Interact } from '../../../../store/interact';
+import { Lang } from '../../../../store/lang';
+import PouchDB from 'pouchdb';
+import Remote from '../../../../modules/remote/remote';
 /**
  * Svelte is throwing errors when importing pouch
  * instead i've moved those packages into the build_tools/move-resources
@@ -11,16 +11,16 @@ import Remote from '../../../../modules/remote/remote'
  * Not idea, but I can get svelte to compile with them.
  */
 // import pouchdb from "pouchdb";
-import Storage from '../../storage'
+import Storage from '../../storage';
 
 // import * as PouchDB from 'pouchdb';
 
 // declare var PouchDB: any
 
-let listeners = []
-let changeListeners = {}
-let syncer
-let dbKey = 'nomie6-pouch'
+let listeners = [];
+let changeListeners = {};
+let syncer;
+let dbKey = 'nomie6-pouch';
 
 export const PouchDBEngine: IStorage = {
   name: 'PouchDB',
@@ -37,10 +37,10 @@ export const PouchDBEngine: IStorage = {
     ajax: { cache: false },
   }),
   basePath(src) {
-    return '/'
+    return '/';
   },
   onReady(func) {
-    func(this)
+    func(this);
     // No need to setup just call the function
     // if (listeners.indexOf(func) == -1) {
     //   listeners.push(func);
@@ -48,175 +48,175 @@ export const PouchDBEngine: IStorage = {
   },
   fireReady() {
     listeners.forEach((func) => {
-      func()
-    })
-    listeners = []
+      func();
+    });
+    listeners = [];
   },
   // Convert a remote object to CouchURL
   remoteToUrl() {
-    let remote = this.getRemote()
+    let remote = this.getRemote();
     if (remote.isValid()) {
-      let parsed = remote.url
+      let parsed = remote.url;
       // parsed.username = remote.username ? remote.username || "".length : null;
       // parsed.password = remote.password ? remote.password || "".length : null;
-      parsed.pathname = `/${remote.database}`
-      return parsed.toString()
+      parsed.pathname = `/${remote.database}`;
+      return parsed.toString();
     } else {
-      return null
+      return null;
     }
   },
   // If something has changed
   onChange(change) {
-    this.syncing = true
+    this.syncing = true;
     if (change.direction == 'pull') {
       // It's an update
       let docs = change.change.docs.forEach((doc) => {
         if (changeListeners.hasOwnProperty(doc._id)) {
           changeListeners[doc._id].forEach((func) => {
-            func(doc.data)
-          })
+            func(doc.data);
+          });
         }
-      })
+      });
     }
   },
   onPaused(change) {
-    this.syncing = false
+    this.syncing = false;
   },
   onError(error) {
-    Interact.alert(Lang.t('sync.error', 'Sync Error'), error.message)
-    console.error(error)
-    this.syncing = false
+    Interact.alert(Lang.t('sync.error', 'Sync Error'), error.message);
+    console.error(error);
+    this.syncing = false;
   },
   stopSync() {
     if (this.syncer) {
-      this.syncer.cancel()
-      this.syncing = false
-      let remote = this.getRemote()
-      remote.syncEnabled = false
-      this.saveRemote(remote)
+      this.syncer.cancel();
+      this.syncing = false;
+      let remote = this.getRemote();
+      remote.syncEnabled = false;
+      this.saveRemote(remote);
     }
   },
   startSync() {
-    let remote = this.getRemote()
-    let errorCount = 0
-    let syncURL = this.remoteToUrl()
-    let self = this
+    let remote = this.getRemote();
+    let errorCount = 0;
+    let syncURL = this.remoteToUrl();
+    let self = this;
     if (syncURL) {
       let syncOptions: any = {
         live: true,
         retry: true,
         ajax: { cache: false },
         batch_size: 10,
-      }
+      };
       if (remote.username || remote.password) {
         syncOptions.auth = {
           username: remote.username,
           password: remote.password,
-        }
+        };
       }
 
-      this.syncer = PouchDB.sync(dbKey, syncURL, syncOptions)
+      this.syncer = PouchDB.sync(dbKey, syncURL, syncOptions);
 
       this.syncer
         .catch((e) => {
-          console.error(`Catch error in syncer ${e.message}`)
-          this.syncing = false
+          console.error(`Catch error in syncer ${e.message}`);
+          this.syncing = false;
         })
         .then((res) => {
-          self.syncing = true
-          self.syncValid = true
-        })
+          self.syncing = true;
+          self.syncValid = true;
+        });
 
       this.syncer
         .on('complete', this.onChange)
         .on('change', this.onChange)
         .on('paused', this.onPaused)
         .on('error', (e) => {
-          this.onError(e)
-          errorCount++
+          this.onError(e);
+          errorCount++;
           if (errorCount > 10) {
-            alert('Something bad is going on')
+            alert('Something bad is going on');
           }
-        })
+        });
     }
   },
   getRemote() {
-    this.remote = new Remote(Storage.local.get('pouchdb-remote'))
-    return this.remote
+    this.remote = new Remote(Storage.local.get('pouchdb-remote'));
+    return this.remote;
   },
   saveRemote(remote) {
-    this.remote = remote
-    Storage.local.put('pouchdb-remote', remote)
+    this.remote = remote;
+    Storage.local.put('pouchdb-remote', remote);
   },
   init() {
     // Get Remote from Storage
-    this.getRemote()
+    this.getRemote();
     // Determine if we should be syncing
-    this.sync = this.remote.sync
+    this.sync = this.remote.sync;
     if (this.remote.syncEnabled) {
       setTimeout(() => {
-        this.startSync()
-      }, 500)
+        this.startSync();
+      }, 500);
     }
-    return this.fireReady()
+    return this.fireReady();
   },
   info() {
     return {
       sync: syncer,
-    }
+    };
   },
   async getProfile() {
     return {
       username: 'Local User',
-    }
+    };
   },
   async put(path, content) {
     let payload = {
       _id: path,
       data: content,
-    }
+    };
     // check if it exists
-    let exists = await this.getFullDoc(path)
+    let exists = await this.getFullDoc(path);
     try {
       if (exists) {
-        return this.db.put({ ...exists, ...payload })
+        return this.db.put({ ...exists, ...payload });
       } else {
-        return this.db.put(payload)
+        return this.db.put(payload);
       }
     } catch (e) {
-      console.error(e)
-      Interact.error(e.message)
+      console.error(e);
+      Interact.error(e.message);
     }
   },
   async getFullDoc(path) {
-    let doc = null
+    let doc = null;
     try {
-      doc = await this.db.get(path)
-    } catch (e) { }
-    return doc
+      doc = await this.db.get(path);
+    } catch (e) {}
+    return doc;
   },
   async get(path, onChange) {
     if (onChange && (changeListeners[path] || []).indexOf(onChange) == -1) {
-      changeListeners[path] = changeListeners[path] || []
-      changeListeners[path].push(onChange)
+      changeListeners[path] = changeListeners[path] || [];
+      changeListeners[path].push(onChange);
     }
-    let doc = null
+    let doc = null;
     try {
-      let fullDoc = await this.getFullDoc(path)
-      doc = fullDoc ? fullDoc.data : null
-    } catch (e) { }
-    return doc
+      let fullDoc = await this.getFullDoc(path);
+      doc = fullDoc ? fullDoc.data : null;
+    } catch (e) {}
+    return doc;
   },
   async list() {
-    let docs = await this.db.allDocs()
-    let rows = docs ? docs.rows : []
-    return rows.map((doc) => doc.id)
+    let docs = await this.db.allDocs();
+    let rows = docs ? docs.rows : [];
+    return rows.map((doc) => doc.id);
   },
   async delete(path) {
-    let doc = await this.getFullDoc(path)
+    let doc = await this.getFullDoc(path);
     if (doc) {
-      return await this.db.remove(doc)
+      return await this.db.remove(doc);
     }
-    return null
+    return null;
   },
-}
+};

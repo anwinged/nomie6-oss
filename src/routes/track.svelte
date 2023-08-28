@@ -1,11 +1,11 @@
 <script lang="ts">
-  import Toolbar from '../components/toolbar/toolbar.svelte'
-  import Button from '../components/button/button.svelte'
-  import BoardTabs from '../components/board-tabs/board-tabs.svelte'
-  import { AlarmOutline } from '../components/icon/nicons'
+  import Toolbar from '../components/toolbar/toolbar.svelte';
+  import Button from '../components/button/button.svelte';
+  import BoardTabs from '../components/board-tabs/board-tabs.svelte';
+  import { AlarmOutline } from '../components/icon/nicons';
 
-  import Uniboard from '../domains/board/Uniboard.svelte'
-  import Layout from '../domains/layout/layout.svelte'
+  import Uniboard from '../domains/board/Uniboard.svelte';
+  import Layout from '../domains/layout/layout.svelte';
 
   import {
     ActiveBoard,
@@ -14,36 +14,36 @@
     setActiveBoard,
     toggleBoardEditMode,
     UniboardStore,
-  } from '../domains/board/UniboardStore'
+  } from '../domains/board/UniboardStore';
 
   // import UsageStoreVisualizer from '../domains/usage/usage-store-visualizer.svelte'
-  import { addDividerToFirst } from '../modules/pop-buttons/pop-buttons'
-  import { Device } from '../store/device-store'
-  import { getBoardAddOptions, getBoardMenu, saveBoard } from '../domains/board/boardActions'
-  import { openUnisearch } from '../domains/search/UnisearchStore'
-  import { Prefs } from '../domains/preferences/Preferences'
-  import { quintOut } from 'svelte/easing'
-  import { RunningTimers } from '../domains/tracker/TrackerStore'
-  import { showRunningTimersModal } from '../domains/tracker/timers/useTimersModal'
-  import { showToast } from '../components/toast/ToastStore'
-  import { slide } from 'svelte/transition'
-  import { TodayStore } from '../domains/usage/today/TodayStore'
-  import { TrackableStore } from '../domains/trackable/TrackableStore'
-  import appConfig from '../config/appConfig'
-  import CaretDownCircle from '../n-icons/CaretDownCircle.svelte'
-  import ExpandOutline from '../n-icons/ExpandOutline.svelte'
-  import IonIcon from '../components/icon/ion-icon.svelte'
-  import Logo from '../components/logo/logo.svelte'
-  import MenuInline from '../components/menu/menu-inline.svelte'
-  import SearchBar from '../components/search-bar/search-bar.svelte'
-  import SearchIcon from '../n-icons/SearchIcon.svelte'
-  import TodayDateController from '../domains/usage/today-date-controller.svelte'
-  import type { Trackable } from '../domains/trackable/Trackable.class'
-  import type { UniboardType } from '../domains/board/UniboardStore'
-  import UpgradeMessage from '../components/upgrade-message/upgrade-message.svelte'
+  import { addDividerToFirst } from '../modules/pop-buttons/pop-buttons';
+  import { Device } from '../store/device-store';
+  import { getBoardAddOptions, getBoardMenu, saveBoard } from '../domains/board/boardActions';
+  import { openUnisearch } from '../domains/search/UnisearchStore';
+  import { Prefs } from '../domains/preferences/Preferences';
+  import { quintOut } from 'svelte/easing';
+  import { RunningTimers } from '../domains/tracker/TrackerStore';
+  import { showRunningTimersModal } from '../domains/tracker/timers/useTimersModal';
+  import { showToast } from '../components/toast/ToastStore';
+  import { slide } from 'svelte/transition';
+  import { TodayStore } from '../domains/usage/today/TodayStore';
+  import { TrackableStore } from '../domains/trackable/TrackableStore';
+  import appConfig from '../config/appConfig';
+  import CaretDownCircle from '../n-icons/CaretDownCircle.svelte';
+  import ExpandOutline from '../n-icons/ExpandOutline.svelte';
+  import IonIcon from '../components/icon/ion-icon.svelte';
+  import Logo from '../components/logo/logo.svelte';
+  import MenuInline from '../components/menu/menu-inline.svelte';
+  import SearchBar from '../components/search-bar/search-bar.svelte';
+  import SearchIcon from '../n-icons/SearchIcon.svelte';
+  import TodayDateController from '../domains/usage/today-date-controller.svelte';
+  import type { Trackable } from '../domains/trackable/Trackable.class';
+  import type { UniboardType } from '../domains/board/UniboardStore';
+  import UpgradeMessage from '../components/upgrade-message/upgrade-message.svelte';
 
-  export const location = undefined
-  export const style = ''
+  export const location = undefined;
+  export const style = '';
 
   /**
    * Get Dynamic boards
@@ -58,10 +58,10 @@
    * TODO: look what happens if these do not match up
    */
 
-  let activeBoard: UniboardType | undefined = undefined
-  let searchFor: string | undefined = undefined
+  let activeBoard: UniboardType | undefined = undefined;
+  let searchFor: string | undefined = undefined;
 
-  let edittedUniboard: UniboardType
+  let edittedUniboard: UniboardType;
 
   /**
    * React to the Board Change
@@ -73,14 +73,14 @@
     $UniboardStore.activeId &&
     $UniboardStore.activeId !== activeBoard?.id
   ) {
-    activeBoard = $CombinedBoards.find((b) => b.id === $UniboardStore.activeId)
+    activeBoard = $CombinedBoards.find((b) => b.id === $UniboardStore.activeId);
     if (activeBoard) {
-      setBoardFilters(activeBoard)
+      setBoardFilters(activeBoard);
     }
   }
 
-  let lastActiveHash = ''
-  let boardAddMenu = []
+  let lastActiveHash = '';
+  let boardAddMenu = [];
 
   $: if ($Prefs) {
     boardAddMenu = [
@@ -92,30 +92,30 @@
           divider: true,
           icon: SearchIcon,
           click() {
-            openUnisearch()
+            openUnisearch();
           },
         },
       ],
-    ]
+    ];
   }
 
   $: if ($UniboardStore.hash !== lastActiveHash) {
-    lastActiveHash = $UniboardStore.hash
-    setBoardFilters($ActiveBoard)
+    lastActiveHash = $UniboardStore.hash;
+    setBoardFilters($ActiveBoard);
   }
 
   /**
    * Setup Searching for any Trackable
    */
-  let searching = false
+  let searching = false;
   $: if (searchFor) {
-    searching = true
+    searching = true;
     trackableFilter = (trackable: Trackable): any => {
-      return JSON.stringify(trackable).toLowerCase().search(searchFor.toLowerCase()) > -1 ? true : false
-    }
+      return JSON.stringify(trackable).toLowerCase().search(searchFor.toLowerCase()) > -1 ? true : false;
+    };
   } else if (searching) {
-    searching = false
-    setBoardFilters(activeBoard)
+    searching = false;
+    setBoardFilters(activeBoard);
   }
 
   /**
@@ -123,9 +123,9 @@
    * @param ele
    */
   let trackableFilter = (ele: Trackable) => {
-    return ele.type
+    return ele.type;
     // == 'tracker'
-  }
+  };
 
   /**
    * Default Trackable Sorting
@@ -133,8 +133,8 @@
    * @param ele2
    */
   let trackableSort = (ele1: Trackable, ele2: Trackable) => {
-    return ele1.label.toLowerCase() > ele2.label.toLowerCase() ? 1 : -1
-  }
+    return ele1.label.toLowerCase() > ele2.label.toLowerCase() ? 1 : -1;
+  };
 
   /**
    * Setup the Filter and Sort
@@ -148,25 +148,25 @@
   const setBoardFilters = async (board: UniboardType) => {
     if (board) {
       trackableSort = (a: Trackable, b: Trackable) => {
-        return board.elements.indexOf(a.tag) > board.elements.indexOf(b.tag) ? 1 : -1
-      }
+        return board.elements.indexOf(a.tag) > board.elements.indexOf(b.tag) ? 1 : -1;
+      };
 
       // Create the Filter for the View
       trackableFilter = (t: any): any => {
-        return board.elements.indexOf(t.tag) > -1
-      }
+        return board.elements.indexOf(t.tag) > -1;
+      };
     }
-  }
+  };
 
   // let showCouchWarning: boolean = false
 
   const saveBoardEdits = async () => {
-    const savingBoard = { ...edittedUniboard }
-    await saveBoard(savingBoard)
-    edittedUniboard = undefined
-    disableBoardEditMode()
-    showToast({ message: `${savingBoard.label} updated` })
-  }
+    const savingBoard = { ...edittedUniboard };
+    await saveBoard(savingBoard);
+    edittedUniboard = undefined;
+    disableBoardEditMode();
+    showToast({ message: `${savingBoard.label} updated` });
+  };
 </script>
 
 <Layout pageTitle={`${$ActiveBoard?.label || ''} Track`}>
@@ -222,9 +222,9 @@
           editMode={$UniboardStore.editMode}
           className="w-full filler"
           on:tabTap={async (evt) => {
-            const newActiveBoard = evt.detail
-            setActiveBoard(newActiveBoard)
-            Device.scrollToTop()
+            const newActiveBoard = evt.detail;
+            setActiveBoard(newActiveBoard);
+            Device.scrollToTop();
           }}
         />
       {:else}
@@ -243,10 +243,10 @@
           style="max-width:220px;"
           compact
           on:clear={() => {
-            searchFor = undefined
+            searchFor = undefined;
           }}
           on:change={(evt) => {
-            searchFor = evt.detail
+            searchFor = evt.detail;
           }}
         />
       {/if}
@@ -259,10 +259,10 @@
       className=""
       compact
       on:clear={() => {
-        searchFor = undefined
+        searchFor = undefined;
       }}
       on:change={(evt) => {
-        searchFor = evt.detail
+        searchFor = evt.detail;
       }}
     >
       <Button icon slot="right-inside" on:click={() => openUnisearch(searchFor)}>
@@ -294,7 +294,7 @@
   <Uniboard
     searching={searchFor}
     on:editted={(evt) => {
-      edittedUniboard = evt.detail
+      edittedUniboard = evt.detail;
     }}
     bind:sort={trackableSort}
     bind:filter={trackableFilter}

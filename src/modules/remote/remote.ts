@@ -17,8 +17,8 @@ class Remote {
     }
     this.username = starter.username || null;
     this.password = starter.password || null;
-    this.dbPrefix = starter.dbPrefix || "";
-    this.database = starter.database || "nomie";
+    this.dbPrefix = starter.dbPrefix || '';
+    this.database = starter.database || 'nomie';
     this.syncEnabled = starter.syncEnabled || false;
   }
   setURL(url) {
@@ -26,7 +26,7 @@ class Remote {
       this.url = new URL(url);
       this._dirty = false;
     } catch (e) {
-      console.error("Set URL error", e.message);
+      console.error('Set URL error', e.message);
     }
     return this;
   }

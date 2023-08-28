@@ -1,13 +1,13 @@
 // import TrackableElement, { toElement } from '../../../src/modules/trackable-element/trackable-element'
 // // import extractor from "../../../src/utils/extract/extract";
 
-import { test, describe, expect } from 'vitest'
+import { test, describe, expect } from 'vitest';
 
 describe('modules/trackable-element', function () {
   test('Deprecated', () => {
-    expect(1).toBe(1)
-  })
-})
+    expect(1).toBe(1);
+  });
+});
 // describe('modules/trackable-element', function () {
 //   let trackerElement = toElement('#mood')
 //   let personElement = toElement('@bobby')

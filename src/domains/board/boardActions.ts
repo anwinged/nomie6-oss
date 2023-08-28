@@ -5,14 +5,13 @@ import {
   BookOutline,
   CalendarOutline,
   CreateOutline,
-
   PeopleOutline,
   SettingsOutline,
   TabsOutline,
   TrashOutline,
-} from '../../components/icon/nicons'
+} from '../../components/icon/nicons';
 // import { selectTrackables } from '../selector/useSelectTrackables'
-import { openTrackableLibrary } from '../library/tracker-library'
+import { openTrackableLibrary } from '../library/tracker-library';
 import {
   UniboardStore,
   addNewBoard,
@@ -21,54 +20,54 @@ import {
   saveBoardsToStorage,
   saveBoardsToStorageAndUpdate,
   toggleBoardEditMode,
-} from './UniboardStore'
+} from './UniboardStore';
 
-import type { Dayjs } from 'dayjs'
-import { Device } from '../../store/device-store'
-import FilterCircleOutline from '../../n-icons/FilterCircleOutline.svelte'
-import RepeatOutline from '../../n-icons/RepeatOutline.svelte'
-import type { IPopMenuOptions } from '../../store/interact'
-import type { ITrackables } from '../trackable/trackable-utils'
-import { Interact } from '../../store/interact'
-import { Lang } from '../../store/lang'
-import type NLog from '../nomie-log/nomie-log'
-import Person from '../people/Person.class'
+import type { Dayjs } from 'dayjs';
+import { Device } from '../../store/device-store';
+import FilterCircleOutline from '../../n-icons/FilterCircleOutline.svelte';
+import RepeatOutline from '../../n-icons/RepeatOutline.svelte';
+import type { IPopMenuOptions } from '../../store/interact';
+import type { ITrackables } from '../trackable/trackable-utils';
+import { Interact } from '../../store/interact';
+import { Lang } from '../../store/lang';
+import type NLog from '../nomie-log/nomie-log';
+import Person from '../people/Person.class';
 //@ts-ignore
-import PlayBackCircle from '../../n-icons/PlayBackCircle.svelte'
-import type { PopMenuButton } from '../../components/pop-menu/usePopmenu'
+import PlayBackCircle from '../../n-icons/PlayBackCircle.svelte';
+import type { PopMenuButton } from '../../components/pop-menu/usePopmenu';
 
 //@ts-ignore
-import StreakScroller from '../steak/screak-scroller.svelte'
+import StreakScroller from '../steak/screak-scroller.svelte';
 
-import { Trackable } from '../trackable/Trackable.class'
-import TrackerClass from '../../modules/tracker/TrackerClass'
-import type { UniboardType } from './UniboardStore'
-import { addTrackablesToBoard } from './UniboardStore'
-import appConfig from '../../config/appConfig'
-import { deleteTrackableFromNomie } from '../trackable/TrackableStore'
-import { getDateFormats } from '../preferences/Preferences'
-import { goBackInTime } from '../usage/today/TodayStore'
-import { objectHash } from '../../modules/object-hash/object-hash'
-import { openBoardSorter } from './useBoardSortModal'
-import { openCalendarView } from '../calendar-view/CalendarViewStore'
-import { openDropMenu } from '../../components/menu/useDropmenu'
-import { openLogDisplay } from '../nomie-log/log-display-modal/LogDisplayStore'
-import { openOnThisDayModal } from '../on-this-day/useOnThisDayModal'
-import { openPopMenu } from '../../components/pop-menu/usePopmenu'
+import { Trackable } from '../trackable/Trackable.class';
+import TrackerClass from '../../modules/tracker/TrackerClass';
+import type { UniboardType } from './UniboardStore';
+import { addTrackablesToBoard } from './UniboardStore';
+import appConfig from '../../config/appConfig';
+import { deleteTrackableFromNomie } from '../trackable/TrackableStore';
+import { getDateFormats } from '../preferences/Preferences';
+import { goBackInTime } from '../usage/today/TodayStore';
+import { objectHash } from '../../modules/object-hash/object-hash';
+import { openBoardSorter } from './useBoardSortModal';
+import { openCalendarView } from '../calendar-view/CalendarViewStore';
+import { openDropMenu } from '../../components/menu/useDropmenu';
+import { openLogDisplay } from '../nomie-log/log-display-modal/LogDisplayStore';
+import { openOnThisDayModal } from '../on-this-day/useOnThisDayModal';
+import { openPopMenu } from '../../components/pop-menu/usePopmenu';
 
-import { openStats2 } from '../stats2/Stats2Store'
-import { openStreakModal } from '../steak/StreakModalStore'
-import { openTrackableEditor } from '../trackable/trackable-editor/TrackableEditorStore'
-import { openTrendingModal } from '../trending/TrendingModalStore'
-import { selectTrackables } from '../trackable/trackable-selector/TrackableSelectorStore'
-import { wait } from '../../utils/tick/tick'
+import { openStats2 } from '../stats2/Stats2Store';
+import { openStreakModal } from '../steak/StreakModalStore';
+import { openTrackableEditor } from '../trackable/trackable-editor/TrackableEditorStore';
+import { openTrendingModal } from '../trending/TrendingModalStore';
+import { selectTrackables } from '../trackable/trackable-selector/TrackableSelectorStore';
+import { wait } from '../../utils/tick/tick';
 
-import { getTrackableLastUsageHeavy } from '../usage/UsageStore'
-import dayjs from 'dayjs'
-import { md5 } from '../../modules/nid/nid'
-import BookmarksOutline from '../../n-icons/BookmarksOutline.svelte'
+import { getTrackableLastUsageHeavy } from '../usage/UsageStore';
+import dayjs from 'dayjs';
+import { md5 } from '../../modules/nid/nid';
+import BookmarksOutline from '../../n-icons/BookmarksOutline.svelte';
 
-import { openTimelineModal } from '../timeline/timeline-helpers'
+import { openTimelineModal } from '../timeline/timeline-helpers';
 
 /**
  * Create a New Board
@@ -77,23 +76,20 @@ import { openTimelineModal } from '../timeline/timeline-helpers'
 export const createNewBoard = async () => {
   let res: any = await Interact.prompt(
     `${Lang.t('board.add-a-board', 'Add New Tab')}`,
-    `${Lang.t(
-      'board.add-a-board-description',
-      'Tabs help you organize your trackables into logical groups.'
-    )}`,
+    `${Lang.t('board.add-a-board-description', 'Tabs help you organize your trackables into logical groups.')}`,
     {
       placeholder: `${Lang.t('board.board-input-placeholder', 'Tab name or Emoji 👍')}`,
     }
-  )
+  );
   if (res) {
-    let label = res.trim()
+    let label = res.trim();
     if (label.toLowerCase() !== 'all') {
-      addNewBoard(label)
+      addNewBoard(label);
     } else {
-      Interact.error("Sorry, 'All' is a reserved word")
+      Interact.error("Sorry, 'All' is a reserved word");
     }
   }
-}
+};
 
 // /**
 //  * Edit a Board
@@ -108,15 +104,15 @@ export const getAddContextButton = (board: UniboardType) => {
     title: Lang.t('general.new-context', ' Add New +Context'),
     icon: BookmarksOutline,
     async click() {
-      await 200
+      await 200;
       await openTrackableEditor(
         new Trackable({
           type: 'context',
         })
-      )
+      );
     },
-  }
-}
+  };
+};
 
 /**
  * Button: Get Add Tracker
@@ -128,10 +124,10 @@ export const getAddTrackerButton = (board: UniboardType) => {
     title: `${Lang.t('general.new-tracker', 'Add New #Tracker')}`,
     icon: AddIcon,
     async click() {
-      openTrackableEditor(new Trackable({ type: 'tracker', tracker: new TrackerClass({}) }))
+      openTrackableEditor(new Trackable({ type: 'tracker', tracker: new TrackerClass({}) }));
     },
-  }
-}
+  };
+};
 
 /**
  * Remove a Tracker from Nomie
@@ -144,36 +140,39 @@ export const removeTrackableFromNomie = async (trackable: Trackable) => {
       'tracker.delete-description',
       'No tracked data will be deleted, and you can always recreate this tracker'
     )}`
-  )
+  );
   if (confirmed) {
-    Interact.blocker('Deleting...')
-    await deleteTrackableFromNomie(trackable, false)
+    Interact.blocker('Deleting...');
+    await deleteTrackableFromNomie(trackable, false);
     Interact.stopBlocker();
     Device.reload();
   }
-}
+};
 
 /**
  * Remove a Trackable from the active Board
  * @param trackable
  */
 export const removeTrackableFromBoard = async (trackable: Trackable, boardId?: string) => {
-  const currentBoardId = boardId || getLastBoardId()
-  const confirmed = await Interact.confirm(`Remove ${trackable.tag} from this board?`, 'You can always re-add it later')
+  const currentBoardId = boardId || getLastBoardId();
+  const confirmed = await Interact.confirm(
+    `Remove ${trackable.tag} from this board?`,
+    'You can always re-add it later'
+  );
   if (confirmed) {
-    const boards = await getBoardsFromStorage()
-    const workingBoard = boards.find((b) => b.id === currentBoardId)
+    const boards = await getBoardsFromStorage();
+    const workingBoard = boards.find((b) => b.id === currentBoardId);
     if (workingBoard) {
-      workingBoard.elements = workingBoard.elements.filter((e) => e !== trackable.tag)
+      workingBoard.elements = workingBoard.elements.filter((e) => e !== trackable.tag);
     }
-    await saveBoardsToStorage(boards)
+    await saveBoardsToStorage(boards);
     UniboardStore.update((s) => {
-      s.boards = boards
-      s.hash = objectHash(boards)
-      return s
-    })
+      s.boards = boards;
+      s.hash = objectHash(boards);
+      return s;
+    });
   }
-}
+};
 
 /**
  * Upsert a Board
@@ -181,18 +180,18 @@ export const removeTrackableFromBoard = async (trackable: Trackable, boardId?: s
  * @returns
  */
 export const saveBoard = async (board: UniboardType) => {
-  const boards = await getBoardsFromStorage()
-  const foundIndex = boards.findIndex((b) => b.id == board.id)
+  const boards = await getBoardsFromStorage();
+  const foundIndex = boards.findIndex((b) => b.id == board.id);
   if (foundIndex > -1) {
-    boards[foundIndex] = board
+    boards[foundIndex] = board;
   } else {
-    boards.push(board)
+    boards.push(board);
   }
 
-  return saveBoardsToStorageAndUpdate(boards)
-}
+  return saveBoardsToStorageAndUpdate(boards);
+};
 
-export const browseLibrary = async () => {}
+export const browseLibrary = async () => {};
 
 /**
  * Remove Board From Nomie
@@ -200,13 +199,13 @@ export const browseLibrary = async () => {}
  * @returns
  */
 export const removeBoard = async (board: UniboardType): Promise<any> => {
-  const boards = await getBoardsFromStorage()
+  const boards = await getBoardsFromStorage();
   return saveBoardsToStorage(
     (boards || []).filter((b) => {
-      return b.id !== board.id
+      return b.id !== board.id;
     })
-  )
-}
+  );
+};
 
 /**
  * Remove a Trackable
@@ -214,65 +213,65 @@ export const removeBoard = async (board: UniboardType): Promise<any> => {
  * @returns
  */
 export const removeTrackable = async (trackable: Trackable) => {
-  const currentBoardId = getLastBoardId()
+  const currentBoardId = getLastBoardId();
 
   const buttons = [
     {
       title: `Remove from Current Tab`,
       click() {
-        removeTrackableFromBoard(trackable, currentBoardId)
+        removeTrackableFromBoard(trackable, currentBoardId);
       },
     },
     {
       title: 'Remove official Trackable',
       click() {
-        removeTrackableFromNomie(trackable)
+        removeTrackableFromNomie(trackable);
       },
     },
-  ]
+  ];
 
-  await wait(300)
+  await wait(300);
   Interact.popmenu({
     id: `delete-${trackable.tag}`,
     trackable: trackable,
     title: `Delete ${trackable.label}`,
     buttons,
-  })
+  });
 
   // if (currentBoardId === '_all' || currentBoardId === '_people') {
   //   return removeTrackableFromNomie(trackable)
   // } else {
   //   return removeTrackableFromBoard(trackable, currentBoardId)
   // }
-}
+};
 
 export const showLogTrackablePopmenu = (log: NLog, trackable: Trackable) => {
   const buttons: Array<PopMenuButton> = [
     {
       title: 'View Full Note',
       click() {
-        openLogDisplay(log)
+        openLogDisplay(log);
       },
     },
     {
       title: `View all ${log.endDayjs().format(getDateFormats().mmm_d_yyyy)}`,
       click() {
-        openOnThisDayModal(log.end)
+        openOnThisDayModal(log.end);
       },
     },
     {
       title: `View Trending on ${log.endDayjs().format(getDateFormats().mmm_d_yyyy)}`,
       click() {
-        openTrendingModal(log.end, 'day')
+        openTrendingModal(log.end, 'day');
       },
     },
-  ]
+  ];
   Interact.popmenu({
     id: `calendar-mode-${log._id}`,
     title: 'What would you like to do?',
     buttons,
-  })
-}
+  });
+};
 
 /**
  * Show Trackable More Popmenu
@@ -283,37 +282,37 @@ export const showLogTrackablePopmenu = (log: NLog, trackable: Trackable) => {
 export const showTrackablePopmenu = async (
   trackable: Trackable,
   options?: {
-    title?: string
-    buttons?: Array<any>
-    description?: string
-    click?: Function
-    component?: any
-    componentProps?: any
-    trackable?: Trackable
-    date?: Dayjs
+    title?: string;
+    buttons?: Array<any>;
+    description?: string;
+    click?: Function;
+    component?: any;
+    componentProps?: any;
+    trackable?: Trackable;
+    date?: Dayjs;
   }
 ) => {
-  options = options || {}
-  options.component = options.component || StreakScroller
-  options.componentProps = options.componentProps || { trackable: trackable }
-  options.title = options.title || trackable.tag
+  options = options || {};
+  options.component = options.component || StreakScroller;
+  options.componentProps = options.componentProps || { trackable: trackable };
+  options.title = options.title || trackable.tag;
 
-  const usage = getTrackableLastUsageHeavy(trackable)
-  const streakValue = usage ? usage[trackable.tag]?.streak?.v : 0
+  const usage = getTrackableLastUsageHeavy(trackable);
+  const streakValue = usage ? usage[trackable.tag]?.streak?.v : 0;
 
-  const description = []
+  const description = [];
   if (usage && usage.last) {
-    description.push(`(${trackable.formatValue(usage.last.v)})`)
-    description.push(dayjs(usage.last.d).fromNow())
+    description.push(`(${trackable.formatValue(usage.last.v)})`);
+    description.push(dayjs(usage.last.d).fromNow());
   }
-  options.description = description.length ? description.join(' ') : undefined
-  options.trackable = options.trackable || trackable
+  options.description = description.length ? description.join(' ') : undefined;
+  options.trackable = options.trackable || trackable;
 
   const click = () => {
     if (options.click) {
-      options.click()
+      options.click();
     }
-  }
+  };
   let buttons = [
     {
       title: `${Lang.t('tracker.stats', 'Stats')} `,
@@ -322,8 +321,8 @@ export const showTrackablePopmenu = async (
       click() {
         // Interact.openStats(`${trackable.tag}`)
 
-        openStats2(trackable, { known: {}, date: new Date() })
-        click()
+        openStats2(trackable, { known: {}, date: new Date() });
+        click();
       },
     },
     {
@@ -332,23 +331,22 @@ export const showTrackablePopmenu = async (
       right: streakValue,
       skipClosing: true,
       click() {
-        openStreakModal(trackable)
+        openStreakModal(trackable);
         // click()
       },
     },
     {
-      title: Lang.t('general.entries','Entries'),
+      title: Lang.t('general.entries', 'Entries'),
       icon: CreateOutline,
       skipClosing: true,
       click() {
-        
         openTimelineModal({
           search: trackable.tag,
-          notes: true
-        })
+          notes: true,
+        });
         // SearchStore.view('history', trackable.tag)
-      }
-    }, 
+      },
+    },
     // {
     //   title: Lang.t('tracker.related', 'Related'),
     //   icon: RelatedOutline,
@@ -364,7 +362,7 @@ export const showTrackablePopmenu = async (
       icon: CalendarOutline,
       skipClosing: true,
       click() {
-        openCalendarView({ trackable: options.trackable })
+        openCalendarView({ trackable: options.trackable });
         // SearchStore.search(trackable.tag)
         // click()
       },
@@ -374,10 +372,10 @@ export const showTrackablePopmenu = async (
       icon: SettingsOutline,
       skipClosing: true,
       click() {
-        if (trackable.type === 'tracker') openTrackableEditor(trackable)
-        if (trackable.type === 'person') openTrackableEditor(trackable)
-        if (trackable.type === 'context') openTrackableEditor(trackable)
-        click()
+        if (trackable.type === 'tracker') openTrackableEditor(trackable);
+        if (trackable.type === 'person') openTrackableEditor(trackable);
+        if (trackable.type === 'context') openTrackableEditor(trackable);
+        click();
       },
     },
     {
@@ -385,11 +383,11 @@ export const showTrackablePopmenu = async (
       icon: TrashOutline,
 
       click() {
-        removeTrackable(trackable)
-        click()
+        removeTrackable(trackable);
+        click();
       },
     },
-  ]
+  ];
   const trackerPopMenu: IPopMenuOptions = {
     id: `trackable-options-${md5(options.trackable.tag)}`,
     title: options.title || 'Tracker Options',
@@ -404,9 +402,9 @@ export const showTrackablePopmenu = async (
     //   openCalendarView({ trackable: options.trackable })
     //   Interact.dismiss()
     // },
-  }
-  return await openPopMenu(trackerPopMenu)
-}
+  };
+  return await openPopMenu(trackerPopMenu);
+};
 
 /**
  * Button: Add Person Button
@@ -418,20 +416,20 @@ export const getAddPersonButton = (board?: UniboardType) => {
     title: `${Lang.t('general.new-person', 'Add New @Person')}`,
     icon: PeopleOutline,
     async click() {
-      await wait(300)
-      addNewPerson()
+      await wait(300);
+      addNewPerson();
     },
-  }
-}
+  };
+};
 
 export const addNewPerson = async (name?: string) => {
   try {
-    const person = new Person({})
-    openTrackableEditor(person.toTrackable())
+    const person = new Person({});
+    openTrackableEditor(person.toTrackable());
   } catch (e) {
-    Interact.error(e.message)
+    Interact.error(e.message);
   }
-}
+};
 
 /**
  * Generates a PopMenu Button for Adding Existing Trackables
@@ -445,14 +443,14 @@ export const getAddExistingButton = (board: UniboardType, disabled: boolean) => 
     disabled,
     divider: true,
     async click() {
-      await wait(300)
-      const trackables = await selectTrackables()
+      await wait(300);
+      const trackables = await selectTrackables();
       if (trackables.length) {
-        await addTrackablesToBoard(trackables, board)
+        await addTrackablesToBoard(trackables, board);
       }
     },
-  }
-}
+  };
+};
 
 /**
  * Button: Browse Library Button
@@ -461,10 +459,9 @@ export const browseLibraryButton = {
   title: `${Lang.t('general.browse-library', 'Browse Library...')}`,
   icon: BookOutline,
   async click() {
-    openTrackableLibrary()
+    openTrackableLibrary();
   },
-}
-
+};
 
 /* Creating a new tab button. */
 export const newTabButton = {
@@ -472,10 +469,9 @@ export const newTabButton = {
   icon: TabsOutline,
   divider: true,
   async click() {
-    createNewBoard()
+    createNewBoard();
   },
-}
-
+};
 
 /**
  * It returns an array of buttons that are used to add new trackables to a board
@@ -484,7 +480,7 @@ export const newTabButton = {
  * @returns An array of PopMenuButton objects.
  */
 export const getBoardAddOptions = (board: UniboardType, knownTrackables: ITrackables = {}): Array<PopMenuButton> => {
-  const hasTrackables = Object.keys(knownTrackables).length > 0
+  const hasTrackables = Object.keys(knownTrackables).length > 0;
 
   return [
     getAddTrackerButton(board),
@@ -493,8 +489,8 @@ export const getBoardAddOptions = (board: UniboardType, knownTrackables: ITracka
     getAddExistingButton(board, !hasTrackables), // disable if no trackables
     browseLibraryButton,
     newTabButton,
-  ]
-}
+  ];
+};
 
 /**
  * It takes a board and a list of known trackables, and returns a list of buttons that can be used to
@@ -503,13 +499,13 @@ export const getBoardAddOptions = (board: UniboardType, knownTrackables: ITracka
  * @param {ITrackables} knownTrackables - ITrackables = {}
  */
 export const showBoardAddOptions = async (board: UniboardType, knownTrackables: ITrackables = {}) => {
-  const buttons = getBoardAddOptions(board, knownTrackables)
+  const buttons = getBoardAddOptions(board, knownTrackables);
   Interact.popmenu({
     id: 'things-to-track',
     // title: 'Add things to Track',
     buttons,
-  })
-}
+  });
+};
 
 /**
  * Show Board + Options
@@ -543,28 +539,28 @@ export const showBoardAddOptions = async (board: UniboardType, knownTrackables: 
  *   divider: boolean
  */
 export const getBoardMenu = (board?: UniboardType): Array<PopMenuButton> => {
-  let buttons = []
+  let buttons = [];
 
   buttons.push({
     title: `${Lang.t('general.go-back-in-time', 'Go Back in Time')}`,
     icon: PlayBackCircle,
     async click() {
-      await wait(300)
-      goBackInTime()
+      await wait(300);
+      goBackInTime();
     },
-  })
+  });
 
   buttons.push({
     title: 'Edit',
     divider: true,
     icon: FilterCircleOutline,
     click() {
-      toggleBoardEditMode()
+      toggleBoardEditMode();
     },
-  })
+  });
 
-  return buttons
-}
+  return buttons;
+};
 
 /**
  * It returns a PopMenuButton object that has a title, icon, divider, and click function
@@ -576,10 +572,10 @@ export const getEditDeleteTabsButton = (): PopMenuButton => {
     icon: SettingsOutline,
     divider: false,
     async click() {
-      openBoardSorter()
+      openBoardSorter();
     },
-  }
-}
+  };
+};
 
 /**
  * It opens a drop menu with the options for a board
@@ -587,8 +583,8 @@ export const getEditDeleteTabsButton = (): PopMenuButton => {
  * @param {any} [evt] - The event that triggered the function.
  */
 export const showBoardOptions = async (board?: UniboardType, evt?: any) => {
-  openDropMenu(evt.detail.target, getBoardMenu(board))
-}
+  openDropMenu(evt.detail.target, getBoardMenu(board));
+};
 
 /**
  * It takes a current score and a callback function, and returns an array of PopMenuButton objects
@@ -606,8 +602,8 @@ export const getPositivityButtons = (currentScore: number = 0, onSelect?: Functi
         emoji: pos.emoji,
         checked: currentScore == pos.score,
         click() {
-          if (onSelect) onSelect(pos)
+          if (onSelect) onSelect(pos);
         },
-      }
-    })
-}
+      };
+    });
+};

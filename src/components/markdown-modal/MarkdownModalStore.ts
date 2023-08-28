@@ -1,14 +1,14 @@
-import MarkdownModal from './markdown-modal.svelte'
-import { objectHash } from '../../modules/object-hash/object-hash'
-import { openModal } from '../backdrop/BackdropStore2'
-import { writable } from 'svelte/store'
+import MarkdownModal from './markdown-modal.svelte';
+import { objectHash } from '../../modules/object-hash/object-hash';
+import { openModal } from '../backdrop/BackdropStore2';
+import { writable } from 'svelte/store';
 
 export type MarkdownModalStoreProps = {
-  title?: string
-  path?: string
-}
+  title?: string;
+  path?: string;
+};
 
-export const MarkdownModalStore = writable<MarkdownModalStoreProps | undefined>(undefined)
+export const MarkdownModalStore = writable<MarkdownModalStoreProps | undefined>(undefined);
 
 export const openMarkdownModal = (props: MarkdownModalStoreProps) => {
   openModal({
@@ -18,23 +18,23 @@ export const openMarkdownModal = (props: MarkdownModalStoreProps) => {
     componentProps: {
       props,
     },
-  })
-}
+  });
+};
 
 export const closeMarkdownModal = () => {
-  MarkdownModalStore.update((s) => undefined)
-}
+  MarkdownModalStore.update((s) => undefined);
+};
 
 export const openTermsOfService = () => {
   openMarkdownModal({
     title: 'Terms of Service',
     path: '/content/terms.md',
-  })
-}
+  });
+};
 
 export const openPrivacyPolicy = () => {
   openMarkdownModal({
     title: 'Privacy Policy',
     path: '/content/privacy.md',
-  })
-}
+  });
+};

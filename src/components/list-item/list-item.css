@@ -33,17 +33,13 @@
   text-decoration: none;
 }
 
-
 button.n-item:active {
   @apply ring-2 ring-primary-500;
 }
 
-
 .n-item.filled {
   @apply bg-white dark:bg-black dark:bg-opacity-50;
 }
-
-
 
 .n-item:focus {
   @apply ring-2;
@@ -82,7 +78,6 @@ button.n-item:active {
 [item-divider] {
   @apply bg-gray-200 dark:bg-gray-800;
 }
-
 
 .n-item.clickable:active .hit-mark {
   @apply opacity-30;
@@ -134,7 +129,7 @@ button.n-item:active {
 } */
 
 * > .n-item.bottom-line:last-child::before,
-* > .n-item[bottom-line]:last-child::before  {
+* > .n-item[bottom-line]:last-child::before {
   @apply hidden;
 }
 
@@ -143,7 +138,7 @@ button.n-item:active {
   content: '';
   position: absolute;
   bottom: 0px;
-  
+
   @apply border-b border-black dark:border-white border-opacity-20 dark:border-opacity-10;
   left: var(--line-gap, 16px);
   right: 0;
@@ -188,7 +183,6 @@ button.n-item:active {
   overflow-x: auto;
 }
 
-
 .n-item .main {
   padding-top: 2px;
   padding-bottom: 2px;
@@ -205,7 +199,7 @@ button.n-item:active {
 
 .n-item .main .note,
 .n-item .main .description {
-  @apply text-gray-500 dark:text-gray-400 text-xs leading-snug mt-1
+  @apply text-gray-500 dark:text-gray-400 text-xs leading-snug mt-1;
 }
 .n-item .left .btn-icon,
 .n-item .right .btn-icon {

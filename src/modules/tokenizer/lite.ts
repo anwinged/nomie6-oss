@@ -1,22 +1,22 @@
-import time from '../time/time'
-import { Parser } from 'expr-eval'
+import time from '../time/time';
+import { Parser } from 'expr-eval';
 
-const prefixes: any = { context: '+', person: '@', tracker: '#' }
+const prefixes: any = { context: '+', person: '@', tracker: '#' };
 
-export type TokenTypes = 'person' | 'link' | 'generic' | 'tracker' | 'context' | 'place' | 'line-break'
+export type TokenTypes = 'person' | 'link' | 'generic' | 'tracker' | 'context' | 'place' | 'line-break';
 export interface Token {
-  id: string
-  raw: string // Raw word
-  prefix: string // #,@,+
-  type: TokenTypes // type of trackableElement
-  value?: string | number // value of the tracker
-  remainder?: string //any trailing words
-  uom?: string
+  id: string;
+  raw: string; // Raw word
+  prefix: string; // #,@,+
+  type: TokenTypes; // type of trackableElement
+  value?: string | number; // value of the tracker
+  remainder?: string; //any trailing words
+  uom?: string;
 }
 
 export interface WordPart {
-  word: string
-  remainder: string // ending parts of a word, < like that comma
+  word: string;
+  remainder: string; // ending parts of a word, < like that comma
 }
 
 /**
@@ -27,15 +27,15 @@ export interface WordPart {
  * @param {String} word
  */
 function getParsedValue(word: string): ParsedStringValue {
-  const wordSplit = word.split('(')
-  let value = wordSplit.length === 2 ? wordSplit[1].replace(')', '') : '1'
-  value = value.length ? value : '1'
-  return parseStringValue(value)
+  const wordSplit = word.split('(');
+  let value = wordSplit.length === 2 ? wordSplit[1].replace(')', '') : '1';
+  value = value.length ? value : '1';
+  return parseStringValue(value);
 }
 
 interface ParsedStringValue {
-  value: number
-  uom?: string
+  value: number;
+  uom?: string;
 }
 
 /**
@@ -44,37 +44,37 @@ interface ParsedStringValue {
  * @param valueStr String
  */
 function parseStringValue(valueStr: string): ParsedStringValue {
-  const uomMatch = valueStr.match(/[a-z/%$]+/gi)
-  const uom = uomMatch ? uomMatch[0] : undefined
+  const uomMatch = valueStr.match(/[a-z/%$]+/gi);
+  const uom = uomMatch ? uomMatch[0] : undefined;
 
   if (valueStr.match(/\+|-|\/|\*|Mod|\(|\)/)) {
-    valueStr = valueStr.replace(/[a-z]+/gi, '')
+    valueStr = valueStr.replace(/[a-z]+/gi, '');
     try {
       return {
         value: Parser.evaluate(valueStr),
         uom,
-      }
+      };
     } catch (e) {
       return {
         value: 0,
         uom,
-      }
+      };
     }
   } else if (valueStr.split('.').length === 2) {
     return {
       value: parseFloat(valueStr),
       uom,
-    }
+    };
   } else if (valueStr.search(':') > -1) {
     return {
       value: time.timestringToSeconds(valueStr),
       uom: 'timer',
-    }
+    };
   } else {
     return {
       value: parseInt(valueStr),
       uom,
-    }
+    };
   }
 }
 
@@ -87,11 +87,11 @@ function parseStringValue(valueStr: string): ParsedStringValue {
  */
 function scrub(word: string): WordPart {
   // let uom:string;
-  const cleanedWord: string = word.trim().replace(/(’s|'s|'|,|\.|!|’|\?|:)/gi, '')
+  const cleanedWord: string = word.trim().replace(/(’s|'s|'|,|\.|!|’|\?|:)/gi, '');
   return {
     word: cleanedWord,
     remainder: word.trim().replace(cleanedWord, ''),
-  }
+  };
 }
 
 /**
@@ -106,22 +106,22 @@ function scrub(word: string): WordPart {
  */
 
 type ToTokenProps = {
-  type: TokenTypes
-  word: string
-  value?: any
-  remainder?: any
-  raw?: string
-  uom?: string
-}
+  type: TokenTypes;
+  word: string;
+  value?: any;
+  remainder?: any;
+  raw?: string;
+  uom?: string;
+};
 
 function toToken(tokenPayload: ToTokenProps): Token {
-  const { word, type, value, remainder, raw, uom } = tokenPayload
-  const prefix: string = prefixes[type] || ''
+  const { word, type, value, remainder, raw, uom } = tokenPayload;
+  const prefix: string = prefixes[type] || '';
   const id: string = (
     word.search(/\(/) > -1 ? word.replace(prefix, '').split('(')[0] : word.replace(prefix, '')
-  ).toLowerCase()
+  ).toLowerCase();
 
-  let finalRaw = raw || word || ''
+  let finalRaw = raw || word || '';
 
   return {
     id,
@@ -131,14 +131,14 @@ function toToken(tokenPayload: ToTokenProps): Token {
     value, // value of the tracker
     remainder, //any trailing words
     uom,
-  }
+  };
 }
 
 export const strToToken = (str: string = ''): Token | undefined => {
-  const tokens = strToTokens(str)
-  if (tokens.length) return tokens[0]
-  return undefined
-}
+  const tokens = strToTokens(str);
+  if (tokens.length) return tokens[0];
+  return undefined;
+};
 
 /**
  *
@@ -150,23 +150,23 @@ export const strToToken = (str: string = ''): Token | undefined => {
  */
 export const strToTokens = (str: string = ''): Array<Token> => {
   // Split it into an array of lines
-  const lines = str.split(/\r?\n/)
-  const final: Array<Token> = []
+  const lines = str.split(/\r?\n/);
+  const final: Array<Token> = [];
   // Loop over each line
   lines.forEach((line) => {
     // Extract
-    const tokens = tokenizeLite(line)
+    const tokens = tokenizeLite(line);
     tokens.forEach((token: Token) => {
-      final.push(token)
-    })
+      final.push(token);
+    });
     // Add the line Break
     if (lines.length > 1) {
-      final.push(toToken({ type: 'line-break', word: '' }))
+      final.push(toToken({ type: 'line-break', word: '' }));
     }
-  })
+  });
   // Return parsed note
-  return final
-}
+  return final;
+};
 
 /**
  *
@@ -175,16 +175,16 @@ export const strToTokens = (str: string = ''): Array<Token> => {
  *
  */
 export const tokenizeLite = (str: string = ''): Array<Token> => {
-  const wordArray: Array<string> = str.trim().replace(/\n/g, ' \n ').split(' ')
+  const wordArray: Array<string> = str.trim().replace(/\n/g, ' \n ').split(' ');
   return (
     // Split on the space
     wordArray
       .map((word: string) => {
         // Loop over each word
-        const scrubbed = scrub(word) // Scrub it clean
-        const parsedValueString = getParsedValue(word)
+        const scrubbed = scrub(word); // Scrub it clean
+        const parsedValueString = getParsedValue(word);
 
-        const firstChar = word.trim().substring(0, 1)
+        const firstChar = word.trim().substring(0, 1);
         // switch on first character
 
         /**
@@ -201,7 +201,7 @@ export const tokenizeLite = (str: string = ''): Array<Token> => {
               value: parsedValueString.value,
               remainder: scrubbed.remainder.replace(word, ''),
               uom: parsedValueString.uom,
-            })
+            });
           } else {
             return toToken({
               type: 'tracker',
@@ -210,7 +210,7 @@ export const tokenizeLite = (str: string = ''): Array<Token> => {
               value: parsedValueString.value,
               remainder: scrubbed.remainder.replace(word, '').trim(),
               uom: parsedValueString.uom,
-            })
+            });
           }
         } else if (firstChar === '@' && word.length > 1) {
           /**
@@ -223,7 +223,7 @@ export const tokenizeLite = (str: string = ''): Array<Token> => {
             value: parsedValueString.value,
             remainder: scrubbed.remainder,
             uom: parsedValueString.uom,
-          })
+          });
         } else if (firstChar === '+' && word.length > 1) {
           /**
            * It's a Context Match
@@ -235,29 +235,29 @@ export const tokenizeLite = (str: string = ''): Array<Token> => {
             value: parsedValueString.value,
             remainder: scrubbed.remainder,
             uom: parsedValueString.uom,
-          })
+          });
         } else if (word.search(/(\w){3}:\/\/(\w)/) > -1) {
           return toToken({
             type: 'link',
             word: word.trim().replace(/(https|http):\/\//gi, ''),
             raw: word.trim(),
-          })
+          });
         } else if (word == '\n') {
           return toToken({
             type: 'line-break',
             word: '\n',
-          })
+          });
         } else if (word) {
           return toToken({
             type: 'generic',
             word: word.trim(),
-          })
+          });
         }
-        return undefined
+        return undefined;
       })
       .filter((word) => word)
-  )
-} // end parse string
+  );
+}; // end parse string
 
 // else if (firstChar === '/' && word.length > 1) {
 //   /**

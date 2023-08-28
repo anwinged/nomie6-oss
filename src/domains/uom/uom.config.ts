@@ -1,4 +1,4 @@
-import type { IUOM } from './uom-types'
+import type { IUOM } from './uom-types';
 
 const UOMS: IUOM = {
   num: {
@@ -91,7 +91,7 @@ const UOMS: IUOM = {
     type: 'currency',
     symbolAffix: 'pre',
     display: function (v: number) {
-      return '$' + v.toFixed(2)
+      return '$' + v.toFixed(2);
     },
   },
   peso: {
@@ -101,7 +101,7 @@ const UOMS: IUOM = {
     type: 'currency',
     symbolAffix: 'pre',
     display: function (v: number) {
-      return '$' + v.toFixed(2)
+      return '$' + v.toFixed(2);
     },
   },
   franc: {
@@ -111,7 +111,7 @@ const UOMS: IUOM = {
     type: 'currency',
     symbolAffix: 'pre',
     display: function (v: number) {
-      return 'Fr. ' + v.toFixed(2)
+      return 'Fr. ' + v.toFixed(2);
     },
   },
   cpound: {
@@ -121,7 +121,7 @@ const UOMS: IUOM = {
     type: 'currency',
     symbolAffix: 'pre',
     display: function (v: number) {
-      return '£' + v.toFixed(2)
+      return '£' + v.toFixed(2);
     },
   },
   rupee: {
@@ -131,7 +131,7 @@ const UOMS: IUOM = {
     type: 'currency',
     symbolAffix: 'pre',
     display: function (v: number) {
-      return 'Rs. ' + v.toFixed(2)
+      return 'Rs. ' + v.toFixed(2);
     },
   },
   yen: {
@@ -141,7 +141,7 @@ const UOMS: IUOM = {
     type: 'currency',
     symbolAffix: 'pre',
     display: function (v: number) {
-      return '¥' + v.toFixed(2)
+      return '¥' + v.toFixed(2);
     },
   },
   yuan: {
@@ -151,7 +151,7 @@ const UOMS: IUOM = {
     type: 'currency',
     symbolAffix: 'pre',
     display: function (v: number) {
-      return '¥' + v.toFixed(2)
+      return '¥' + v.toFixed(2);
     },
   },
   bitcoin: {
@@ -168,7 +168,7 @@ const UOMS: IUOM = {
     type: 'currency',
     symbolAffix: 'pre',
     display: function (v: number) {
-      return '€' + v.toFixed(2)
+      return '€' + v.toFixed(2);
     },
   },
   timer: {
@@ -179,11 +179,11 @@ const UOMS: IUOM = {
     symbolAffix: 'post',
     symbolSpace: false,
     display: function (v: any) {
-      var secNum = parseInt(v, 10) // don't forget the second param
-      var hours = Math.floor(secNum / 3600)
-      var minutes = Math.floor((secNum - hours * 3600) / 60)
-      var seconds = secNum - hours * 3600 - minutes * 60
-      return !hours ? minutes + 'm ' + seconds + 's' : hours + 'h ' + minutes + 'm'
+      var secNum = parseInt(v, 10); // don't forget the second param
+      var hours = Math.floor(secNum / 3600);
+      var minutes = Math.floor((secNum - hours * 3600) / 60);
+      var seconds = secNum - hours * 3600 - minutes * 60;
+      return !hours ? minutes + 'm ' + seconds + 's' : hours + 'h ' + minutes + 'm';
     },
   },
   sec: {
@@ -195,9 +195,9 @@ const UOMS: IUOM = {
     symbolSpace: true,
     display: function (v: number) {
       if (v < 3600) {
-        return v + 's'
+        return v + 's';
       } else {
-        return Math.round((v / 60) * 100) / 100 + 'm'
+        return Math.round((v / 60) * 100) / 100 + 'm';
       }
     },
   },
@@ -210,13 +210,13 @@ const UOMS: IUOM = {
     symbolSpace: false,
     display: function (v: number) {
       if (v < 60) {
-        return v + 'm'
+        return v + 'm';
       } else if (v > 60 && v < 1441) {
-        return Math.round((v / 60) * 100) / 100 + 'h'
+        return Math.round((v / 60) * 100) / 100 + 'h';
       } else if (v > 1440 && v < 10000) {
-        return (v / 1440).toFixed(0) + 'd'
+        return (v / 1440).toFixed(0) + 'd';
       } else {
-        return (v / 1440).toFixed(0) + 'd'
+        return (v / 1440).toFixed(0) + 'd';
       }
     },
   },
@@ -229,9 +229,9 @@ const UOMS: IUOM = {
     symbolSpace: false,
     display: function (v: number) {
       if (v < 168) {
-        return Math.round(v * 100) / 100 + 'h'
+        return Math.round(v * 100) / 100 + 'h';
       } else {
-        return (v / 24).toFixed(0) + 'd'
+        return (v / 24).toFixed(0) + 'd';
       }
     },
   },
@@ -277,9 +277,9 @@ const UOMS: IUOM = {
     cousin: 'mile',
     convert(v: number) {
       if (v) {
-        return v * 0.621371
+        return v * 0.621371;
       }
-      return v
+      return v;
     },
   },
   inch: {
@@ -354,9 +354,9 @@ const UOMS: IUOM = {
     cousin: 'km',
     convert(v: number) {
       if (v) {
-        return v / 0.621371
+        return v / 0.621371;
       }
-      return v
+      return v;
     },
   },
   mcg: {
@@ -384,9 +384,9 @@ const UOMS: IUOM = {
     cousin: 'oz',
     convert(v: number) {
       if (v) {
-        return v / 28.3495
+        return v / 28.3495;
       }
-      return v
+      return v;
     },
   },
   kg: {
@@ -399,9 +399,9 @@ const UOMS: IUOM = {
     cousin: 'pound',
     convert(v: number) {
       if (v) {
-        return v / 0.453592
+        return v / 0.453592;
       }
-      return v
+      return v;
     },
   },
   stone: {
@@ -422,9 +422,9 @@ const UOMS: IUOM = {
     cousin: 'gram',
     convert(v: number) {
       if (v) {
-        return v * 28.3495
+        return v * 28.3495;
       }
-      return v
+      return v;
     },
   },
   pound: {
@@ -438,9 +438,9 @@ const UOMS: IUOM = {
     cousin: 'kg',
     convert(v: number) {
       if (v) {
-        return v * 0.453592
+        return v * 0.453592;
       }
-      return v
+      return v;
     },
   },
   cup: {
@@ -462,7 +462,7 @@ const UOMS: IUOM = {
     system: 'imperial',
     cousin: 'milliliter',
     convert(v: number) {
-      return v * 29.57353
+      return v * 29.57353;
     },
   },
   pint: {
@@ -502,7 +502,7 @@ const UOMS: IUOM = {
     system: 'imperial',
     cousin: 'liter',
     convert(v) {
-      return v !== 0 ? v * 3.78 : v
+      return v !== 0 ? v * 3.78 : v;
     },
   },
   liter: {
@@ -515,7 +515,7 @@ const UOMS: IUOM = {
     system: 'metric',
     cousin: 'gallon',
     convert(v) {
-      return v !== 0 ? v / 3.78 : v
+      return v !== 0 ? v / 3.78 : v;
     },
   },
   kiloliter: {
@@ -536,6 +536,6 @@ const UOMS: IUOM = {
     symbolSpace: false,
     system: 'metric',
   },
-}
+};
 
-export default UOMS
+export default UOMS;

@@ -1,17 +1,17 @@
-import type { Trackable, TrackableTypes } from '../Trackable.class'
+import type { Trackable, TrackableTypes } from '../Trackable.class';
 
-import TrackableSelectorModal from './trackable-selector-modal.svelte'
-import { openModal } from '../../../components/backdrop/BackdropStore2'
-import { wait } from '../../../utils/tick/tick'
-import { writable } from 'svelte/store'
+import TrackableSelectorModal from './trackable-selector-modal.svelte';
+import { openModal } from '../../../components/backdrop/BackdropStore2';
+import { wait } from '../../../utils/tick/tick';
+import { writable } from 'svelte/store';
 
 export type TrackableSelectorProps = {
-  multiple?: boolean
-  onSelect?: Function
-  type?: TrackableTypes
-}
+  multiple?: boolean;
+  onSelect?: Function;
+  type?: TrackableTypes;
+};
 
-export const TrackableSelectorStore = writable<TrackableSelectorProps | undefined>()
+export const TrackableSelectorStore = writable<TrackableSelectorProps | undefined>();
 
 /**
  * It opens a modal with a component called `TrackableSelectorModal` and passes it a prop called
@@ -26,15 +26,15 @@ export const openTrackableSelector = (options: TrackableSelectorProps = {}) => {
     componentProps: {
       payload: options,
     },
-  })
-}
+  });
+};
 
 /**
  * It updates the `TrackableSelectorStore` with `undefined`
  */
 export const closeTrackableSelector = () => {
-  TrackableSelectorStore.update((s) => undefined)
-}
+  TrackableSelectorStore.update((s) => undefined);
+};
 
 /**
  * It opens a trackable selector, waits for the user to select a trackable, and then returns the
@@ -52,12 +52,12 @@ export const selectTrackables = async (
       multiple: multiple,
       type,
       onSelect: async (trackables: Array<Trackable>) => {
-        resolve(trackables)
-        await wait(200)
+        resolve(trackables);
+        await wait(200);
       },
-    })
-  })
-}
+    });
+  });
+};
 
 /**
  * It returns the first trackable of the given type, or undefined if there are none
@@ -65,9 +65,9 @@ export const selectTrackables = async (
  * @returns An array of trackables
  */
 export const selectTrackable = async (type?: TrackableTypes | undefined) => {
-  const trackables = await selectTrackables(type, false)
+  const trackables = await selectTrackables(type, false);
   if (trackables.length) {
-    return trackables[0]
+    return trackables[0];
   }
-  return undefined
-}
+  return undefined;
+};

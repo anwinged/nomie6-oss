@@ -6,11 +6,11 @@ export default function autoresize(node) {
   }
 
   handleChange();
-  node.addEventListener("input", handleChange);
+  node.addEventListener('input', handleChange);
 
   return {
     destroy() {
-      node.removeEventListener("input", handleChange);
+      node.removeEventListener('input', handleChange);
     },
   };
 }

@@ -1,7 +1,7 @@
 //Originally from https://github.com/tusnolobov/svelte-calculator/blob/master/src/helpers.js
 export function calculate(input: string | Array<any> = []) {
   if (typeof input === 'string') {
-    input = input.split("");
+    input = input.split('');
   }
 
   const result = input.reduce((acc, val, idx, arr) => {
@@ -10,13 +10,13 @@ export function calculate(input: string | Array<any> = []) {
     if (isNaN(nextNumber)) return acc;
 
     switch (val) {
-      case "+":
+      case '+':
         return acc + nextNumber;
-      case "−":
+      case '−':
         return acc - nextNumber;
-      case "×":
+      case '×':
         return acc * nextNumber;
-      case "÷":
+      case '÷':
         return acc / nextNumber;
     }
 

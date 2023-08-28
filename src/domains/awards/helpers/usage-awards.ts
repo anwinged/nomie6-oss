@@ -1,8 +1,8 @@
-import type { AwardConfig } from './award.class'
+import type { AwardConfig } from './award.class';
 
 export const getAwardById = (id: string): AwardConfig => {
-  return usageAwards.find((a) => a.id == id)
-}
+  return usageAwards.find((a) => a.id == id);
+};
 
 export const usageAwards: Array<AwardConfig> = [
   {
@@ -175,4 +175,4 @@ export const usageAwards: Array<AwardConfig> = [
     name: 'Wordsmith',
     value: 0.7,
   },
-]
+];

@@ -1,5 +1,5 @@
-import { AppVersion } from "../modules/app-version/app-version";
-import latest from "./whatsNew.json";
+import { AppVersion } from '../modules/app-version/app-version';
+import latest from './whatsNew.json';
 
 export default {
   version: AppVersion,

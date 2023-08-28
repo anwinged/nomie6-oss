@@ -1,6 +1,6 @@
-import type { PositivityType } from '../../config/appConfig'
-import appConfig from '../../config/appConfig'
-import { openDropMenu } from '../../components/menu/useDropmenu'
+import type { PositivityType } from '../../config/appConfig';
+import appConfig from '../../config/appConfig';
+import { openDropMenu } from '../../components/menu/useDropmenu';
 
 export const openScoreSelectMenu = (target): Promise<PositivityType> => {
   return new Promise((resolve, reject) => {
@@ -13,10 +13,10 @@ export const openScoreSelectMenu = (target): Promise<PositivityType> => {
             title: pos.label,
             emoji: pos.emoji,
             click() {
-              resolve(pos)
+              resolve(pos);
             },
-          }
+          };
         })
-    )
-  })
-}
+    );
+  });
+};

@@ -213,7 +213,6 @@ html.mode-dark {
   font-size: 10px;
 }
 
-
 .hover-primary {
   @apply hover:text-primary-500;
   @apply transition-colors duration-200;

@@ -9,28 +9,30 @@ import {
   SparklesOutline,
   TextOutline,
   ThermometerIcon,
-} from '../../../components/icon/nicons'
-import CheckmarkCircleOutlineSvelte from '../../../n-icons/CheckmarkCircleOutline.svelte'
-import type { PluginClass } from '../../plugins/plugin-helpers'
+} from '../../../components/icon/nicons';
+import CheckmarkCircleOutlineSvelte from '../../../n-icons/CheckmarkCircleOutline.svelte';
+import type { PluginClass } from '../../plugins/plugin-helpers';
 
-export type IWidgetTypeUnit = 'timeframe' | 'cond-style' | 'token' | 'tokens'
+export type IWidgetTypeUnit = 'timeframe' | 'cond-style' | 'token' | 'tokens';
 
 export type IWidgetType = {
-  id: string
-  label: string
-  requires: Array<IWidgetTypeUnit>
-  optional: Array<IWidgetTypeUnit>
-  image?: string
-  icon?: any
-  emoji?: string
-  data?: any
-}
+  id: string;
+  label: string;
+  requires: Array<IWidgetTypeUnit>;
+  optional: Array<IWidgetTypeUnit>;
+  image?: string;
+  icon?: any;
+  emoji?: string;
+  data?: any;
+};
 
-export const getWidgetTypes = ($PluginStore:Array<PluginClass>):Array<IWidgetType> => {
-    const allWidgetTypes = [...widgetTypes];
-    $PluginStore.filter(p=>{
-      return p.active && p.addToWidgets
-    }).forEach((plugin:PluginClass)=>{
+export const getWidgetTypes = ($PluginStore: Array<PluginClass>): Array<IWidgetType> => {
+  const allWidgetTypes = [...widgetTypes];
+  $PluginStore
+    .filter((p) => {
+      return p.active && p.addToWidgets;
+    })
+    .forEach((plugin: PluginClass) => {
       allWidgetTypes.push({
         id: `plugin`,
         label: plugin.name,
@@ -38,13 +40,12 @@ export const getWidgetTypes = ($PluginStore:Array<PluginClass>):Array<IWidgetTyp
         optional: [],
         emoji: plugin.emoji,
         data: {
-          pluginId: plugin.id
-        }
-      })
-    })
-    return allWidgetTypes;
-}
-
+          pluginId: plugin.id,
+        },
+      });
+    });
+  return allWidgetTypes;
+};
 
 export const widgetTypes: Array<IWidgetType> = [
   {
@@ -145,4 +146,4 @@ export const widgetTypes: Array<IWidgetType> = [
     image: '/images/widget-types/just-text.svg',
     icon: TextOutline,
   },
-]
+];

@@ -1,23 +1,23 @@
-import Person from '../people/Person.class'
-import type { Token } from '../../modules/tokenizer/lite'
-import { Trackable } from './Trackable.class'
+import Person from '../people/Person.class';
+import type { Token } from '../../modules/tokenizer/lite';
+import { Trackable } from './Trackable.class';
 
-import TrackerClass from '../../modules/tracker/TrackerClass'
-import downloader from '../../modules/download/download'
-import { parseNumber } from '../../utils/parseNumber/parseNumber'
-import snakeCase from 'lodash/snakeCase'
-import { strToToken } from '../../modules/tokenizer/lite'
+import TrackerClass from '../../modules/tracker/TrackerClass';
+import downloader from '../../modules/download/download';
+import { parseNumber } from '../../utils/parseNumber/parseNumber';
+import snakeCase from 'lodash/snakeCase';
+import { strToToken } from '../../modules/tokenizer/lite';
 
 export type TrackableVisualType = {
-  emoji?: string
-  avatar?: string
-  color?: string
-  label?: string
-}
+  emoji?: string;
+  avatar?: string;
+  color?: string;
+  label?: string;
+};
 
 export type ITrackables = {
-  [key: string]: Trackable
-}
+  [key: string]: Trackable;
+};
 
 /**
  * Converts iTrackables into an Array
@@ -26,11 +26,11 @@ export type ITrackables = {
  */
 export const toTrackableArray = (trackables: ITrackables): Array<Trackable> => {
   return Object.keys(trackables).map((key) => {
-    const trackable = trackables[key]
-    trackable.id = trackable.tag
-    return trackable
-  })
-}
+    const trackable = trackables[key];
+    trackable.id = trackable.tag;
+    return trackable;
+  });
+};
 
 /**
  * Converts a Trackable into a Token
@@ -38,17 +38,17 @@ export const toTrackableArray = (trackables: ITrackables): Array<Trackable> => {
  * @returns
  */
 export const trackableToToken = (trackable: Trackable): Token => {
-  let id: string
+  let id: string;
   switch (trackable.type) {
     case 'tracker':
-      id = trackable.id.replace('#', '')
-      break
+      id = trackable.id.replace('#', '');
+      break;
     case 'person':
-      id = trackable.id.replace('@', '')
-      break
+      id = trackable.id.replace('@', '');
+      break;
     case 'context':
-      id = trackable.id.replace('+', '')
-      break
+      id = trackable.id.replace('+', '');
+      break;
   }
   const token: Token = {
     id,
@@ -56,9 +56,9 @@ export const trackableToToken = (trackable: Trackable): Token => {
     value: trackable.value,
     raw: trackable.tag,
     prefix: trackable?.tag.substring(0, 1),
-  }
-  return token
-}
+  };
+  return token;
+};
 
 /**
  * Converts a String to a trackable
@@ -67,38 +67,38 @@ export const trackableToToken = (trackable: Trackable): Token => {
  * @returns
  */
 export const strToTrackable = (str: string, known: ITrackables): Trackable | undefined => {
-  const token: Token = strToToken(str)
+  const token: Token = strToToken(str);
   if (token) {
     const trackable: any = {
       value: token.value,
-    }
+    };
     // See if the trackable exists in the provided known iTrackable
-    const foundTrackable = toTrackableArray(known).find((t: Trackable) => t.id === `${token.prefix}${token.id}`)
+    const foundTrackable = toTrackableArray(known).find((t: Trackable) => t.id === `${token.prefix}${token.id}`);
     if (foundTrackable) {
-      foundTrackable.value = parseNumber(token.value)
-      return foundTrackable
+      foundTrackable.value = parseNumber(token.value);
+      return foundTrackable;
     }
     // If not found
     if (token.type === 'tracker') {
-      trackable.type = 'tracker'
-      trackable.tracker = new TrackerClass({ tag: token.id })
+      trackable.type = 'tracker';
+      trackable.tracker = new TrackerClass({ tag: token.id });
     } else if (token.type === 'person') {
-      trackable.type = 'person'
-      trackable.id = str
-      trackable.person = new Person({ username: token.id })
+      trackable.type = 'person';
+      trackable.id = str;
+      trackable.person = new Person({ username: token.id });
     } else if (token.type === 'context') {
-      trackable.type = 'context'
-      trackable.context = token.id
+      trackable.type = 'context';
+      trackable.context = token.id;
     }
-    const finalTrackable = new Trackable(trackable)
+    const finalTrackable = new Trackable(trackable);
     if (trackable.value && trackable.value > 1 && trackable.type == 'tracker') {
-      finalTrackable.tracker.type = 'value'
+      finalTrackable.tracker.type = 'value';
     }
-    return finalTrackable
+    return finalTrackable;
   } else {
-    return undefined
+    return undefined;
   }
-}
+};
 
 /**
  * It takes a Trackable and returns a TrackableVisualType
@@ -116,8 +116,8 @@ export const getTrackableVisuals = (trackable: Trackable): TrackableVisualType =
     emoji: trackable.emoji,
     avatar: trackable.avatar,
     label: trackable.label,
-  }
-}
+  };
+};
 
 /**
  * It takes a string, removes any `@` or `+#` characters, trims the string, replaces any
@@ -130,8 +130,8 @@ export const strToTagSafe = (str: string) => {
     .replace(/(\@|\+\#)/gi, '')
     .trim()
     .replace(/[^A-Z0-9]/gi, '_')
-    .toLowerCase()
-}
+    .toLowerCase();
+};
 
 /**
  * It takes a trackable and a set of visuals, and returns a new trackable with the visuals applied
@@ -140,26 +140,26 @@ export const strToTagSafe = (str: string) => {
  * @returns A Trackable object
  */
 export const setTrackableVisuals = (_trackable: Trackable, visuals: TrackableVisualType): Trackable => {
-  const trackable = new Trackable(_trackable)
+  const trackable = new Trackable(_trackable);
   if (trackable.type === 'context') {
-    if (visuals.hasOwnProperty('color')) trackable.ctx.color = visuals.color
-    if (visuals.hasOwnProperty('emoji')) trackable.ctx.emoji = visuals.emoji
-    if (visuals.hasOwnProperty('avatar')) trackable.ctx.avatar = visuals.avatar
-    if (visuals.hasOwnProperty('label')) trackable.ctx.label = visuals.label
+    if (visuals.hasOwnProperty('color')) trackable.ctx.color = visuals.color;
+    if (visuals.hasOwnProperty('emoji')) trackable.ctx.emoji = visuals.emoji;
+    if (visuals.hasOwnProperty('avatar')) trackable.ctx.avatar = visuals.avatar;
+    if (visuals.hasOwnProperty('label')) trackable.ctx.label = visuals.label;
   } else if (trackable.type === 'person') {
-    if (visuals.hasOwnProperty('color')) trackable.person.color = visuals.color
-    if (visuals.hasOwnProperty('emoji')) trackable.person.emoji = visuals.emoji
-    if (visuals.hasOwnProperty('avatar')) trackable.person.avatar = visuals.avatar
-    if (visuals.hasOwnProperty('label')) trackable.person.displayName = visuals.label
+    if (visuals.hasOwnProperty('color')) trackable.person.color = visuals.color;
+    if (visuals.hasOwnProperty('emoji')) trackable.person.emoji = visuals.emoji;
+    if (visuals.hasOwnProperty('avatar')) trackable.person.avatar = visuals.avatar;
+    if (visuals.hasOwnProperty('label')) trackable.person.displayName = visuals.label;
   } else if (trackable.type === 'tracker') {
-    if (visuals.hasOwnProperty('color')) trackable.tracker.color = visuals.color
-    if (visuals.hasOwnProperty('emoji')) trackable.tracker.emoji = visuals.emoji
-    if (visuals.hasOwnProperty('avatar')) trackable.tracker.avatar = visuals.avatar
-    if (visuals.hasOwnProperty('label')) trackable.tracker.label = visuals.label
+    if (visuals.hasOwnProperty('color')) trackable.tracker.color = visuals.color;
+    if (visuals.hasOwnProperty('emoji')) trackable.tracker.emoji = visuals.emoji;
+    if (visuals.hasOwnProperty('avatar')) trackable.tracker.avatar = visuals.avatar;
+    if (visuals.hasOwnProperty('label')) trackable.tracker.label = visuals.label;
   }
 
-  return trackable
-}
+  return trackable;
+};
 
 /**
  * It takes an array of trackables and a version number, and then downloads a JSON file containing the
@@ -173,9 +173,9 @@ export const downloadTrackables = (trackables: Array<Trackable>, appVersion: str
     trackables: trackables,
     created: new Date(),
     version: appVersion, // TODO figure out how to do this without meta
-  }
+  };
   downloader.text(
     `${snakeCase(trackables.map((t) => t.label).join('-')).toLowerCase()}.trackables.json`,
     JSON.stringify(pkg)
-  )
-}
+  );
+};

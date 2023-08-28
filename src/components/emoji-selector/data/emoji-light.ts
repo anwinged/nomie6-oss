@@ -1567,4 +1567,4 @@ export default [
   { n: 'lipstick', e: '💄', v: [], c: 'People' },
   { n: 'ring', e: '💍', v: [], c: 'People' },
   { n: 'gem', e: '💎', v: [], c: 'People' },
-]
+];

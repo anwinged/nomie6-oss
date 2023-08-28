@@ -1,103 +1,100 @@
-import dayjs from 'dayjs'
+import dayjs from 'dayjs';
 
+import type { ITrackables } from '../../domains/ledger/ledger-tools';
+import type NLog from '../../domains/nomie-log/nomie-log';
 
-import type { ITrackables } from '../../domains/ledger/ledger-tools'
-import type NLog from '../../domains/nomie-log/nomie-log'
+import type { Trackable } from '../../domains/trackable/Trackable.class';
+import logsToTrackableUsage from '../../domains/usage/usage-utils';
+import { calendarMap } from '../time/time';
 
-import type { Trackable } from '../../domains/trackable/Trackable.class'
-import logsToTrackableUsage from '../../domains/usage/usage-utils'
-import { calendarMap } from '../time/time'
+import { tokenToTag } from '../tokenizer/tokenToTrackable';
 
-import { tokenToTag } from '../tokenizer/tokenToTrackable'
-
-import CSVColumnWorker from "./csv-column-worker?worker";
+import CSVColumnWorker from './csv-column-worker?worker';
 
 export const logsToCSV = async (
   logs: Array<NLog>,
   includeTrackables: Array<Trackable>,
   knownTrackables: ITrackables
 ): Promise<Array<any>> => {
-
-
   return new Promise((resolve) => {
-    let csvWorker = new CSVColumnWorker()
+    let csvWorker = new CSVColumnWorker();
     csvWorker.onmessage = (message) => {
-      let data = message.data
+      let data = message.data;
       resolve(data);
-    }
+    };
 
     csvWorker.postMessage({
-      logs, includeTrackables, knownTrackables
-    })
-  })
-
-
-}
+      logs,
+      includeTrackables,
+      knownTrackables,
+    });
+  });
+};
 
 export const logsToCSVOLD = async (
   logs: Array<NLog>,
   includeTrackables: Array<Trackable>,
   knownTrackables: ITrackables
 ) => {
-  logs = logs.sort((a, b) => (a.end > b.end ? 1 : -1))
+  logs = logs.sort((a, b) => (a.end > b.end ? 1 : -1));
 
-  const trackableArray = includeTrackables
-  const columns: Array<any> = ['date']
-  const doc: Array<any> = []
+  const trackableArray = includeTrackables;
+  const columns: Array<any> = ['date'];
+  const doc: Array<any> = [];
 
   if (logs.length) {
-    const start = logs[0].endDayjs()
-    const end = logs[logs.length - 1].endDayjs()
-    const calMap = calendarMap(start.toDate(), end.toDate(), 'day')
-    const usage = logsToTrackableUsage(logs, { trackables: knownTrackables })
+    const start = logs[0].endDayjs();
+    const end = logs[logs.length - 1].endDayjs();
+    const calMap = calendarMap(start.toDate(), end.toDate(), 'day');
+    const usage = logsToTrackableUsage(logs, { trackables: knownTrackables });
 
     trackableArray.forEach((trackable) => {
-      columns.push(trackable.tag)
-    })
+      columns.push(trackable.tag);
+    });
 
     calMap.forEach((cal) => {
-      const d = dayjs(cal.date)
-      const row: Array<any> = [d.format('YYYY-MM-DD')]
-      doc.push(row)
-    })
+      const d = dayjs(cal.date);
+      const row: Array<any> = [d.format('YYYY-MM-DD')];
+      doc.push(row);
+    });
 
     trackableArray.forEach((trackable, index) => {
-      const tu = usage[trackable.tag]
+      const tu = usage[trackable.tag];
       if (tu) {
-        let tuDay = tu.backfill(calMap[0].date, calMap[calMap.length - 1].date).byDay
-        let columnIndex = columns.indexOf(tuDay.trackable.tag)
+        let tuDay = tu.backfill(calMap[0].date, calMap[calMap.length - 1].date).byDay;
+        let columnIndex = columns.indexOf(tuDay.trackable.tag);
 
         tuDay.dates.forEach((d, dIndex) => {
-          const rowIndex = doc.findIndex((r) => r[0] === d.format('YYYY-MM-DD'))
+          const rowIndex = doc.findIndex((r) => r[0] === d.format('YYYY-MM-DD'));
           if (rowIndex > -1 && columnIndex > -1) {
             const value = tuDay.values[dIndex];
-            doc[rowIndex][columnIndex] = isNaN(value) ? 0 : value
+            doc[rowIndex][columnIndex] = isNaN(value) ? 0 : value;
           }
-        })
+        });
       }
-    })
+    });
   }
 
-  return [...[columns], ...doc.reverse()]
-}
+  return [...[columns], ...doc.reverse()];
+};
 
 export const logsToDetailedCSV = (logs: Array<NLog>, trackersToInclude: Array<any>) => {
-  let header = ['epoch', 'start', 'end', 'offset', 'note', 'lat', 'lng', 'location', 'score']
-  let rows: Array<any> = []
+  let header = ['epoch', 'start', 'end', 'offset', 'note', 'lat', 'lng', 'location', 'score'];
+  let rows: Array<any> = [];
   // Get an array of tag names from the trackers
-  let tokensToInclude: Array<string> = trackersToInclude.map((tracker) => tracker.tag)
+  let tokensToInclude: Array<string> = trackersToInclude.map((tracker) => tracker.tag);
 
   // Loop over logs
   logs.forEach((log) => {
-    log.getMeta()
+    log.getMeta();
     // Extract log tracker tags
 
-    const tzoffset = (log.offset || new Date().getTimezoneOffset()) * 60000 //offset in milliseconds
-    const localStart = new Date(log.start.getTime() - tzoffset).toISOString().slice(0, -1)
-    const localEnd = new Date(log.end.getTime() - tzoffset).toISOString().slice(0, -1)
+    const tzoffset = (log.offset || new Date().getTimezoneOffset()) * 60000; //offset in milliseconds
+    const localStart = new Date(log.start.getTime() - tzoffset).toISOString().slice(0, -1);
+    const localEnd = new Date(log.end.getTime() - tzoffset).toISOString().slice(0, -1);
 
     // Loop over tracker tags
-    const logTokens = log.elements.filter(t => t.type !== 'generic').map(t => tokenToTag(t));
+    const logTokens = log.elements.filter((t) => t.type !== 'generic').map((t) => tokenToTag(t));
     const found = logTokens.filter((obj: string) => {
       return tokensToInclude.indexOf(obj) !== -1;
     });
@@ -105,7 +102,7 @@ export const logsToDetailedCSV = (logs: Array<NLog>, trackersToInclude: Array<an
     // Should Push Log to CSV?
     let pushLog: boolean = false;
 
-    // If no trackables provided 
+    // If no trackables provided
     if (!tokensToInclude.length) {
       pushLog = true;
     } else if (found.length) {
@@ -124,11 +121,11 @@ export const logsToDetailedCSV = (logs: Array<NLog>, trackersToInclude: Array<an
         log.lng,
         `${log.location || ''}`.replace(/(\"|\,|\n|\r)/g, ' '), // Remove csv breaking chars
         log.score,
-      ])
+      ]);
     }
-  })
-  return [...[header], ...rows.reverse()]
-}
+  });
+  return [...[header], ...rows.reverse()];
+};
 
 // export default class CSVGenerator {
 //   constructor() {}

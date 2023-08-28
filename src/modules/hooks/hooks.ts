@@ -1,5 +1,5 @@
-import Logger from "../../utils/log/log";
-const console = new Logger("modules/hooks");
+import Logger from '../../utils/log/log';
+const console = new Logger('modules/hooks');
 
 /**
  * Super Simple Hook System Listener Thing
@@ -15,7 +15,7 @@ export default class Hooky {
     this.hooks = {};
   }
   hook(hookName, func) {
-    if (typeof func === "function") {
+    if (typeof func === 'function') {
       this.hooks[hookName] = this.hooks[hookName] || [];
       this.hooks[hookName].push(func);
       return () => {

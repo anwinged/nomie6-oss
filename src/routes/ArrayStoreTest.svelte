@@ -1,38 +1,38 @@
 <script lang="ts">
-  import ListItem from '../components/list-item/list-item.svelte'
-  import Layout from '../domains/layout/layout.svelte'
+  import ListItem from '../components/list-item/list-item.svelte';
+  import Layout from '../domains/layout/layout.svelte';
 
-  import { Interact } from '../store/interact'
-  import { createKVStore } from '../store/KVStore'
-  import { TestItem } from '../utils/test/TestItem'
+  import { Interact } from '../store/interact';
+  import { createKVStore } from '../store/KVStore';
+  import { TestItem } from '../utils/test/TestItem';
 
-  let message: string | undefined = undefined
+  let message: string | undefined = undefined;
 
   const testStore = createKVStore('/samples-kv.json', {
     label: 'Tester',
     key: 'id',
     itemInitializer: (item) => {
-      return new TestItem(item)
+      return new TestItem(item);
     },
     itemSerializer: (item) => {
-      return item
+      return item;
     },
-  })
-  testStore.init()
+  });
+  testStore.init();
 
   const add = async () => {
-    let name = message
-    message = undefined
-    return await testStore.upsert(new TestItem({ name }))
-  }
+    let name = message;
+    message = undefined;
+    return await testStore.upsert(new TestItem({ name }));
+  };
   const remove = async (item: TestItem) => {
-    return await testStore.remove(item)
-  }
+    return await testStore.remove(item);
+  };
   const edit = async (item: TestItem) => {
-    const newText = await Interact.prompt('New Name', '', { value: item.name })
-    item.name = newText
-    return await testStore.upsert(item)
-  }
+    const newText = await Interact.prompt('New Name', '', { value: item.name });
+    item.name = newText;
+    return await testStore.upsert(item);
+  };
 </script>
 
 <Layout>
@@ -42,7 +42,7 @@
     <input type="text" class="p-2 text-lg" placeholder="message" bind:value={message} />
     <button
       on:click={() => {
-        add()
+        add();
       }}>Save</button
     >
   </div>
@@ -54,13 +54,13 @@
           slot="left"
           class="text-primary-500"
           on:click={() => {
-            edit(item)
+            edit(item);
           }}>Edit</button
         >
         <button
           slot="right"
           on:click={() => {
-            remove(item)
+            remove(item);
           }}>Remove</button
         >
       </ListItem>

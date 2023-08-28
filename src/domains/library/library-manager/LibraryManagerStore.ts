@@ -1,40 +1,34 @@
-
-import { writable } from 'svelte/store'
-import type { ITracker } from '../../../modules/tracker/TrackerClass'
-import type TrackerClass from '../../../modules/tracker/TrackerClass'
+import { writable } from 'svelte/store';
+import type { ITracker } from '../../../modules/tracker/TrackerClass';
+import type TrackerClass from '../../../modules/tracker/TrackerClass';
 
 export type LibraryCategoryType = {
-  id: string
-  label: string
-  emoji: string
-}
+  id: string;
+  label: string;
+  emoji: string;
+};
 
 export type LibraryTrackerType = {
-  title: string
-  trackers: Array<ITracker | TrackerClass>
-  tags: Array<string>
-  uid?: string
-  _id?: string
-}
+  title: string;
+  trackers: Array<ITracker | TrackerClass>;
+  tags: Array<string>;
+  uid?: string;
+  _id?: string;
+};
 
 type LibraryManagerStateType = {
-  libraryTracker: undefined | LibraryTrackerType
-}
+  libraryTracker: undefined | LibraryTrackerType;
+};
 const initialState: LibraryManagerStateType = {
   libraryTracker: undefined,
-}
-export const LibraryManagerStore = writable(initialState)
+};
+export const LibraryManagerStore = writable(initialState);
 
 export const getLibraryCategories = async (): Promise<Array<LibraryCategoryType>> => {
+  return [];
+};
 
-  return []
-}
-
-
-
-export const saveLibraryTracker = async (props: LibraryTrackerType) => {
-
-}
+export const saveLibraryTracker = async (props: LibraryTrackerType) => {};
 
 export const getAllLibraryTrackers = async () => {
   // const collection = getCollectionRef()
@@ -51,8 +45,8 @@ export const getAllLibraryTrackers = async () => {
   //   final.push(data)
   // })
   // return final
-  return []
-}
+  return [];
+};
 
 export const getLibraryTrackersByCategory = async (
   category: LibraryCategoryType
@@ -73,5 +67,5 @@ export const getLibraryTrackersByCategory = async (
   // })
 
   // return final
-  return []
-}
+  return [];
+};

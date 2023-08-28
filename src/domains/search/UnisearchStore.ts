@@ -1,40 +1,40 @@
-import type NLog from '../nomie-log/nomie-log'
-import type { PopMenuButton } from '../../components/pop-menu/usePopmenu'
-import type { Trackable } from '../trackable/Trackable.class'
-import UnisearchModal from './unisearch-modal.svelte'
-import { getTrackablesFromStorage } from '../trackable/TrackableStore'
-import { closeModal, openModal } from '../../components/backdrop/BackdropStore2'
-import { toTrackableArray } from '../trackable/trackable-utils'
-import { unisearchCommands } from './unisearch-commands'
-import { writable } from 'svelte/store'
-import { trackEvent } from '../usage/stat-ping'
+import type NLog from '../nomie-log/nomie-log';
+import type { PopMenuButton } from '../../components/pop-menu/usePopmenu';
+import type { Trackable } from '../trackable/Trackable.class';
+import UnisearchModal from './unisearch-modal.svelte';
+import { getTrackablesFromStorage } from '../trackable/TrackableStore';
+import { closeModal, openModal } from '../../components/backdrop/BackdropStore2';
+import { toTrackableArray } from '../trackable/trackable-utils';
+import { unisearchCommands } from './unisearch-commands';
+import { writable } from 'svelte/store';
+import { trackEvent } from '../usage/stat-ping';
 
 export type UnisearchResultsType = {
-  trackables: Array<Trackable>
-  logs: Array<NLog>
-  commands: Array<PopMenuButton>
-  exactTrackable: Trackable | undefined
-}
+  trackables: Array<Trackable>;
+  logs: Array<NLog>;
+  commands: Array<PopMenuButton>;
+  exactTrackable: Trackable | undefined;
+};
 type UnisearchStoreType = {
-  visible: boolean
-  term: string | undefined
-}
-const initState: UnisearchStoreType = { term: undefined, visible: false }
-export const UnisearchResultsStore = writable<UnisearchResultsType | undefined>(undefined)
-export const UnisearchStore = writable<UnisearchStoreType>(initState)
+  visible: boolean;
+  term: string | undefined;
+};
+const initState: UnisearchStoreType = { term: undefined, visible: false };
+export const UnisearchResultsStore = writable<UnisearchResultsType | undefined>(undefined);
+export const UnisearchStore = writable<UnisearchStoreType>(initState);
 
 /**
  * It closes the UniSearch component
  */
 export const closeUnisearch = () => {
-  closeModal('unisearch')
+  closeModal('unisearch');
   UnisearchStore.update((s) => {
     return {
       term: undefined,
       visible: false,
-    }
-  })
-}
+    };
+  });
+};
 
 /**
  * It opens a modal with the UnisearchModal component, and passes the searchTerm prop to it
@@ -50,8 +50,8 @@ export const openUnisearch = (term?: string) => {
     },
     tappable: true,
     position: 'center',
-  })
-}
+  });
+};
 
 /**
  * It takes a search term and returns a list of commands, trackables, and logs that match the search
@@ -64,28 +64,28 @@ export const openUnisearch = (term?: string) => {
  * exactTrackable: an exact trackable
  */
 export const getUnisearchResults = async (term: string): Promise<UnisearchResultsType> => {
-  let exactTrackable = undefined
-  if (!term) return { commands: [], trackables: [], logs: [], exactTrackable: undefined }
+  let exactTrackable = undefined;
+  if (!term) return { commands: [], trackables: [], logs: [], exactTrackable: undefined };
   const commands = unisearchCommands.filter((b) => {
-    return JSON.stringify(b).toLowerCase().search(term.toLowerCase()) > -1
-  })
-  const known = await getTrackablesFromStorage()
+    return JSON.stringify(b).toLowerCase().search(term.toLowerCase()) > -1;
+  });
+  const known = await getTrackablesFromStorage();
   const trackables = toTrackableArray(known).filter((t) => {
-    return JSON.stringify(t).toLowerCase().search(term.toLowerCase()) > -1
-  })
+    return JSON.stringify(t).toLowerCase().search(term.toLowerCase()) > -1;
+  });
   if (known[term]) {
-    exactTrackable = known[term]
+    exactTrackable = known[term];
   } else if (known[`#${term}`]) {
-    exactTrackable = known[`#${term}`]
+    exactTrackable = known[`#${term}`];
   } else if (known[`@${term}`]) {
-    exactTrackable = known[`@${term}`]
+    exactTrackable = known[`@${term}`];
   }
-  const logs = []
+  const logs = [];
 
   return {
     commands,
     trackables,
     logs,
     exactTrackable,
-  }
-}
+  };
+};

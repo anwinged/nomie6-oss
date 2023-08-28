@@ -1,13 +1,13 @@
-import { Interact } from './interact'
-import { Lang } from './lang'
-import { LedgerStore } from '../domains/ledger/LedgerStore'
-import NLog from '../domains/nomie-log/nomie-log'
+import { Interact } from './interact';
+import { Lang } from './lang';
+import { LedgerStore } from '../domains/ledger/LedgerStore';
+import NLog from '../domains/nomie-log/nomie-log';
 // utils
-import NStorage from '../domains/storage/storage'
-import config from '../config/appConfig'
-import { showToast } from '../components/toast/ToastStore'
-import tick from '../utils/tick/tick'
-import { writable } from 'svelte/store'
+import NStorage from '../domains/storage/storage';
+import config from '../config/appConfig';
+import { showToast } from '../components/toast/ToastStore';
+import tick from '../utils/tick/tick';
+import { writable } from 'svelte/store';
 
 /**
  * Offline Queue Store
@@ -18,9 +18,9 @@ import { writable } from 'svelte/store'
  */
 
 export interface IOfflineQueueState {
-  logs: Array<NLog>
-  lastSync?: Date
-  status: 'idle' | 'syncing'
+  logs: Array<NLog>;
+  lastSync?: Date;
+  status: 'idle' | 'syncing';
 }
 
 const InitOfflineQueueStore = () => {
@@ -29,7 +29,7 @@ const InitOfflineQueueStore = () => {
     logs: [],
     lastSync: undefined,
     status: 'idle',
-  })
+  });
 
   const methods = {
     async init(): Promise<void> {
@@ -37,76 +37,76 @@ const InitOfflineQueueStore = () => {
       let fromStore = (await NStorage.engines.local.get(`${config.data_root}/offline-queue`)) || {
         logs: [],
         lastSync: undefined,
-      }
+      };
       fromStore.logs = (fromStore.logs || [])
         .map((log) => {
-          return new NLog(log)
+          return new NLog(log);
         })
         .sort((a, b) => {
-          return a.end < b.end ? 1 : -1
-        })
-      methods.state(fromStore)
+          return a.end < b.end ? 1 : -1;
+        });
+      methods.state(fromStore);
     },
     // Sync Items in the Offline Queue
     async sync(): Promise<Array<NLog>> {
       // Promise to handle the callback
-      let state = methods.state({ status: 'syncing' })
-      let logs: Array<NLog> = []
+      let state = methods.state({ status: 'syncing' });
+      let logs: Array<NLog> = [];
       // Loop over logs in the state
       for (let i = 0; i < state.logs.length; i++) {
         // Assign log for use later
-        const log: NLog = state.logs[i]
+        const log: NLog = state.logs[i];
         // Save it to ledger and wait 500ms
-        let saved = await LedgerStore._saveLog(log)
-        await tick(500)
+        let saved = await LedgerStore._saveLog(log);
+        await tick(500);
         // If saved - push to log
         if (saved) {
-          logs.push(log)
+          logs.push(log);
         }
       }
       // If we have the same log count, we did them all
       if (state.logs.length == logs.length) {
         // Update state to idle and update.
-        saveState({ status: 'idle', logs: [] })
+        saveState({ status: 'idle', logs: [] });
       } else {
         // We missed something.
-        Interact.alert('Error', 'Some logs did not save, check the console for more information')
+        Interact.alert('Error', 'Some logs did not save, check the console for more information');
         console.error({
           logs,
           stateLogs: state.logs,
-        })
+        });
       }
-      return logs
+      return logs;
     },
     state(s: any = {}): IOfflineQueueState {
-      let _state
+      let _state;
       update((state) => {
-        _state = { ...state, ...s }
-        return _state
-      })
-      return _state
+        _state = { ...state, ...s };
+        return _state;
+      });
+      return _state;
     },
     async record(log: NLog): Promise<boolean> {
-      let state: IOfflineQueueState = methods.state()
-      state.logs.push(log)
-      saveState(state)
-      return true
+      let state: IOfflineQueueState = methods.state();
+      state.logs.push(log);
+      saveState(state);
+      return true;
     },
-  }
+  };
 
   async function removeLog(log: NLog) {
     try {
-      const confirmed = confirm(Lang.t('board.delete-log-from-offline-queue', 'Delete this note from offline queue?'))
+      const confirmed = confirm(Lang.t('board.delete-log-from-offline-queue', 'Delete this note from offline queue?'));
       if (confirmed) {
-        const _state = methods.state()
+        const _state = methods.state();
         _state.logs = _state.logs.filter((loopLog: NLog) => {
-          return loopLog !== log
-        })
-        await saveState(_state)
+          return loopLog !== log;
+        });
+        await saveState(_state);
       }
-      return true
+      return true;
     } catch (e) {
-      alert(e.message)
+      alert(e.message);
     }
   }
 
@@ -114,21 +114,21 @@ const InitOfflineQueueStore = () => {
     const confirmed = await Interact.confirm(
       Lang.t('board.empty-offline-title', 'Delete logs in offline queue?'),
       `This cannot be undone`
-    )
+    );
     if (confirmed) {
-      await saveState({ status: 'idle', logs: [] })
-      showToast({ message: 'Offline Queue cleared' })
+      await saveState({ status: 'idle', logs: [] });
+      showToast({ message: 'Offline Queue cleared' });
     }
 
-    return true
+    return true;
   }
 
   function saveState(state: IOfflineQueueState) {
     update((s: any) => {
-      s = { ...s, ...state }
-      NStorage.engines.local.put(`${config.data_root}/offline-queue`, s)
-      return s
-    })
+      s = { ...s, ...state };
+      NStorage.engines.local.put(`${config.data_root}/offline-queue`, s);
+      return s;
+    });
   }
 
   return {
@@ -138,9 +138,9 @@ const InitOfflineQueueStore = () => {
     ...methods,
     clear,
     removeLog,
-  }
-}
+  };
+};
 
-export const OfflineQueue = InitOfflineQueueStore()
-declare let window: any
-window.OQ = OfflineQueue
+export const OfflineQueue = InitOfflineQueueStore();
+declare let window: any;
+window.OQ = OfflineQueue;

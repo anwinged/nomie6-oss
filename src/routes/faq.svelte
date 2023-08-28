@@ -5,14 +5,14 @@
 
   // Components
 
-  import NItem from '../components/list-item/list-item.svelte'
-  import NBackButton from '../components/back-button/back-button.svelte'
+  import NItem from '../components/list-item/list-item.svelte';
+  import NBackButton from '../components/back-button/back-button.svelte';
   // containers
 
-  import NLayout from '../domains/layout/layout.svelte'
+  import NLayout from '../domains/layout/layout.svelte';
 
   // config
-  import faq from '../config/faq'
+  import faq from '../config/faq';
 </script>
 
 <NLayout className="faq" pageTitle="Common Questions about Nomie" showTabs={false}>

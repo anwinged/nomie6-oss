@@ -4,44 +4,44 @@
   posts and content. 
  */
 
-import { ContextClass } from './context-class'
+import { ContextClass } from './context-class';
 // Stores
-import { Interact } from '../../store/interact'
-import { LedgerStore } from '../ledger/LedgerStore'
+import { Interact } from '../../store/interact';
+import { LedgerStore } from '../ledger/LedgerStore';
 // utils
-import Logger from '../../utils/log/log'
-import NPaths from '../../paths'
+import Logger from '../../utils/log/log';
+import NPaths from '../../paths';
 // Vendors
-import Storage from '../../domains/storage/storage'
-import array_utils from '../../utils/array/array_utils'
-import { createArrayStore } from '../../store/ArrayStore'
-import dayjs from 'dayjs'
+import Storage from '../../domains/storage/storage';
+import array_utils from '../../utils/array/array_utils';
+import { createArrayStore } from '../../store/ArrayStore';
+import dayjs from 'dayjs';
 // Svelte
-import { writable } from 'svelte/store'
+import { writable } from 'svelte/store';
 
 // Get Config
 
-const console = new Logger('🗺 $ContextStore')
+const console = new Logger('🗺 $ContextStore');
 
 const searchForContext = async () => {
-  let contexts: Array<string> = []
-  Interact.blocker('Finding context...')
+  let contexts: Array<string> = [];
+  Interact.blocker('Finding context...');
   try {
     const logs = await LedgerStore.query({
       start: dayjs().subtract(6, 'month'),
-    })
+    });
     logs.forEach((log) => {
       log.getMeta().context.forEach((context) => {
-        contexts.push(context.id)
-      })
-    })
+        contexts.push(context.id);
+      });
+    });
   } catch (e) {
-    console.error(e)
-    Interact.alert('Error', e.message)
+    console.error(e);
+    Interact.alert('Error', e.message);
   }
-  Interact.stopBlocker()
-  return array_utils.unique(contexts)
-}
+  Interact.stopBlocker();
+  return array_utils.unique(contexts);
+};
 
 // Nomie API Store
 
@@ -151,9 +151,9 @@ export const ContextStore = createArrayStore(NPaths.storage.context(), {
   key: 'tag',
   label: 'Context',
   itemInitializer: (item) => {
-    return new ContextClass(item)
+    return new ContextClass(item);
   },
   itemSerializer: (item: ContextClass) => {
-    return item.asObject
+    return item.asObject;
   },
-})
+});

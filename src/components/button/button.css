@@ -3,16 +3,15 @@
   padding-bottom: 12px;
 }
 
-header[slot="header"] .nbtn.clear {
+header[slot='header'] .nbtn.clear {
   @apply focus:outline-none;
   @apply rounded-xl;
   @apply focus:ring-2 ring-yellow-500;
-  
 }
 
 .nbtn {
   @apply relative;
-  @apply outline-none focus:outline-none; 
+  @apply outline-none focus:outline-none;
   @apply transition-all duration-200 ease-in-out;
   @apply inline-flex items-center justify-center;
   @apply rounded-md;
@@ -28,7 +27,8 @@ header[slot="header"] .nbtn.clear {
   border: none;
 }
 
-button, .nbtn {
+button,
+.nbtn {
   @apply focus:outline-none;
   @apply focus:ring-2 ring-primary-500;
 }
@@ -44,7 +44,7 @@ button, .nbtn {
   transform: scale(0.95);
 }
 
-.nbtn:active  .hit-mark {
+.nbtn:active .hit-mark {
   @apply opacity-30;
   @apply dark:bg-white bg-primary-500;
 }
@@ -77,9 +77,10 @@ button, .nbtn {
   user-select: none;
 }
 
-.nbtn.capture::before, button.capture {
+.nbtn.capture::before,
+button.capture {
   @apply absolute top-0 left-0 right-0 bottom-0;
-  content: "";
+  content: '';
 }
 
 .nbtn:disabled,
@@ -105,17 +106,16 @@ button, .nbtn {
   @apply text-lg;
   @apply leading-none;
   @apply md:text-xl;
-  min-height:48px;
+  min-height: 48px;
 }
 .nbtn-lg.nbtn-rounded {
   @apply rounded-xl;
-  
 }
 .nbtn-desc {
   min-height: 40px;
   height: auto;
   flex-grow: 1;
-  
+
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
@@ -183,7 +183,6 @@ button, .nbtn {
 .nbtn-transparent,
 .nbtn-text {
   box-shadow: none;
-  
 }
 .nbtn-text {
   text-transform: uppercase;
@@ -210,7 +209,6 @@ button, .nbtn {
   flex-shrink: 0;
   width: 36px;
   height: 36px;
-
 }
 .nbtn .button-main {
   @apply items-center  flex;

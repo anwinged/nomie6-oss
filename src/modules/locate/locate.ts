@@ -1,17 +1,17 @@
-import Logger from "../../utils/log/log";
+import Logger from '../../utils/log/log';
 
 // consts
-const console = new Logger("🗺 locate.js");
-const LOC_CACHE_KEY = "loc-cache";
+const console = new Logger('🗺 locate.js');
+const LOC_CACHE_KEY = 'loc-cache';
 
 type LocationLookupResponse = {
-  time: number
-  latitude: number
-  longitude: number
-}
+  time: number;
+  latitude: number;
+  longitude: number;
+};
 
-export default ():Promise<LocationLookupResponse> => {
-  let getRealLocation = ():Promise<LocationLookupResponse> => {
+export default (): Promise<LocationLookupResponse> => {
+  let getRealLocation = (): Promise<LocationLookupResponse> => {
     return new Promise((resolve, reject) => {
       try {
         navigator.geolocation.getCurrentPosition(
@@ -41,7 +41,7 @@ export default ():Promise<LocationLookupResponse> => {
   };
 
   return new Promise((resolve, reject) => {
-    let cachedRaw = JSON.parse(localStorage.getItem(LOC_CACHE_KEY) || "null");
+    let cachedRaw = JSON.parse(localStorage.getItem(LOC_CACHE_KEY) || 'null');
 
     try {
       if (cachedRaw) {
@@ -53,7 +53,7 @@ export default ():Promise<LocationLookupResponse> => {
           });
         } else {
           if (!navigator.geolocation) {
-            reject({ message: "No geolocation service found" });
+            reject({ message: 'No geolocation service found' });
           } else {
             getRealLocation().then(resolve).catch(reject);
           } // end if have geo lookup

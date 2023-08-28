@@ -1,7 +1,7 @@
 <script lang="ts">
   //Vendors
 
-  import { onMount } from 'svelte'
+  import { onMount } from 'svelte';
 
   // Modules
 
@@ -9,25 +9,25 @@
 
   // Components
 
-  import NBackButton from '../components/back-button/back-button.svelte'
+  import NBackButton from '../components/back-button/back-button.svelte';
 
   // containers
-  import NLayout from '../domains/layout/layout.svelte'
+  import NLayout from '../domains/layout/layout.svelte';
   // config
 
-  import { Lang } from '../store/lang'
-  import Spacer from '../components/spacer/spacer.svelte'
-  import Empty from '../components/empty/empty.svelte'
+  import { Lang } from '../store/lang';
+  import Spacer from '../components/spacer/spacer.svelte';
+  import Empty from '../components/empty/empty.svelte';
 
-  import ToolbarGrid from '../components/toolbar/toolbar-grid.svelte'
+  import ToolbarGrid from '../components/toolbar/toolbar-grid.svelte';
 
   const methods = {
     export() {
       // Exporter()
     },
-  }
+  };
 
-  onMount(() => {})
+  onMount(() => {});
 </script>
 
 <NLayout pageTitle="Export your Data" className="Export">

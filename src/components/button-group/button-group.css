@@ -1,13 +1,12 @@
-
 .nbtn-group {
   @apply shadow-sm;
-  @apply w-full;  
+  @apply w-full;
   @apply flex-grow;
   @apply flex;
   @apply items-center;
   @apply rounded-lg;
   @apply bg-gray-300 bg-opacity-70 dark:bg-gray-500 dark:bg-opacity-20;
-  padding:2px;
+  padding: 2px;
 }
 
 .nbtn-group button.active {
@@ -39,8 +38,6 @@
 .nbtn-group button:active {
   @apply scale-95;
 }
-
-
 
 .nbtn-group.size-sm button {
   @apply text-sm;

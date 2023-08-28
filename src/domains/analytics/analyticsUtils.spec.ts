@@ -1,7 +1,7 @@
-import NLog from '../nomie-log/nomie-log'
-import { getGeneralUsageCounts } from './analyticsUtils'
-import type { GeneralCountsResponse } from './analyticsUtils'
-import { test, describe, expect } from 'vitest'
+import NLog from '../nomie-log/nomie-log';
+import { getGeneralUsageCounts } from './analyticsUtils';
+import type { GeneralCountsResponse } from './analyticsUtils';
+import { test, describe, expect } from 'vitest';
 
 const testLogs = [
   new NLog({ note: 'Tracker #cheese for Brandon 1' }),
@@ -17,12 +17,12 @@ const testLogs = [
     _id: 'goattest',
     note: `Tracker #cheese(33:33) for Brandon 10  #goat`,
   }),
-]
+];
 
 describe('analytics specs', () => {
   test('should get couns', () => {
-    const usage: GeneralCountsResponse = getGeneralUsageCounts(testLogs)
-    expect(usage).toBeTruthy()
-    expect(usage.totalDatapoints).toBeGreaterThan(0)
-  })
-})
+    const usage: GeneralCountsResponse = getGeneralUsageCounts(testLogs);
+    expect(usage).toBeTruthy();
+    expect(usage.totalDatapoints).toBeGreaterThan(0);
+  });
+});

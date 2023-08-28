@@ -28,11 +28,11 @@ export default function (calcBuffer) {
     }
   };
   let map = {
-    "*": _multiply,
-    "-": _sub,
-    "+": _add,
-    "/": _divide,
-    ".": _decimal,
+    '*': _multiply,
+    '-': _sub,
+    '+': _add,
+    '/': _divide,
+    '.': _decimal,
   };
   calcBuffer.forEach((bit, index) => {
     if (isNumber(bit)) {

@@ -9,7 +9,6 @@
   width: 97vw;
   @apply max-w-sm;
   @apply shadow-2xl;
-  
 }
 
 .pop-menu .card .card-body {
@@ -37,12 +36,10 @@
   border-radius: 1em;
   max-height: 70vh;
   overflow-y: scroll;
-  
 }
 .pop-menu .n-list .nbtn {
   @apply bg-transparent;
   min-height: 56px;
-  
 }
 .pop-menu .n-list .nbtn .main {
   @apply font-semibold;
@@ -50,7 +47,6 @@
   @apply items-end;
   @apply justify-start;
   @apply leading-none;
-  
 }
 .pop-menu .n-list .nbtn ~ .nbtn:after {
   content: '';

@@ -1,4 +1,4 @@
-import math from '../../utils/math/math'
+import math from '../../utils/math/math';
 
 const colors: Array<string> = [
   '#f44336',
@@ -180,38 +180,38 @@ const colors: Array<string> = [
   '#00C853',
   '#64DD17',
   '#DD2C00',
-]
+];
 
-export default colors
-export const base = colors
+export default colors;
+export const base = colors;
 
 export const randomColor = (): string => {
-  return math.random(colors)
-}
+  return math.random(colors);
+};
 
 //stackoverflow.com/questions/21646738/convert-hex-to-rgba
 export const hex2rgba = (hex: string, alpha: number = 1): string => {
-  let c
+  let c;
   if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
-    c = hex.substring(1).split('')
+    c = hex.substring(1).split('');
     if (c.length == 3) {
-      c = [c[0], c[0], c[1], c[1], c[2], c[2]]
+      c = [c[0], c[0], c[1], c[1], c[2], c[2]];
     }
-    c = '0x' + c.join('')
-    return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + `,${alpha})`
+    c = '0x' + c.join('');
+    return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + `,${alpha})`;
   }
-  return `rgba(155,155,155,${alpha})`
-}
+  return `rgba(155,155,155,${alpha})`;
+};
 
 export const hex2rgb = (hex: string, alpha: number = 1): string => {
-  let c
+  let c;
   if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
-    c = hex.substring(1).split('')
+    c = hex.substring(1).split('');
     if (c.length == 3) {
-      c = [c[0], c[0], c[1], c[1], c[2], c[2]]
+      c = [c[0], c[0], c[1], c[1], c[2], c[2]];
     }
-    c = '0x' + c.join('')
-    return [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',')
+    c = '0x' + c.join('');
+    return [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',');
   }
-  return `155,155,155`
-}
+  return `155,155,155`;
+};

@@ -21,87 +21,82 @@
 
 // Todo make this more type complete
 
-import {
-  addDividerToFirst,
-  getDatePopButtons,
-  getLogPopButtons,
-} from '../modules/pop-buttons/pop-buttons'
+import { addDividerToFirst, getDatePopButtons, getLogPopButtons } from '../modules/pop-buttons/pop-buttons';
 // vendors
-import type { Dayjs } from 'dayjs'
+import type { Dayjs } from 'dayjs';
 
-import AlertBox from '../components/alertbox/alertbox.svelte'
-import type { ILocation } from '../domains/locations/LocationClass'
+import AlertBox from '../components/alertbox/alertbox.svelte';
+import type { ILocation } from '../domains/locations/LocationClass';
 
-import { Lang } from './lang'
+import { Lang } from './lang';
 // Stores
-import { LedgerStore } from '../domains/ledger/LedgerStore'
+import { LedgerStore } from '../domains/ledger/LedgerStore';
 
-import NLocationModal from '../domains/map/location-modal.svelte'
-import NLog from '../domains/nomie-log/nomie-log'
-import type { PopMenuButton } from '../components/pop-menu/usePopmenu'
-import Prompt from '../components/alertbox/prompt.svelte'
-import type { Trackable } from '../domains/trackable/Trackable.class'
-import { TrashOutline } from '../components/icon/nicons'
+import NLocationModal from '../domains/map/location-modal.svelte';
+import NLog from '../domains/nomie-log/nomie-log';
+import type { PopMenuButton } from '../components/pop-menu/usePopmenu';
+import Prompt from '../components/alertbox/prompt.svelte';
+import type { Trackable } from '../domains/trackable/Trackable.class';
+import { TrashOutline } from '../components/icon/nicons';
 
-import { objectHash } from '../modules/object-hash/object-hash'
-import { openLogEditor } from '../domains/nomie-log/LogEditorStore'
-import { closeModal, openModal } from '../components/backdrop/BackdropStore2'
-import { openPopMenu } from '../components/pop-menu/usePopmenu'
-import { showToast } from '../components/toast/ToastStore'
+import { objectHash } from '../modules/object-hash/object-hash';
+import { openLogEditor } from '../domains/nomie-log/LogEditorStore';
+import { closeModal, openModal } from '../components/backdrop/BackdropStore2';
+import { openPopMenu } from '../components/pop-menu/usePopmenu';
+import { showToast } from '../components/toast/ToastStore';
 
-
-import { wait } from '../utils/tick/tick'
+import { wait } from '../utils/tick/tick';
 // Svelte
-import { writable } from 'svelte/store'
-import dayjs from 'dayjs'
+import { writable } from 'svelte/store';
+import dayjs from 'dayjs';
 
-import blockerModalSvelte from '../components/backdrop/blocker-modal.svelte'
+import blockerModalSvelte from '../components/backdrop/blocker-modal.svelte';
 
 // utils
 
 // modules
 
 export interface IToastOptions {
-  timeout?: number
-  show?: boolean
-  description?: string
-  buttonLabel?: string
-  buttonClick?: Function
-  click?: Function
-  perm?: boolean
+  timeout?: number;
+  show?: boolean;
+  description?: string;
+  buttonLabel?: string;
+  buttonClick?: Function;
+  click?: Function;
+  perm?: boolean;
 }
 
 type promptProps = {
-  show?: boolean
-  message?: string
-  title?: string
-  value?: any
-  valueType?: 'textarea' | 'input'
-  cancel?: any
-  placeholder?: string
-  onInteract?: Function
-}
+  show?: boolean;
+  message?: string;
+  title?: string;
+  value?: any;
+  valueType?: 'textarea' | 'input';
+  cancel?: any;
+  placeholder?: string;
+  onInteract?: Function;
+};
 
 export interface ConfettiOptions {
-  title?: string
-  message?: string
-  show?: boolean
-  timeout?: number
+  title?: string;
+  message?: string;
+  show?: boolean;
+  timeout?: number;
 }
 
 export type IPopMenuOptions = {
-  id: string
-  show?: boolean
-  buttons: Array<any>
-  title?: string
-  component?: any
-  componentProps?: any
-  description?: string
-  trackable?: Trackable
-  headerRightIcon?: any
-  headerRightIconClick?: Function
-  buttonView?: 'list' | 'grid'
-}
+  id: string;
+  show?: boolean;
+  buttons: Array<any>;
+  title?: string;
+  component?: any;
+  componentProps?: any;
+  description?: string;
+  trackable?: Trackable;
+  headerRightIcon?: any;
+  headerRightIconClick?: Function;
+  buttonView?: 'list' | 'grid';
+};
 
 const PopMenuInitialState = {
   show: false,
@@ -115,17 +110,17 @@ const PopMenuInitialState = {
   trackable: undefined as undefined | Trackable,
   headerRightIcon: undefined,
   headerRightIconClick: undefined,
-}
+};
 
 interface StatsInteractConfig {
-  activeTag: string | undefined
-  date: Dayjs | undefined
-  terms: Array<string>
+  activeTag: string | undefined;
+  date: Dayjs | undefined;
+  terms: Array<string>;
   focused:
     | undefined
     | {
-        date: Dayjs | undefined
-      }
+        date: Dayjs | undefined;
+      };
 }
 
 const stateStats: StatsInteractConfig = {
@@ -133,18 +128,18 @@ const stateStats: StatsInteractConfig = {
   date: null,
   terms: [],
   focused: null,
-}
+};
 
 export type AlertType = {
-  title?: string
-  message?: string
-  ok?: string
-  cancel?: string
-  onInteract?: Function
-  value?: any
-  valueType?: 'value' | 'textarea' | 'number' | 'datetime'
-  placeholder?: string
-}
+  title?: string;
+  message?: string;
+  ok?: string;
+  cancel?: string;
+  onInteract?: Function;
+  value?: any;
+  valueType?: 'value' | 'textarea' | 'number' | 'datetime';
+  placeholder?: string;
+};
 
 const interactInit = () => {
   const { update, subscribe, set } = writable({
@@ -213,7 +208,7 @@ const interactInit = () => {
       cancel: undefined,
       onInteract: undefined,
     },
-  })
+  });
 
   const methods = {
     alert(title: string, message?: string, ok?: string) {
@@ -232,7 +227,7 @@ const interactInit = () => {
               onInteract: resolve,
             },
           },
-        })
+        });
         // update((s) => {
         //   s.alert.show = true
         //   s.alert.title = title
@@ -242,15 +237,15 @@ const interactInit = () => {
         //   s.alert.onInteract = resolve
         //   return s
         // })
-      })
+      });
     },
     confetti(options: ConfettiOptions = {}) {
       update((state) => {
-        state.confetti.show = options.show === false ? false : true
+        state.confetti.show = options.show === false ? false : true;
         // state.confetti.title = options.title;
         // state.confetti.message = options.message;
         if (options.title) {
-          methods.alert(options.title, options.message)
+          methods.alert(options.title, options.message);
         }
         if (options.timeout) {
           setTimeout(() => {
@@ -259,57 +254,57 @@ const interactInit = () => {
               title: undefined,
               message: undefined,
               timeout: undefined,
-            })
-          }, options.timeout)
+            });
+          }, options.timeout);
         }
-        return state
-      })
+        return state;
+      });
     },
     blocker(message, percent?: number) {
       openModal({
         id: 'blocker',
         position: 'center',
         transparent: true,
-        component: blockerModalSvelte
-      })
+        component: blockerModalSvelte,
+      });
       update((state) => {
-        state.blocker.show = true
-        state.blocker.message = message
-        state.blocker.percent = percent
-        return state
-      })
+        state.blocker.show = true;
+        state.blocker.message = message;
+        state.blocker.percent = percent;
+        return state;
+      });
     },
     stopBlocker() {
       closeModal('blocker');
       update((state) => {
-        state.blocker.show = false
-        state.blocker.message = undefined
-        state.blocker.percent = undefined
-        return state
-      })
+        state.blocker.show = false;
+        state.blocker.message = undefined;
+        state.blocker.percent = undefined;
+        return state;
+      });
     },
 
     toggleFocusedEditor() {
-      openLogEditor(new NLog({}))
+      openLogEditor(new NLog({}));
     },
 
     loading(message) {
       let cancel = () => {
         update((state) => {
-          state.toast.show = false
-          state.toast.message = null
-          state.toast.detail = null
-          state.toast.buttonClick = undefined
-          state.toast.buttonLabel = undefined
-          return state
-        })
-      }
+          state.toast.show = false;
+          state.toast.message = null;
+          state.toast.detail = null;
+          state.toast.buttonClick = undefined;
+          state.toast.buttonLabel = undefined;
+          return state;
+        });
+      };
       update((state) => {
-        state.toast.show = true
-        state.toast.message = message
-        return state
-      })
-      return cancel
+        state.toast.show = true;
+        state.toast.message = message;
+        return state;
+      });
+      return cancel;
     },
 
     /**
@@ -340,63 +335,66 @@ const interactInit = () => {
     },
     dismissTrackerInput() {
       update((d) => {
-        d.trackerInput.show = false
-        d.trackerInput.tracker = null
-        d.trackerInput.onInteract = null
-        return d
-      })
+        d.trackerInput.show = false;
+        d.trackerInput.tracker = null;
+        d.trackerInput.onInteract = null;
+        return d;
+      });
     },
 
     focusDate(selectedPoint: undefined | { date: Dayjs | undefined }) {
       update((state) => {
-        state.stats.focused = selectedPoint
-        return state
-      })
+        state.stats.focused = selectedPoint;
+        return state;
+      });
     },
 
     closeStats() {
       update((d) => {
-        d.stats.terms = []
-        return d
-      })
+        d.stats.terms = [];
+        return d;
+      });
     },
 
     async selectDate(starterDate: Date = new Date()) {
       let selectedDate: any = await Interact.prompt('Date / Time', null, {
         valueType: 'datetime',
         value: starterDate,
-      })
-      return selectedDate.getTime()
+      });
+      return selectedDate.getTime();
     },
 
     logOptions(log, options: any = {}) {
-      log = new NLog(log)
+      log = new NLog(log);
       if (!log.trackers) {
-        log.expanded()
+        log.expanded();
       }
       return new Promise((resolve, reject) => {
         const deleteButton = {
           title: `${Lang.t('general.delete-this-note', 'Delete this note...')}`,
           click: async () => {
-            await wait(300)
-            let confirmed = await methods.confirm('Delete this note?', 'Are you sure? Deleting a log cannot be undone.')
+            await wait(300);
+            let confirmed = await methods.confirm(
+              'Delete this note?',
+              'Are you sure? Deleting a log cannot be undone.'
+            );
             if (confirmed) {
               try {
-                await LedgerStore.deleteLogs([log])
-                showToast({ message: Lang.t('general.note-deleted','Note Deleted') })
+                await LedgerStore.deleteLogs([log]);
+                showToast({ message: Lang.t('general.note-deleted', 'Note Deleted') });
               } catch (e) {
-                methods.error(e.message)
+                methods.error(e.message);
               }
-              return { action: 'deleted' }
+              return { action: 'deleted' };
             } else {
-              return null
+              return null;
             }
           },
           icon: TrashOutline,
           divider: true,
-        }
+        };
 
-        let trackableButton: Array<PopMenuButton> = []
+        let trackableButton: Array<PopMenuButton> = [];
         // const trackables = log.elements
         //   .map((token) => {
         //     return tokenToTrackable(token, MasterTrackables)
@@ -417,29 +415,29 @@ const interactInit = () => {
             ...addDividerToFirst(getDatePopButtons(log.end)),
             ...[deleteButton],
           ],
-        })
-      }) // end return promise
+        });
+      }); // end return promise
     },
     showLocations(locations) {
       update((s) => {
-        s.locationViewer.locations = locations
-        s.locationViewer.show = true
-        return s
-      })
+        s.locationViewer.locations = locations;
+        s.locationViewer.show = true;
+        return s;
+      });
     },
     dismissLocations() {
       update((s) => {
-        s.locationViewer.locations = null
-        s.locationViewer.show = false
-        return s
-      })
+        s.locationViewer.locations = null;
+        s.locationViewer.show = false;
+        return s;
+      });
     },
     async error(message) {
-      return methods.alert(`${Lang.t('general.error', 'Error')}`, message)
+      return methods.alert(`${Lang.t('general.error', 'Error')}`, message);
     },
     confirm(title: string, message?: string, ok?: string, cancel?: string): Promise<boolean> {
       return new Promise((resolve) => {
-        const id = `alert-${objectHash([title, message, ok])}`
+        const id = `alert-${objectHash([title, message, ok])}`;
         openModal({
           id: id,
           component: AlertBox,
@@ -452,28 +450,28 @@ const interactInit = () => {
               ok: ok || 'Ok',
               onInteract: (res) => {
                 if (res.value === false) {
-                  resolve(false)
+                  resolve(false);
                 } else {
-                  resolve(res.value || true)
+                  resolve(res.value || true);
                 }
-                closeModal(id)
+                closeModal(id);
               },
             },
           },
-        })
-      })
+        });
+      });
     },
     reload() {
-      document.location.reload()
+      document.location.reload();
     },
     closePopMenu() {
       update((s) => {
-        s.popmenu = PopMenuInitialState
-        return s
-      })
+        s.popmenu = PopMenuInitialState;
+        return s;
+      });
     },
     popmenu(options: IPopMenuOptions) {
-      openPopMenu(options)
+      openPopMenu(options);
     },
     pickLocation(location?: ILocation | undefined) {
       return new Promise((resolve, reject) => {
@@ -483,11 +481,11 @@ const interactInit = () => {
           componentProps: {
             location,
             onSelect: (location) => {
-              resolve(location)
+              resolve(location);
             },
           },
-        })
-      })
+        });
+      });
     },
 
     prompt(title: string, msg?: string, options: promptProps = {}): Promise<any> {
@@ -507,36 +505,36 @@ const interactInit = () => {
               cancel: `${Lang.t('general.cancel', 'Cancel')}`,
               placeholder: options.placeholder || '',
               onInteract: (res: AlertType) => {
-                if (res) resolve(res.value)
+                if (res) resolve(res.value);
               },
             },
           },
-        })
-      })
+        });
+      });
     },
     dismiss() {
       update((s) => {
-        s.popmenu.show = false
-        s.prompt.show = false
-        s.popmenu.component = undefined
-        s.popmenu.componentProps = undefined
-        return s
-      })
+        s.popmenu.show = false;
+        s.prompt.show = false;
+        s.popmenu.component = undefined;
+        s.popmenu.componentProps = undefined;
+        return s;
+      });
     },
-  }
+  };
 
-  window['interact'] = methods
+  window['interact'] = methods;
 
   return {
     update,
     subscribe,
     set,
     ...methods,
-  }
-}
+  };
+};
 
-export const Interact = interactInit()
+export const Interact = interactInit();
 
 export const closePopMenu = () => {
-  Interact.closePopMenu()
-}
+  Interact.closePopMenu();
+};

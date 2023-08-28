@@ -22,8 +22,8 @@ export default class DateTime {
     return this._date.getDay() + 1;
   }
 
-  getMonthName(mode = "long") {
-    return this._date.toLocaleString("en-US", { month: mode });
+  getMonthName(mode = 'long') {
+    return this._date.toLocaleString('en-US', { month: mode });
   }
 
   getFullYear() {
@@ -38,8 +38,8 @@ export default class DateTime {
     return this._date.getTime();
   }
 
-  getDayName(mode = "long") {
-    return this._date.toLocaleString("en-US", { weekday: mode });
+  getDayName(mode = 'long') {
+    return this._date.toLocaleString('en-US', { weekday: mode });
   }
 
   getNextDay() {
@@ -59,7 +59,7 @@ export default class DateTime {
     return this.getTime();
   }
 
-  isInRange(start, end, repeat = "never") {
+  isInRange(start, end, repeat = 'never') {
     let startDate = new this.constructor(start);
     let endDate = new this.constructor(end);
     let currentTime = this.getTime();
@@ -68,21 +68,21 @@ export default class DateTime {
     let startCheck;
     let endCheck;
     switch (repeat) {
-      case "monthly":
+      case 'monthly':
         startTime = new this.constructor(this.getFullYear(), this.getMonth(), startDate.getDate()).getTime();
         endTime = new this.constructor(this.getFullYear(), this.getMonth(), endDate.getDate()).getTime();
         startCheck = currentTime >= startTime;
         endCheck = currentTime <= endTime;
         return startCheck && endCheck;
 
-      case "yearly":
+      case 'yearly':
         startTime = new this.constructor(this.getFullYear(), startDate.getMonth(), startDate.getDate()).getTime();
         endTime = new this.constructor(this.getFullYear(), endDate.getMonth(), endDate.getDate()).getTime();
         startCheck = currentTime >= startTime;
         endCheck = currentTime <= endTime;
         return startCheck && endCheck;
 
-      case "never":
+      case 'never':
         startCheck = currentTime >= startDate.getTime();
         endCheck = currentTime <= endDate.getTime();
         return startCheck && endCheck;

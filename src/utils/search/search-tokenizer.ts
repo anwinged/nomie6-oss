@@ -1,5 +1,5 @@
-import latinize from "./latinize";
-import { parseBooleanQuery } from "boolean-parser";
+import latinize from './latinize';
+import { parseBooleanQuery } from 'boolean-parser';
 export default (query: string) => {
   // Remove latin elements
   // Replace and or with AND and OR

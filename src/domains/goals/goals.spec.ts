@@ -1,10 +1,10 @@
-import { GoalClass } from './goal-class'
-import NLog from '../nomie-log/nomie-log'
-import TrackerClass from '../../modules/tracker/TrackerClass'
-import dayjs from 'dayjs'
-import { getDurationFromGoals } from './goal-utils'
-import logsToTrackableUsage from '../usage/usage-utils'
-import { test, describe, expect } from 'vitest'
+import { GoalClass } from './goal-class';
+import NLog from '../nomie-log/nomie-log';
+import TrackerClass from '../../modules/tracker/TrackerClass';
+import dayjs from 'dayjs';
+import { getDurationFromGoals } from './goal-utils';
+import logsToTrackableUsage from '../usage/usage-utils';
+import { test, describe, expect } from 'vitest';
 
 // jest.mock('@stripe/firestore-stripe-payments', () => {
 //   return {}
@@ -28,21 +28,21 @@ describe('Goals!', () => {
     { end: dayjs('2021-04-02').toDate(), note: `#coffee(4.3) #sleep(40000) #mood(2)` },
     { end: dayjs('2021-04-04').toDate(), note: `#coffee(4) #water(400) #mood(5)` },
   ].map((l) => {
-    return new NLog({ end: l.end, note: l.note })
-  })
+    return new NLog({ end: l.end, note: l.note });
+  });
 
   for (let i = 0; i < 100; i++) {
-    const date = dayjs('2021-04-04').add(1, 'day')
+    const date = dayjs('2021-04-04').add(1, 'day');
     const note =
-      i % 5 ? `#random${Math.random.toString().replace('0.', '')} Note here` : `#coffee(2) #water(400) #mood(5)`
-    logs.push(new NLog({ end: date.toDate(), note }))
+      i % 5 ? `#random${Math.random.toString().replace('0.', '')} Note here` : `#coffee(2) #water(400) #mood(5)`;
+    logs.push(new NLog({ end: date.toDate(), note }));
   }
 
-  const mood = new TrackerClass({ tag: 'mood', math: 'avg', emoji: '😭' })
-  const coffee = new TrackerClass({ tag: 'coffee', math: 'sum', emoji: '☕️' })
-  const water = new TrackerClass({ tag: 'water', math: 'sum', emoji: '💦' })
-  const walk = new TrackerClass({ tag: 'walk', math: 'sum', emoji: '🚶‍♀️' })
-  const empty = new TrackerClass({ tag: 'empty', math: 'sum', emoji: '🚶‍♀️' })
+  const mood = new TrackerClass({ tag: 'mood', math: 'avg', emoji: '😭' });
+  const coffee = new TrackerClass({ tag: 'coffee', math: 'sum', emoji: '☕️' });
+  const water = new TrackerClass({ tag: 'water', math: 'sum', emoji: '💦' });
+  const walk = new TrackerClass({ tag: 'walk', math: 'sum', emoji: '🚶‍♀️' });
+  const empty = new TrackerClass({ tag: 'empty', math: 'sum', emoji: '🚶‍♀️' });
 
   let trackables = {
     '#mood': mood.toTrackable(),
@@ -50,16 +50,16 @@ describe('Goals!', () => {
     '#water': water.toTrackable(),
     '#walk': walk.toTrackable(),
     '#empty': empty.toTrackable(),
-  }
+  };
 
-  const usages = logsToTrackableUsage(logs, { trackables })
+  const usages = logsToTrackableUsage(logs, { trackables });
 
   let CoffeeGoal = new GoalClass({
     duration: 'day',
     target: 2,
     comparison: 'lte',
     trackable: trackables['#coffee'],
-  })
+  });
 
   // let EmptyGoal = new GoalClass({
   //   duration: 'day',
@@ -73,7 +73,7 @@ describe('Goals!', () => {
     target: 40,
     comparison: 'gte',
     trackable: trackables['#water'],
-  })
+  });
 
   // let WalkGoal = new GoalClass({
   //   duration: 'week',
@@ -96,14 +96,14 @@ describe('Goals!', () => {
   // })
 
   test('it shoudl be able to calculate the right score for the dont do', () => {
-    const scores = CoffeeGoal.calculateScores(usages['#coffee'])
-    expect(scores[0].percent).toBe(75)
-  })
+    const scores = CoffeeGoal.calculateScores(usages['#coffee']);
+    expect(scores[0].percent).toBe(75);
+  });
 
   test('it should know if its a do it or dont do it goal', () => {
-    expect(CoffeeGoal.isDontDoIt).toBe(true)
-    expect(WaterGoal.isDontDoIt).toBe(false)
-  })
+    expect(CoffeeGoal.isDontDoIt).toBe(true);
+    expect(WaterGoal.isDontDoIt).toBe(false);
+  });
 
   // test('it should get the start and end dates for a group of Goals that has a Week duration', () => {
   //   const shouldBeWeekGoals = [WalkGoal, CoffeeGoal, WaterGoal]
@@ -112,22 +112,22 @@ describe('Goals!', () => {
   // })
 
   test('it should get the start and end dates for a group of Goals that has a Day duration - and a custom date', () => {
-    const shouldBeDayGoals = [CoffeeGoal, WaterGoal]
-    const base = dayjs().add(4, 'day')
-    const dayTimespan = getDurationFromGoals(shouldBeDayGoals, base)
-    expect(dayTimespan.start.format('YYYY-MM-DD')).toBe(base.startOf('day').format('YYYY-MM-DD'))
-  })
+    const shouldBeDayGoals = [CoffeeGoal, WaterGoal];
+    const base = dayjs().add(4, 'day');
+    const dayTimespan = getDurationFromGoals(shouldBeDayGoals, base);
+    expect(dayTimespan.start.format('YYYY-MM-DD')).toBe(base.startOf('day').format('YYYY-MM-DD'));
+  });
 
   test('it should get the start and end dates for a group of Goals that has a Day duration', () => {
-    const shouldBeDayGoals = [CoffeeGoal, WaterGoal]
-    const dayTimespan = getDurationFromGoals(shouldBeDayGoals)
-    expect(dayTimespan.start.format('YYYY-MM-DD')).toBe(dayjs().startOf('day').format('YYYY-MM-DD'))
-  })
+    const shouldBeDayGoals = [CoffeeGoal, WaterGoal];
+    const dayTimespan = getDurationFromGoals(shouldBeDayGoals);
+    expect(dayTimespan.start.format('YYYY-MM-DD')).toBe(dayjs().startOf('day').format('YYYY-MM-DD'));
+  });
 
   test('it should calculate the day scores for a DONTDOIT goal', () => {
-    const scores = CoffeeGoal.calculateScores(usages['#coffee'])
-    expect(scores.length).toBeGreaterThan(11)
-  })
+    const scores = CoffeeGoal.calculateScores(usages['#coffee']);
+    expect(scores.length).toBeGreaterThan(11);
+  });
 
   // test('it should calculate Month Long Goals', () => {
   //   const scores = WalkGoal.calculateScores(usages['#walk'])
@@ -136,16 +136,16 @@ describe('Goals!', () => {
 
   test('it should calculate scores for a DO IT GOAL', () => {
     // Todo: make this mor in depth
-    const scores = WaterGoal.calculateScores(usages['#water'])
-    expect(scores[0].success).toBe(false)
-    expect(scores[6].success).toBe(true)
-  })
+    const scores = WaterGoal.calculateScores(usages['#water']);
+    expect(scores[0].success).toBe(false);
+    expect(scores[6].success).toBe(true);
+  });
 
   test('It should work as na object', () => {
-    expect(CoffeeGoal.target).toBe(2)
-    expect(CoffeeGoal.duration).toBe('day')
-    expect(CoffeeGoal.comparison).toBe('lte')
-    expect(CoffeeGoal.trackable).toEqual(trackables['#coffee'])
-    expect(GoalClass).toBeTruthy()
-  })
-})
+    expect(CoffeeGoal.target).toBe(2);
+    expect(CoffeeGoal.duration).toBe('day');
+    expect(CoffeeGoal.comparison).toBe('lte');
+    expect(CoffeeGoal.trackable).toEqual(trackables['#coffee']);
+    expect(GoalClass).toBeTruthy();
+  });
+});

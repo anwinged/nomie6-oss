@@ -33,7 +33,7 @@
   grid-template-rows: 1fr;
   @apply items-center;
   @apply px-4;
-  min-height:50px;
+  min-height: 50px;
 }
 
 .n-toolbar-grid .left {

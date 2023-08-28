@@ -5,75 +5,75 @@
    * The timeine page will show an infinite scrolling list of your activities
    */
 
-  import dayjs from 'dayjs'
-  import type { Dayjs } from 'dayjs'
+  import dayjs from 'dayjs';
+  import type { Dayjs } from 'dayjs';
 
-  import Layout from '../domains/layout/layout.svelte'
+  import Layout from '../domains/layout/layout.svelte';
 
-  import { getDateFormats } from '../domains/preferences/Preferences'
-  import LetterTicker from '../components/letter-ticker/letter-ticker.svelte'
-  import { TrackableStore } from '../domains/trackable/TrackableStore'
-  import { onMount } from 'svelte/internal'
+  import { getDateFormats } from '../domains/preferences/Preferences';
+  import LetterTicker from '../components/letter-ticker/letter-ticker.svelte';
+  import { TrackableStore } from '../domains/trackable/TrackableStore';
+  import { onMount } from 'svelte/internal';
 
-  import Button from '../components/button/button.svelte'
-  import IonIcon from '../components/icon/ion-icon.svelte'
-  import { CalendarOutline, ChevronForwardOutline, SearchIcon } from '../components/icon/nicons'
+  import Button from '../components/button/button.svelte';
+  import IonIcon from '../components/icon/ion-icon.svelte';
+  import { CalendarOutline, ChevronForwardOutline, SearchIcon } from '../components/icon/nicons';
 
-  import { selectFuzzyDate } from '../domains/timeline/select-date-fuzzy'
-  import { openOnThisDayModal } from '../domains/on-this-day/useOnThisDayModal'
+  import { selectFuzzyDate } from '../domains/timeline/select-date-fuzzy';
+  import { openOnThisDayModal } from '../domains/on-this-day/useOnThisDayModal';
 
-  import Toolbar from '../components/toolbar/toolbar.svelte'
-  import type { TimelineFilterProps, TimelineItemType } from '../domains/timeline/timeline-utils'
-  import { openUnisearch } from '../domains/search/UnisearchStore'
+  import Toolbar from '../components/toolbar/toolbar.svelte';
+  import type { TimelineFilterProps, TimelineItemType } from '../domains/timeline/timeline-utils';
+  import { openUnisearch } from '../domains/search/UnisearchStore';
 
-  import { TimelineOptionsStore } from '../domains/timeline/timeline-helpers'
-  import ContextChart from '../domains/context/context-chart.svelte'
+  import { TimelineOptionsStore } from '../domains/timeline/timeline-helpers';
+  import ContextChart from '../domains/context/context-chart.svelte';
 
-  import Container from '../components/container/container.svelte'
+  import Container from '../components/container/container.svelte';
 
-  import MenuInline from '../components/menu/menu-inline.svelte'
+  import MenuInline from '../components/menu/menu-inline.svelte';
 
-  import type { PopMenuButton } from '../components/pop-menu/usePopmenu'
+  import type { PopMenuButton } from '../components/pop-menu/usePopmenu';
 
-  import CreateOutline from '../n-icons/CreateOutline.svelte'
-  import AppsOutline from '../n-icons/AppsOutline.svelte'
-  import BarChartOutline from '../n-icons/BarChartOutline.svelte'
+  import CreateOutline from '../n-icons/CreateOutline.svelte';
+  import AppsOutline from '../n-icons/AppsOutline.svelte';
+  import BarChartOutline from '../n-icons/BarChartOutline.svelte';
 
-  import CaretDownCircle from '../n-icons/CaretDownCircle.svelte'
-  import PositivityGrid from '../components/positivity-bar/positivity-grid.svelte'
+  import CaretDownCircle from '../n-icons/CaretDownCircle.svelte';
+  import PositivityGrid from '../components/positivity-bar/positivity-grid.svelte';
 
-  import TimelineLoader from '../domains/timeline/timeline-loader.svelte'
+  import TimelineLoader from '../domains/timeline/timeline-loader.svelte';
 
-  let startingDate: Date = new Date()
-  let date: Dayjs = dayjs(startingDate)
-  let displayDate = dayjs()
-  let topItem: TimelineItemType
-  let inPast: boolean = false
+  let startingDate: Date = new Date();
+  let date: Dayjs = dayjs(startingDate);
+  let displayDate = dayjs();
+  let topItem: TimelineItemType;
+  let inPast: boolean = false;
 
-  const dateFormats = getDateFormats()
+  const dateFormats = getDateFormats();
 
-  let hashDate: any
+  let hashDate: any;
 
   $: if (date && date !== hashDate && $TrackableStore.ready) {
-    hashDate = date
+    hashDate = date;
   }
 
   /**
    * Jump to specific point in time
    */
   const jumpTo = async () => {
-    const jumpDate = await selectFuzzyDate(dayjs(date), false)
+    const jumpDate = await selectFuzzyDate(dayjs(date), false);
     if (jumpDate) {
-      date = dayjs(jumpDate)
-      startingDate = jumpDate.toDate()
-      displayDate = date
+      date = dayjs(jumpDate);
+      startingDate = jumpDate.toDate();
+      displayDate = date;
       if (startingDate.toDateString() !== new Date().toDateString()) {
-        inPast = true
+        inPast = true;
       } else {
-        inPast = false
+        inPast = false;
       }
     }
-  }
+  };
 
   /**
    * View Base Filters
@@ -84,16 +84,16 @@
     maps: false,
     trackables: false,
     context: false,
-  }
+  };
 
   // A function that takes a filter object and returns a new filter object with the search and startingDate properties set to undefined.
   export function clearFilterSearch(filter: TimelineFilterProps): TimelineFilterProps {
-    const f = { ...filter }
-    f.search = undefined
-    return f
+    const f = { ...filter };
+    f.search = undefined;
+    return f;
   }
 
-  let filters: TimelineFilterProps = { ...baseFilters }
+  let filters: TimelineFilterProps = { ...baseFilters };
 
   /**
    * Show the Menu Filter
@@ -106,8 +106,8 @@
         checked: filters.notes,
         icon: CreateOutline,
         click() {
-          filters.notes = !filters.notes
-          TimelineOptionsStore.setItem('filters', clearFilterSearch(filters))
+          filters.notes = !filters.notes;
+          TimelineOptionsStore.setItem('filters', clearFilterSearch(filters));
         },
       },
       {
@@ -115,8 +115,8 @@
         checked: filters.trackables,
         icon: AppsOutline,
         click() {
-          filters.trackables = !filters.trackables
-          TimelineOptionsStore.setItem('filters', clearFilterSearch(filters))
+          filters.trackables = !filters.trackables;
+          TimelineOptionsStore.setItem('filters', clearFilterSearch(filters));
         },
       },
       {
@@ -124,27 +124,27 @@
         icon: BarChartOutline,
         checked: filters.context,
         click() {
-          filters.context = !filters.context
-          TimelineOptionsStore.setItem('filters', clearFilterSearch(filters))
+          filters.context = !filters.context;
+          TimelineOptionsStore.setItem('filters', clearFilterSearch(filters));
         },
       },
-    ]
+    ];
 
-    return options
-  }
+    return options;
+  };
 
-  let filterMenu: Array<PopMenuButton> = showFilterMenu()
+  let filterMenu: Array<PopMenuButton> = showFilterMenu();
 
   $: if ($TimelineOptionsStore.filters) {
-    filters = $TimelineOptionsStore.filters
-    filterMenu = showFilterMenu()
+    filters = $TimelineOptionsStore.filters;
+    filterMenu = showFilterMenu();
   }
 
-  let mounted: boolean
+  let mounted: boolean;
 
   onMount(async () => {
-    mounted = true
-  })
+    mounted = true;
+  });
 </script>
 
 <Layout pageTitle="Timeline" className="timeline-layout bg-gray-200 dark:bg-gray-800">
@@ -152,12 +152,12 @@
     <MenuInline id="timeline-filter" menuButtons={filterMenu} buttonClass="menu-icon-button">
       <IonIcon className="text-primary-500" icon={CaretDownCircle} size={32} />
     </MenuInline>
-    <div class="ntitle w-full mt-2 px-4  justify-center items-center  grid grid-cols-1">
+    <div class="ntitle w-full mt-2 px-4 justify-center items-center grid grid-cols-1">
       <button
         type="button"
         class="mx-auto mb-1 hover:text-gray-500 transform-gpu transition-all duration-200 items-center grid grid-cols-1"
         on:click={() => {
-          openOnThisDayModal(displayDate.toDate())
+          openOnThisDayModal(displayDate.toDate());
         }}
       >
         {#key mounted}
@@ -190,13 +190,13 @@
 
   <TimelineLoader
     on:xfilters={(evt) => {
-      filters = { ...filters, ...evt.detail }
-      TimelineOptionsStore.setItem('filters', filters)
+      filters = { ...filters, ...evt.detail };
+      TimelineOptionsStore.setItem('filters', filters);
     }}
     bind:startingDate
     on:topItem={(evt) => {
-      topItem = evt.detail
-      displayDate = topItem.time
+      topItem = evt.detail;
+      displayDate = topItem.time;
     }}
     bind:filters
   />

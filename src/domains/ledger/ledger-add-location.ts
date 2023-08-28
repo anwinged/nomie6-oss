@@ -1,9 +1,9 @@
-import Location from '../locations/LocationClass'
-import type NLog from '../nomie-log/nomie-log'
+import Location from '../locations/LocationClass';
+import type NLog from '../nomie-log/nomie-log';
 
-import { findNearestLocationHeavy } from '../locations/LocationStore'
-import locate from '../../modules/locate/locate'
-import { getRawPrefs } from '../preferences/Preferences'
+import { findNearestLocationHeavy } from '../locations/LocationStore';
+import locate from '../../modules/locate/locate';
+import { getRawPrefs } from '../preferences/Preferences';
 
 /**
  * If the user has enabled location tracking, and we can get a location, then we'll add the location to
@@ -18,28 +18,28 @@ export async function logAppendLocationIfNeeded(log: NLog): Promise<NLog> {
   if (shouldLocate) {
     try {
       // Get the Location
-      let theLoc: any = await locate()
+      let theLoc: any = await locate();
       // make it a location
-      let location = new Location({ lat: theLoc.latitude, lng: theLoc.longitude })
+      let location = new Location({ lat: theLoc.latitude, lng: theLoc.longitude });
       // Find any favorited that are super close
-      let nearest = findNearestLocationHeavy(location)
+      let nearest = findNearestLocationHeavy(location);
       // If we have a nearest and a name
       if (nearest && nearest.name) {
-        location.name = nearest.name
+        location.name = nearest.name;
       }
       if (location && !log.lat) {
-        log.lat = location.lat
-        log.lng = location.lng
-        log.location = location.name
+        log.lat = location.lat;
+        log.lng = location.lng;
+        log.location = location.name;
       }
       // Return the match - or the location if we didnt any favorites
-      return log
+      return log;
     } catch (e) {
       // Any location errors
-      console.error(`Non-fatal location error`, e.message)
-      return log
+      console.error(`Non-fatal location error`, e.message);
+      return log;
     }
   } else {
-    return log
+    return log;
   }
 }

@@ -1,4 +1,4 @@
-import nid from "../nid/nid";
+import nid from '../nid/nid';
 
 export interface IBoard {
   index?: number;

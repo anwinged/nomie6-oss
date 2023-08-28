@@ -1,10 +1,10 @@
 type TimeType = {
-  type: Stats2TimeSpanType
-  label: string
-  unit: string
-  format: string
-  groupByFormat: string
-}
+  type: Stats2TimeSpanType;
+  label: string;
+  unit: string;
+  format: string;
+  groupByFormat: string;
+};
 
 export const Stats2TimeTypes: { [key: string]: TimeType } = {
   d: {
@@ -49,21 +49,21 @@ export const Stats2TimeTypes: { [key: string]: TimeType } = {
     format: 'YYYY-MM-DD',
     groupByFormat: 'YYYY-MM-W',
   },
-}
+};
 
-export type Stats2TimeSpanType = 'd' | 'w' | 'm' | '3m' | '6m' | '1y'
+export type Stats2TimeSpanType = 'd' | 'w' | 'm' | '3m' | '6m' | '1y';
 
 export type Stats2TimeTypeExpanded = {
-  type: string
-  label: string
-  unit: string
-  format: string
-  groupByFormat: string
-}
+  type: string;
+  label: string;
+  unit: string;
+  format: string;
+  groupByFormat: string;
+};
 
 export const expandStats2TimeType = (type: Stats2TimeSpanType): Stats2TimeTypeExpanded | undefined => {
-  return Stats2TimeTypes[type]
-}
+  return Stats2TimeTypes[type];
+};
 
 // if (type == 'd') {
 //   return {

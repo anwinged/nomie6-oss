@@ -1,27 +1,27 @@
 <script lang="ts">
-  import Layout from '../domains/layout/layout.svelte'
+  import Layout from '../domains/layout/layout.svelte';
 
-  import AnalyticsView from '../domains/analytics/analytics-view.svelte'
-  import type { Dayjs } from 'dayjs'
-  import dayjs from 'dayjs'
-  import NextPrevCal from '../components/next-prev-cal/next-prev-cal.svelte'
+  import AnalyticsView from '../domains/analytics/analytics-view.svelte';
+  import type { Dayjs } from 'dayjs';
+  import dayjs from 'dayjs';
+  import NextPrevCal from '../components/next-prev-cal/next-prev-cal.svelte';
 
-  import Toolbar from '../components/toolbar/toolbar.svelte'
-  import { getDateFormats } from '../domains/preferences/Preferences'
+  import Toolbar from '../components/toolbar/toolbar.svelte';
+  import { getDateFormats } from '../domains/preferences/Preferences';
 
-  let endDate: Dayjs = dayjs()
-  let startDate: Dayjs = dayjs().subtract(90, 'days')
+  let endDate: Dayjs = dayjs();
+  let startDate: Dayjs = dayjs().subtract(90, 'days');
 
-  $: startDate = endDate.subtract(90, 'days')
+  $: startDate = endDate.subtract(90, 'days');
 
-  const dateFormats = getDateFormats()
+  const dateFormats = getDateFormats();
 
   const previousPeriod = () => {
-    endDate = endDate.subtract(90, 'days')
-  }
+    endDate = endDate.subtract(90, 'days');
+  };
   const nextPeriod = () => {
-    endDate = endDate.add(90, 'days')
-  }
+    endDate = endDate.add(90, 'days');
+  };
 </script>
 
 <Layout pageTitle="My Analytics">

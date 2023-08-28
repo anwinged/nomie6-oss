@@ -1,109 +1,108 @@
-import config from './config/appConfig'
+import config from './config/appConfig';
 
 const NPaths = {
-
   awardChainDoc(uid: string = 'local') {
-    return `awards.json`
+    return `awards.json`;
   },
   routes: {
     board(id) {
-      return `/board/${id}`
+      return `/board/${id}`;
     },
     analytics() {
-      return `/analytics`
+      return `/analytics`;
     },
     search() {
-      return `/search`
+      return `/search`;
     },
     history() {
-      return `/history`
+      return `/history`;
     },
     dashboard() {
-      return `/dashboard`
+      return `/dashboard`;
     },
     people() {
-      return `/people`
+      return `/people`;
     },
     settings() {
-      return '/settings'
+      return '/settings';
     },
     uoms() {
-      return '/uoms'
+      return '/uoms';
     },
   },
   storage: {
     trackers() {
-      return `trackers.json`
+      return `trackers.json`;
     },
     backup() {
-      return `backup-settings.json`
+      return `backup-settings.json`;
     },
     search() {
-      return `searches.json`
+      return `searches.json`;
     },
     book(id: string) {
-      return `${config.data_root}/books/${id}`
+      return `${config.data_root}/books/${id}`;
     },
     boards() {
-      return `boards.json`
+      return `boards.json`;
     },
     uniboards() {
-      return `uniboards.json`
+      return `uniboards.json`;
     },
     dashboards() {
-      return `dashboards.json`
+      return `dashboards.json`;
     },
     context() {
-      return `context.json`
+      return `context.json`;
     },
     csvTemplates() {
-      return `csv-templates.json`
+      return `csv-templates.json`;
     },
     templates() {
-      return `templates.json`
+      return `templates.json`;
     },
     people() {
-      return `people.json`
+      return `people.json`;
     },
     locations() {
-      return `locations.json`
+      return `locations.json`;
     },
     writingPrompts() {
-      return `writing-prompts.json`
+      return `writing-prompts.json`;
     },
     plugins() {
-      return `plugins.json`
+      return `plugins.json`;
     },
     goals() {
-      return `goals.json`
+      return `goals.json`;
     },
     awards() {
-      return `awards.json`
+      return `awards.json`;
     },
     lastUsage() {
-      return `last-usage.json`
+      return `last-usage.json`;
     },
     lastUsed() {
-      return 'trackable-usage.json'
+      return 'trackable-usage.json';
     },
     trackableUsage() {
-      return 'trackable-usage.json'
+      return 'trackable-usage.json';
     },
     uom() {
-      return 'uoms.json'
+      return 'uoms.json';
     },
   },
   local: {
     storage(path: string) {
-      return `storage/${path}`
+      return `storage/${path}`;
     },
     storageType() {
-      return NPaths.local.storage(`root/storage_type`)
+      return NPaths.local.storage(`root/storage_type`);
     },
     sidestore(path: string) {
-      return `${config.data_root}/localDB/${path}`
+      return `${config.data_root}/localDB/${path}`;
     },
   },
-}
+};
 
-export default NPaths
+export default NPaths;

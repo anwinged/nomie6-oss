@@ -13,37 +13,37 @@ import {
   PencilOutline,
   SwapOutline,
   TrashOutline,
-} from '../../components/icon/nicons'
+} from '../../components/icon/nicons';
 
-import { DashboardClass } from './dashboard-class'
-import type { DashboardPayload } from './dashboard-class'
-import { Interact } from '../../store/interact'
-import { Lang } from '../../store/lang'
-import NPaths from '../../paths'
-import type { PopMenuButton } from '../../components/pop-menu/usePopmenu'
-import Storage from '../../domains/storage/storage'
-import { WidgetClass } from './widget/widget-class'
-import nid from '../../modules/nid/nid'
-import { objectHash } from '../../modules/object-hash/object-hash'
-import { openWidgetEditor } from './widget/widget-editor/useWidgetEditorModal'
-import { wait } from '../../utils/tick/tick'
-import { writable } from 'svelte/store'
-import { dedupArray } from '../../utils/array/array_utils'
+import { DashboardClass } from './dashboard-class';
+import type { DashboardPayload } from './dashboard-class';
+import { Interact } from '../../store/interact';
+import { Lang } from '../../store/lang';
+import NPaths from '../../paths';
+import type { PopMenuButton } from '../../components/pop-menu/usePopmenu';
+import Storage from '../../domains/storage/storage';
+import { WidgetClass } from './widget/widget-class';
+import nid from '../../modules/nid/nid';
+import { objectHash } from '../../modules/object-hash/object-hash';
+import { openWidgetEditor } from './widget/widget-editor/useWidgetEditorModal';
+import { wait } from '../../utils/tick/tick';
+import { writable } from 'svelte/store';
+import { dedupArray } from '../../utils/array/array_utils';
 
 type InitialState = {
-  dashboards: Array<DashboardClass>
-  activeDashboard: undefined | DashboardClass
-  activeIndex: undefined | number
-  editMode?: boolean
-  dashboardHash: string | undefined
-}
+  dashboards: Array<DashboardClass>;
+  activeDashboard: undefined | DashboardClass;
+  activeIndex: undefined | number;
+  editMode?: boolean;
+  dashboardHash: string | undefined;
+};
 
 const getLastSelectedIndex = () => {
-  return parseInt(localStorage.getItem('last-dash-index') || '0')
-}
+  return parseInt(localStorage.getItem('last-dash-index') || '0');
+};
 const setLastSelectedIndex = (index) => {
-  localStorage.setItem('last-dash-index', index)
-}
+  localStorage.setItem('last-dash-index', index);
+};
 
 const dashboardInitialState: InitialState = {
   dashboards: [],
@@ -51,9 +51,9 @@ const dashboardInitialState: InitialState = {
   editMode: false,
   activeDashboard: undefined,
   activeIndex: getLastSelectedIndex(),
-}
+};
 
-export const DashStore = writable(dashboardInitialState)
+export const DashStore = writable(dashboardInitialState);
 
 /**
  * Initialize the DashStore
@@ -61,55 +61,53 @@ export const DashStore = writable(dashboardInitialState)
  * @returns
  */
 export const initializeDashStore = async (): Promise<InitialState> => {
-  const storedState = await getDashboardDataFromStorage()
-  let finalState: InitialState
+  const storedState = await getDashboardDataFromStorage();
+  let finalState: InitialState;
   DashStore.update((s: InitialState) => {
-    s = { ...storedState }
-    s.activeIndex = getLastSelectedIndex()
+    s = { ...storedState };
+    s.activeIndex = getLastSelectedIndex();
 
     try {
-      s.activeDashboard = s.dashboards[s.activeIndex]
+      s.activeDashboard = s.dashboards[s.activeIndex];
     } catch (e) {
-      s.activeIndex = 0
-      s.activeDashboard = s.dashboards[0]
-      console.error('Error finding dashboard, default to 0')
+      s.activeIndex = 0;
+      s.activeDashboard = s.dashboards[0];
+      console.error('Error finding dashboard, default to 0');
     }
-    finalState = s
-    return s
-  })
+    finalState = s;
+    return s;
+  });
 
-  return finalState
-}
+  return finalState;
+};
 
 /**
  * Get Dashboard Data from Storage
  * @returns
  */
 const getDashboardDataFromStorage = async (): Promise<InitialState> => {
-  const rawDashboards: Array<DashboardClass> = ((await getDashboards()) || []);
-  const dashboards = rawDashboards.map(dash=>{
+  const rawDashboards: Array<DashboardClass> = (await getDashboards()) || [];
+  const dashboards = rawDashboards.map((dash) => {
     dash.widgets = dedupArray(dash.widgets, 'id');
     return dash;
-  })
-  const active: DashboardClass = dashboards[0]
+  });
+  const active: DashboardClass = dashboards[0];
   return {
     activeIndex: getLastSelectedIndex(),
     dashboards,
     dashboardHash: objectHash(dashboards),
     activeDashboard: active,
-  }
-}
+  };
+};
 
-const removeDuplicateWidgets = (items:Array<any>, key:string) => {
-  
-}
+const removeDuplicateWidgets = (items: Array<any>, key: string) => {};
 
 export const toggleDashboardEditMode = () => {
   DashStore.update((s) => {
-    s.editMode = !s.editMode
-    return s
-  })
-}
+    s.editMode = !s.editMode;
+    return s;
+  });
+};
 
 /**
  * Get Dashboards from Storage
@@ -118,31 +116,30 @@ export const toggleDashboardEditMode = () => {
 export const getDashboards = async (): Promise<Array<DashboardClass>> => {
   let dashboards: Array<DashboardClass> = ((await Storage.get(NPaths.storage.dashboards())) || []).map(
     (dashboard: any) => new DashboardClass(dashboard)
-  )
+  );
   // If no boards - lets add one
   if (dashboards.length === 0) {
-    const firstDasboard = new DashboardClass({ id: 'mystats-first-board', label: 'My Stats', widgets: [] })
-    dashboards = [firstDasboard]
+    const firstDasboard = new DashboardClass({ id: 'mystats-first-board', label: 'My Stats', widgets: [] });
+    dashboards = [firstDasboard];
     setLastSelectedIndex(0);
-    
   }
-  return dashboards
-}
+  return dashboards;
+};
 
-export const deleteDashboard = async (dashboard:DashboardClass)=>{
+export const deleteDashboard = async (dashboard: DashboardClass) => {
   const exist = await getDashboards();
-  let final:Array<DashboardClass> = [];
+  let final: Array<DashboardClass> = [];
   DashStore.update((state: InitialState) => {
     // Loop over existing, replace with new boards if exist
     final = exist.filter((dash) => {
       return dash.id !== dashboard.id;
-    })
+    });
     state.dashboards = final;
     return state;
   });
-  
+
   return await writeDashboardsToStorage(final);
-}
+};
 
 /**
  * Save Dashboards
@@ -151,36 +148,36 @@ export const deleteDashboard = async (dashboard:DashboardClass)=>{
  * @param dashboards
  */
 export const saveDashboards = async (dashboards: Array<DashboardClass>) => {
-  const existing = await getDashboards()
+  const existing = await getDashboards();
 
   DashStore.update((state: InitialState) => {
     // Loop over existing, replace with new boards if exist
     const final = existing.map((dash) => {
-      const found = dashboards.find((d) => d.id == dash.id)
-      if (found) return found
-      return dash
-    })
+      const found = dashboards.find((d) => d.id == dash.id);
+      if (found) return found;
+      return dash;
+    });
 
     // Loop over new boards
     // if not found, then push it
     dashboards.forEach((dash) => {
-      const found = final.find((d) => d.id == dash.id)
-      if (!found) final.push(dash)
-    })
+      const found = final.find((d) => d.id == dash.id);
+      if (!found) final.push(dash);
+    });
 
-    state.dashboards = final
-    state.dashboardHash = objectHash(state.dashboards)
+    state.dashboards = final;
+    state.dashboardHash = objectHash(state.dashboards);
 
     // Set the active Dashbaord
     // this way we see changes right away
     if (state.activeDashboard) {
-      state.activeDashboard = final.find((d) => d.id == state.activeDashboard.id) || state.activeDashboard
+      state.activeDashboard = final.find((d) => d.id == state.activeDashboard.id) || state.activeDashboard;
     }
 
-    writeDashboardsToStorage(final)
-    return state
-  })
-}
+    writeDashboardsToStorage(final);
+    return state;
+  });
+};
 
 /**
  * Save a Dashboard
@@ -189,8 +186,8 @@ export const saveDashboards = async (dashboards: Array<DashboardClass>) => {
  * @returns
  */
 export const saveDashboard = async (dashboard: DashboardClass) => {
-  return saveDashboards([dashboard])
-}
+  return saveDashboards([dashboard]);
+};
 
 /**
  * Write Dashboard data to storage
@@ -198,8 +195,8 @@ export const saveDashboard = async (dashboard: DashboardClass) => {
  * @returns
  */
 export const writeDashboardsToStorage = async (dashboards: Array<DashboardClass>): Promise<void> => {
-  return Storage.put(NPaths.storage.dashboards(), dashboards)
-}
+  return Storage.put(NPaths.storage.dashboards(), dashboards);
+};
 
 /**
  * Get Board by Widget
@@ -207,12 +204,12 @@ export const writeDashboardsToStorage = async (dashboards: Array<DashboardClass>
  * @returns
  */
 export const getBoardByWidget = async (widget: WidgetClass): Promise<DashboardClass | undefined> => {
-  const dashboards = await getDashboards()
+  const dashboards = await getDashboards();
   const found: DashboardClass | undefined = dashboards.find((d) => {
-    return d.widgets.find((w) => w.id == widget.id)
-  })
-  return found
-}
+    return d.widgets.find((w) => w.id == widget.id);
+  });
+  return found;
+};
 
 /**
  * Delete a Widget
@@ -220,14 +217,14 @@ export const getBoardByWidget = async (widget: WidgetClass): Promise<DashboardCl
  * @returns
  */
 export const deleteWidget = async (widget: WidgetClass) => {
-  const board: DashboardClass = await getBoardByWidget(widget)
+  const board: DashboardClass = await getBoardByWidget(widget);
   if (board) {
-    board.widgets = board.widgets.filter((w) => w.id !== widget.id)
-    return saveDashboard(board)
+    board.widgets = board.widgets.filter((w) => w.id !== widget.id);
+    return saveDashboard(board);
   } else {
-    alert('ERROR: Unable to find that Widget')
+    alert('ERROR: Unable to find that Widget');
   }
-}
+};
 
 /**
  * Duplicates a widget to the active stores
@@ -235,14 +232,14 @@ export const deleteWidget = async (widget: WidgetClass) => {
  * @returns
  */
 export const duplicateWidget = async (widget: WidgetClass) => {
-  let baseWidget: WidgetClass = new WidgetClass(widget)
-  baseWidget.id = nid()
-  const board = await getBoardByWidget(widget)
-  board.widgets.push(baseWidget)
-  await wait(100)
-  return await saveDashboard(board)
+  let baseWidget: WidgetClass = new WidgetClass(widget);
+  baseWidget.id = nid();
+  const board = await getBoardByWidget(widget);
+  board.widgets.push(baseWidget);
+  await wait(100);
+  return await saveDashboard(board);
   // await DashboardStore.saveWidget(baseWidget)
-}
+};
 
 /**
  * Fuse with the Store State
@@ -250,13 +247,13 @@ export const duplicateWidget = async (widget: WidgetClass) => {
  * @returns
  */
 const fuse = (addOn: any = {}) => {
-  let state: InitialState
+  let state: InitialState;
   DashStore.update((s) => {
-    state = { ...s, ...addOn }
-    return state
-  })
-  return state
-}
+    state = { ...s, ...addOn };
+    return state;
+  });
+  return state;
+};
 
 /**
  * Create a new Dashboard
@@ -264,12 +261,12 @@ const fuse = (addOn: any = {}) => {
 export const createNewDashboard = async () => {
   let name = await Interact.prompt('Create new Dashboard', null, {
     placeholder: 'Dashboard Label',
-  })
+  });
   if (name) {
-    let dashboard = new DashboardClass({ id: nid(), label: name, widgets: [] })
-    saveDashboard(dashboard)
+    let dashboard = new DashboardClass({ id: nid(), label: name, widgets: [] });
+    saveDashboard(dashboard);
   }
-}
+};
 
 /**
  * Upsert a Widget
@@ -278,39 +275,39 @@ export const createNewDashboard = async () => {
  * @returns
  */
 export const upsertWidget = async (widget: WidgetClass) => {
-  const board: DashboardClass = await getBoardByWidget(widget)
+  const board: DashboardClass = await getBoardByWidget(widget);
   if (board) {
     board.widgets = board.widgets.map((w) => {
       if (w.id == widget.id) {
-        return widget
+        return widget;
       } else {
-        return w
+        return w;
       }
-    })
-    return await saveDashboard(board)
+    });
+    return await saveDashboard(board);
   } else {
-    const state = fuse()
+    const state = fuse();
     if (state.activeDashboard) {
-      state.activeDashboard.widgets.push(widget)
+      state.activeDashboard.widgets.push(widget);
     }
-    saveDashboard(state.activeDashboard)
+    saveDashboard(state.activeDashboard);
   }
-}
+};
 
 /**
  * Select a Dashboard by Index
  * @param index
  */
 export const selectDashboardByIndex = async (index: number) => {
-  const dashboards = await getDashboards()
-  const active = dashboards[index]
-  setLastSelectedIndex(index)
+  const dashboards = await getDashboards();
+  const active = dashboards[index];
+  setLastSelectedIndex(index);
   DashStore.update((s) => {
-    s.activeDashboard = active
-    s.activeIndex = index
-    return s
-  })
-}
+    s.activeDashboard = active;
+    s.activeIndex = index;
+    return s;
+  });
+};
 
 /**
  * Import Dashboards
@@ -318,49 +315,49 @@ export const selectDashboardByIndex = async (index: number) => {
  * @returns
  */
 export const importDashboards = (rawDashboards: Array<DashboardPayload>) => {
-  const dashboards = rawDashboards.map((raw) => new DashboardClass(raw))
-  return saveDashboards(dashboards)
-}
+  const dashboards = rawDashboards.map((raw) => new DashboardClass(raw));
+  return saveDashboards(dashboards);
+};
 
 /**
  * Move a Widget
  * @param widget
  */
 export const moveWidget = async (widget: WidgetClass) => {
-  const rawDashboards = await getDashboards()
+  const rawDashboards = await getDashboards();
 
   const moveToDashboard = (dashboard) => {
     let dashboards = rawDashboards.map((loopDashboard: DashboardClass) => {
       loopDashboard.widgets = loopDashboard.widgets.filter((loopWidget: WidgetClass) => {
-        return loopWidget.id !== widget.id
-      })
+        return loopWidget.id !== widget.id;
+      });
       if (loopDashboard.id == dashboard.id) {
-        loopDashboard.widgets.push(widget)
+        loopDashboard.widgets.push(widget);
       }
-      return loopDashboard
-    })
-    saveDashboards(dashboards)
-  }
+      return loopDashboard;
+    });
+    saveDashboards(dashboards);
+  };
 
   const buttons = rawDashboards.map((dashboard: DashboardClass) => {
     return {
       title: dashboard.label,
       click() {
         try {
-          moveToDashboard(dashboard)
+          moveToDashboard(dashboard);
         } catch (e) {
-          Interact.alert('Error', e.message)
+          Interact.alert('Error', e.message);
         }
       },
-    }
-  })
+    };
+  });
 
   Interact.popmenu({
     id: 'widget-move',
     buttons,
     title: `${Lang.t('dashboard.select-dashboard-to-move-widget', 'Move widget to which dashboard?')}`,
-  })
-}
+  });
+};
 
 /**
  * Show Widget Popmenu
@@ -372,12 +369,12 @@ export const showWidgetPopmenu = (widget: WidgetClass) => {
       title: 'Edit Widget',
       icon: PencilOutline,
       async click() {
-        await wait(300)
+        await wait(300);
 
         openWidgetEditor({
           widget: widget,
           onSave(evt) {},
-        })
+        });
       },
     },
     {
@@ -385,31 +382,34 @@ export const showWidgetPopmenu = (widget: WidgetClass) => {
       icon: SwapOutline,
       divider: true,
       async click() {
-        await wait(200)
-        moveWidget(widget)
+        await wait(200);
+        moveWidget(widget);
       },
     },
     {
       title: 'Duplicate',
       icon: DuplicateOutline,
       async click() {
-        await wait(200)
-        duplicateWidget(widget)
+        await wait(200);
+        duplicateWidget(widget);
       },
     },
     {
       title: 'Delete Widget',
       icon: TrashOutline,
       async click() {
-        await wait(300)
-        let confirmed = await Interact.confirm(Lang.t('general.delete', 'Delete?'), 'You can always recreate it later.')
-        if (confirmed) deleteWidget(widget)
+        await wait(300);
+        let confirmed = await Interact.confirm(
+          Lang.t('general.delete', 'Delete?'),
+          'You can always recreate it later.'
+        );
+        if (confirmed) deleteWidget(widget);
       },
     },
-  ]
+  ];
   Interact.popmenu({
     id: `widget-options`,
     title: Lang.t('widgets.widget-options', 'Widget Options'),
     buttons,
-  })
-}
+  });
+};

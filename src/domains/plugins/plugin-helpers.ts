@@ -1,13 +1,37 @@
-import { uid } from "../../modules/uid/uid";
+import { uid } from '../../modules/uid/uid';
 
-export type PluginUseTypes = 'getLocation' | 'alert' | 'alertReply'  | 'onWidget' | 'getTrackableReply' | 'getTrackableUsage' | 'getTrackable' | 'getStorageItemReply' | 'setStorageItemReply' |  'locationReply' | 'getTrackableUsageReply' | 'trackablesSelected' | 'selectTrackables' | 'onUIOpened' | 'registered' | 'onLaunch' | 'openURL' | 'searchNotes' | 'searchReply' | 'confirmReply' | 'promptReply' | 'onNote' | 'createNote' | 'queryNotes'
+export type PluginUseTypes =
+  | 'getLocation'
+  | 'alert'
+  | 'alertReply'
+  | 'onWidget'
+  | 'getTrackableReply'
+  | 'getTrackableUsage'
+  | 'getTrackable'
+  | 'getStorageItemReply'
+  | 'setStorageItemReply'
+  | 'locationReply'
+  | 'getTrackableUsageReply'
+  | 'trackablesSelected'
+  | 'selectTrackables'
+  | 'onUIOpened'
+  | 'registered'
+  | 'onLaunch'
+  | 'openURL'
+  | 'searchNotes'
+  | 'searchReply'
+  | 'confirmReply'
+  | 'promptReply'
+  | 'onNote'
+  | 'createNote'
+  | 'queryNotes';
 
 export type PluginRef = {
   name: string;
   description: string;
   emoji?: string;
   url: string;
-}
+};
 
 export type PluginType = {
   id: string;
@@ -20,10 +44,10 @@ export type PluginType = {
   url: string;
   version: string;
   active: boolean;
-  uses: Array<PluginUseTypes>
+  uses: Array<PluginUseTypes>;
   error?: string;
   locked?: boolean;
-}
+};
 
 export class PluginClass {
   id: string;
@@ -36,7 +60,7 @@ export class PluginClass {
   addToWidgets: boolean;
   version: string;
   active: boolean;
-  uses: Array<PluginUseTypes>
+  uses: Array<PluginUseTypes>;
   error?: string;
   locked?: boolean;
 
@@ -58,17 +82,15 @@ export class PluginClass {
 
   hasError(message: string) {
     this.error = message;
-
   }
 
   get isAutoLoad(): boolean {
-    return this.uses.includes('onLaunch') ||
-      this.uses.includes('onNote');
+    return this.uses.includes('onLaunch') || this.uses.includes('onNote');
   }
 
   get urlWithParams(): string {
     try {
-      const url = new URL(this.url || "");
+      const url = new URL(this.url || '');
       url.searchParams.append('pid', this.id);
       return url.toString();
     } catch (e) {

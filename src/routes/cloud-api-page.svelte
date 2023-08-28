@@ -1,16 +1,16 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
+  import { onMount } from 'svelte';
 
-  import Empty from '../components/empty/empty.svelte'
-  import CloudApiView from '../domains/cloud-api/cloud-api-view.svelte'
-  import { PermissionsStore } from '../domains/my-account/PermissionsStore'
+  import Empty from '../components/empty/empty.svelte';
+  import CloudApiView from '../domains/cloud-api/cloud-api-view.svelte';
+  import { PermissionsStore } from '../domains/my-account/PermissionsStore';
 
-  let mounted = false
+  let mounted = false;
   onMount(() => {
     setTimeout(() => {
-      mounted = true
-    }, 1000)
-  })
+      mounted = true;
+    }, 1000);
+  });
 </script>
 
 {#if $PermissionsStore.canAPI}

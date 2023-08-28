@@ -1,16 +1,16 @@
-import dayjs from 'dayjs'
-import math from '../../utils/math/math'
-import type { ITrackerMath } from '../../modules/tracker/TrackerClass'
-import type { IStatDow } from '../stats/stats-types'
+import dayjs from 'dayjs';
+import math from '../../utils/math/math';
+import type { ITrackerMath } from '../../modules/tracker/TrackerClass';
+import type { IStatDow } from '../stats/stats-types';
 
 export interface IDow {
-  mon: IStatDow
-  tue: IStatDow
-  wed: IStatDow
-  thu: IStatDow
-  fri: IStatDow
-  sat: IStatDow
-  sun: IStatDow
+  mon: IStatDow;
+  tue: IStatDow;
+  wed: IStatDow;
+  thu: IStatDow;
+  fri: IStatDow;
+  sat: IStatDow;
+  sun: IStatDow;
 }
 
 function DayOfWeek(rows, tag = null, mathType: ITrackerMath = 'sum'): IDow {
@@ -50,26 +50,26 @@ function DayOfWeek(rows, tag = null, mathType: ITrackerMath = 'sum'): IDow {
       values: [],
       percent: 0,
     },
-  }
+  };
 
   rows.forEach((row) => {
-    let day = dayjs(row.end).format('ddd').toLowerCase()
-    let thisDow = dow[day]
+    let day = dayjs(row.end).format('ddd').toLowerCase();
+    let thisDow = dow[day];
     if (thisDow) {
-      thisDow.count++
-      thisDow.values.push(tag ? row.getTrackerValue(tag, mathType) : 1)
+      thisDow.count++;
+      thisDow.values.push(tag ? row.getTrackerValue(tag, mathType) : 1);
     }
-  })
+  });
 
-  let counts = Object.keys(dow).map((t) => dow[t].count)
-  let countPercentages = math.percentile(counts)
+  let counts = Object.keys(dow).map((t) => dow[t].count);
+  let countPercentages = math.percentile(counts);
 
   Object.keys(dow).forEach((key, index) => {
-    dow[key].percent = countPercentages[index]
-    dow[key].total = mathType == 'sum' ? math.sum(dow[key].values) : math.average(dow[key].valuels)
-  })
+    dow[key].percent = countPercentages[index];
+    dow[key].total = mathType == 'sum' ? math.sum(dow[key].values) : math.average(dow[key].valuels);
+  });
 
-  return dow
+  return dow;
 }
 
-export default DayOfWeek
+export default DayOfWeek;

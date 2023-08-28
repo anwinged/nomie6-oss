@@ -1,7 +1,6 @@
-
 // import type NLog from '../../nomie-log/nomie-log'
 // import dayjs from 'dayjs'
-import { it, describe, expect } from 'vitest'
+import { it, describe, expect } from 'vitest';
 // import CSVRImport from './csv-import-helper'
 const zeno = `tag,timestamp
 Peed,2020-08-30T08:28:00.000-04:00
@@ -11,12 +10,12 @@ Peed,2020-08-27T08:28:00.000-04:00
 Peed,2020-08-23T08:28:00.000-04:00
 Peed,2020-08-22T08:28:00.000-04:00
 Peed,2020-08-12T08:28:00.000-04:00
-Peed,2020-08-11T08:28:00.000-04:00`
+Peed,2020-08-11T08:28:00.000-04:00`;
 
 describe('CSVR Import Tests', () => {
-  it('should', ()=>{
+  it('should', () => {
     expect(1).toBe(1);
-  })
+  });
   // const importer = new CSVRImport({
   //   template: '#{f0} #zeno imported #{f1}',
   //   fieldMap: {
@@ -39,4 +38,4 @@ describe('CSVR Import Tests', () => {
   //   expect(logs[1].note).toContain('#Peed')
   //   expect(logs.length).toBe(9)
   // })
-})
+});
