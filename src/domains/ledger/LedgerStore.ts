@@ -191,72 +191,67 @@ const ledgerInit = () => {
      * @param {Date} previousEndDate
      */
     async updateLog(log: NLog, previousEndDate?) {
-      if (checkIfBlocked()) {
-        promptForUpgrade();
-        return false;
+      // Fire hooks
+      methods.hooks.run('onBeforeUpdate', log);
+      // Set saving
+      LedgerStoreSaving.update((s) => true);
+
+      // Add modified flag - in case we want to use it later
+      log.modified = new Date().getTime();
+
+      // Get Date for Book ID
+      let bookDate = log.bookId;
+      let previousBookDate = getBookIdFromDate(previousEndDate);
+      let isSameBook = bookDate === previousBookDate;
+
+      // Get books
+      let book: ILedgerBook = await methods.getBook(bookDate);
+
+      let previousBook; // incase we're moving a log from one book to another
+
+      // Set empty foundIndex
+      const foundIndex: number = book.findIndex((r) => r._id == log._id);
+
+      // Did we find anything?
+      if (foundIndex > -1) {
+        // Update the row
+        book[foundIndex] = log;
       } else {
-        // Fire hooks
-        methods.hooks.run('onBeforeUpdate', log);
-        // Set saving
-        LedgerStoreSaving.update((s) => true);
-
-        // Add modified flag - in case we want to use it later
-        log.modified = new Date().getTime();
-
-        // Get Date for Book ID
-        let bookDate = log.bookId;
-        let previousBookDate = getBookIdFromDate(previousEndDate);
-        let isSameBook = bookDate === previousBookDate;
-
-        // Get books
-        let book: ILedgerBook = await methods.getBook(bookDate);
-
-        let previousBook; // incase we're moving a log from one book to another
-
-        // Set empty foundIndex
-        const foundIndex: number = book.findIndex((r) => r._id == log._id);
-
-        // Did we find anything?
-        if (foundIndex > -1) {
-          // Update the row
-          book[foundIndex] = log;
-        } else {
-          // We didn't find it in the first book - so it must be a different book
-          book.push(log);
-        }
-
-        // Remove it from the prvious if we're in a different book
-        if (!isSameBook) {
-          previousBook = await methods.getBook(previousBookDate);
-          previousBook = previousBook.filter((row) => {
-            return row._id !== log._id;
-          });
-        }
-
-        // Update base again
-        update((s) => {
-          s.books[bookDate] = book;
-          if (!isSameBook) {
-            s.books[previousBookDate] = previousBook;
-          }
-          s.hash = methods.getHash(s);
-          return s;
-        });
-
-        LedgerStoreSaving.update((s) => false);
-
-        let promises = [methods.putBook(bookDate, book)];
-        if (!isSameBook) {
-          promises.push(methods.putBook(previousBookDate, previousBook));
-        }
-
-        let final = Promise.all(promises).then((res) => {
-          return res[0];
-        });
-
-        methods.hooks.run('onLogUpdate', log);
-        return final;
+        // We didn't find it in the first book - so it must be a different book
+        book.push(log);
       }
+
+      // Remove it from the prvious if we're in a different book
+      if (!isSameBook) {
+        previousBook = await methods.getBook(previousBookDate);
+        previousBook = previousBook.filter((row) => {
+          return row._id !== log._id;
+        });
+      }
+
+      // Update base again
+      update((s) => {
+        s.books[bookDate] = book;
+        if (!isSameBook) {
+          s.books[previousBookDate] = previousBook;
+        }
+        s.hash = methods.getHash(s);
+        return s;
+      });
+
+      LedgerStoreSaving.update((s) => false);
+
+      let promises = [methods.putBook(bookDate, book)];
+      if (!isSameBook) {
+        promises.push(methods.putBook(previousBookDate, previousBook));
+      }
+
+      let final = Promise.all(promises).then((res) => {
+        return res[0];
+      });
+
+      methods.hooks.run('onLogUpdate', log);
+      return final;
     },
     /**
      * Prepare a log
@@ -331,94 +326,90 @@ const ledgerInit = () => {
         saving: true,
       });
 
-      if (checkIfBlocked()) {
-        promptForUpgrade();
-      } else {
-        try {
-          // Set the date for the book
-          let bookDateId = getBookIdFromDate(log.end);
+      try {
+        // Set the date for the book
+        let bookDateId = getBookIdFromDate(log.end);
 
-          // Set Path
-          let bookPath = NPaths.storage.book(bookDateId);
+        // Set Path
+        let bookPath = NPaths.storage.book(bookDateId);
 
-          // Get the Book - if its blockstack then make sure it exists
-          /**
-           * This is breaking sometimes and deletes content
-           * We must make sure that NEVER happens
-           * - if book.length from the getBook is zero
-           * and we have logs for that book, something went wrong.
-           */
-          let book = await methods.getBookWithSync(bookDateId);
-          if (!book.length && currentState.books[bookDateId].length) {
-            console.error(
-              `NOTICE: I was not able to get the latest from the server as it returned an empty array. Instead, I'm just using the book that we have stored locally.`
-            );
-            book = currentState.books[bookDateId];
-          }
-
-          // Push the log
-          book.push(log);
-          // Save Book.
-          await Storage.put(bookPath, book);
-          // Set the current state book to this one
-          currentState.books[bookDateId] = book;
-          // Save Last Update to server
-          let timeString = new Date().toJSON();
-          // get the Last Updated
-          let lastDatePath = methods.getLastUpdatePath(bookDateId);
-          //await - removing to see if that speeds things up
-          // Split this off, so it doesn't slow down the rest
-          setTimeout(() => {
-            // Put the last Used
-            Storage.put(lastDatePath, timeString);
-
-            // Add lastUpdated to state
-            currentState.booksLastUpdate[bookDateId] = timeString;
-          }, 1);
-
-          // Update Store
-          update((s) => {
-            s.books = currentState.books;
-            s.hash = methods.getHash(s);
-            return s;
-          });
-          LedgerStoreSaving.update((s) => false);
-
-          /** Fire off Notifications and hooks Save */
-          const undoLastUsedItems = updateLastUsed(log);
-
-          showToast({
-            message: `${Lang.t('general.saved', 'Saved')}: ${textUtils.truncate(log.note, 100)}`,
-            timeout: 2200,
-            type: 'success',
-            buttonLabel: 'Undo',
-            buttonClick: () => {
-              LedgerStore.deleteLogs([log]).then(async () => {
-                // Push the Last Known Ones back to the UsageStore
-                UsageStore.updateSync((state) => {
-                  return { ...state, ...undoLastUsedItems };
-                });
-                await loadToday({ knownTrackables: MasterTrackables });
-                update((s) => {
-                  s.hash = `${Math.random()}`;
-                  return s;
-                });
-                showToast({ message: 'Undo complete' });
-              });
-            },
-          });
-
-          if (!props?.silent) {
-            methods.hooks.run('onLogSaved', log);
-          }
-
-          return { log, date: bookDateId };
-        } catch (e) {
-          console.error(`_saveLog error: ${e.message}`);
-          console.error(e);
-          throw new Error(e.message);
+        // Get the Book - if its blockstack then make sure it exists
+        /**
+         * This is breaking sometimes and deletes content
+         * We must make sure that NEVER happens
+         * - if book.length from the getBook is zero
+         * and we have logs for that book, something went wrong.
+         */
+        let book = await methods.getBookWithSync(bookDateId);
+        if (!book.length && currentState.books[bookDateId].length) {
+          console.error(
+            `NOTICE: I was not able to get the latest from the server as it returned an empty array. Instead, I'm just using the book that we have stored locally.`
+          );
+          book = currentState.books[bookDateId];
         }
-      } /// end if it's blocked or not.
+
+        // Push the log
+        book.push(log);
+        // Save Book.
+        await Storage.put(bookPath, book);
+        // Set the current state book to this one
+        currentState.books[bookDateId] = book;
+        // Save Last Update to server
+        let timeString = new Date().toJSON();
+        // get the Last Updated
+        let lastDatePath = methods.getLastUpdatePath(bookDateId);
+        //await - removing to see if that speeds things up
+        // Split this off, so it doesn't slow down the rest
+        setTimeout(() => {
+          // Put the last Used
+          Storage.put(lastDatePath, timeString);
+
+          // Add lastUpdated to state
+          currentState.booksLastUpdate[bookDateId] = timeString;
+        }, 1);
+
+        // Update Store
+        update((s) => {
+          s.books = currentState.books;
+          s.hash = methods.getHash(s);
+          return s;
+        });
+        LedgerStoreSaving.update((s) => false);
+
+        /** Fire off Notifications and hooks Save */
+        const undoLastUsedItems = updateLastUsed(log);
+
+        showToast({
+          message: `${Lang.t('general.saved', 'Saved')}: ${textUtils.truncate(log.note, 100)}`,
+          timeout: 2200,
+          type: 'success',
+          buttonLabel: 'Undo',
+          buttonClick: () => {
+            LedgerStore.deleteLogs([log]).then(async () => {
+              // Push the Last Known Ones back to the UsageStore
+              UsageStore.updateSync((state) => {
+                return { ...state, ...undoLastUsedItems };
+              });
+              await loadToday({ knownTrackables: MasterTrackables });
+              update((s) => {
+                s.hash = `${Math.random()}`;
+                return s;
+              });
+              showToast({ message: 'Undo complete' });
+            });
+          },
+        });
+
+        if (!props?.silent) {
+          methods.hooks.run('onLogSaved', log);
+        }
+
+        return { log, date: bookDateId };
+      } catch (e) {
+        console.error(`_saveLog error: ${e.message}`);
+        console.error(e);
+        throw new Error(e.message);
+      }
     },
 
     getHash(state: ILedgerState) {
@@ -707,25 +698,6 @@ export const getTrackableUsage = async (
     known
   );
   return usage;
-};
-
-/**
- * It checks if the user is blocked from writing to the database
- * @returns A function that returns a boolean
- */
-export const checkIfBlocked = (): boolean => {
-  return false;
-};
-
-/**
- * It prompts the user to upgrade their subscription.
- */
-export const promptForUpgrade = async () => {
-  let doUpgrade = await Interact.confirm(
-    `Subscription Needed`,
-    'You need to have a valid subscription to write to the Nomie encrypted cloud',
-    'Upgrade'
-  );
 };
 
 /**
