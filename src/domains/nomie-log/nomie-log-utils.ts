@@ -16,6 +16,8 @@ export const isDataNote = (str: string): boolean => {
 };
 
 export const isLongFormat = (str: string): boolean => {
-  if (str.split(' ').length < 5) return false;
+  if (str.split(' ').length < 5) {
+    return false;
+  }
   return isTextNote(str);
 };

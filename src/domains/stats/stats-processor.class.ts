@@ -25,12 +25,12 @@ import type {
 } from './stats-types';
 import { timeSpans } from './stats-types';
 import type { Trackable } from '../trackable/Trackable.class';
-import type { Token, TokenTypes } from '../../modules/tokenizer/lite';
+import type { Token, TokenType } from '../../modules/tokenizer/lite';
 
 class StatsProcessor implements IStats {
   trackable: Trackable;
   rows: Array<NLog>;
-  type: TokenTypes;
+  type: TokenType;
   math: ITrackerMath;
   avg: number;
   sum: number;

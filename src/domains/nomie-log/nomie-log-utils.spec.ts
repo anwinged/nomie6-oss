@@ -1,5 +1,6 @@
 import { isDataNote, isTextNote, notePercentage } from './nomie-log-utils';
 import { it, describe, expect } from 'vitest';
+
 describe('Nomie Log Utils', () => {
   it('should know if a note is a note or a data note', () => {
     const note1 = '#brandon is #taging a #bunch of #stuff and #should be a #note';

@@ -1,6 +1,6 @@
 import type { Dayjs, OpUnitType } from 'dayjs';
 import type NLog from '../nomie-log/nomie-log';
-import type { TokenTypes } from '../../modules/tokenizer/lite';
+import type { TokenType } from '../../modules/tokenizer/lite';
 
 import type { ITrackerMath } from '../../modules/tracker/TrackerClass';
 import type { Trackable } from '../trackable/Trackable.class';
@@ -102,7 +102,7 @@ export type IStatsMaxMin = {
 export type IStats = {
   trackable: Trackable;
   rows: Array<NLog>;
-  type: TokenTypes;
+  type: TokenType;
   math: ITrackerMath;
   avg: number;
   sum: number;

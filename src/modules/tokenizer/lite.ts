@@ -1,14 +1,15 @@
 import time from '../time/time';
 import { Parser } from 'expr-eval';
 
-const prefixes: any = { context: '+', person: '@', tracker: '#' };
+const prefixes: any = { context: '+', person: '@', tracker: '#' } as const;
 
-export type TokenTypes = 'person' | 'link' | 'generic' | 'tracker' | 'context' | 'place' | 'line-break';
+export type TokenType = 'person' | 'link' | 'generic' | 'tracker' | 'context' | 'place' | 'line-break';
+
 export interface Token {
   id: string;
   raw: string; // Raw word
   prefix: string; // #,@,+
-  type: TokenTypes; // type of trackableElement
+  type: TokenType; // type of trackableElement
   value?: string | number; // value of the tracker
   remainder?: string; //any trailing words
   uom?: string;
@@ -20,7 +21,6 @@ export interface WordPart {
 }
 
 /**
- *
  * Get Parsed Value from word
  * Returns a value string from #tracker(value)
  *
@@ -41,7 +41,6 @@ interface ParsedStringValue {
 /**
  * Parse String Value
  * Convert a string into a value, or a time string 01:03:44 into seconds
- * @param valueStr String
  */
 function parseStringValue(valueStr: string): ParsedStringValue {
   const uomMatch = valueStr.match(/[a-z/%$]+/gi);
@@ -79,7 +78,6 @@ function parseStringValue(valueStr: string): ParsedStringValue {
 }
 
 /**
- *
  * Scrub
  * Removes common word ending characters
  *
@@ -94,19 +92,8 @@ function scrub(word: string): WordPart {
   };
 }
 
-/**
- *
- * toToken
- * Creates a payload that can be turned into a
- *
- * @param {String} type tracker,context,person,generic
- * @param {String} word
- * @param {String} value
- * @param {String} remainder
- */
-
 type ToTokenProps = {
-  type: TokenTypes;
+  type: TokenType;
   word: string;
   value?: any;
   remainder?: any;
@@ -114,6 +101,10 @@ type ToTokenProps = {
   uom?: string;
 };
 
+/**
+ * toToken
+ * Creates a payload that can be turned into a token
+ */
 function toToken(tokenPayload: ToTokenProps): Token {
   const { word, type, value, remainder, raw, uom } = tokenPayload;
   const prefix: string = prefixes[type] || '';
@@ -136,17 +127,15 @@ function toToken(tokenPayload: ToTokenProps): Token {
 
 export const strToToken = (str: string = ''): Token | undefined => {
   const tokens = strToTokens(str);
-  if (tokens.length) return tokens[0];
+  if (tokens.length) {
+    return tokens[0];
+  }
   return undefined;
 };
 
 /**
- *
  * Parse
- * parses a string and returns an array of
- * elements
- *
- * @param {String} str
+ * parses a string and returns an array of elements
  */
 export const strToTokens = (str: string = ''): Array<Token> => {
   // Split it into an array of lines
@@ -169,17 +158,14 @@ export const strToTokens = (str: string = ''): Array<Token> => {
 };
 
 /**
- *
  * Parse a Line to an array.
- * @param {String} str
- *
  */
-export const tokenizeLite = (str: string = ''): Array<Token> => {
+export const tokenizeLite = (str: string): Array<Token> => {
   const wordArray: Array<string> = str.trim().replace(/\n/g, ' \n ').split(' ');
   return (
     // Split on the space
     wordArray
-      .map((word: string) => {
+      .map((word: string): Token => {
         // Loop over each word
         const scrubbed = scrub(word); // Scrub it clean
         const parsedValueString = getParsedValue(word);

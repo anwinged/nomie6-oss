@@ -1,26 +1,18 @@
 import snakeCase from '../snake-case/snake-case';
 
-// import { tokenize } from 'nomie-utils'
-
 import { tokenizeLite } from '../../modules/tokenizer/lite';
+import type { TokenType } from '../../modules/tokenizer/lite';
 import type { Token } from '../../modules/tokenizer/lite';
-// import { tokenizeDeep } from '../../modules/tokenizer/deep'
 
-declare var window: any;
-// window.tokenize = tokenize
+type ParseOptions = {
+  includeGeneric?: boolean;
+};
 
 /**
  * Parse a string into an array of Trackable Items
  * pass in an optional option.includeGeneric to include all terms
- * @param {String} str
- * @param {Object} options
  */
-
-type parseOptionProps = {
-  includeGeneric?: boolean;
-};
-
-function parse(str = '', options?: parseOptionProps): Array<Token> {
+function parse(str: string, options?: ParseOptions): Array<Token> {
   options = options || {};
   return tokenizeLite(str).filter((token: Token) => {
     if (options.includeGeneric) {
@@ -30,21 +22,22 @@ function parse(str = '', options?: parseOptionProps): Array<Token> {
     }
   });
 }
+
 /**
  * Converts a single trackable element like #tag or @people to a TrackableElement
- * @param {String} str
  */
-function toElement(str: string) {
+function toElement(str: string): Token | null {
   const parsed: Array<Token> = parse(str);
   if (parsed.length) {
     return parsed[0];
-  } else if (str.length) {
-    parsed.push({ id: snakeCase(str), prefix: '', raw: str, type: 'generic' });
   }
-  return parsed.length ? parsed[0] : null;
+  if (str.length) {
+    return { id: snakeCase(str), prefix: '', raw: str, type: 'generic' };
+  }
+  return null;
 }
 
-function generateRaw(str = '', type = 'generic') {
+function generateRaw(str: string, type: TokenType = 'generic') {
   switch (type) {
     case 'tracker':
       return `#${str}`;
@@ -57,23 +50,29 @@ function generateRaw(str = '', type = 'generic') {
   }
 }
 
+function people(str: string): Array<Token> {
+  return parse(str).filter((token) => {
+    return token.type == 'person';
+  });
+}
+
+function trackers(str: string): Array<Token> {
+  return parse(str).filter((token) => {
+    return token.type == 'tracker';
+  });
+}
+
+function context(str: string): Array<Token> {
+  return parse(str).filter((token) => {
+    return token.type == 'context';
+  });
+}
+
 export default {
   parse,
   toElement,
   generateRaw,
-  people(str) {
-    return parse(str).filter((token) => {
-      return token.type == 'person';
-    });
-  },
-  trackers(str) {
-    return parse(str).filter((token) => {
-      return token.type == 'tracker';
-    });
-  },
-  context(str) {
-    return parse(str).filter((token) => {
-      return token.type == 'context';
-    });
-  },
+  people,
+  trackers,
+  context,
 };

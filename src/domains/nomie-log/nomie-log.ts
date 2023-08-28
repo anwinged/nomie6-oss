@@ -104,7 +104,7 @@ export class NLog implements NomieLogType {
   }
 
   get elements(): Array<Token> {
-    return tokenizeLite(this.note);
+    return tokenizeLite(this.note || '');
   }
 
   get bookId(): string {

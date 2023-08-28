@@ -309,14 +309,9 @@ const ledgerInit = () => {
       return logRaw ? new NLog(logRaw) : null;
     },
 
-    // async fastLog(note) {
-    //   let log = new NLog({ note })
-    //   return saveLog(log)
-    // },
     /**
      * Save Log
      * Real Save Log function - used only in saveLog method.
-     * @param log
      * TODO make this dry enough to put in its own ledgerTools function
      */
     async _saveLog(log: NLog, props?: SaveLogProps): Promise<{ log: NLog; date: string }> {
@@ -604,10 +599,9 @@ type LogSaveResponseType = { log: NLog; date: string };
 type SaveLogProps = {
   silent?: boolean;
 };
+
 /**
  * Save a Log
- * @param {Nlog} log
- * @returns {Promise<LogSaveResponseType>}
  */
 export const saveLog = async (log: NLog, props?: SaveLogProps): Promise<LogSaveResponseType> => {
   LedgerStoreSaving.update((s) => true);
@@ -632,11 +626,8 @@ export const saveLog = async (log: NLog, props?: SaveLogProps): Promise<LogSaveR
  * Prepare a Log to be saved
  * This will lookup a location, if needed. Then score the note
  * against the current time and known trackers
- * @param {Nlog} log
- * @param {ITrackers} knownTrackers
- * @returns {NLog}
  */
-export const prepareLog = async (log: NLog, knownTrackers?: ITrackers) => {
+export const prepareLog = async (log: NLog, knownTrackers?: ITrackers): Promise<NLog> => {
   log = await logAppendLocationIfNeeded(log);
   log.score = log.score || ScoreNote(log.note, log.end, knownTrackers);
   log = ledgerTools.prepareLogForSave(log);
