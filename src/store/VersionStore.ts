@@ -1,6 +1,5 @@
 // This is a stupidly confusing name...
 // Consider renaming to something about software-update or something
-import Logger from '../utils/log/log';
 import { writable } from 'svelte/store';
 
 // Vendors
@@ -10,7 +9,6 @@ import { Interact } from './interact';
 
 // Stores
 
-const console = new Logger('🗺 $AppStore');
 // Nomie API Store
 
 const AppStoreState: any = {

@@ -4,16 +4,11 @@
  * Nomie 2 supported all sorts of wacky shit
  */
 
-import { Interact } from './interact';
 // utils
-import Logger from '../utils/log/log';
 import clipboard from '../utils/clipboard/clipboard';
 import { showToast } from '../components/toast/ToastStore';
 // Svelte
 import { writable } from 'svelte/store';
-
-// Vendors
-const console = new Logger('📲 Device Store');
 
 declare let window: any;
 

@@ -4,7 +4,6 @@
  */
 
 // utils
-import Logger from '../../utils/log/log';
 import NPaths from '../../paths';
 import SearchModal from './search-modal.svelte';
 import { SideStore } from '../../domains/storage/side-storage';
@@ -15,8 +14,6 @@ import { writable } from 'svelte/store';
 // Vendors
 
 // Stores
-
-const console = new Logger('🕵️‍♂️ $Search Store');
 
 export class SearchTerm {
   term: string;

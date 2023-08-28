@@ -1,7 +1,4 @@
-import Logger from '../../utils/log/log';
-
 // consts
-const console = new Logger('🗺 locate.js');
 const LOC_CACHE_KEY = 'loc-cache';
 
 type LocationLookupResponse = {

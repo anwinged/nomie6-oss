@@ -4,17 +4,10 @@
  */
 
 // utils
-import Logger from '../../utils/log/log';
 import TrackableLibraryModal from './library-modal.svelte';
 import { openModal } from '../../components/backdrop/BackdropStore2';
 // Svelte
 import { writable } from 'svelte/store';
-
-// Vendors
-
-// Stores
-
-const console = new Logger('📚 Nomie Library');
 
 // Nomie API Store
 

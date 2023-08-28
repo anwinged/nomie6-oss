@@ -19,7 +19,6 @@
 
   export let enabled: boolean = true
 
-  // const console = new Logger('↕️ NSortable');
   let cleanItems: Array<any> = []
   $: if (items && items.length) {
     // cleanItems = dedupArray(items, key)

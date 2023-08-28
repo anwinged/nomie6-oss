@@ -31,6 +31,7 @@
     "svelte-check": "svelte-check",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test-coverage": "NODE_OPTIONS=--experimental-vm-modules jest  --collect-coverage",
+    "ts-check": "tsc --noEmit",
     "todo": "node build-tools/get-todo.js",
     "vbuild": "vite build --force",
     "vserve": "vite --host 0.0.0.0 --port 5000",

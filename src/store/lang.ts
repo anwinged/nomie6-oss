@@ -6,18 +6,10 @@
 // Svelte
 import { writable } from 'svelte/store';
 
-// utils
-import Logger from '../utils/log/log';
-
 // Vendors
 import i18next from 'i18next';
 
 import langs from '../lang/lang';
-// import testLang from '../lang/test';
-
-// Stores
-
-const console = new Logger('🚦 Lang');
 
 // Nomie API Store
 

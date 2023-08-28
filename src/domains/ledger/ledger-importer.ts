@@ -3,8 +3,6 @@ import NLog from '../nomie-log/nomie-log';
 import { wait } from '../../utils/tick/tick';
 import type LedgerTools from './ledger-tools';
 
-// const console = new Logger(":The Ledger importer", true);
-
 export class LedgerImporter {
   storage: IStorage;
   status: Function;

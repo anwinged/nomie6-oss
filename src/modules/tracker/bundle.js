@@ -1,4 +1,4 @@
-import TrackerClass from './tracker';
+import TrackerClass from './TrackerClass';
 
 export default class Bundle {
   constructor(starter = {}) {

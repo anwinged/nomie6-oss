@@ -1,6 +1,3 @@
-import Logger from '../../utils/log/log';
-const console = new Logger('modules/hooks');
-
 /**
  * Super Simple Hook System Listener Thing
  *
