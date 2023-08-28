@@ -14,7 +14,7 @@
 
 import { UsageStore, updateLastUsed } from '../usage/UsageStore';
 import dayjs, { Dayjs } from 'dayjs';
-import { deleteLogFromCache, saveLogToCache } from './ledger-cache';
+import { deleteLogFromCache } from './ledger-cache';
 
 // Hooks for firing off hooks
 import Hooky from '../../modules/hooks/hooks';
