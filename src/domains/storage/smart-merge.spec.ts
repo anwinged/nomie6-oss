@@ -31,8 +31,8 @@ describe('modules/smart-merge', function () {
       },
     ];
 
-    const merged = smartMerge(array1, array2);
-    console.log(merged);
+    const merged = smartMerge(array1, array2) as any;
+
     expect(merged).toBeTruthy();
     expect(merged.length).toBe(4);
     expect(merged[merged.length - 1].id).toBe('1246');
@@ -53,7 +53,7 @@ describe('modules/smart-merge', function () {
       tags: ['fly'],
       sub: { notime: true },
     };
-    const merged = smartMerge(obj1, obj2);
+    const merged = smartMerge(obj1, obj2) as any;
     expect(merged.age).toBe(55);
     expect(merged.name).toBe('Brandon');
     expect(merged.type).toBe('Person');

@@ -135,7 +135,7 @@ export const updateAllLastUsed = async (knownTrackables: ITrackables, daysBack: 
             min: { v: usage.min?.value || 0, d: usage.min?.date.toDate() },
             max: { v: usage.max.value, d: usage.max.date.toDate() },
             last: { v: lastValue, d: lastDate?.toDate() },
-            longest: { v: streakSummary.longestStreak },
+            longest: { v: streakSummary.longestStreak, d: new Date() },
             streak: streakSummary.todayInStreak
               ? { v: streakSummary.currentStreak, d: new Date() }
               : { v: 0, d: new Date() },

@@ -155,6 +155,7 @@ export default class Export {
           // Fix the path if the storage engine uses something differnt than posix style
           let bookPath = Storage.convertPath(books[finished.length]);
           if (Storage._storageType() === 'firebase') {
+            // @ts-ignore
             const profileRoot = Storage.getEngine().basePath();
             bookPath = bookPath.replace(`${profileRoot}/`, '');
           }

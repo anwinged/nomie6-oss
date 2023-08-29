@@ -7,13 +7,7 @@
  * and how it manged stats with Widgets
  */
 
-import {
-  AddCircleOutline,
-  DuplicateOutline,
-  PencilOutline,
-  SwapOutline,
-  TrashOutline,
-} from '../../components/icon/nicons';
+import { DuplicateOutline, PencilOutline, SwapOutline, TrashOutline } from '../../components/icon/nicons';
 
 import { DashboardClass } from './dashboard-class';
 import type { DashboardPayload } from './dashboard-class';
@@ -99,8 +93,6 @@ const getDashboardDataFromStorage = async (): Promise<InitialState> => {
     activeDashboard: active,
   };
 };
-
-const removeDuplicateWidgets = (items: Array<any>, key: string) => {};
 
 export const toggleDashboardEditMode = () => {
   DashStore.update((s) => {

@@ -43,13 +43,13 @@ export default class DateTime {
   }
 
   getNextDay() {
-    let day = new this.constructor(this.getTime());
+    let day = new DateTime(this.getTime());
     day.setDate(day.getDate() + 1);
     return day;
   }
 
   getPrevDay() {
-    let day = new this.constructor(this.getTime());
+    let day = new DateTime(this.getTime());
     day.setDate(day.getDate() - 1);
     return day;
   }
@@ -60,8 +60,8 @@ export default class DateTime {
   }
 
   isInRange(start, end, repeat = 'never') {
-    let startDate = new this.constructor(start);
-    let endDate = new this.constructor(end);
+    let startDate = new DateTime(start);
+    let endDate = new DateTime(end);
     let currentTime = this.getTime();
     let startTime;
     let endTime;
@@ -69,15 +69,15 @@ export default class DateTime {
     let endCheck;
     switch (repeat) {
       case 'monthly':
-        startTime = new this.constructor(this.getFullYear(), this.getMonth(), startDate.getDate()).getTime();
-        endTime = new this.constructor(this.getFullYear(), this.getMonth(), endDate.getDate()).getTime();
+        startTime = new DateTime(this.getFullYear(), this.getMonth(), startDate.getDate()).getTime();
+        endTime = new DateTime(this.getFullYear(), this.getMonth(), endDate.getDate()).getTime();
         startCheck = currentTime >= startTime;
         endCheck = currentTime <= endTime;
         return startCheck && endCheck;
 
       case 'yearly':
-        startTime = new this.constructor(this.getFullYear(), startDate.getMonth(), startDate.getDate()).getTime();
-        endTime = new this.constructor(this.getFullYear(), endDate.getMonth(), endDate.getDate()).getTime();
+        startTime = new DateTime(this.getFullYear(), startDate.getMonth(), startDate.getDate()).getTime();
+        endTime = new DateTime(this.getFullYear(), endDate.getMonth(), endDate.getDate()).getTime();
         startCheck = currentTime >= startTime;
         endCheck = currentTime <= endTime;
         return startCheck && endCheck;
@@ -110,10 +110,10 @@ export default class DateTime {
     return this._date.getTimezoneOffset();
   }
   getNumberOfDaysInMonth() {
-    return new this.constructor(this.getFullYear(), this.getMonth() + 1, 0).getDate();
+    return new DateTime(this.getFullYear(), this.getMonth() + 1, 0).getDate();
   }
 
   getFirstWeekdayOfMonth() {
-    return new this.constructor(this.getFullYear(), this.getMonth(), 1).getDay();
+    return new DateTime(this.getFullYear(), this.getMonth(), 1).getDay();
   }
 }

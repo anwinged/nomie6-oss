@@ -2,6 +2,8 @@
 // import dayjs from 'dayjs'
 import { it, describe, expect } from 'vitest';
 // import CSVRImport from './csv-import-helper'
+
+// @ts-ignore
 const zeno = `tag,timestamp
 Peed,2020-08-30T08:28:00.000-04:00
 Peed,2020-08-29T08:28:00.000-04:00

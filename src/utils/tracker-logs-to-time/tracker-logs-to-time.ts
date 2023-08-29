@@ -28,6 +28,7 @@ export default function TrackerLogsToTime(trackerTag: string, logs: Array<NLog>)
       if (!dates[endDateString].end || dates[endDateString].end > log.end) {
         dates[endDateString].end = log.end;
       }
+      // @ts-ignore
       let start = dayjs(log.end).subtract(trackerFound.value, 'second').toDate().getTime();
       if (!dates[endDateString].start || dates[endDateString].start > start) {
         dates[endDateString].start = start;

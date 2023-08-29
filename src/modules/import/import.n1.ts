@@ -112,6 +112,7 @@ function getLogs(fileData: any): Array<NLog> {
   });
 
   // Count for missing parents
+  // @ts-ignore
   let missingParent = 0;
   // Next get the Tracked Events
   fileData.events.forEach((event) => {

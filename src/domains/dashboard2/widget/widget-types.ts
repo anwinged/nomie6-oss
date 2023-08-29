@@ -4,7 +4,6 @@ import {
   ChatboxOutline,
   HighLowIcon,
   MapOutline,
-  PieChartOutline,
   PulseOutline,
   SparklesOutline,
   TextOutline,

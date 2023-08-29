@@ -54,4 +54,5 @@ export const autoCompleteSearch = (searchTag, type = 'tracker', elements: autoCo
         : [];
     }
   } catch (e) {}
+  return [];
 };

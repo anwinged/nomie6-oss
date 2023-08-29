@@ -44,6 +44,7 @@ export const findLocations = async (search: string): Promise<Array<Location>> =>
   return new Promise((resolve) => {
     clearTimeout(searchDebounce);
     searchDebounce = setTimeout(() => {
+      // @ts-ignore
       lookupLocation(search).then((results) => {
         resolve(results);
       });

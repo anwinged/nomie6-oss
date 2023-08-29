@@ -34,6 +34,7 @@ export const PouchDBEngine: IStorage = {
   syncer: null, // the sync object
   db: new PouchDB(dbKey, {
     auto_compaction: true,
+    // @ts-ignore
     ajax: { cache: false },
   }),
   basePath(src) {
@@ -195,6 +196,7 @@ export const PouchDBEngine: IStorage = {
     } catch (e) {}
     return doc;
   },
+  // @ts-ignore
   async get(path, onChange) {
     if (onChange && (changeListeners[path] || []).indexOf(onChange) == -1) {
       changeListeners[path] = changeListeners[path] || [];

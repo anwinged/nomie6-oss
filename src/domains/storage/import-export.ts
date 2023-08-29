@@ -59,16 +59,14 @@ export const exportStorage = async (props?: exportPropsType) => {
 
 /**
  * Import Storage
- * @param merge
- * @returns
  */
 export const importStorage = async (merge: boolean = true): Promise<Boolean> => {
   const fileUpload = await selectFile('.json,.csv');
 
   if (`${fileUpload.file.name}`.toLowerCase().endsWith('.csv')) {
     hideImportModal();
-
     showCSVImportModal(fileUpload);
+    return false;
   } else {
     const archive: N6StorageExport | any = JSON.parse(fileUpload.data);
 
@@ -101,16 +99,15 @@ export const importStorage = async (merge: boolean = true): Promise<Boolean> => 
       showImportModal(archive);
     }
   }
+  return false;
 };
 
 type ImportProps = {
   silent?: boolean;
 };
+
 /**
  * Import a Storage Archive
- * @param archive N6StorageExport
- * @param mergeData Should we merge this with existing, or overrite?
- * @returns
  */
 export const importStorageArchive = async (archive: N6StorageExport, props: ImportProps = {}): Promise<Boolean> => {
   const files = Object.keys(archive.files).map((path) => {
@@ -128,68 +125,69 @@ export const importStorageArchive = async (archive: N6StorageExport, props: Impo
           Object.keys(archive.files).length
         } files. This action cannot be undone.`
       );
-  if (confirmed) {
-    const chunkedFiles = chunk(files, 10);
-    const errors: Array<any> = [];
-    const done: Array<any> = [];
+
+  if (!confirmed) {
+    return false;
+  }
+
+  const chunkedFiles = chunk(files, 10);
+  const errors: Array<any> = [];
+  const done: Array<any> = [];
+
+  /**
+   * Loop Over Each Chunk of Files
+   */
+  for (let i = 0; i < chunkedFiles.length; i++) {
+    const cfiles = chunkedFiles[i];
 
     /**
-     * Loop Over Each Chunk of Files
+     * Loop Over Paths in this Chunk
      */
-    for (let i = 0; i < chunkedFiles.length; i++) {
-      const cfiles = chunkedFiles[i];
+    for (let c = 0; c < cfiles.length; c++) {
+      Interact.blocker(`${cfiles[c].path}`, math.percentage(files.length, done.length));
 
-      /**
-       * Loop Over Paths in this Chunk
-       */
-      for (let c = 0; c < cfiles.length; c++) {
-        Interact.blocker(`${cfiles[c].path}`, math.percentage(files.length, done.length));
+      try {
+        let path = cfiles[c].path;
+        let content = cfiles[c].content;
 
-        try {
-          let path = cfiles[c].path;
-          let content = cfiles[c].content;
-
-          /**
-           * If the Existing Exists, and it's not a string
-           * then we will merge the Two together using
-           * lodash merge
-           */
-          const existing = await Storage.get(path);
-          if (existing && typeof existing !== 'string') {
-            let merged = smartMerge(existing, content);
-            await Storage.put(path, merged);
-          } else {
-            // It's either a string, or the existing doesn't exist
-            await Storage.put(path, content);
-          }
-
-          done.push(path);
-        } catch (e) {
-          errors.push({ path: cfiles[c].path, e });
+        /**
+         * If the Existing Exists, and it's not a string
+         * then we will merge the Two together using
+         * lodash merge
+         */
+        const existing = await Storage.get(path);
+        if (existing && typeof existing !== 'string') {
+          let merged = smartMerge(existing, content);
+          await Storage.put(path, merged);
+        } else {
+          // It's either a string, or the existing doesn't exist
+          await Storage.put(path, content);
         }
+
+        done.push(path);
+      } catch (e) {
+        errors.push({ path: cfiles[c].path, e });
       }
     }
+  }
 
-    Interact.stopBlocker();
+  Interact.stopBlocker();
 
-    /**
-     * Check if we have errors
-     */
-    if (!props.silent) {
-      if (!errors.length) {
-        await Interact.alert(`Successfully imported ${files.length} files`);
-        window.location.reload();
-        return true;
-      } else {
-        console.error(errors);
-        await Interact.alert(
-          'Notice',
-          `${errors.length} files errored on Import. Check your console to see the details`
-        );
-        window.location.reload();
-        return true;
-      }
+  /**
+   * Check if we have errors
+   */
+  if (!props.silent) {
+    if (!errors.length) {
+      await Interact.alert(`Successfully imported ${files.length} files`);
+      window.location.reload();
+      return true;
+    } else {
+      console.error(errors);
+      await Interact.alert('Notice', `${errors.length} files errored on Import. Check your console to see the details`);
+      window.location.reload();
+      return true;
     }
-    return true;
-  } // end if Confirmed
+  }
+
+  return true;
 };

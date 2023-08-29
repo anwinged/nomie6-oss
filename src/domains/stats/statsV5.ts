@@ -222,6 +222,7 @@ export default class StatsProcessor implements IStats {
     let timespan: ITimeSpanUnit = timeSpans[this.mode];
     let diff = Math.abs(start.diff(end, timespan.displayUnit)) + 1;
     for (let i = 0; i < diff; i++) {
+      // @ts-ignore
       valueMap[end.subtract(i, timespan.displayUnit).format(timespan.format)] = [];
     }
     return valueMap;
@@ -233,7 +234,6 @@ export default class StatsProcessor implements IStats {
    *    '2020-03-02': [1,2],
    *    '2020-03-01: [1]
    * }
-   * @param {Array} rows
    */
   getValueMap(overrideRows, _unitFormat?: string): any {
     let rows = overrideRows || this.rows;

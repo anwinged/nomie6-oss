@@ -5,12 +5,8 @@ import { GoalClass } from './goal-class';
 import GoalDetailModal from './goal-details-modal.svelte';
 import GoalEditorModal from './goal-editor-modal.svelte';
 import type { GoalScoreType } from './goal-class';
-import type { GoalType } from './goal-class';
 import type { ITrackables } from '../trackable/trackable-utils';
-import { Interact } from '../../store/interact';
-import { MasterTrackables } from '../trackable/TrackableStore';
 import NPaths from '../../paths';
-import Storage from '../../domains/storage/storage';
 import type { TrackableUsage } from '../usage/trackable-usage.class';
 import { createArrayStore } from '../../store/ArrayStore';
 import { createLSStore } from '../../store/LSStore';
@@ -61,8 +57,6 @@ export const GoalModalStore = writable({
  * Init Goals
  * get the goals from storage and update
  */
-
-let masterGoals: Array<GoalClass> = [];
 
 type SavedGoalScoreType = {
   goalId: string;

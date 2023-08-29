@@ -9,9 +9,7 @@ import nid from '../../modules/nid/nid';
 import { dateToDayPart, DayPartUnit } from '../../modules/time/time';
 import type { PopMenuButton } from '../../components/pop-menu/usePopmenu';
 import math from '../../utils/math/math';
-import { wait } from '../../utils/tick/tick';
 import ShuffleOutline from '../../n-icons/ShuffleOutline.svelte';
-import { CreateOutline } from '../../components/icon/nicons';
 
 export const openWritingPrompt = (prompt: WritingPrompt) => {
   // const startingPrompt:any = prompt || shuffle(prompts2)[0];

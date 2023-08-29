@@ -35,19 +35,19 @@ export type IPopMenuOptions = {
   buttonView?: 'list' | 'grid';
 };
 
-const PopMenuInitialState: IPopMenuOptions = {
-  id: 'unknown',
-  show: false,
-  title: null,
-  description: null,
-  buttons: [],
-  component: undefined,
-  componentProps: undefined,
-  buttonView: 'list',
-  trackable: undefined as undefined | Trackable,
-  headerRightIcon: undefined,
-  headerRightIconClick: undefined,
-};
+// const PopMenuInitialState: IPopMenuOptions = {
+//   id: 'unknown',
+//   show: false,
+//   title: null,
+//   description: null,
+//   buttons: [],
+//   component: undefined,
+//   componentProps: undefined,
+//   buttonView: 'list',
+//   trackable: undefined as undefined | Trackable,
+//   headerRightIcon: undefined,
+//   headerRightIconClick: undefined,
+// };
 
 export const PopMenuStore = writable<Array<IPopMenuOptions>>([]);
 export const openPopMenu = (options: IPopMenuOptions) => {

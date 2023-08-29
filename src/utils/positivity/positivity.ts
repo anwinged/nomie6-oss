@@ -63,6 +63,7 @@ export function getEmojiFromScore(_score: number, onlyEmoji: boolean = false): I
   if (match) {
     return onlyEmoji ? match.emoji : match;
   }
+  throw new Error('Unexpected behaviour');
 }
 
 export function positivityFromLogs(logs: Array<any>, trackers: ITrackers): IPositivityResults {

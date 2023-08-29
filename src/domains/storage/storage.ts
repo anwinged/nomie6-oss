@@ -118,6 +118,7 @@ const Storage: IStorage = {
   _storageType() {
     return getStorageType();
   },
+  // @ts-ignore
   setType(type: StorageTypes) {
     saveStorageType(type);
   },

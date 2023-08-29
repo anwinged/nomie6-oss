@@ -5,7 +5,7 @@ import { Trackable } from '../trackable/Trackable.class';
 import { TrackableUsage } from './trackable-usage.class';
 import TrackerClass from '../../modules/tracker/TrackerClass';
 import dayjs from 'dayjs';
-import logsToTrackableUsage, { logToTrackableUsage } from './usage-utils';
+import logsToTrackableUsage from './usage-utils';
 import math from '../../utils/math/math';
 import { it, test, describe, expect } from 'vitest';
 const moodTrackable = new Trackable({
@@ -123,12 +123,6 @@ describe('Trackable Usage Tests', () => {
     const end = dayjs('2021-11-10');
 
     const shorter = trackableUsage.truncate(start, end);
-
-    console.table(
-      shorter.dates.map((d, i) => {
-        return { date: d.format('MMM Do YYYY'), value: shorter.values[i] };
-      })
-    );
     expect(shorter.values.length).toBe(5);
   });
 

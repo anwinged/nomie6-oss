@@ -6,39 +6,39 @@
 
 import { ContextClass } from './context-class';
 // Stores
-import { Interact } from '../../store/interact';
-import { LedgerStore } from '../ledger/LedgerStore';
+// import { Interact } from '../../store/interact';
+// import { LedgerStore } from '../ledger/LedgerStore';
 // utils
-import Logger from '../../utils/log/logger';
+// import Logger from '../../utils/log/logger';
 import NPaths from '../../paths';
 // Vendors
-import array_utils from '../../utils/array/array_utils';
+// import array_utils from '../../utils/array/array_utils';
 import { createArrayStore } from '../../store/ArrayStore';
-import dayjs from 'dayjs';
+// import dayjs from 'dayjs';
 
 // Get Config
 
-const console = new Logger('🗺 $ContextStore');
+// const console = new Logger('🗺 $ContextStore');
 
-const searchForContext = async () => {
-  let contexts: Array<string> = [];
-  Interact.blocker('Finding context...');
-  try {
-    const logs = await LedgerStore.query({
-      start: dayjs().subtract(6, 'month'),
-    });
-    logs.forEach((log) => {
-      log.getMeta().context.forEach((context) => {
-        contexts.push(context.id);
-      });
-    });
-  } catch (e) {
-    console.error(e);
-    Interact.alert('Error', e.message);
-  }
-  Interact.stopBlocker();
-  return array_utils.unique(contexts);
-};
+// const searchForContext = async () => {
+//   let contexts: Array<string> = [];
+//   Interact.blocker('Finding context...');
+//   try {
+//     const logs = await LedgerStore.query({
+//       start: dayjs().subtract(6, 'month'),
+//     });
+//     logs.forEach((log) => {
+//       log.getMeta().context.forEach((context) => {
+//         contexts.push(context.id);
+//       });
+//     });
+//   } catch (e) {
+//     console.error(e);
+//     Interact.alert('Error', e.message);
+//   }
+//   Interact.stopBlocker();
+//   return array_utils.unique(contexts);
+// };
 
 // Nomie API Store
 

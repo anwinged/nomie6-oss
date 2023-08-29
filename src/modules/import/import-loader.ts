@@ -162,6 +162,7 @@ export default class ImportLoader {
     return this;
   }
 
+  // @ts-ignore
   private fireChange(status) {
     this.changeListeners.forEach((func) => {
       func(status);

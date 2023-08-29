@@ -1,5 +1,6 @@
 import { writable } from 'svelte/store';
-import type { UomType } from '../../utils/nomie-uom/uoms';
+// @ts-ignore
+import type { UomType } from '../utils/nomie-uom/uoms';
 
 type uomModalStoreType = {
   uom?: UomType;

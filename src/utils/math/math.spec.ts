@@ -23,7 +23,6 @@ describe('utils/math', function () {
   it('should generate percentages', () => {
     let positivity = [10, 5, 2];
     let percentile = math.percentile(positivity);
-    console.table(percentile);
     expect(percentile.join(',')).toBe('59,29,12');
   });
 

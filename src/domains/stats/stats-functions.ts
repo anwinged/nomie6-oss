@@ -14,6 +14,7 @@ const getStarterValueMap = (startDate: Dayjs, endDate: Dayjs, groupTimeBy: IStat
   let timespan: ITimeSpanUnit = timeSpans[groupTimeBy];
   let diff = Math.abs(start.diff(end, timespan.displayUnit)) + 1;
   for (let i = 0; i < diff; i++) {
+    // @ts-ignore
     valueMap[end.subtract(i, timespan.displayUnit).format(timespan.format)] = [];
   }
   return valueMap;

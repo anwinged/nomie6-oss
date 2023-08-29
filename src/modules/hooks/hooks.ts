@@ -11,6 +11,7 @@ export default class Hooky {
   constructor() {
     this.hooks = {};
   }
+  // @ts-ignore
   hook(hookName, func) {
     if (typeof func === 'function') {
       this.hooks[hookName] = this.hooks[hookName] || [];

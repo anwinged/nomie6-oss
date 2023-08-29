@@ -1,4 +1,4 @@
-import type { TrackableUsage, TrackableUsageMap, TrackableUsageType } from '../usage/trackable-usage.class';
+import type { TrackableUsage, TrackableUsageMap } from '../usage/trackable-usage.class';
 
 import type { CompareDataResponse } from '../usage/trackable-usage-utils';
 import type { Dayjs } from 'dayjs';

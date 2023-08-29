@@ -1,6 +1,5 @@
 import { writable } from 'svelte/store';
 import { closeModal, openModal } from '../../components/backdrop/BackdropStore2';
-import appConfig from '../../config/appConfig';
 import NPaths from '../../paths';
 import { createArrayStore } from '../../store/ArrayStore';
 

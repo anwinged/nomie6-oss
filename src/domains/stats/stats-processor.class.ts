@@ -1,4 +1,4 @@
-import dayjs, { OpUnitType } from 'dayjs';
+import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
 // Modules
 import logFilter from '../nomie-log/log-filter/log-filter';
@@ -26,6 +26,7 @@ import type {
 import { timeSpans } from './stats-types';
 import type { Trackable } from '../trackable/Trackable.class';
 import type { Token, TokenType } from '../../modules/tokenizer/lite';
+import type TrackerClass from '../../modules/tracker/TrackerClass';
 
 class StatsProcessor implements IStats {
   trackable: Trackable;
@@ -48,6 +49,7 @@ class StatsProcessor implements IStats {
   mode: IStatsChartMode;
   is24Hour: boolean;
   streak?: any;
+  // @ts-ignore
   _stats?: StatsProcessor;
   valueMap: IStatsValueMap;
 
@@ -218,6 +220,7 @@ class StatsProcessor implements IStats {
     let timespan: ITimeSpanUnit = timeSpans[this.mode];
     let diff = Math.abs(start.diff(end, timespan.displayUnit)) + 1;
     for (let i = 0; i < diff; i++) {
+      // @ts-ignore
       valueMap[end.subtract(i, timespan.displayUnit).format(timespan.format)] = [];
     }
     return valueMap;
@@ -229,7 +232,6 @@ class StatsProcessor implements IStats {
    *    '2020-03-02': [1,2],
    *    '2020-03-01: [1]
    * }
-   * @param {Array} rows
    */
   getValueMap(overrideRows, _unitFormat?: string): any {
     let rows = overrideRows || this.rows;
@@ -304,9 +306,9 @@ class StatsProcessor implements IStats {
 
   /**
    * Get Related Items
-   * @param {Array} rows NLog
    */
   getRelated(overrideRows?: Array<NLog>) {
+    // @ts-ignore
     let rows = overrideRows || this.rows;
     let people = {};
     let context = {};
@@ -402,8 +404,8 @@ class StatsProcessor implements IStats {
   /**
    * getChartData
    * returns the chart data fro a given type
-   * @param {*} valueMapTotals
    */
+  // @ts-ignore
   getChartData(valueMapTotals, modeOverride?: 'd' | 'w' | 'm' | 'q' | 'y') {
     // If it's a date mode
     let mode = modeOverride || this.mode;
@@ -466,7 +468,7 @@ class StatsProcessor implements IStats {
     }
   } // end to Chart Data;
 
-  getTracker(): Tracker | undefined {
+  getTracker(): TrackerClass | undefined {
     if (this.trackable?.tracker) {
       return this.trackable.tracker;
     }
@@ -523,6 +525,7 @@ class StatsProcessor implements IStats {
     let minMax = this.getMinMaxFromValueMap(this.valueMap);
     let chart = this.getChartData(valueMapTotals);
     return {
+      // @ts-ignore
       _stats: this,
       type: this.trackable.type,
       trackable: this.trackable,

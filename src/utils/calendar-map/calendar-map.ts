@@ -10,21 +10,6 @@ export type CalendarMapProps = {
   rows?: Array<NLog>;
 };
 
-const groupLogsByType = (logs: Array<NLog>, groupBy: TimeGroupType) => {
-  const formats = getCalendarMapFormats(groupBy);
-  const timeMap: any = {};
-  logs.forEach((log) => {
-    const timeKey = log.endDayjs().format(formats.slotFormat);
-    timeMap[timeKey] = timeMap[timeKey] || {
-      values: [],
-      positivity: [],
-      date: log.endDayjs(),
-    };
-    timeMap[timeKey].values.push(1);
-    timeMap[timeKey].positivity.push(log.score);
-  });
-};
-
 export type CalendarMapResponseType = {
   times: Array<number>;
   count: Array<number>;
@@ -47,9 +32,11 @@ const CalendarMap = (options: CalendarMapProps): CalendarMapResponseType => {
   options.rows = options.rows || [];
 
   if (options.rows.length && !options.start) {
+    // @ts-ignore
     options.start = options.rows[0].end; // yes end - is the only real time stamp for a log
   }
   if (options.rows.length && !options.end) {
+    // @ts-ignore
     options.end = options.rows[0].end;
   }
 

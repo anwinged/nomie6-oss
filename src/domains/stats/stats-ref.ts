@@ -3,12 +3,12 @@ import { strToColor } from '../../components/dymoji/dymoji';
 import Tracker from '../../modules/tracker/TrackerClass';
 import type { ITrackerMath } from '../../modules/tracker/TrackerClass';
 import StatsV5 from './statsV5';
-import type { ITimeSpanKey } from './statsV5';
-import type { IStats } from './statsV5';
+import type ITimeSpanKey from './statsV5';
+import type IStats from './statsV5';
 import extractor from '../../utils/extract/extract';
 
 // Stores
-import { LedgerStore } from '../../domains/ledger/LedgerStore';
+import { LedgerStore } from '../ledger/LedgerStore';
 import nid from '../../modules/nid/nid';
 import type { Dayjs } from 'dayjs';
 
@@ -36,6 +36,7 @@ class StatsReference {
   }
 
   getSearchTerm() {
+    // @ts-ignore
     return extractor.generateRaw(this.key, this.type);
   }
 
@@ -68,10 +69,12 @@ class StatsReference {
       // Get Resutls from Ledger
       let results = await LedgerStore.query(payload);
       // Process the Stats
+      // @ts-ignore
       this.stats = statsV5.generate({
         rows: results,
         fromDate: fromDate,
         toDate: toDate,
+        // @ts-ignore
         mode: timeSpan,
         math: this.base.math || 'sum', // added to fix compares not showing right math
         tracker: this.getTracker(),

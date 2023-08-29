@@ -41,6 +41,7 @@ export const onTrackerLongPress = async (tracker, trackers: ITrackers) => {
     }
   } else if (tracker.type !== 'timer') {
     // If it's a note - just open it like normal
+    // @ts-ignore
     onTrackerTap(tracker, trackers);
   }
   return false;
