@@ -93,7 +93,7 @@
     "npm-run-all": "^4.1.5",
     "postcss-load-config": "^3.1.0",
     "pouchdb": "^7.3.0",
-    "prettier": "3.0.2",
+    "prettier": "^3.0.3",
     "prettier-plugin-svelte": "^3.0.3",
     "release-it": "^15.6.0",
     "rollup-plugin-svelte-svg": "^1.0.0-beta.6",
@@ -120,7 +120,6 @@
   },
   "dependencies": {
     "@composi/gestures": "^1.0.9",
-    "@stripe/firestore-stripe-payments": "0.0.6",
     "@sveltejs/svelte-virtual-list": "^3.0.1",
     "@tailwindcss/line-clamp": "^0.2.2",
     "archiver": "^5.3.1",
