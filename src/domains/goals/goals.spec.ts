@@ -6,10 +6,6 @@ import { getDurationFromGoals } from './goal-utils';
 import logsToTrackableUsage from '../usage/usage-utils';
 import { test, describe, expect } from 'vitest';
 
-// jest.mock('@stripe/firestore-stripe-payments', () => {
-//   return {}
-// })
-
 // .meta.env.VITE_APP_FIRESTORE_ROOT
 describe('Goals!', () => {
   const logs = [

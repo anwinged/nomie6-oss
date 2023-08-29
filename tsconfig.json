@@ -8,7 +8,7 @@
     "baseUrl": "./src",
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "types": ["jest", "svelte", "vite/client"],
+    "types": ["svelte", "vite/client"],
     "esModuleInterop": true,
     "importsNotUsedAsValues": "error",
     "noUnusedLocals": true,

@@ -76,8 +76,6 @@ describe('Ledger Tools test sweeeeet', () => {
   //   expect(books[0]).toBe(`${appConfig.book_root}/${getBookIdFromDate(baseDate)}`)
   // })
 
-  // TODO figure out how to get dayjs weekly format into jest
-
   // it("should convert the right date time", () => {
   //   dayjs.extend(weekOfYear);
   //   expect(dayjs().format(appConfig.book_time_format)).toBe("something");
