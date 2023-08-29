@@ -11,7 +11,7 @@
 
   import SortableList2 from '../../components/sortable-list/sortable-list2.svelte'
   import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
-  import nid, { md5 } from '../../modules/nid/nid'
+  import nid from '../../modules/nid/nid'
 
   import type { ICondition } from '../../modules/scoring/score-tracker'
   import CloseOutline from '../../n-icons/CloseOutline.svelte'
@@ -22,6 +22,7 @@
   import { wait } from '../../utils/tick/tick'
   import ConditionItem from './condition-item.svelte'
   import type { OpenScoreEditorProps } from './PositivityEditorStore'
+  import { md5 } from '../../utils/hash/hash'
 
   export let id: string
   export let props: OpenScoreEditorProps

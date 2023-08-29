@@ -64,10 +64,10 @@ import { wait } from '../../utils/tick/tick';
 
 import { getTrackableLastUsageHeavy } from '../usage/UsageStore';
 import dayjs from 'dayjs';
-import { md5 } from '../../modules/nid/nid';
 import BookmarksOutline from '../../n-icons/BookmarksOutline.svelte';
 
 import { openTimelineModal } from '../timeline/timeline-helpers';
+import { md5 } from '../../utils/hash/hash';
 
 /**
  * Create a New Board

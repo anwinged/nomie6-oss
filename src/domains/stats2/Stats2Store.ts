@@ -14,7 +14,8 @@ import logsToTrackableUsage from '../usage/usage-utils';
 import { openModal } from '../../components/backdrop/BackdropStore2';
 import { wait } from '../../utils/tick/tick';
 import { textToId } from '../../utils/text/text';
-import { md5 } from '../../modules/nid/nid';
+
+import { md5 } from '../../utils/hash/hash';
 
 type Stat2StoreProps = {
   loading: boolean;

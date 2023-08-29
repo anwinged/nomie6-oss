@@ -5,7 +5,7 @@
  * Since nomie runs locally, a collision will be unlikely.
  */
 
-import { Md5 } from 'ts-md5/dist/md5';
+import { Md5 } from 'ts-md5';
 
 export default (a1?: string | number, a2?: string | number): string => {
   let str: string = `${new Date().getTime() + Math.random()}`;
@@ -22,21 +22,4 @@ export default (a1?: string | number, a2?: string | number): string => {
     }
   }
   return undefined;
-};
-
-export function md5(str: string): string {
-  return Md5.hashStr(str).toString();
-}
-
-export const fastHash = (str: string): any => {
-  let hash = 0,
-    i,
-    chr;
-  if (str.length === 0) return hash;
-  for (i = 0; i < str.length; i++) {
-    chr = str.charCodeAt(i);
-    hash = (hash << 5) - hash + chr;
-    hash |= 0; // Convert to 32bit integer
-  }
-  return hash;
 };

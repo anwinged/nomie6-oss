@@ -3,7 +3,6 @@
   import { dedupArray } from '../../utils/array/array_utils'
   import { getDateFormats, Prefs } from '../preferences/Preferences'
   import { LedgerStore } from '../ledger/LedgerStore'
-  import { md5 } from '../../modules/nid/nid'
   import { tokenToTrackable } from '../../modules/tokenizer/tokenToTrackable'
   import { TrackableStore } from '../trackable/TrackableStore'
   import { TrackableUsage } from '../usage/trackable-usage.class'
@@ -16,6 +15,7 @@
   import type { WidgetClass } from './widget/widget-class'
   import type NLog from '../nomie-log/nomie-log'
   import WidgetDisplay from './widget/widget-display.svelte'
+  import { md5 } from '../../utils/hash/hash'
 
   export let dashboard: DashboardClass
   export let showDate: boolean = false

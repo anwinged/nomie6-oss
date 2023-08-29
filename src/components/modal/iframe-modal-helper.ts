@@ -1,6 +1,6 @@
-import { md5 } from '../../modules/nid/nid';
 import { openModal } from '../backdrop/BackdropStore2';
 import iFrameModal from './iframe-modal.svelte';
+import { md5 } from '../../utils/hash/hash';
 export const openIFrameModal = (url: string, title?: string, messagePayload?: any) => {
   openModal({
     component: iFrameModal,

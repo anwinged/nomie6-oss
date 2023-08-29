@@ -1,4 +1,5 @@
-import nid, { md5 } from '../../../modules/nid/nid';
+import nid from '../../../modules/nid/nid';
+import { md5 } from '../../../utils/hash/hash';
 export type AwardConfig = {
   id?: string;
   name: string;

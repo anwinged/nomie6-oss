@@ -3,7 +3,8 @@
   import { press } from 'svelte-hammer'
 
   import './button.css'
-  import { md5 } from '../../modules/nid/nid'
+
+  import { md5 } from '../../utils/hash/hash'
 
   const dispatch = createEventDispatcher()
   export let id = undefined

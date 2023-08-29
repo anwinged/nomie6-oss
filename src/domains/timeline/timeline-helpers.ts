@@ -2,7 +2,8 @@ import { createLSStore } from '../../store/LSStore';
 import type { TimelineFilterProps } from './timeline-utils';
 import TimelineModal from './timeline-modal.svelte';
 import { openModal } from '../../components/backdrop/BackdropStore2';
-import { md5 } from '../../modules/nid/nid';
+
+import { md5 } from '../../utils/hash/hash';
 export const TimelineOptionsStore = createLSStore('timeline-settings', {
   default: {
     notes: true,

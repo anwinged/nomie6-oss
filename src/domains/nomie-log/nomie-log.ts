@@ -10,10 +10,11 @@ import { Trackable } from '../trackable/Trackable.class';
 import extractor from '../../utils/extract/extract';
 import { getBookIdFromDate } from '../ledger/ledger-books-to-get';
 import math from '../../utils/math/math';
-import nid, { fastHash } from '../../modules/nid/nid';
+import nid from '../../modules/nid/nid';
 import { notePercentage } from './nomie-log-utils';
 import { tokenToTrackable } from '../../modules/tokenizer/tokenToTrackable';
 import { tokenizeLite } from '../../modules/tokenizer/lite';
+import { fastHash } from '../../utils/hash/hash';
 
 export type NomieLogType = {
   note?: string;
@@ -133,7 +134,7 @@ export class NLog implements NomieLogType {
 
   // Get a hash of this note
   hash(): string {
-    return fastHash([this.note, this.start, this.end, this.lat, this.lng].join(''));
+    return String(fastHash([this.note, this.start, this.end, this.lat, this.lng].join('')));
   }
 
   isValid(): boolean {
