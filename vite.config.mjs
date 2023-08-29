@@ -30,7 +30,9 @@ export default defineConfig({
     }),
     VitePWA({
       manifest: manifest,
-      maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+      workbox: {
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024
+      },
     }),
   ],
 });
