@@ -91,7 +91,6 @@
     "husky": "^4.2.5",
     "i18next": "^17.0.16",
     "import-sort-style-eslint": "^6.0.0",
-    "node-fetch": "^3.2.0",
     "npm-run-all": "^4.1.5",
     "postcss-load-config": "^3.1.0",
     "pouchdb": "^7.3.0",
@@ -101,7 +100,7 @@
     "rollup-plugin-svelte-svg": "^1.0.0-beta.6",
     "semver": "^6.2.0",
     "svelte": "^3.44.2",
-    "svelte-autosize": "^1.0.1",
+    "svelte-autosize": "^1.1.0",
     "svelte-check": "^3.5.0",
     "svelte-hammer": "^0.1.7",
     "svelte-preprocess": "^4.10.7",
@@ -111,6 +110,9 @@
     "ts-md5": "^1.2.7",
     "typescript": "^4.9.5",
     "vite": "^3.2.5",
+    "vite-plugin-package-version": "^1.0.2",
+    "vite-plugin-pwa": "^0.16.4",
+    "vite-plugin-svelte-svg": "^2.2.1",
     "vitest": "^0.34.3",
     "workbox-window": "^6.4.1"
   },
@@ -148,10 +150,7 @@
     "svelte-navigator": "^3.1.5",
     "textarea-caret": "^3.1.0",
     "tweetnacl": "^1.0.3",
-    "tweetnacl-util": "^0.15.1",
-    "vite-plugin-package-version": "^1.0.2",
-    "vite-plugin-pwa": "^0.14.0",
-    "vite-plugin-svelte-svg": "^2.1.0"
+    "tweetnacl-util": "^0.15.1"
   },
   "license": "MIT"
 }
