@@ -23,14 +23,14 @@ export default defineConfig({
     },
   },
   plugins: [
-    svelte({}),
-    loadVersion(),
+    svelte(),
+    loadVersion.default(),
     svelteSVG({
       svgoConfig: {}, // See https://github.com/svg/svgo#configuration
     }),
     VitePWA({
       manifest: manifest,
-      maximumFileSizeToCacheInBytes: 1000 * 1000 * 4,
+      maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
     }),
   ],
 });

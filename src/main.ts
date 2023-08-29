@@ -1,4 +1,3 @@
-//@ts-ignore
 import NomieApp from './App.svelte';
 import { useRegisterSW } from 'virtual:pwa-register/svelte';
 
