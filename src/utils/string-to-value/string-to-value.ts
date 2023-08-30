@@ -1,5 +1,6 @@
 import { parseNumber } from '../parseNumber/parseNumber';
 import time from '../time/time';
+
 const StringToValue = (valueStr: any) => {
   if (typeof valueStr == 'string') {
     if (valueStr.split('.').length == 2) {

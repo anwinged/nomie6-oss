@@ -14,7 +14,9 @@ export interface ILogTime {
   hours?: number;
   percent?: number;
 }
+
 export type ILogTimes = Array<ILogTime>;
+
 export default function TrackerLogsToTime(trackerTag: string, logs: Array<NLog>): ILogTimes {
   let times: Array<ILogTime> = [];
   let dates = {};

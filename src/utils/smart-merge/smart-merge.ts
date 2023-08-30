@@ -1,4 +1,5 @@
 import mergeDeep from 'deepmerge';
+
 export const smartMerge = (v1: any, v2: any) => {
   if (v1 instanceof Array) {
     return mergeArray(v1, v2);

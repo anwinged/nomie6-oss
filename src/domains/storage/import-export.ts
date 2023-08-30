@@ -12,7 +12,7 @@ import { wait } from '../../utils/tick/tick';
 import TrackerClass from '../../modules/tracker/TrackerClass';
 import { MasterTrackables, saveTrackable } from '../trackable/TrackableStore';
 
-import { smartMerge } from './smart-merge';
+import { smartMerge } from '../../utils/smart-merge/smart-merge';
 import { TemplateToImport } from './storage-export.helper';
 type exportPropsType = {
   onChange: Function;
