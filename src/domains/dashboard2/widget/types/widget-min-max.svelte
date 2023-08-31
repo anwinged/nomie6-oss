@@ -1,16 +1,16 @@
 <script lang="ts">
-  import dayjs from 'dayjs'
-  import type { TrackableUsage } from '../../../usage/trackable-usage.class'
-  import type { Trackable } from '../../../trackable/Trackable.class'
+  import dayjs from 'dayjs';
+  import type { TrackableUsage } from '../../../usage/trackable-usage.class';
+  import type { Trackable } from '../../../trackable/Trackable.class';
   // import type { WidgetClass } from '../widget-class'
-  import { openOnThisDayModal } from '../../../on-this-day/useOnThisDayModal'
-  import { getDateFormats } from '../../../preferences/Preferences'
-  import { openDateOptionPopMenu } from '../../../../components/pop-menu/usePopmenu'
+  import { openOnThisDayModal } from '../../../on-this-day/useOnThisDayModal';
+  import { getDateFormats } from '../../../preferences/Preferences';
+  import { openDateOptionPopMenu } from '../../../../components/pop-menu/usePopmenu';
 
-  export let trackable: Trackable
-  export let usage: TrackableUsage
+  export let trackable: Trackable;
+  export let usage: TrackableUsage;
 
-  $: dateFormat = getDateFormats()
+  $: dateFormat = getDateFormats();
 </script>
 
 <div class="min-max-widget">

@@ -1,34 +1,34 @@
 <script lang="ts">
-  import dayjs from 'dayjs'
+  import dayjs from 'dayjs';
 
-  import { createEventDispatcher } from 'svelte'
-  import { Prefs } from '../../domains/preferences/Preferences'
-  import IonIcon from '../icon/ion-icon.svelte'
-  import { ChevronBackOutline, ChevronForwardOutline } from '../icon/nicons'
+  import { createEventDispatcher } from 'svelte';
+  import { Prefs } from '../../domains/preferences/Preferences';
+  import IonIcon from '../icon/ion-icon.svelte';
+  import { ChevronBackOutline, ChevronForwardOutline } from '../icon/nicons';
 
-  export let date: number
+  export let date: number;
 
-  const dispatch = createEventDispatcher()
-  let theDate = new Date()
+  const dispatch = createEventDispatcher();
+  let theDate = new Date();
 
-  const dayMonth = $Prefs.use24hour ? 'DD/MM' : 'MM/DD'
+  const dayMonth = $Prefs.use24hour ? 'DD/MM' : 'MM/DD';
 
   $: if (date && date !== theDate.getTime()) {
-    theDate = new Date(date)
+    theDate = new Date(date);
   } else if (!date && theDate.getTime()) {
-    theDate = new Date()
+    theDate = new Date();
   }
 
   const addDate = () => {
-    theDate = dayjs(theDate).add(1, 'day').toDate()
-    date = theDate.getTime()
-    dispatch('click', date)
-  }
+    theDate = dayjs(theDate).add(1, 'day').toDate();
+    date = theDate.getTime();
+    dispatch('click', date);
+  };
   const subtractDate = () => {
-    theDate = dayjs(theDate).subtract(1, 'day').toDate()
-    date = theDate.getTime()
-    dispatch('click', date)
-  }
+    theDate = dayjs(theDate).subtract(1, 'day').toDate();
+    date = theDate.getTime();
+    dispatch('click', date);
+  };
 </script>
 
 <div class="flex items-center text-xs space-x- date-stepper" aria-label="Control the Date">

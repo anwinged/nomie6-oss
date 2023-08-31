@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let className = "";
+  export let className = '';
   export let noFill: boolean = false;
   export let gap = undefined;
 </script>

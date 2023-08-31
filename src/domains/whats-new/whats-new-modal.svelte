@@ -1,20 +1,20 @@
 <script lang="ts">
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
 
-  import NItem from '../../components/list-item/list-item.svelte'
+  import NItem from '../../components/list-item/list-item.svelte';
 
-  import Button from '../../components/button/button.svelte'
-  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte'
+  import Button from '../../components/button/button.svelte';
+  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte';
 
-  import whatsNew from '../../config/whatsNew'
-  import { closeModal } from '../../components/backdrop/BackdropStore2'
-  import { Lang } from '../../store/lang'
-  import List from '../../components/list/list.svelte'
+  import whatsNew from '../../config/whatsNew';
+  import { closeModal } from '../../components/backdrop/BackdropStore2';
+  import { Lang } from '../../store/lang';
+  import List from '../../components/list/list.svelte';
 
-  export let id: string
+  export let id: string;
 
-  let showFixes = false
-  let showUpdates = false
+  let showFixes = false;
+  let showUpdates = false;
 </script>
 
 <BackdropModal>
@@ -25,7 +25,7 @@
           clear
           primary
           on:click={() => {
-            closeModal(id)
+            closeModal(id);
           }}
         >
           {Lang.t('general.close', 'Close')}
@@ -67,7 +67,7 @@
         block
         color="primary"
         on:click={() => {
-          showUpdates = true
+          showUpdates = true;
         }}>View Changes</Button
       >
     {/if}

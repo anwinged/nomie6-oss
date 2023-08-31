@@ -1,61 +1,60 @@
 <script lang="ts">
-  import type NLog from '../nomie-log/nomie-log'
-  import { logsToTimeline, TimelineFilterProps, TimelineItemType } from './timeline-utils'
+  import type NLog from '../nomie-log/nomie-log';
+  import { logsToTimeline, TimelineFilterProps, TimelineItemType } from './timeline-utils';
 
-  import { TrackableStore } from '../trackable/TrackableStore'
-  import TrackablePill from '../trackable/trackable-pill.svelte'
+  import { TrackableStore } from '../trackable/TrackableStore';
+  import TrackablePill from '../trackable/trackable-pill.svelte';
 
-  import { getDateFormats } from '../preferences/Preferences'
-  import { createEventDispatcher } from 'svelte'
+  import { getDateFormats } from '../preferences/Preferences';
+  import { createEventDispatcher } from 'svelte';
 
-  import { showTrackablePopmenu } from '../board/boardActions'
+  import { showTrackablePopmenu } from '../board/boardActions';
 
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import { ChevronForwardOutline } from '../../components/icon/nicons'
-  import { Interact } from '../../store/interact'
-  import Container from '../../components/container/container.svelte'
-  import { openOnThisDayModal } from '../on-this-day/useOnThisDayModal'
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import { ChevronForwardOutline } from '../../components/icon/nicons';
+  import { Interact } from '../../store/interact';
+  import Container from '../../components/container/container.svelte';
+  import { openOnThisDayModal } from '../on-this-day/useOnThisDayModal';
 
-  import math from '../../utils/math/math'
-  import ValueButton from '../../components/value-button/value-button.svelte'
+  import math from '../../utils/math/math';
+  import ValueButton from '../../components/value-button/value-button.svelte';
 
-  import { Device } from '../../store/device-store'
+  import { Device } from '../../store/device-store';
 
-  import NvirtualList from '../../components/nvirtual-list/nvirtual-list.svelte'
-  import { UsageStore } from '../usage/UsageStore'
-  import ListItemLog from '../../components/list-item-log/list-item-log.svelte'
-  import { textToId } from '../../utils/text/text'
+  import NvirtualList from '../../components/nvirtual-list/nvirtual-list.svelte';
+  import { UsageStore } from '../usage/UsageStore';
+  import ListItemLog from '../../components/list-item-log/list-item-log.svelte';
+  import { textToId } from '../../utils/text/text';
 
-  import ListItem from '../../components/list-item/list-item.svelte'
-  
+  import ListItem from '../../components/list-item/list-item.svelte';
 
-  export let logs: Array<NLog> = []
-  export let filters: TimelineFilterProps = {}
-  const dispatch = createEventDispatcher()
+  export let logs: Array<NLog> = [];
+  export let filters: TimelineFilterProps = {};
+  const dispatch = createEventDispatcher();
 
-  let timeline: Array<TimelineItemType> = []
-  let dateFormats = getDateFormats()
+  let timeline: Array<TimelineItemType> = [];
+  let dateFormats = getDateFormats();
 
-  let listStartIndex: number
-  let listEndIndex: number
+  let listStartIndex: number;
+  let listEndIndex: number;
 
   $: if ($TrackableStore) {
-    timeline = logsToTimeline(logs, $TrackableStore.trackables)
+    timeline = logsToTimeline(logs, $TrackableStore.trackables);
   }
 
-  let topItem: TimelineItemType | undefined = undefined
+  let topItem: TimelineItemType | undefined = undefined;
 
   // let lastEndIndex = 0
 
   $: if (listEndIndex === timeline.length && timeline.length > 0) {
-    dispatch('endOfItems')
+    dispatch('endOfItems');
   }
 </script>
 
 <NvirtualList
   on:topItem={(evt) => {
-    topItem = evt.detail
-    dispatch('scrollItem', evt.detail)
+    topItem = evt.detail;
+    dispatch('scrollItem', evt.detail);
   }}
   items={timeline}
   let:item
@@ -68,10 +67,10 @@
         type="button"
         class=" text-left w-full font-bold hover:opacity-80"
         on:click={() => {
-          openOnThisDayModal(item.logs[0].end)
+          openOnThisDayModal(item.logs[0].end);
         }}
       >
-        <div class="text-sm block font-normal  leading-none text-gray-500 mb-1">
+        <div class="text-sm block font-normal leading-none text-gray-500 mb-1">
           {item.logs[0].endDayjs().fromNow()}
         </div>
         <h2
@@ -91,10 +90,10 @@
           <div class="trackables relative z-0 rounded-lg bg-white dark:bg-gray-950">
             {#each Object.keys(item.usage)
               .map((tag) => {
-                return { usage: item.usage[tag], tag: tag, item }
+                return { usage: item.usage[tag], tag: tag, item };
               })
               .sort((a, b) => {
-                return a.usage.logs[a.usage.logs.length - 1].end < b.usage.logs[b.usage.logs.length - 1].end ? 1 : -1
+                return a.usage.logs[a.usage.logs.length - 1].end < b.usage.logs[b.usage.logs.length - 1].end ? 1 : -1;
               }) as usageMapItem, index (usageMapItem.tag)}
               <!-- <TimelineItem {item} /> -->
               <ListItem bottomLine={60} id="{textToId(usageMapItem.usage.trackable.tag)}-items">
@@ -114,14 +113,14 @@
                   <div class="flex w-full justify-end items-end flex-wrap">
                     {#each usageMapItem.usage.values
                       .map((v, i) => {
-                        return { value: v, log: usageMapItem.usage.logs[i], date: usageMapItem.usage.dates[i], usage: usageMapItem.usage, trackable: usageMapItem.usage.trackable, percentage: math.percentage(UsageStore[usageMapItem.usage.trackable.tag]?.max.v || v, v) }
+                        return { value: v, log: usageMapItem.usage.logs[i], date: usageMapItem.usage.dates[i], usage: usageMapItem.usage, trackable: usageMapItem.usage.trackable, percentage: math.percentage(UsageStore[usageMapItem.usage.trackable.tag]?.max.v || v, v) };
                       })
                       .sort((a, b) => (a.log.end > b.log.end ? 1 : -1)) as usageItem, index (index)}
                       <ValueButton
                         on:click={() => {
                           Interact.logOptions(usageItem.log, {
                             description: usageItem.log.note,
-                          })
+                          });
                         }}
                         percentage={usageItem.percentage}
                         value={usageItem.trackable.formatValue(usageItem.value)}
@@ -143,16 +142,18 @@
 
     {#if filters.notes}
       <div class="notes">
-        {#each item.logs.filter((nlog) => {
-          if (filters.trackables) return nlog.hasNote
-          return true
-        }).sort((a,b)=>{
-          if(a.pinned || b.pinned) {
-            return a.pinned < b.pinned ? 1 : -1
-          } else {
-            return a.end < b.end ? 1 : -1
-          }
-        }) as log}
+        {#each item.logs
+          .filter((nlog) => {
+            if (filters.trackables) return nlog.hasNote;
+            return true;
+          })
+          .sort((a, b) => {
+            if (a.pinned || b.pinned) {
+              return a.pinned < b.pinned ? 1 : -1;
+            } else {
+              return a.end < b.end ? 1 : -1;
+            }
+          }) as log}
           <div class="px-4 py-2">
             <ListItemLog {log} hideTrackables={filters.trackables} />
           </div>

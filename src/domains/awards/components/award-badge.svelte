@@ -1,9 +1,9 @@
 <script lang="ts">
-  import dayjs from 'dayjs'
+  import dayjs from 'dayjs';
 
-  export let sm: boolean = false
-  import type Award from '../helpers/award.class'
-  export let award: Award
+  export let sm: boolean = false;
+  import type Award from '../helpers/award.class';
+  export let award: Award;
 </script>
 
 <div class="award-badge" class:sm>

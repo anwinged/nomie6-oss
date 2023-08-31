@@ -1,129 +1,129 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
-  import { createEventDispatcher } from 'svelte'
-  import SvelteMarkdown from 'svelte-markdown'
+  import { onMount } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
+  import SvelteMarkdown from 'svelte-markdown';
 
-  import Avatar from '../../components/avatar/avatar.svelte'
+  import Avatar from '../../components/avatar/avatar.svelte';
 
-  import Button from '../../components/button/button.svelte'
-  import Divider from '../../components/divider/divider.svelte'
-  import Input from '../../components/input/input.svelte'
-  import ListItem from '../../components/list-item/list-item.svelte'
+  import Button from '../../components/button/button.svelte';
+  import Divider from '../../components/divider/divider.svelte';
+  import Input from '../../components/input/input.svelte';
+  import ListItem from '../../components/list-item/list-item.svelte';
 
-  import List from '../../components/list/list.svelte'
-  import Spinner from '../../components/spinner/spinner.svelte'
-  import Title from '../../components/title/title.svelte'
-  import { showToast } from '../../components/toast/ToastStore'
-  import nid from '../../modules/nid/nid'
-  import { Interact } from '../../store/interact'
-  import is from '../../utils/is/is'
-  import { wait } from '../../utils/tick/tick'
+  import List from '../../components/list/list.svelte';
+  import Spinner from '../../components/spinner/spinner.svelte';
+  import Title from '../../components/title/title.svelte';
+  import { showToast } from '../../components/toast/ToastStore';
+  import nid from '../../modules/nid/nid';
+  import { Interact } from '../../store/interact';
+  import is from '../../utils/is/is';
+  import { wait } from '../../utils/tick/tick';
 
-  import { randomEmoji } from '../tracker/editor/TrackerEditorStore'
-  import { trackEvent } from '../usage/stat-ping'
-  import { PluginClass, PluginType } from './plugin-helpers'
-  import { broadcastPluginMessage, PluginStore } from './PluginStore'
+  import { randomEmoji } from '../tracker/editor/TrackerEditorStore';
+  import { trackEvent } from '../usage/stat-ping';
+  import { PluginClass, PluginType } from './plugin-helpers';
+  import { broadcastPluginMessage, PluginStore } from './PluginStore';
 
-  export let url: string
-  let id: string
-  let pluginDetails: any | PluginType = {}
-  let loading: boolean = false
+  export let url: string;
+  let id: string;
+  let pluginDetails: any | PluginType = {};
+  let loading: boolean = false;
 
-  let lastURL: string
-  let showInstallCard: boolean = false
+  let lastURL: string;
+  let showInstallCard: boolean = false;
 
   $: if (url && url !== lastURL && is.url(url)) {
-    lastURL = url
-    id = nid(url)
-    pluginDetails.id = id
-    pluginDetails.url = url
-    pluginDetails.name = undefined
-    showIframe = false
+    lastURL = url;
+    id = nid(url);
+    pluginDetails.id = id;
+    pluginDetails.url = url;
+    pluginDetails.name = undefined;
+    showIframe = false;
   }
 
   const clearPluginDetail = (clearURL: boolean = false) => {
     if (clearURL) {
-      url = ''
+      url = '';
     }
-    showIframe = false
-    pluginDetails = {}
-    showInstallCard = false
-  }
+    showIframe = false;
+    pluginDetails = {};
+    showInstallCard = false;
+  };
 
-  let showIframe: boolean = false
+  let showIframe: boolean = false;
 
   const messageListener = (evt) => {
     if (evt.data.action === 'register') {
-      let payload = evt.data.data
+      let payload = evt.data.data;
 
       if (payload) {
-        pluginDetails = { ...pluginDetails, ...payload }
-        pluginDetails.description = payload.description
-        pluginDetails.emoji = payload.emoji || randomEmoji()
-        pluginDetails.name = payload.name
-        pluginDetails.addToCaptureMenu = payload.addToCaptureMenu
-        pluginDetails.version = payload.version
-        pluginDetails.uses = payload.uses || []
+        pluginDetails = { ...pluginDetails, ...payload };
+        pluginDetails.description = payload.description;
+        pluginDetails.emoji = payload.emoji || randomEmoji();
+        pluginDetails.name = payload.name;
+        pluginDetails.addToCaptureMenu = payload.addToCaptureMenu;
+        pluginDetails.version = payload.version;
+        pluginDetails.uses = payload.uses || [];
       }
 
-      const plugin = new PluginClass(pluginDetails)
+      const plugin = new PluginClass(pluginDetails);
 
       broadcastPluginMessage({
         action: 'registered',
         data: plugin,
-      })
+      });
     }
-  }
+  };
 
   const loadPlugin = async () => {
-    loading = true
-    showIframe = false
-    await wait(100)
-    showIframe = true
-    await wait(500)
-    showInstallCard = true
-  }
+    loading = true;
+    showIframe = false;
+    await wait(100);
+    showIframe = true;
+    await wait(500);
+    showInstallCard = true;
+  };
 
   onMount(() => {
-    window.addEventListener('message', messageListener)
-    console.log('Plugin installer mounted', url)
+    window.addEventListener('message', messageListener);
+    console.log('Plugin installer mounted', url);
     if (url && is.url(url)) {
-      loadPlugin()
+      loadPlugin();
     }
-  })
+  });
 
   const installPluginDetails = async () => {
-    const plugin = new PluginClass(pluginDetails)
-    trackEvent(`in-plugin-${plugin.url}`)
+    const plugin = new PluginClass(pluginDetails);
+    trackEvent(`in-plugin-${plugin.url}`);
     if (plugin.name) {
-      PluginStore.upsert(plugin)
+      PluginStore.upsert(plugin);
       let confirmEnabled = await Interact.confirm(
         `Enabled ${plugin.name}?`,
         `${plugin.name} was installed successfully. Would you like to enabled it now?`
-      )
+      );
       if (confirmEnabled) {
-        plugin.active = true
-        await PluginStore.upsert(plugin)
-        showToast({ message: `${plugin.name} enabled` })
+        plugin.active = true;
+        await PluginStore.upsert(plugin);
+        showToast({ message: `${plugin.name} enabled` });
       }
-      emit('installed')
-      clearPluginDetail(true)
+      emit('installed');
+      clearPluginDetail(true);
     }
-  }
+  };
 
   const iframeError = (e) => {
-    Interact.error(`${e}`)
-  }
+    Interact.error(`${e}`);
+  };
 
   const iframeLoaded = async () => {
-    await wait(500)
-    loading = false
+    await wait(500);
+    loading = false;
     if (!pluginDetails.name) {
-      Interact.error(`Unable to load that Plugin. Check its URL and try again.`)
+      Interact.error(`Unable to load that Plugin. Check its URL and try again.`);
     }
-  }
+  };
 
-  const emit = createEventDispatcher()
+  const emit = createEventDispatcher();
 </script>
 
 {#if showInstallCard && pluginDetails && pluginDetails.name}
@@ -155,7 +155,7 @@
     </ListItem>
     <ListItem
       on:click={() => {
-        emit('cancel')
+        emit('cancel');
       }}
     >
       <div class="text-red-500 w-full text-center">Cancel</div>

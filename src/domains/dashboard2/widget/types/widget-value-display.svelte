@@ -1,16 +1,13 @@
 <script lang="ts">
-  import type { TrackableUsage } from '../../../usage/trackable-usage.class'
-  
+  import type { TrackableUsage } from '../../../usage/trackable-usage.class';
 
-  import type { WidgetClass } from '../widget-class'
-  import math from '../../../../utils/math/math'
-  import ProgressBar from '../../../../components/progress-bar/progress-bar.svelte'
+  import type { WidgetClass } from '../widget-class';
+  import math from '../../../../utils/math/math';
+  import ProgressBar from '../../../../components/progress-bar/progress-bar.svelte';
 
-  export let widget: WidgetClass
+  export let widget: WidgetClass;
   // export let trackable: Trackable
-  export let usage: TrackableUsage
-
-
+  export let usage: TrackableUsage;
 </script>
 
 <div class="value px-4 flex flex-col items-center h-full justify-center {widget.includeAvg ? 'value-sm' : ''}">
@@ -22,13 +19,12 @@
         percentage={math.percentage(usage.trackable.tracker.max || 10, usage.total)}
       />
     {:else}
-    
       <div class="mb-2 text-3xl leading-tight">{usage?.totalDisplay || 0}</div>
     {/if}
   </div>
   {#if widget.includeAvg && usage}
     <div class="avg text-primary-500 font-medium text-sm mt-1">
-      Avg <span class="font-bold">{(usage.trackable.formatValue(math.average(usage.byDay.values)))}</span>
+      Avg <span class="font-bold">{usage.trackable.formatValue(math.average(usage.byDay.values))}</span>
     </div>
   {/if}
 </div>

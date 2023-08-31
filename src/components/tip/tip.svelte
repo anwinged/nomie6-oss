@@ -1,49 +1,49 @@
 <script lang="ts">
-  import Storage from '../../domains/storage/storage'
+  import Storage from '../../domains/storage/storage';
 
-  import nid from '../../modules/nid/nid'
-  import Button from '../button/button.svelte'
+  import nid from '../../modules/nid/nid';
+  import Button from '../button/button.svelte';
 
-  import tips from '../../config/tips'
-  import IonIcon from '../icon/ion-icon.svelte'
-  import { ChevronBackOutline, ChevronForwardOutline } from '../icon/nicons'
+  import tips from '../../config/tips';
+  import IonIcon from '../icon/ion-icon.svelte';
+  import { ChevronBackOutline, ChevronForwardOutline } from '../icon/nicons';
 
-  export let className = ''
+  export let className = '';
 
-  let hiddenTips = Storage.local.get('hidden-tips') || []
+  let hiddenTips = Storage.local.get('hidden-tips') || [];
 
-  let id = null
-  let show = false
+  let id = null;
+  let show = false;
 
   const state = {
     activeTip: 0,
-  }
+  };
 
   $: if (tips) {
-    id = nid(JSON.stringify(tips))
-    show = hiddenTips.indexOf(id) == -1
+    id = nid(JSON.stringify(tips));
+    show = hiddenTips.indexOf(id) == -1;
   } else {
-    show = false
+    show = false;
   }
 
   async function hideTips() {
-    hiddenTips.push(id)
-    Storage.local.put('hidden-tips', hiddenTips)
-    show = false
+    hiddenTips.push(id);
+    Storage.local.put('hidden-tips', hiddenTips);
+    show = false;
   }
 
   function nextTip() {
     if (state.activeTip == tips.length - 1) {
-      state.activeTip = 0
+      state.activeTip = 0;
     } else {
-      state.activeTip++
+      state.activeTip++;
     }
   }
   function previousTip() {
     if (state.activeTip == 0) {
-      state.activeTip = tips.length - 1
+      state.activeTip = tips.length - 1;
     } else {
-      state.activeTip--
+      state.activeTip--;
     }
   }
 </script>

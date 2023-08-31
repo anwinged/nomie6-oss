@@ -1,18 +1,18 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
+  import { onMount } from 'svelte';
 
-  import SvelteMarkdown from 'svelte-markdown'
+  import SvelteMarkdown from 'svelte-markdown';
 
-  export let content: string
+  export let content: string;
 
-  let wrapperEle: HTMLElement
+  let wrapperEle: HTMLElement;
 
   onMount(() => {
-    let items = wrapperEle.querySelectorAll('a')
+    let items = wrapperEle.querySelectorAll('a');
     items.forEach((item) => {
-      item.setAttribute('target', '_blank')
-    })
-  })
+      item.setAttribute('target', '_blank');
+    });
+  });
 </script>
 
 <div bind:this={wrapperEle} {...$$restProps} class="markdown {$$restProps['class']}">

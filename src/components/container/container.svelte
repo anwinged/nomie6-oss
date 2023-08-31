@@ -1,6 +1,6 @@
 <script lang="ts">
-  export let size: 'xs' | 'sm' | 'md' | 'lg' | 'xl' = 'md'
-  export let className: string = ''
+  export let size: 'xs' | 'sm' | 'md' | 'lg' | 'xl' = 'md';
+  export let className: string = '';
 </script>
 
 <div class={`nui-container nui-container-${size} ${className}`}>

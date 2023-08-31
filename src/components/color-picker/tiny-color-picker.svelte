@@ -1,18 +1,18 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
-  import CheckmarkCircle from '../../n-icons/CheckmarkCircle.svelte'
-import CheckmarkCircleOutline from '../../n-icons/CheckmarkCircleOutline.svelte';
-  import IonIcon from '../icon/ion-icon.svelte'
+  import { createEventDispatcher } from 'svelte';
+  import CheckmarkCircle from '../../n-icons/CheckmarkCircle.svelte';
+  import CheckmarkCircleOutline from '../../n-icons/CheckmarkCircleOutline.svelte';
+  import IonIcon from '../icon/ion-icon.svelte';
 
-  export let value
-  export let colors: Array<string> = ['green', 'orange', 'red', 'blue']
-  export let size = 24
-  export let className = ''
-  const dispatch = createEventDispatcher()
+  export let value;
+  export let colors: Array<string> = ['green', 'orange', 'red', 'blue'];
+  export let size = 24;
+  export let className = '';
+  const dispatch = createEventDispatcher();
 
-  let selected
+  let selected;
   $: if (value && value !== selected) {
-    selected = value
+    selected = value;
   }
 </script>
 
@@ -22,7 +22,7 @@ import CheckmarkCircleOutline from '../../n-icons/CheckmarkCircleOutline.svelte'
       aria-label={color}
       style={`height:${size}px;width:${size}px;`}
       on:click={() => {
-        dispatch('change', color)
+        dispatch('change', color);
       }}
       class={`${selected == color ? `selected ${color}` : `not-selected ${color}`}`}
     >

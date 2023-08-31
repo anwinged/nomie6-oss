@@ -1,34 +1,32 @@
 <script lang="ts">
-  import { openTemplateEditor, openTemplateRef, TemplateStore } from './templates-svelte-helpers'
-  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte'
-  import Button from '../../components/button/button.svelte'
-  import List from '../../components/list/list.svelte'
-  import Title from '../../components/title/title.svelte'
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
-  import { closeTemplateManager } from './templates-svelte-helpers'
-  import Empty from '../../components/empty/empty.svelte'
+  import { openTemplateEditor, openTemplateRef, TemplateStore } from './templates-svelte-helpers';
+  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte';
+  import Button from '../../components/button/button.svelte';
+  import List from '../../components/list/list.svelte';
+  import Title from '../../components/title/title.svelte';
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
+  import { closeTemplateManager } from './templates-svelte-helpers';
+  import Empty from '../../components/empty/empty.svelte';
 
-  import { Template, templateRefs } from './templates-utils'
+  import { Template, templateRefs } from './templates-utils';
 
-  import { onMount } from 'svelte'
-  import ListItem from '../../components/list-item/list-item.svelte'
+  import { onMount } from 'svelte';
+  import ListItem from '../../components/list-item/list-item.svelte';
 
-  import Toolbar from '../../components/toolbar/toolbar.svelte'
-  import ButtonGroup from '../../components/button-group/button-group.svelte'
-import TemplateEditorList from './template-editor-list.svelte'
-import AvailableTemplatesList from './available-templates-list.svelte'
+  import Toolbar from '../../components/toolbar/toolbar.svelte';
+  import ButtonGroup from '../../components/button-group/button-group.svelte';
+  import TemplateEditorList from './template-editor-list.svelte';
+  import AvailableTemplatesList from './available-templates-list.svelte';
 
-  let view: 'templates' | 'mine' = 'templates'
+  let view: 'templates' | 'mine' = 'templates';
 
   onMount(() => {
-    TemplateStore.init()
-  })
+    TemplateStore.init();
+  });
 
   const newTemplate = () => {
-    openTemplateEditor(new Template())
-  }
-
-
+    openTemplateEditor(new Template());
+  };
 </script>
 
 <BackdropModal className="h-full" mainClass="bg-gray-100 dark:bg-gray-800">
@@ -44,14 +42,14 @@ import AvailableTemplatesList from './available-templates-list.svelte'
             label: 'Available',
             active: view == 'templates',
             click() {
-              view = 'templates'
+              view = 'templates';
             },
           },
           {
             label: 'Build',
             active: view == 'mine',
             click() {
-              view = 'mine'
+              view = 'mine';
             },
           },
         ]}
@@ -73,11 +71,11 @@ import AvailableTemplatesList from './available-templates-list.svelte'
       </List>
 
       {#if $TemplateStore.length}
-      <div class="py-2 px-4 flex justify-center">
-        <button class="text-primary py-2 px-4" on:click={() => newTemplate()}> Create Template </button>
-      </div>
+        <div class="py-2 px-4 flex justify-center">
+          <button class="text-primary py-2 px-4" on:click={() => newTemplate()}> Create Template </button>
+        </div>
       {/if}
-      
+
       <div class="px-4 py-4 text-center note-muted">
         Build a custom Nomie Configuration that can be downloaded and shared with others
       </div>

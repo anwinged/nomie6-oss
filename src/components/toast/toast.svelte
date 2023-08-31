@@ -1,43 +1,43 @@
 <script lang="ts">
-  import { fade, fly } from 'svelte/transition'
+  import { fade, fly } from 'svelte/transition';
   // import { flip } from 'svelte/animate'
-  import { removeToast, ToastType } from './ToastStore'
-  import { onDestroy, onMount } from 'svelte'
-  import math from '../../utils/math/math'
-  import ProgressBar from '../progress-bar/progress-bar.svelte'
-  import IonIcon from '../icon/ion-icon.svelte'
-  import CloseOutline from '../../n-icons/CloseOutline.svelte'
-  import CloseCircleOutline from '../../n-icons/CloseCircleOutline.svelte'
-  import CheckmarkCircleOutline from '../../n-icons/CheckmarkCircleOutline.svelte'
+  import { removeToast, ToastType } from './ToastStore';
+  import { onDestroy, onMount } from 'svelte';
+  import math from '../../utils/math/math';
+  import ProgressBar from '../progress-bar/progress-bar.svelte';
+  import IonIcon from '../icon/ion-icon.svelte';
+  import CloseOutline from '../../n-icons/CloseOutline.svelte';
+  import CloseCircleOutline from '../../n-icons/CloseCircleOutline.svelte';
+  import CheckmarkCircleOutline from '../../n-icons/CheckmarkCircleOutline.svelte';
 
-  export let toast: ToastType
+  export let toast: ToastType;
 
-  let timer: number = 0
-  let clearInterval: any
-  let percentage: number = 0
+  let timer: number = 0;
+  let clearInterval: any;
+  let percentage: number = 0;
   $: if (toast) {
-    percentage = math.percentage((toast.timeout || 3000) - 200, timer)
+    percentage = math.percentage((toast.timeout || 3000) - 200, timer);
   }
 
   onMount(() => {
     if (toast) {
-      timer = 0
+      timer = 0;
       clearInterval = setInterval(() => {
-        timer = timer + 100
+        timer = timer + 100;
         if (timer >= toast.timeout) {
-          percentage = 100
+          percentage = 100;
           try {
-            clearInterval()
+            clearInterval();
           } catch (e) {}
         }
-      }, 100)
+      }, 100);
     }
-  })
+  });
   onDestroy(() => {
     try {
-      clearInterval()
+      clearInterval();
     } catch (e) {}
-  })
+  });
 </script>
 
 {#if toast}
@@ -53,7 +53,7 @@
     {/if}
     <div
       on:click={() => {
-        removeToast(toast)
+        removeToast(toast);
       }}
       class="toast"
     >
@@ -61,8 +61,8 @@
       {#if toast.buttonLabel}
         <button
           on:click|preventDefault|stopPropagation={() => {
-            toast.buttonClick()
-            removeToast(toast)
+            toast.buttonClick();
+            removeToast(toast);
           }}
           class="text-primary-500 uppercase font-semibold text-sm px-2 py-1 rounded-full focus:outline-none focus:ring-2 ring-primary-500"
         >

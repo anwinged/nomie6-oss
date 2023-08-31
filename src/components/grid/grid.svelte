@@ -1,19 +1,19 @@
 <script lang="ts">
-  import './grid.css'
+  import './grid.css';
 
-  export let columns: number = 3
-  export let gap: number = 2
-  export let className: string = ''
-  export let style: string = ''
+  export let columns: number = 3;
+  export let gap: number = 2;
+  export let className: string = '';
+  export let style: string = '';
 
-  let columnFr: string = '1fr 1fr 1fr'
-  let columnDots: string = '. . .'
-  let gapStr: string = '2px 2px'
+  let columnFr: string = '1fr 1fr 1fr';
+  let columnDots: string = '. . .';
+  let gapStr: string = '2px 2px';
 
   $: if (columns) {
-    columnFr = Array(columns).fill('1fr').join(' ')
-    columnDots = Array(columns).fill('.').join(' ')
-    gapStr = `${gap}px`
+    columnFr = Array(columns).fill('1fr').join(' ');
+    columnDots = Array(columns).fill('.').join(' ');
+    gapStr = `${gap}px`;
   }
 </script>
 

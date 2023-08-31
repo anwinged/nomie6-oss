@@ -1,8 +1,8 @@
 <script lang="ts">
-  import VirtualList from '@sveltejs/svelte-virtual-list'
-  import ListItemLog from '../../../components/list-item-log/list-item-log.svelte'
-  import type NLog from '../nomie-log'
-  export let logs: Array<NLog> = []
+  import VirtualList from '@sveltejs/svelte-virtual-list';
+  import ListItemLog from '../../../components/list-item-log/list-item-log.svelte';
+  import type NLog from '../nomie-log';
+  export let logs: Array<NLog> = [];
 </script>
 
 <div class="virtual-list">

@@ -1,8 +1,8 @@
 <script lang="ts">
-  export let size = 32
-  export let color = '#319ED7'
-  export let className = ''
-  export let style = ''
+  export let size = 32;
+  export let color = '#319ED7';
+  export let className = '';
+  export let style = '';
 </script>
 
 <svg

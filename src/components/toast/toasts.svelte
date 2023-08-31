@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { ToastStore } from './ToastStore'
-  import { fly } from 'svelte/transition'
+  import { ToastStore } from './ToastStore';
+  import { fly } from 'svelte/transition';
 
-  import Toast from './toast.svelte'
+  import Toast from './toast.svelte';
 </script>
 
 <div in:fly={{ y: 100 }} out:fly={{ y: 100 }} class="toasts">

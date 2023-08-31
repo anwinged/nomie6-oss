@@ -1,34 +1,34 @@
 <script lang="ts">
-  import { getEmojiFromScore } from '../../utils/positivity/positivity'
+  import { getEmojiFromScore } from '../../utils/positivity/positivity';
 
-  import Button from '../button/button.svelte'
-  import PositivitySelector from './positivity-selector.svelte'
-  import IonIcon from '../icon/ion-icon.svelte'
-  import { CloseOutline } from '../icon/nicons'
-  export let score = 0
-  export let closeBackgroundTap: boolean = false
-  export let className = ''
-  export let size = 'lg'
-  export let y = '60%'
-  export let direction: 'horizontal' | 'vertical' = 'horizontal'
+  import Button from '../button/button.svelte';
+  import PositivitySelector from './positivity-selector.svelte';
+  import IonIcon from '../icon/ion-icon.svelte';
+  import { CloseOutline } from '../icon/nicons';
+  export let score = 0;
+  export let closeBackgroundTap: boolean = false;
+  export let className = '';
+  export let size = 'lg';
+  export let y = '60%';
+  export let direction: 'horizontal' | 'vertical' = 'horizontal';
 
-  let selected: any
-  let showMenu: boolean = false
-  $: selected = getEmojiFromScore(score)
-  let triggerButton
+  let selected: any;
+  let showMenu: boolean = false;
+  $: selected = getEmojiFromScore(score);
+  let triggerButton;
 
-  let id: string = `ps-${Math.random()}`
+  let id: string = `ps-${Math.random()}`;
 
-  let x: number
+  let x: number;
   // let y: string = `60%`
 
   function toggle(evt?) {
-    y = `${document.getElementById(id).offsetTop}px`
+    y = `${document.getElementById(id).offsetTop}px`;
 
     if (evt && !showMenu) {
-      x = evt.detail.pageX - 240
+      x = evt.detail.pageX - 240;
     }
-    showMenu = !showMenu
+    showMenu = !showMenu;
   }
 </script>
 
@@ -44,7 +44,7 @@
       {id}
       bind:score
       on:change={() => {
-        toggle()
+        toggle();
       }}
     />
     <button class="flex items-center flex-shrink-0 w-8 px-2 text-white" on:click={toggle}>

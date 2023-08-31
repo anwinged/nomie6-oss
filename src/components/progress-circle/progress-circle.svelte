@@ -1,36 +1,36 @@
 <script lang="ts">
   // https://github.com/stephane-vanraes/svelte-progresscircle/edit/master/src/index.svelte
 
-  export let value: number = 0
-  export let max: number = 100
-  export let size: number = 100
-  export let color: string | undefined = undefined
-  export let backgroundColor: string | undefined = undefined
-  export let showValue: boolean = true
-  export let className: string = ''
-  export let style: string = ''
+  export let value: number = 0;
+  export let max: number = 100;
+  export let size: number = 100;
+  export let color: string | undefined = undefined;
+  export let backgroundColor: string | undefined = undefined;
+  export let showValue: boolean = true;
+  export let className: string = '';
+  export let style: string = '';
 
   $: progressPath = () => {
     if (value <= 0) {
-      return ''
+      return '';
     } else if (value >= max) {
-      return 'M50,5A45 45 0 1 1 49.9999 5'
+      return 'M50,5A45 45 0 1 1 49.9999 5';
     } else {
-      const angle = Math.PI * 2 * (value / max)
-      const x = 50 + Math.cos(angle - Math.PI / 2) * 45
-      const y = 50 + Math.sin(angle - Math.PI / 2) * 45
+      const angle = Math.PI * 2 * (value / max);
+      const x = 50 + Math.cos(angle - Math.PI / 2) * 45;
+      const y = 50 + Math.sin(angle - Math.PI / 2) * 45;
 
-      let path = 'M50,5'
+      let path = 'M50,5';
 
       if (angle > Math.PI) {
-        path += 'A45 45 0 0 1 50 95'
+        path += 'A45 45 0 0 1 50 95';
       }
 
-      path += `A45 45 0 0 1 ${x} ${y}`
+      path += `A45 45 0 0 1 ${x} ${y}`;
 
-      return path
+      return path;
     }
-  }
+  };
 </script>
 
 <div

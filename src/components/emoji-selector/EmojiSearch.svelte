@@ -1,26 +1,26 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
+  import { onMount } from 'svelte';
 
-  import IonIcon from '../icon/ion-icon.svelte'
-  import { CloseOutline, SearchIcon } from '../icon/nicons'
+  import IonIcon from '../icon/ion-icon.svelte';
+  import { CloseOutline, SearchIcon } from '../icon/nicons';
 
-  export let searchText = ''
+  export let searchText = '';
 
-  let searchField
+  let searchField;
 
   onMount(() => {
     // searchField.focus();
-  })
+  });
 
   function clearSearchText() {
-    searchText = ''
-    searchField.focus()
+    searchText = '';
+    searchField.focus();
   }
 
   function handleKeyDown(event) {
     if (event.key === 'Escape' && searchText) {
-      clearSearchText()
-      event.stopPropagation()
+      clearSearchText();
+      event.stopPropagation();
     }
   }
 </script>

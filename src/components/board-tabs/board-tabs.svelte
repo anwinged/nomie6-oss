@@ -1,68 +1,68 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher } from 'svelte';
 
   // components
-  import NHScroller from '../h-scroller/h-scroller.svelte'
+  import NHScroller from '../h-scroller/h-scroller.svelte';
 
-  import './board-tabs.css'
-  import IonIcon from '../icon/ion-icon.svelte'
-  import { ActiveBoard, CombinedBoards, deleteUniboard, saveSortedBoards } from '../../domains/board/UniboardStore'
-  import type { UniboardType } from '../../domains/board/UniboardStore'
-  import SortableList2 from '../sortable-list/sortable-list2.svelte'
-  import CloseOutline from '../../n-icons/CloseOutline.svelte'
+  import './board-tabs.css';
+  import IonIcon from '../icon/ion-icon.svelte';
+  import { ActiveBoard, CombinedBoards, deleteUniboard, saveSortedBoards } from '../../domains/board/UniboardStore';
+  import type { UniboardType } from '../../domains/board/UniboardStore';
+  import SortableList2 from '../sortable-list/sortable-list2.svelte';
+  import CloseOutline from '../../n-icons/CloseOutline.svelte';
 
-  import { Interact } from '../../store/interact'
-  import { showToast } from '../toast/ToastStore'
-  import { Prefs } from '../../domains/preferences/Preferences'
+  import { Interact } from '../../store/interact';
+  import { showToast } from '../toast/ToastStore';
+  import { Prefs } from '../../domains/preferences/Preferences';
 
-  export let boards: Array<UniboardType> = []
+  export let boards: Array<UniboardType> = [];
 
-  export let className: string = ''
+  export let className: string = '';
 
-  export let editMode: boolean = false
+  export let editMode: boolean = false;
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
   const state = {
     active: null,
     activeIndex: 0,
     hasTimers: false,
     editMode: false,
-  }
-  let ready: boolean = true
-  let localBoards: Array<UniboardType> = []
-  let active: UniboardType
+  };
+  let ready: boolean = true;
+  let localBoards: Array<UniboardType> = [];
+  let active: UniboardType;
 
   $: if ($CombinedBoards && $Prefs) {
-    localBoards = $CombinedBoards || []
-    active = $ActiveBoard
-    localBoards = localBoards
+    localBoards = $CombinedBoards || [];
+    active = $ActiveBoard;
+    localBoards = localBoards;
   }
 
   $: if (editMode === true) {
-    state.editMode = true
+    state.editMode = true;
   } else if (editMode === false) {
-    state.editMode = false
+    state.editMode = false;
   }
   // When board size changes
   $: if (boards.length && active) {
     boards.forEach((b, index) => {
       if (b.id == active.id && b.id !== '_all' && b.id !== '_timers') {
-        state.activeIndex = index // all
+        state.activeIndex = index; // all
       }
-    })
+    });
   }
 
   async function deleteBoard(board) {
     let confirmed = await Interact.confirm(
       'Delete ' + board.label + ' tab?',
       "You can recreate it later, but it's not super easy."
-    )
+    );
     if (confirmed === true) {
-      ready = false
-      await deleteUniboard(board)
-      ready = true
-      showToast({ message: 'Deleted' })
+      ready = false;
+      await deleteUniboard(board);
+      ready = true;
+      showToast({ message: 'Deleted' });
     }
   }
 </script>
@@ -82,7 +82,7 @@
             type="menu"
             class="tab board-{board.id}  {board == active ? 'selected' : 'inactive'}"
             on:click={() => {
-              dispatch('tabTap', board)
+              dispatch('tabTap', board);
             }}
           >
             {#if board.icon}
@@ -102,14 +102,14 @@
         key="id"
         direction="x"
         on:update={(evt) => {
-          saveSortedBoards(evt.detail)
+          saveSortedBoards(evt.detail);
         }}
         let:item
       >
         <div class="px-1">
           <button
             on:click|preventDefault={() => {
-              deleteBoard(item)
+              deleteBoard(item);
             }}
             class="rounded-full h-4 w-4 absolute z-50 -right-2 bg-red-500 text-white"
           >

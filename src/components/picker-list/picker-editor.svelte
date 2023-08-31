@@ -1,36 +1,36 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
+  import { onMount } from 'svelte';
 
-  import NItem from '../list-item/list-item.svelte'
+  import NItem from '../list-item/list-item.svelte';
 
-  import { createEventDispatcher } from 'svelte'
-  import Input from '../input/input.svelte'
-  import { Lang } from '../../store/lang'
-  import Text from '../text/text.svelte'
-  const dispatch = createEventDispatcher()
+  import { createEventDispatcher } from 'svelte';
+  import Input from '../input/input.svelte';
+  import { Lang } from '../../store/lang';
+  import Text from '../text/text.svelte';
+  const dispatch = createEventDispatcher();
 
-  export let style = ''
-  export let className = ''
-  export let itemClass = ''
-  export let list: Array<any> = []
-  export let showHeaderContent: boolean = true
+  export let style = '';
+  export let className = '';
+  export let itemClass = '';
+  export let list: Array<any> = [];
+  export let showHeaderContent: boolean = true;
 
-  let ready = false
-  let textList
-  let picks = []
+  let ready = false;
+  let textList;
+  let picks = [];
 
   function textListChanged(evt) {
-    picks = textList.getValue().split('\n')
-    dispatch('change', picks)
+    picks = textList.getValue().split('\n');
+    dispatch('change', picks);
   }
 
   $: if (list && list.length && picks.length == 0) {
-    picks = list || []
+    picks = list || [];
   }
 
   onMount(() => {
-    ready = true
-  })
+    ready = true;
+  });
 </script>
 
 <div class="n-picker-list edit-mode {className}" {style}>

@@ -1,40 +1,40 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
+  import { onMount } from 'svelte';
 
-  import HScroller from '../../../../components/h-scroller/h-scroller.svelte'
-  import IonIcon from '../../../../components/icon/ion-icon.svelte'
+  import HScroller from '../../../../components/h-scroller/h-scroller.svelte';
+  import IonIcon from '../../../../components/icon/ion-icon.svelte';
 
-  import { getWidgetTypes, IWidgetType, widgetTypes } from '../widget-types'
-  import { PluginStore } from '../../../plugins/PluginStore'
+  import { getWidgetTypes, IWidgetType, widgetTypes } from '../widget-types';
+  import { PluginStore } from '../../../plugins/PluginStore';
 
-  import Avatar from '../../../../components/avatar/avatar.svelte'
-import type { WidgetClass } from '../widget-class';
+  import Avatar from '../../../../components/avatar/avatar.svelte';
+  import type { WidgetClass } from '../widget-class';
   export let widget: WidgetClass;
 
-  let mounted = false
+  let mounted = false;
   $: if (widget && widget.type && mounted) {
     setTimeout(() => {
-      const ele = document.querySelector('.widget-type-selector .active-type')
+      const ele = document.querySelector('.widget-type-selector .active-type');
       if (ele) {
-        ele.scrollIntoView()
+        ele.scrollIntoView();
       }
-    }, 300)
+    }, 300);
   }
 
   const select = (selectedType: IWidgetType) => {
-    widget.type = selectedType.id
+    widget.type = selectedType.id;
     widget.data = selectedType.data;
-  }
+  };
 
-  let allWidgetTypes: Array<IWidgetType> = []
+  let allWidgetTypes: Array<IWidgetType> = [];
 
   $: if (mounted && !allWidgetTypes.length) {
-    allWidgetTypes = getWidgetTypes($PluginStore)
+    allWidgetTypes = getWidgetTypes($PluginStore);
   }
 
   onMount(() => {
-    mounted = true
-  })
+    mounted = true;
+  });
 </script>
 
 <HScroller
@@ -46,7 +46,7 @@ import type { WidgetClass } from '../widget-class';
       class="flex flex-col self-start focus:outline-none p-1 rounded-xl"
       aria-label={`${widgetType.label} widget`}
       on:click={() => {
-        select(widgetType)
+        select(widgetType);
       }}
     >
       <div

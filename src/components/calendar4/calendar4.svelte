@@ -1,29 +1,29 @@
 <script lang="ts">
-  import dayjs from 'dayjs'
-  import type { Dayjs } from 'dayjs'
-  import { createEventDispatcher } from 'svelte'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import { ChevronBackOutline, ChevronForwardOutline } from '../../components/icon/nicons'
+  import dayjs from 'dayjs';
+  import type { Dayjs } from 'dayjs';
+  import { createEventDispatcher } from 'svelte';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import { ChevronBackOutline, ChevronForwardOutline } from '../../components/icon/nicons';
 
-  import { Lang } from '../../store/lang'
-  import { parseNumber } from '../../utils/parseNumber/parseNumber'
-  import type NLog from '../../domains/nomie-log/nomie-log'
+  import { Lang } from '../../store/lang';
+  import { parseNumber } from '../../utils/parseNumber/parseNumber';
+  import type NLog from '../../domains/nomie-log/nomie-log';
 
-  import { objectHash } from '../../modules/object-hash/object-hash'
-  import math from '../../utils/math/math'
-  import ProgressBar from '../progress-bar/progress-bar.svelte'
-  import type { CalendarDayUnit } from './calendar-utils'
+  import { objectHash } from '../../modules/object-hash/object-hash';
+  import math from '../../utils/math/math';
+  import ProgressBar from '../progress-bar/progress-bar.svelte';
+  import type { CalendarDayUnit } from './calendar-utils';
 
-  export let date: Date = new Date()
-  export let weekStarts: 'monday' | 'sunday' = 'sunday'
+  export let date: Date = new Date();
+  export let weekStarts: 'monday' | 'sunday' = 'sunday';
 
-  export let days: Array<CalendarDayUnit> = []
+  export let days: Array<CalendarDayUnit> = [];
 
-  export let size: 'sm' | 'base' = 'base'
+  export let size: 'sm' | 'base' = 'base';
 
-  let now = dayjs().format('YYYY-MM-DD')
+  let now = dayjs().format('YYYY-MM-DD');
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
   let weekDays = [
     Lang.t('days.monday', 'Monday'),
@@ -33,45 +33,45 @@
     Lang.t('days.friday', 'Friday'),
     Lang.t('days.saturday', 'Saturday'),
     Lang.t('days.sunday', 'Sunday'),
-  ]
+  ];
 
   type DayMapType = {
-    [key: string]: CalendarDayUnit
-  }
-  let daysMap: DayMapType = {}
+    [key: string]: CalendarDayUnit;
+  };
+  let daysMap: DayMapType = {};
 
   $: if (objectHash(days)) {
     days.forEach((day) => {
-      daysMap[day.date.toDateString()] = day
-    })
+      daysMap[day.date.toDateString()] = day;
+    });
   }
 
-  $: datejs = dayjs(date).startOf('month')
-  $: daysInMonth = datejs.daysInMonth()
-  $: daysInPreviousMonth = datejs.subtract(1, 'month').daysInMonth()
-  $: firstDayColumn = datejs.day() - (weekStarts === 'monday' ? 1 : 0)
-  $: lastDayColumn = datejs.endOf('month').day() + (weekStarts === 'monday' ? 0 : 1)
-  $: month = datejs.month()
-  $: year = parseNumber(datejs.format('YYYY'))
+  $: datejs = dayjs(date).startOf('month');
+  $: daysInMonth = datejs.daysInMonth();
+  $: daysInPreviousMonth = datejs.subtract(1, 'month').daysInMonth();
+  $: firstDayColumn = datejs.day() - (weekStarts === 'monday' ? 1 : 0);
+  $: lastDayColumn = datejs.endOf('month').day() + (weekStarts === 'monday' ? 0 : 1);
+  $: month = datejs.month();
+  $: year = parseNumber(datejs.format('YYYY'));
   $: if (weekStarts == 'sunday') {
-    const sunday = weekDays.pop()
-    weekDays.unshift(sunday)
+    const sunday = weekDays.pop();
+    weekDays.unshift(sunday);
   }
 
   const nextPrev = (dir: 'next' | 'previous') => {
     if (dir === 'next') {
-      date = dayjs(date).add(1, 'month').toDate()
+      date = dayjs(date).add(1, 'month').toDate();
     } else {
-      date = dayjs(date).subtract(1, 'month').toDate()
+      date = dayjs(date).subtract(1, 'month').toDate();
     }
-    dispatch('dateChange', date)
-  }
+    dispatch('dateChange', date);
+  };
 
   const getDayClass = (date: Dayjs): string => {
-    let classArr = []
+    let classArr = [];
     const day = days.find((d) => {
-      return d.date.toDateString() === date.toDate().toDateString()
-    })
+      return d.date.toDateString() === date.toDate().toDateString();
+    });
     if (day) {
     }
     // if (!trackableUsage) return ''
@@ -84,12 +84,12 @@
     // } else if (trackableUsage.positivity[dateIndex] < 0) {
     //   classArr.push('is-negative')
     // }
-    return classArr.join(' ')
-  }
+    return classArr.join(' ');
+  };
 
   const dayClicked = (d: Dayjs) => {
-    dispatch('input', d.toDate())
-  }
+    dispatch('input', d.toDate());
+  };
 </script>
 
 <div class="calendar-4" style="">
@@ -105,15 +105,15 @@
           value={month}
           on:input={(evt) => {
             //@ts-ignore
-            let newDate = datejs.month(evt.target.value)
-            date = newDate.toDate()
-            dispatch('dateChange', newDate.toDate())
+            let newDate = datejs.month(evt.target.value);
+            date = newDate.toDate();
+            dispatch('dateChange', newDate.toDate());
           }}
         >
           {#each Array(12)
             .fill(0)
             .map((c, index) => {
-              return dayjs().month(index).startOf('month').format('MMM')
+              return dayjs().month(index).startOf('month').format('MMM');
             }) as lmonth, index}
             <option value={index}>{lmonth}</option>
           {/each}
@@ -126,15 +126,15 @@
           value={year}
           on:input={(evt) => {
             //@ts-ignore
-            let newDate = datejs.year(parseNumber(evt.target.value))
-            date = newDate.toDate()
-            dispatch('dateChange', newDate)
+            let newDate = datejs.year(parseNumber(evt.target.value));
+            date = newDate.toDate();
+            dispatch('dateChange', newDate);
           }}
         >
           {#each Array(12)
             .fill(0)
             .map((c, index) => {
-              return parseNumber(dayjs().format('YYYY')) - index
+              return parseNumber(dayjs().format('YYYY')) - index;
             }) as lyear, index}
             <option value={lyear}>{lyear}</option>
           {/each}
@@ -153,7 +153,7 @@
           class:sm={size == 'sm'}
           class="nselect"
           on:click={() => {
-            date = new Date()
+            date = new Date();
           }}>Today</button
         >
       {/if}
@@ -179,8 +179,8 @@
         class="past-month day d-{datejs.format('YYYY-MM-DD')}"
         class:today={datejs.format('YYYY-MM-DD') === now}
         on:click={() => {
-          let dayindex = daysInPreviousMonth - (firstDayColumn - (index + 1))
-          dayClicked(datejs.subtract(1, 'month').date(dayindex))
+          let dayindex = daysInPreviousMonth - (firstDayColumn - (index + 1));
+          dayClicked(datejs.subtract(1, 'month').date(dayindex));
         }}
       >
         <span>{daysInPreviousMonth - (firstDayColumn - (index + 1))}</span>
@@ -191,18 +191,18 @@
     {#each Array(daysInMonth)
       .fill(0)
       .map((c, index) => {
-        const d = datejs.date(index + 1)
-        let dateMap = daysMap[d.toDate().toDateString()]
+        const d = datejs.date(index + 1);
+        let dateMap = daysMap[d.toDate().toDateString()];
 
         return { date: d, key: d
             .toDate()
-            .toDateString(), value: dateMap?.value, positivity: dateMap?.positivity > 0 ? 'positive' : dateMap?.positivity < 0 ? 'negative' : 'neutral', percentage: dateMap?.percentage || math.percentage(dateMap?.max || 10, dateMap?.value || 0) }
+            .toDateString(), value: dateMap?.value, positivity: dateMap?.positivity > 0 ? 'positive' : dateMap?.positivity < 0 ? 'negative' : 'neutral', percentage: dateMap?.percentage || math.percentage(dateMap?.max || 10, dateMap?.value || 0) };
       }) as dayItem, index}
       <button
         class="cell day day-{index} positivity-{dayItem.positivity}"
         class:today={dayItem.date.format('YYYY-MM-DD') === now}
         on:click={() => {
-          dayClicked(dayItem.date)
+          dayClicked(dayItem.date);
         }}
       >
         <span> {index + 1}</span>
@@ -226,7 +226,7 @@
         class="next-month day d-{datejs.format('YYYY-MM-DD')}"
         class:today={datejs.format('YYYY-MM-DD') == now}
         on:click={() => {
-          dayClicked(datejs.add(1, 'month').date(index + 1))
+          dayClicked(datejs.add(1, 'month').date(index + 1));
         }}
       >
         <span>{index + 1}</span>

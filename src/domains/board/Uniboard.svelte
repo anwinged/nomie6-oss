@@ -1,86 +1,86 @@
 <script lang="ts">
-  import { saveLog } from '../ledger/LedgerStore'
-  import { Trackable } from '../trackable/Trackable.class'
+  import { saveLog } from '../ledger/LedgerStore';
+  import { Trackable } from '../trackable/Trackable.class';
 
-  import { ActiveLogStore } from '../capture-log/CaptureLogStore'
-  import { InitTrackableStore, TrackableStore } from '../trackable/TrackableStore'
-  import { onTrackerTap } from '../tracker/input/TrackerInputStore'
-  import UniboardTrackableGrid from './UniboardTrackableGrid.svelte'
+  import { ActiveLogStore } from '../capture-log/CaptureLogStore';
+  import { InitTrackableStore, TrackableStore } from '../trackable/TrackableStore';
+  import { onTrackerTap } from '../tracker/input/TrackerInputStore';
+  import UniboardTrackableGrid from './UniboardTrackableGrid.svelte';
   import {
     browseLibraryButton,
     getAddExistingButton,
     getAddTrackerButton,
     showBoardAddOptions,
     showTrackablePopmenu,
-  } from './boardActions'
-  import { ActiveBoard, CombinedBoards, initUniboardStore, setActiveBoard, UniboardStore } from './UniboardStore'
-  import { Lang } from '../../store/lang'
-  import { toTrackableArray } from '../trackable/trackable-utils'
-  import Spinner from '../../components/spinner/spinner.svelte'
-  import Swiper from '../../components/swiper/swiper.svelte'
-  import Menu from '../../components/menu/menu.svelte'
-  import { Prefs } from '../preferences/Preferences'
-  import { objectHash } from '../../modules/object-hash/object-hash'
+  } from './boardActions';
+  import { ActiveBoard, CombinedBoards, initUniboardStore, setActiveBoard, UniboardStore } from './UniboardStore';
+  import { Lang } from '../../store/lang';
+  import { toTrackableArray } from '../trackable/trackable-utils';
+  import Spinner from '../../components/spinner/spinner.svelte';
+  import Swiper from '../../components/swiper/swiper.svelte';
+  import Menu from '../../components/menu/menu.svelte';
+  import { Prefs } from '../preferences/Preferences';
+  import { objectHash } from '../../modules/object-hash/object-hash';
 
-  import { ArchiveOutline } from '../../components/icon/nicons'
+  import { ArchiveOutline } from '../../components/icon/nicons';
 
   // import { openPersonModal } from '../people/usePersonModal'
-  import UniboardEditorView from './uniboard-editor-view.svelte'
-  import { createEventDispatcher } from 'svelte'
-  import { Device } from '../../store/device-store'
-  import Button from '../../components/button/button.svelte'
-  import { openUnisearch } from '../search/UnisearchStore'
-  import { openTrackableEditor } from '../trackable/trackable-editor/TrackableEditorStore'
-  import TrackerClass from '../../modules/tracker/TrackerClass'
-  import { PeopleStore } from '../people/PeopleStore'
-  import { TrackerStore } from '../tracker/TrackerStore'
-  import { onTrackerLongPress } from '../../modules/tracker/tracker-utils'
-  import { importStorage } from '../storage/import-export'
-  import NLog from '../nomie-log/nomie-log'
-  import { UsageStore } from '../usage/UsageStore'
+  import UniboardEditorView from './uniboard-editor-view.svelte';
+  import { createEventDispatcher } from 'svelte';
+  import { Device } from '../../store/device-store';
+  import Button from '../../components/button/button.svelte';
+  import { openUnisearch } from '../search/UnisearchStore';
+  import { openTrackableEditor } from '../trackable/trackable-editor/TrackableEditorStore';
+  import TrackerClass from '../../modules/tracker/TrackerClass';
+  import { PeopleStore } from '../people/PeopleStore';
+  import { TrackerStore } from '../tracker/TrackerStore';
+  import { onTrackerLongPress } from '../../modules/tracker/tracker-utils';
+  import { importStorage } from '../storage/import-export';
+  import NLog from '../nomie-log/nomie-log';
+  import { UsageStore } from '../usage/UsageStore';
 
-  const dispatch = createEventDispatcher()
-  export let searching: undefined | string = undefined
-  export let sort: Function
+  const dispatch = createEventDispatcher();
+  export let searching: undefined | string = undefined;
+  export let sort: Function;
   /**
    * Param of filter - a function to filter the trackables
    * @param ele
    */
   export let filter: Function = (ele: Trackable) => {
-    return true
-  }
+    return true;
+  };
 
   /**
    * Get Trackables
    * from the trackablesStore
    * React and set the trackables to the filters
    * */
-  let trackables: Array<Trackable> = []
+  let trackables: Array<Trackable> = [];
 
   $: if ($TrackableStore.trackables) {
-    const usage = $UsageStore
-    const activeBoard = $ActiveBoard
+    const usage = $UsageStore;
+    const activeBoard = $ActiveBoard;
     trackables = toTrackableArray($TrackableStore.trackables)
       .filter((trackable) => {
-        return filter(trackable)
+        return filter(trackable);
       })
       .map((trackable) => {
-        return trackable
+        return trackable;
       })
       .sort((a, b) => {
         if ((activeBoard?.id || '').substring(0, 1) === '_') {
-          let aUsage = usage[a.tag]?.last?.d ? new Date(usage[a.tag].last.d) : 1
-          let bUsage = usage[b.tag]?.last?.d ? new Date(usage[b.tag].last.d) : 0
-          return aUsage > bUsage ? -1 : 1
+          let aUsage = usage[a.tag]?.last?.d ? new Date(usage[a.tag].last.d) : 1;
+          let bUsage = usage[b.tag]?.last?.d ? new Date(usage[b.tag].last.d) : 0;
+          return aUsage > bUsage ? -1 : 1;
         } else if (sort) {
           // Sort is imported as an attribute
-          return sort(a, b)
+          return sort(a, b);
         } else {
-          let aBoardIndex = activeBoard.elements.indexOf(a.tag)
-          let bBoardIndex = activeBoard.elements.indexOf(b.tag)
-          return aBoardIndex > bBoardIndex ? 1 : -1
+          let aBoardIndex = activeBoard.elements.indexOf(a.tag);
+          let bBoardIndex = activeBoard.elements.indexOf(b.tag);
+          return aBoardIndex > bBoardIndex ? 1 : -1;
         }
-      })
+      });
   }
 
   /**
@@ -89,14 +89,14 @@
    */
   const onTap = (trackable: Trackable) => {
     if (trackable.type === 'tracker') {
-      onTrackerTap(trackable.tracker, $TrackableStore.trackables)
+      onTrackerTap(trackable.tracker, $TrackableStore.trackables);
       // } else if (trackable.type === 'person') {
       //   openPersonModal(trackable.person)
     } else {
-      ActiveLogStore.addElement(trackable.tag)
-      ActiveLogStore.focus()
+      ActiveLogStore.addElement(trackable.tag);
+      ActiveLogStore.focus();
     }
-  }
+  };
 
   /**
    * On More Tapped
@@ -105,8 +105,8 @@
   const onMore = (trackable: Trackable) => {
     showTrackablePopmenu(trackable, {
       title: `${trackable.label}`,
-    })
-  }
+    });
+  };
 
   /**
    * On Long Press
@@ -114,13 +114,13 @@
    */
   const onLongpress = async (trackable: Trackable) => {
     if (trackable.type === 'tracker') {
-      onTrackerLongPress(trackable.tracker, $TrackerStore)
+      onTrackerLongPress(trackable.tracker, $TrackerStore);
     } else {
-      ActiveLogStore.addElement(trackable.tag)
-      await saveLog(new NLog($ActiveLogStore))
-      ActiveLogStore.clear()
+      ActiveLogStore.addElement(trackable.tag);
+      await saveLog(new NLog($ActiveLogStore));
+      ActiveLogStore.clear();
     }
-  }
+  };
 
   /**
    * On Press of the Add Trackable Button
@@ -129,8 +129,8 @@
     showBoardAddOptions(
       $UniboardStore.boards.find((b) => b.id == $UniboardStore.activeId),
       $TrackableStore.trackables
-    )
-  }
+    );
+  };
 
   const getEmptyBoardMenu = (): Array<any> => {
     const emptyBoardMenuButtons = [
@@ -160,23 +160,23 @@
         description: `${Lang.t('general.import-from-backup-description', 'Have a Nomie backup file? Import it here')}`,
         icon: ArchiveOutline,
         click() {
-          importStorage()
+          importStorage();
         },
       },
-    ]
+    ];
 
     if (Object.keys($TrackableStore.trackables).length) {
       //@ts-ignore
-      emptyBoardMenuButtons.unshift(getAddExistingButton($ActiveBoard))
+      emptyBoardMenuButtons.unshift(getAddExistingButton($ActiveBoard));
     }
-    return emptyBoardMenuButtons
-  } // end get Empty Boad Menu
+    return emptyBoardMenuButtons;
+  }; // end get Empty Boad Menu
 
   // const getEmptyBoard
 
-  let swiper: Swiper
-  let initialBoardActived: boolean = false
-  let lastActiveId: string = ''
+  let swiper: Swiper;
+  let initialBoardActived: boolean = false;
+  let lastActiveId: string = '';
 
   /**
    * Reaction
@@ -192,21 +192,21 @@
     !lastActiveId.length &&
     swiper
   ) {
-    setActiveBoard($UniboardStore.activeId)
-    initialBoardActived = true
+    setActiveBoard($UniboardStore.activeId);
+    initialBoardActived = true;
   }
 
   /**
    * Reaction - if the UniboardStore.activeId Changes
    */
   $: if ($ActiveBoard && $ActiveBoard.id !== lastActiveId) {
-    lastActiveId = $ActiveBoard.id
+    lastActiveId = $ActiveBoard.id;
 
     setTimeout(() => {
-      let ele = document.querySelector(`#uniboard-swiper .wrapper #b-${$ActiveBoard.id}`)
-      if (ele) ele.scrollIntoView(false)
-      Device.scrollToTop()
-    }, 200)
+      let ele = document.querySelector(`#uniboard-swiper .wrapper #b-${$ActiveBoard.id}`);
+      if (ele) ele.scrollIntoView(false);
+      Device.scrollToTop();
+    }, 200);
   }
 
   /**
@@ -214,41 +214,41 @@
    * When the hash Changes, initializing the
    * UniboardStore
    */
-  let lastTrackableHash = ''
+  let lastTrackableHash = '';
   $: if (objectHash($TrackableStore.trackables) !== lastTrackableHash) {
     if (Object.keys($TrackableStore.trackables).length > 0) {
-      lastTrackableHash = objectHash($TrackableStore.trackables)
-      initUniboardStore($TrackableStore.trackables)
+      lastTrackableHash = objectHash($TrackableStore.trackables);
+      initUniboardStore($TrackableStore.trackables);
     }
   }
-  let lastPeopleHash = ''
+  let lastPeopleHash = '';
   $: if (objectHash($PeopleStore) !== lastPeopleHash) {
     if (Object.keys($PeopleStore).length > 0) {
-      lastPeopleHash = objectHash($PeopleStore)
-      InitTrackableStore()
+      lastPeopleHash = objectHash($PeopleStore);
+      InitTrackableStore();
       setTimeout(() => {
-        initUniboardStore($TrackableStore.trackables)
-      }, 200)
+        initUniboardStore($TrackableStore.trackables);
+      }, 200);
     }
   }
 </script>
 
-<section class="nomie-board-tab  py-2" style="min-height:45vh">
+<section class="nomie-board-tab py-2" style="min-height:45vh">
   {#if $CombinedBoards}
     <Swiper
       id="uniboard-swiper"
       bind:this={swiper}
       on:index={(evt) => {
-        let index = evt.detail
+        let index = evt.detail;
         if (initialBoardActived) {
-          setActiveBoard($CombinedBoards[index])
+          setActiveBoard($CombinedBoards[index]);
         } else {
-          initialBoardActived = true
+          initialBoardActived = true;
         }
       }}
     >
       {#each $CombinedBoards.filter((t) => t) as board}
-        <section class="min-w-full w-full  text-white" id={`b-${board?.id}`} style="min-height:45vh">
+        <section class="min-w-full w-full text-white" id={`b-${board?.id}`} style="min-height:45vh">
           {#if $ActiveBoard && $ActiveBoard.id === board?.id}
             {#if !$UniboardStore.editMode}
               <UniboardTrackableGrid
@@ -266,7 +266,7 @@
                       <span class="text-gray-500">No trackables found for '{searching}'</span>
                       <Button
                         on:click={() => {
-                          openUnisearch(searching)
+                          openUnisearch(searching);
                         }}
                         size="sm"
                         clear
@@ -280,8 +280,8 @@
                           let trackable = new Trackable({
                             type: 'tracker',
                             tracker: new TrackerClass({ label: searching }),
-                          })
-                          openTrackableEditor(trackable)
+                          });
+                          openTrackableEditor(trackable);
                         }}>Create new "{searching}" tracker →</Button
                       >
                     </div>
@@ -291,7 +291,7 @@
             {:else if $UniboardStore.editMode}
               <UniboardEditorView
                 on:updated={(evt) => {
-                  dispatch('editted', evt.detail)
+                  dispatch('editted', evt.detail);
                 }}
                 board={$ActiveBoard}
               />
@@ -304,7 +304,7 @@
                   <!-- <h1 class="font-bold mb-2 text-xl text-black dark:text-white leading-tight">
                     {Lang.t('general.get-started', 'Get Started!')}
                   </h1> -->
-                  <div class="text-center  text-gray-500 dark:text-gray-400 leading-snug px-6 mb-6 lg:mb-10 flex-fill ">
+                  <div class="text-center text-gray-500 dark:text-gray-400 leading-snug px-6 mb-6 lg:mb-10 flex-fill">
                     <h1 class="text-black dark:text-white font-bold mb-1">Empty.</h1>
                     <p class="text-xs">
                       This is your {board.label} board; used to display your trackable buttons. Get started by adding a trackable

@@ -1,20 +1,20 @@
 <script lang="ts">
-	import { LaunchCount } from './../preferences/LaunchCount.ts';
-  import { navigate } from 'svelte-navigator'
+  import { LaunchCount } from './../preferences/LaunchCount.ts';
+  import { navigate } from 'svelte-navigator';
 
-  import { Device } from '../../store/device-store'
-  import { LedgerStore } from '../ledger/LedgerStore'
-  import { Lang } from '../../store/lang'
-  import ListItem from '../../components/list-item/list-item.svelte'
-  import List from '../../components/list/list.svelte'
-  import { onMount } from 'svelte'
-  import { TrackableStore } from '../trackable/TrackableStore'
-  import { TrackerStore } from '../tracker/TrackerStore'
-  import { PeopleStore } from '../people/PeopleStore'
-  import { ContextStore } from '../context/context-store'
-  import { LocationStore } from '../locations/LocationStore'
-  import { openModal } from '../../components/backdrop/BackdropStore2'
-  import WhatsNewModal from '../whats-new/whats-new-modal.svelte'
+  import { Device } from '../../store/device-store';
+  import { LedgerStore } from '../ledger/LedgerStore';
+  import { Lang } from '../../store/lang';
+  import ListItem from '../../components/list-item/list-item.svelte';
+  import List from '../../components/list/list.svelte';
+  import { onMount } from 'svelte';
+  import { TrackableStore } from '../trackable/TrackableStore';
+  import { TrackerStore } from '../tracker/TrackerStore';
+  import { PeopleStore } from '../people/PeopleStore';
+  import { ContextStore } from '../context/context-store';
+  import { LocationStore } from '../locations/LocationStore';
+  import { openModal } from '../../components/backdrop/BackdropStore2';
+  import WhatsNewModal from '../whats-new/whats-new-modal.svelte';
 
   let counts = {
     trackers: 0,
@@ -22,15 +22,15 @@
     context: 0,
     locations: 0,
     total: 0,
-  }
+  };
 
   onMount(() => {
-    counts.trackers = Object.keys($TrackerStore).length
-    counts.context = Object.keys($ContextStore).length
-    counts.people = Object.keys($PeopleStore).length
-    counts.total = Object.keys($TrackableStore).length
-    counts.locations = $LocationStore.length
-  })
+    counts.trackers = Object.keys($TrackerStore).length;
+    counts.context = Object.keys($ContextStore).length;
+    counts.people = Object.keys($PeopleStore).length;
+    counts.total = Object.keys($TrackableStore).length;
+    counts.locations = $LocationStore.length;
+  });
 </script>
 
 <List solo className=" mb-3" title={Lang.t('settings.learn-more', 'Learn More')} outside>
@@ -118,7 +118,7 @@
         id: 'whats-new',
         component: WhatsNewModal,
         position: 'bottom',
-      })
+      });
     }}
   >
     <span slot="right" class="flex text-sm text-primary-500"> What's New </span>
@@ -127,7 +127,7 @@
     detail
     title="Onboarded"
     on:click={() => {
-      navigate('/setup')
+      navigate('/setup');
     }}
   >
     <span slot="right" class="text-sm text-primary-500">

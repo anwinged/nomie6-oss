@@ -1,25 +1,25 @@
 <script lang="ts">
-  import BackdropModal from '../../../components/backdrop/backdrop-modal.svelte'
-  import { closeModal } from '../../../components/backdrop/BackdropStore2'
+  import BackdropModal from '../../../components/backdrop/backdrop-modal.svelte';
+  import { closeModal } from '../../../components/backdrop/BackdropStore2';
 
-  import Button from '../../../components/button/button.svelte'
-  import IonIcon from '../../../components/icon/ion-icon.svelte'
-  import { CloseOutline } from '../../../components/icon/nicons'
-  import ListItemLog from '../../../components/list-item-log/list-item-log.svelte'
-  
-  import ToolbarGrid from '../../../components/toolbar/toolbar-grid.svelte'
-  import Map from '../../map/map.svelte'
-import { getDateFormats } from '../../preferences/Preferences'
-  import type NLog from '../nomie-log'
+  import Button from '../../../components/button/button.svelte';
+  import IonIcon from '../../../components/icon/ion-icon.svelte';
+  import { CloseOutline } from '../../../components/icon/nicons';
+  import ListItemLog from '../../../components/list-item-log/list-item-log.svelte';
 
-  export let id: string
-  export let log: NLog
+  import ToolbarGrid from '../../../components/toolbar/toolbar-grid.svelte';
+  import Map from '../../map/map.svelte';
+  import { getDateFormats } from '../../preferences/Preferences';
+  import type NLog from '../nomie-log';
+
+  export let id: string;
+  export let log: NLog;
 
   let dateFormats = getDateFormats();
 
   const close = async () => {
-    closeModal(id)
-  }
+    closeModal(id);
+  };
 </script>
 
 <BackdropModal mainClass="overflow-y-auto relative" className="h-full bg-gray-100 dark:bg-gray-900 w-full rounded-2xl">

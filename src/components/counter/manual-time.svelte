@@ -1,15 +1,15 @@
 <script lang="ts">
   // Svelte
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher } from 'svelte';
   // Utils
-  import time from '../../utils/time/time'
+  import time from '../../utils/time/time';
   // export let started = undefined;
-  export let className = ''
-  export let value = 0
-  export let size: 'sm' | 'default' = 'default'
+  export let className = '';
+  export let value = 0;
+  export let size: 'sm' | 'default' = 'default';
 
   // Consts
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
   // methods
   const methods = {
@@ -17,71 +17,71 @@
     add(unit) {
       switch (unit) {
         case 'hours':
-          value = value + 60 * 60
-          break
+          value = value + 60 * 60;
+          break;
         case 'minutes':
-          value = value + 60
-          break
+          value = value + 60;
+          break;
         case 'seconds':
-          value = value + 1
-          break
+          value = value + 1;
+          break;
       }
-      dispatch('change', value)
+      dispatch('change', value);
     },
     // -SUBTRACT from Unit
     subtract(unit) {
       switch (unit) {
         case 'hours':
           if (value > 60 * 60) {
-            value = value - 60 * 60
+            value = value - 60 * 60;
           }
-          break
+          break;
         case 'minutes':
           if (value > 60) {
-            value = value - 60
+            value = value - 60;
           }
-          break
+          break;
         case 'seconds':
           if (value > 1) {
-            value = value - 1
+            value = value - 1;
           }
-          break
+          break;
       }
       // Fire off change event
-      dispatch('change', value)
+      dispatch('change', value);
     },
     // Get Unit Value - for select value
     getUnitValue(unit) {
-      return data[unit] || '00'
+      return data[unit] || '00';
     },
     // Set unit value by select box action
     setUnitValue(event, unit) {
       // Set to init
-      let selected = parseInt(event.target.value)
+      let selected = parseInt(event.target.value);
       // Set temp time chunks
       let dateChunks = {
         hours: data.hours,
         minutes: data.minutes,
         seconds: data.seconds,
-      }
+      };
       // Set new unit
-      dateChunks[unit] = time.padTime(selected)
+      dateChunks[unit] = time.padTime(selected);
       // New Set of the value to Seconds
-      value = time.unitsToSeconds(dateChunks.hours, dateChunks.minutes, dateChunks.seconds)
+      value = time.unitsToSeconds(dateChunks.hours, dateChunks.minutes, dateChunks.seconds);
       // Fire off change
-      dispatch('change', value)
+      dispatch('change', value);
     },
     // Takes 00:00:00 and converts it to seconds
     timeStringToNode(str) {
-      let initialTime = time.secondsToTime(str).split(':')
+      let initialTime = time.secondsToTime(str).split(':');
       let payload = {
         hours: initialTime[0],
         minutes: initialTime[1],
         seconds: initialTime[2],
-      }
-      return payload
+      };
+      return payload;
     },
-  }
+  };
 
   // Data
   let data = {
@@ -90,16 +90,16 @@
       totalSeconds: 0,
     },
     localValue: value,
-  }
+  };
 
   // Watch for Value Change
   $: if (value > -1) {
     // Get the Chunks from Seconds
-    let dateChunks = methods.timeStringToNode(value)
+    let dateChunks = methods.timeStringToNode(value);
     // Set local data chunks to new value
-    data.hours = time.padTime(dateChunks.hours)
-    data.minutes = time.padTime(dateChunks.minutes)
-    data.seconds = time.padTime(dateChunks.seconds)
+    data.hours = time.padTime(dateChunks.hours);
+    data.minutes = time.padTime(dateChunks.minutes);
+    data.seconds = time.padTime(dateChunks.seconds);
   }
 
   // On Mount
@@ -112,7 +112,7 @@
       id="hours"
       value={methods.getUnitValue('hours')}
       on:change={(event) => {
-        methods.setUnitValue(event, 'hours')
+        methods.setUnitValue(event, 'hours');
       }}
     >
       {#each time.getNumberedArray(300) as unit (unit)}
@@ -129,7 +129,7 @@
       name="minutes"
       value={methods.getUnitValue('minutes')}
       on:change={(event) => {
-        methods.setUnitValue(event, 'minutes')
+        methods.setUnitValue(event, 'minutes');
       }}
     >
       {#each time.getNumberedArray(59) as unit (unit)}
@@ -146,7 +146,7 @@
       name="seconds"
       value={methods.getUnitValue('seconds')}
       on:change={(event) => {
-        methods.setUnitValue(event, 'seconds')
+        methods.setUnitValue(event, 'seconds');
       }}
     >
       {#each time.getNumberedArray(59) as unit (unit)}

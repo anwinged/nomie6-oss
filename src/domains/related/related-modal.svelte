@@ -1,44 +1,40 @@
 <script lang="ts">
-  import dayjs from 'dayjs'
-  import { onMount } from 'svelte'
-  import Empty from '../../components/empty/empty.svelte'
-  import type { Trackable } from '../trackable/Trackable.class'
-  import { TrackableStore } from '../trackable/TrackableStore'
-  import { LedgerStore } from '../ledger/LedgerStore'
-  import { wait } from '../../utils/tick/tick'
+  import dayjs from 'dayjs';
+  import { onMount } from 'svelte';
+  import Empty from '../../components/empty/empty.svelte';
+  import type { Trackable } from '../trackable/Trackable.class';
+  import { TrackableStore } from '../trackable/TrackableStore';
+  import { LedgerStore } from '../ledger/LedgerStore';
+  import { wait } from '../../utils/tick/tick';
 
-  import type { TrackableUsage, TrackableUsageMap } from '../usage/trackable-usage.class'
+  import type { TrackableUsage, TrackableUsageMap } from '../usage/trackable-usage.class';
 
-  import math from '../../utils/math/math'
-  import { showTrackablePopmenu } from '../board/boardActions'
+  import math from '../../utils/math/math';
+  import { showTrackablePopmenu } from '../board/boardActions';
 
-  import TrackableAvatar from '../../components/avatar/trackable-avatar.svelte'
-  import { RelatedStore } from './RelatedStore'
-  import { Lang } from '../../store/lang'
+  import TrackableAvatar from '../../components/avatar/trackable-avatar.svelte';
+  import { RelatedStore } from './RelatedStore';
+  import { Lang } from '../../store/lang';
 
-  import Button from '../../components/button/button.svelte'
+  import Button from '../../components/button/button.svelte';
 
-  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte'
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
-  import { closeModal } from '../../components/backdrop/BackdropStore2'
+  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte';
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
+  import { closeModal } from '../../components/backdrop/BackdropStore2';
 
-import RelatedView from './related-view.svelte'
+  import RelatedView from './related-view.svelte';
 
+  export let id: string;
 
-
-  export let id: string
-
-  let trackable: Trackable
-
+  let trackable: Trackable;
 
   $: if ($RelatedStore) {
-    trackable = $RelatedStore.trackable
+    trackable = $RelatedStore.trackable;
   }
 
-  
-    const close = () => {
-    closeModal(id)
-  }
+  const close = () => {
+    closeModal(id);
+  };
 </script>
 
 <BackdropModal>
@@ -58,14 +54,14 @@ import RelatedView from './related-view.svelte'
       <TrackableAvatar size={44} {trackable} />
     {/if}
     <main class="ml-3">
-      <h1 class="font-bold  text-2xl text-black dark:text-white">
+      <h1 class="font-bold text-2xl text-black dark:text-white">
         {trackable?.label || 'Loading...'}
       </h1>
       <p class="text-opacity-60 text-gray-500 text-sm">is possibly related to...</p>
     </main>
   </div>
 
-  <RelatedView className="" style="" trackable={trackable} />
+  <RelatedView className="" style="" {trackable} />
 </BackdropModal>
 
 <style global lang="postcss">

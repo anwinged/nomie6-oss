@@ -1,17 +1,17 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher } from 'svelte';
 
-  import Panel from '../panel/panel.svelte'
-  import ToolbarGrid from '../toolbar/toolbar-grid.svelte'
-  import Modal2 from './modal2.svelte'
-  export let id: string
-  export let tappable: boolean | undefined = undefined
-  export let title: string = undefined
-  export let visible: boolean
-  export let mainClass: string = ''
-  export let headerClass: string | undefined = undefined
-  export let panelClass: string | undefined = undefined
-  const dispatch = createEventDispatcher()
+  import Panel from '../panel/panel.svelte';
+  import ToolbarGrid from '../toolbar/toolbar-grid.svelte';
+  import Modal2 from './modal2.svelte';
+  export let id: string;
+  export let tappable: boolean | undefined = undefined;
+  export let title: string = undefined;
+  export let visible: boolean;
+  export let mainClass: string = '';
+  export let headerClass: string | undefined = undefined;
+  export let panelClass: string | undefined = undefined;
+  const dispatch = createEventDispatcher();
 </script>
 
 <Modal2
@@ -19,7 +19,7 @@
   {visible}
   {tappable}
   on:close={() => {
-    dispatch('close')
+    dispatch('close');
   }}
 >
   <Panel className="h-full {panelClass ? panelClass : 'bg-gray-200 dark:bg-gray-800'}">

@@ -1,67 +1,65 @@
 <script lang="ts">
-  import VirtualList from '@sveltejs/svelte-virtual-list'
-  import type { Dayjs } from 'dayjs'
-  import dayjs from 'dayjs'
+  import VirtualList from '@sveltejs/svelte-virtual-list';
+  import type { Dayjs } from 'dayjs';
+  import dayjs from 'dayjs';
 
-  import TrackableAvatar from '../../components/avatar/trackable-avatar.svelte'
+  import TrackableAvatar from '../../components/avatar/trackable-avatar.svelte';
 
-  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte'
-  import { closeModal } from '../../components/backdrop/BackdropStore2'
-  import Button from '../../components/button/button.svelte'
-  import Calendar from '../../components/calendar/calendar.svelte'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import ListItemSingleTrackable from '../../components/list-item-log/list-item-single-trackable.svelte'
-  import { openDateOptionPopMenu } from '../../components/pop-menu/usePopmenu'
-import Spinner from '../../components/spinner/spinner.svelte'
+  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte';
+  import { closeModal } from '../../components/backdrop/BackdropStore2';
+  import Button from '../../components/button/button.svelte';
+  import Calendar from '../../components/calendar/calendar.svelte';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import ListItemSingleTrackable from '../../components/list-item-log/list-item-single-trackable.svelte';
+  import { openDateOptionPopMenu } from '../../components/pop-menu/usePopmenu';
+  import Spinner from '../../components/spinner/spinner.svelte';
 
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
 
-  import CloseOutline from '../../n-icons/CloseOutline.svelte'
-import { wait } from '../../utils/tick/tick';
-  import Calendar3 from '../calendar-view/calendar3.svelte'
+  import CloseOutline from '../../n-icons/CloseOutline.svelte';
+  import { wait } from '../../utils/tick/tick';
+  import Calendar3 from '../calendar-view/calendar3.svelte';
 
-  import { queryToTrackableUsage } from '../ledger/LedgerStore'
-  import NLog from '../nomie-log/nomie-log'
+  import { queryToTrackableUsage } from '../ledger/LedgerStore';
+  import NLog from '../nomie-log/nomie-log';
 
-  import { getDateFormats } from '../preferences/Preferences'
+  import { getDateFormats } from '../preferences/Preferences';
 
-  import type { Trackable } from '../trackable/Trackable.class'
-  import { TrackableStore } from '../trackable/TrackableStore'
-  import type { TrackableUsage } from '../usage/trackable-usage.class'
+  import type { Trackable } from '../trackable/Trackable.class';
+  import { TrackableStore } from '../trackable/TrackableStore';
+  import type { TrackableUsage } from '../usage/trackable-usage.class';
 
-  import { UsageStore } from '../usage/UsageStore'
-import { streakSummary, StreakSummaryResults } from './streak-helper';
+  import { UsageStore } from '../usage/UsageStore';
+  import { streakSummary, StreakSummaryResults } from './streak-helper';
 
-  
+  export let trackable: Trackable;
+  export let date: Date;
+  export let id: string;
 
-  export let trackable: Trackable
-  export let date: Date
-  export let id: string
+  let usage: TrackableUsage;
+  let endDate: Dayjs;
+  let startDate: Dayjs;
+  let _startDate: Date;
+  let max: number = 0;
 
-  let usage: TrackableUsage
-  let endDate: Dayjs
-  let startDate: Dayjs
-  let _startDate: Date
-  let max: number = 0
+  let values: Array<{ date: Dayjs; value: number; index?: number; logs: Array<NLog> }> = [];
+  let dateFormats = getDateFormats();
 
-  let values: Array<{ date: Dayjs; value: number; index?: number; logs: Array<NLog> }> = []
-  let dateFormats = getDateFormats()
+  const DAYS_BACK = 30;
 
-  const DAYS_BACK = 30
-
-  let lastTrackable
+  let lastTrackable;
   $: if (trackable && trackable !== lastTrackable) {
-    lastTrackable = trackable
-    values = []
+    lastTrackable = trackable;
+    values = [];
   }
   $: if (date) {
-    endDate = dayjs(date)
-    startDate = endDate.subtract(DAYS_BACK, 'days')
-    _startDate = startDate.toDate()
-    loadUsage()
+    endDate = dayjs(date);
+    startDate = endDate.subtract(DAYS_BACK, 'days');
+    _startDate = startDate.toDate();
+    loadUsage();
   }
 
-  let rawUsage: TrackableUsage
+  let rawUsage: TrackableUsage;
   let loading: boolean = false;
   const loadUsage = async () => {
     loading = true;
@@ -72,63 +70,64 @@ import { streakSummary, StreakSummaryResults } from './streak-helper';
         end: endDate,
       },
       $TrackableStore.trackables
-    )
+    );
 
-    max = rawUsage.max?.value > max ? rawUsage.max.value : max
-    usage = rawUsage.byDay.backfill(startDate.toDate(), endDate.toDate())
+    max = rawUsage.max?.value > max ? rawUsage.max.value : max;
+    usage = rawUsage.byDay.backfill(startDate.toDate(), endDate.toDate());
 
     // Loop over Dates
     usage.dates.forEach((date, i) => {
       // Get Index of the current Date from Raw Usage
-      let rawIndex = rawUsage.dates.findIndex((d) => d.format('YYYY-MM-DD-HH') === date.format('YYYY-MM-DD-HH'))
+      let rawIndex = rawUsage.dates.findIndex((d) => d.format('YYYY-MM-DD-HH') === date.format('YYYY-MM-DD-HH'));
 
       // If Values DOES NOT have this date
       if (!values.find((d) => d.date.format('YYYY-MM-DD') == date.format('YYYY-MM-DD'))) {
-        let log = rawIndex > -1 ? rawUsage.logs[rawIndex] : undefined
+        let log = rawIndex > -1 ? rawUsage.logs[rawIndex] : undefined;
         values.push({
           date,
           value: usage.values[i],
           logs: log ? [log] : [],
-        })
+        });
       }
-    })
+    });
     values = values
       .sort((a, b) => {
-        return a.date < b.date ? 1 : -1
+        return a.date < b.date ? 1 : -1;
       })
       .map((item, index) => {
         //@ts-ignore
-        item.index = index
-        return item
-      })
-    wait(500).then(()=>{
+        item.index = index;
+        return item;
+      });
+    wait(500).then(() => {
       loading = false;
-    })
-  }
+    });
+  };
 
   const close = () => {
-    closeModal(id)
-  }
+    closeModal(id);
+  };
 
-  let lastKnownEnd: number
-  let listEndIndex: number
-  let listStartIndex: number
+  let lastKnownEnd: number;
+  let listEndIndex: number;
+  let listStartIndex: number;
 
   let streak: StreakSummaryResults;
 
   $: if (lastKnownEnd !== listEndIndex && listEndIndex === values.length - 1 && values.length > 0) {
-    lastKnownEnd = listEndIndex
-    startDate = startDate.subtract(DAYS_BACK, 'day')
-    _startDate = startDate.toDate()
-    endDate = endDate.subtract(DAYS_BACK, 'day')
-    loadUsage()
-    let knownDates:Array<Date> = values.filter((v)=>{
-      return v.value > 0 || v.value < 0
-    }).map(v=>{
-      return v.date.toDate()
-    });
-    streak = streakSummary(knownDates)
-    
+    lastKnownEnd = listEndIndex;
+    startDate = startDate.subtract(DAYS_BACK, 'day');
+    _startDate = startDate.toDate();
+    endDate = endDate.subtract(DAYS_BACK, 'day');
+    loadUsage();
+    let knownDates: Array<Date> = values
+      .filter((v) => {
+        return v.value > 0 || v.value < 0;
+      })
+      .map((v) => {
+        return v.date.toDate();
+      });
+    streak = streakSummary(knownDates);
   }
 </script>
 
@@ -149,17 +148,14 @@ import { streakSummary, StreakSummaryResults } from './streak-helper';
         loading={false}
         date={_startDate}
         bind:trackableUsage={rawUsage}
-        on:input={(evt) => {
-          
-        }}
+        on:input={(evt) => {}}
         on:dateChange={(evt) => {
-          date = new Date(evt.detail)          
+          date = new Date(evt.detail);
         }}
       />
-     
     {/if}
     {#if streak}
-      <section class="flex w-full  py-2">
+      <section class="flex w-full py-2">
         <div class="rounded-full flex space-x-4 items-center mx-auto w-auto">
           <div class="leading-tight text-center flex items-center space-x-2 text-xs text-description">
             <div class="">Current</div>
@@ -176,7 +172,7 @@ import { streakSummary, StreakSummaryResults } from './streak-helper';
 
   <VirtualList bind:end={listEndIndex} bind:start={listStartIndex} items={values} let:item>
     <div
-      class="px-4 flex bg-white dark:bg-black justify-items-stretch  items-center {isNaN(item.value)
+      class="px-4 flex bg-white dark:bg-black justify-items-stretch items-center {isNaN(item.value)
         ? 'no-activity'
         : 'has-activity'}"
       style="--trackable-color:{trackable.color}"
@@ -187,7 +183,7 @@ import { streakSummary, StreakSummaryResults } from './streak-helper';
         {!isNaN(values[item.index + 1]?.value) ? 'next-sib-active' : 'next-sib-inactive'}"
       />
       {#if isNaN(item.value)}
-        <div class="streak-item no-activity relative w-full  text-gray-500 font-semibold ">
+        <div class="streak-item no-activity relative w-full text-gray-500 font-semibold">
           {item.date.format(dateFormats.mmm_d_yyyy)}
         </div>
       {:else}
@@ -218,7 +214,7 @@ import { streakSummary, StreakSummaryResults } from './streak-helper';
         <ListItemSingleTrackable
           className="ml-2 has-activity"
           on:click={(evt) => {
-            openDateOptionPopMenu(evt.detail.log.end)
+            openDateOptionPopMenu(evt.detail.log.end);
             // showLogTrackablePopmenu(evt.detail.log, trackable)
           }}
           hideTime
@@ -234,9 +230,9 @@ import { streakSummary, StreakSummaryResults } from './streak-helper';
     </div>
   </VirtualList>
   {#if loading}
-  <div class="absolute bottom-4 right-4 z-50">
-    <Spinner size={20} />
-  </div>
+    <div class="absolute bottom-4 right-4 z-50">
+      <Spinner size={20} />
+    </div>
   {/if}
 </BackdropModal>
 

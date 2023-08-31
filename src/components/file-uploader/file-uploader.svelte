@@ -1,51 +1,51 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
-  import { Interact } from '../../store/interact'
-  import Button from '../button/button.svelte'
+  import { createEventDispatcher } from 'svelte';
+  import { Interact } from '../../store/interact';
+  import Button from '../button/button.svelte';
 
-  import Input from '../input/input.svelte'
-  export let className = ''
-  export let accept = 'png,jpeg,jpg,csv'
-  export let placeholder = 'No file chosen'
-  export let label = 'File'
+  import Input from '../input/input.svelte';
+  export let className = '';
+  export let accept = 'png,jpeg,jpg,csv';
+  export let placeholder = 'No file chosen';
+  export let label = 'File';
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
   interface IUploaded {
-    file: File
-    data: string
+    file: File;
+    data: string;
   }
 
-  let uploaded: IUploaded
-  let _input
-  let uploadedFileName
+  let uploaded: IUploaded;
+  let _input;
+  let uploadedFileName;
 
   function clear() {
-    uploaded = undefined
-    uploadedFileName = undefined
+    uploaded = undefined;
+    uploadedFileName = undefined;
   }
 
   function readFile(file: File) {
-    let reader = new FileReader()
+    let reader = new FileReader();
     try {
       reader.onload = async (theFile: any) => {
-        let fileData = theFile.target.result
-        uploaded = { data: null, file: null }
-        uploaded.data = fileData
-        uploaded.file = file
-        uploadedFileName = uploaded.file.name
-        label = 'File Loaded'
-        dispatch('file', uploaded)
-      }
-      reader.readAsText(file)
+        let fileData = theFile.target.result;
+        uploaded = { data: null, file: null };
+        uploaded.data = fileData;
+        uploaded.file = file;
+        uploadedFileName = uploaded.file.name;
+        label = 'File Loaded';
+        dispatch('file', uploaded);
+      };
+      reader.readAsText(file);
     } catch (e) {
-      Interact.error(e.message)
+      Interact.error(e.message);
     }
   }
 
   function change(evt: any) {
-    let files = evt.target.files
-    readFile(files[0])
+    let files = evt.target.files;
+    readFile(files[0]);
   }
 </script>
 
@@ -57,7 +57,7 @@
       <Button
         on:click={() => {
           if (_input) {
-            _input.click()
+            _input.click();
           }
         }}
       >

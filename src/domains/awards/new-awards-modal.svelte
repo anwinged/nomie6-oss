@@ -1,30 +1,30 @@
 <script lang="ts">
-  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte'
-  import { closeModal } from '../../components/backdrop/BackdropStore2'
-  import Button from '../../components/button/button.svelte'
+  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte';
+  import { closeModal } from '../../components/backdrop/BackdropStore2';
+  import Button from '../../components/button/button.svelte';
 
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import { CloseOutline } from '../../components/icon/nicons'
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import { CloseOutline } from '../../components/icon/nicons';
 
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
-  import Toolbar from '../../components/toolbar/toolbar.svelte'
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
+  import Toolbar from '../../components/toolbar/toolbar.svelte';
 
-  import { Lang } from '../../store/lang'
-  import { wait } from '../../utils/tick/tick'
-  import { AwardStore, saveNewAwards } from './AwardsStore'
+  import { Lang } from '../../store/lang';
+  import { wait } from '../../utils/tick/tick';
+  import { AwardStore, saveNewAwards } from './AwardsStore';
 
-  export let id: string
+  export let id: string;
 
-  $: awardCount = $AwardStore.newAwards.length
+  $: awardCount = $AwardStore.newAwards.length;
 
   const close = async () => {
-    await wait(200)
+    await wait(200);
     AwardStore.update((s) => {
-      s.newAwards = []
-      return s
-    })
-    closeModal(id)
-  }
+      s.newAwards = [];
+      return s;
+    });
+    closeModal(id);
+  };
 </script>
 
 <BackdropModal>
@@ -46,7 +46,7 @@
           alt={$AwardStore.newAwards[0].name}
         />
         <div
-          class="text-4xl my-4 font-bold  w-11/12 mx-auto relative text-gray-400 dark:text-gray-200  text-center leading-tight "
+          class="text-4xl my-4 font-bold w-11/12 mx-auto relative text-gray-400 dark:text-gray-200 text-center leading-tight"
         >
           {$AwardStore.newAwards[0].name}
           {#if $AwardStore.newAwards[0].reason}
@@ -65,7 +65,7 @@
           <div class="award-badge">
             <img src="/images/awards/{award.id}.svg" alt={award.name} />
             <div
-              class="text-xs -top-2 w-11/12 mx-auto relative text-gray-400 dark:text-gray-200 rounded-full py-1 text-center line-clamp-1 leading-tight "
+              class="text-xs -top-2 w-11/12 mx-auto relative text-gray-400 dark:text-gray-200 rounded-full py-1 text-center line-clamp-1 leading-tight"
             >
               {award.name}
             </div>
@@ -79,8 +79,8 @@
       id="accept-award-button"
       className="w-full bg-primary-600 text-white font-bold"
       on:click={async () => {
-        await saveNewAwards()
-        close()
+        await saveNewAwards();
+        close();
       }}
     >
       {Lang.t('general.close', 'Close')}

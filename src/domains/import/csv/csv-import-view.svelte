@@ -1,90 +1,89 @@
 <script lang="ts">
-  
-  import type { NLog } from './../../nomie-log/nomie-log'
+  import type { NLog } from './../../nomie-log/nomie-log';
 
-  import { wait } from './../../../utils/tick/tick'
-  import { Interact } from './../../../store/interact'
-  import { getDateFormats } from './../../preferences/Preferences'
-  import NextPrevCal from './../../../components/next-prev-cal/next-prev-cal.svelte'
-  import ToggleSwitch from './../../../components/toggle-switch/toggle-switch.svelte'
-  import FileUploader from './../../../components/file-uploader/file-uploader.svelte'
+  import { wait } from './../../../utils/tick/tick';
+  import { Interact } from './../../../store/interact';
+  import { getDateFormats } from './../../preferences/Preferences';
+  import NextPrevCal from './../../../components/next-prev-cal/next-prev-cal.svelte';
+  import ToggleSwitch from './../../../components/toggle-switch/toggle-switch.svelte';
+  import FileUploader from './../../../components/file-uploader/file-uploader.svelte';
 
-  import ImportLoader from '../../../modules/import/import-loader'
-  import { navigate } from 'svelte-navigator'
-  import { truncateText } from '../../../utils/text/text'
-  import CSVRImport, { CsvTemplateStore, IImportConfig } from './csv-import-helper'
-  import { onMount } from 'svelte'
+  import ImportLoader from '../../../modules/import/import-loader';
+  import { navigate } from 'svelte-navigator';
+  import { truncateText } from '../../../utils/text/text';
+  import CSVRImport, { CsvTemplateStore, IImportConfig } from './csv-import-helper';
+  import { onMount } from 'svelte';
 
-  import Button from '../../../components/button/button.svelte'
-  import ListItem from '../../../components/list-item/list-item.svelte'
-  import Text from '../../../components/text/text.svelte'
-  import { Lang } from '../../../store/lang'
-  import Input from '../../../components/input/input.svelte'
+  import Button from '../../../components/button/button.svelte';
+  import ListItem from '../../../components/list-item/list-item.svelte';
+  import Text from '../../../components/text/text.svelte';
+  import { Lang } from '../../../store/lang';
+  import Input from '../../../components/input/input.svelte';
 
-  import dayjs from 'dayjs'
-  import IonIcon from '../../../components/icon/ion-icon.svelte'
-  import ChevronDownOutline from '../../../n-icons/ChevronDownOutline.svelte'
-  import AddCircleOutline from '../../../n-icons/AddCircleOutline.svelte'
-  import ListItemLog from '../../../components/list-item-log/list-item-log.svelte'
-  import { showToast } from '../../../components/toast/ToastStore'
-  import is from '../../../utils/is/is'
-  
-  import { closeModal } from '../../../components/backdrop/BackdropStore2'
-  import BackdropModal from '../../../components/backdrop/backdrop-modal.svelte'
-  import ToolbarGrid from '../../../components/toolbar/toolbar-grid.svelte'
-import Divider from '../../../components/divider/divider.svelte'
+  import dayjs from 'dayjs';
+  import IonIcon from '../../../components/icon/ion-icon.svelte';
+  import ChevronDownOutline from '../../../n-icons/ChevronDownOutline.svelte';
+  import AddCircleOutline from '../../../n-icons/AddCircleOutline.svelte';
+  import ListItemLog from '../../../components/list-item-log/list-item-log.svelte';
+  import { showToast } from '../../../components/toast/ToastStore';
+  import is from '../../../utils/is/is';
 
-  let stepId: string = 'home'
-  let templates: Array<IImportConfig> = []
-  let activeImporter: CSVRImport
-  let activeMapIndex
-  let previewIndex = 0
-  let previewRow: Array<any>
-  let refreshing = false
-  let previewLog: NLog
-  let listMode = 'list'
-  let expandFields = false
+  import { closeModal } from '../../../components/backdrop/BackdropStore2';
+  import BackdropModal from '../../../components/backdrop/backdrop-modal.svelte';
+  import ToolbarGrid from '../../../components/toolbar/toolbar-grid.svelte';
+  import Divider from '../../../components/divider/divider.svelte';
 
-  export let id: string = 'csv-import'
+  let stepId: string = 'home';
+  let templates: Array<IImportConfig> = [];
+  let activeImporter: CSVRImport;
+  let activeMapIndex;
+  let previewIndex = 0;
+  let previewRow: Array<any>;
+  let refreshing = false;
+  let previewLog: NLog;
+  let listMode = 'list';
+  let expandFields = false;
+
+  export let id: string = 'csv-import';
 
   export let fileUpload:
     | undefined
     | {
-        data: string
-        file: File
-      }
+        data: string;
+        file: File;
+      };
 
   if (fileUpload) {
-    activeImporter = activeImporter || new CSVRImport({})
-    activeImporter.csv(fileUpload.data)
-    activeImporter.setName(fileUpload.file.name)
-    stepId = 'note'
+    activeImporter = activeImporter || new CSVRImport({});
+    activeImporter.csv(fileUpload.data);
+    activeImporter.setName(fileUpload.file.name);
+    stepId = 'note';
   }
 
   $: if (activeImporter && activeImporter.parsed && activeImporter.parsed.data) {
     if (activeImporter.length() > 1 && previewIndex == 0) {
-      previewIndex = 1
+      previewIndex = 1;
     }
-    previewRow = activeImporter.parsed.data[previewIndex]
-    previewLog = activeImporter.toLog(previewRow)
+    previewRow = activeImporter.parsed.data[previewIndex];
+    previewLog = activeImporter.toLog(previewRow);
   }
 
   async function nextPreview() {
-    let current = previewIndex + 0
-    previewIndex == undefined
+    let current = previewIndex + 0;
+    previewIndex == undefined;
     if (current < activeImporter.length() - 1) {
-      previewIndex = current + 1
+      previewIndex = current + 1;
     } else {
-      previewIndex = 0
+      previewIndex = 0;
     }
   }
   async function previousPreview() {
-    let current = previewIndex + 0
-    previewIndex == undefined
+    let current = previewIndex + 0;
+    previewIndex == undefined;
     if (current !== 1) {
-      previewIndex = current - 1
+      previewIndex = current - 1;
     } else {
-      previewIndex = activeImporter.length() - 1
+      previewIndex = activeImporter.length() - 1;
     }
   }
 
@@ -101,16 +100,16 @@ import Divider from '../../../components/divider/divider.svelte'
       title: 'Template',
       id: 'template',
     },
-  ]
+  ];
 
-  $: view = views.find((v) => v.id == stepId)
+  $: view = views.find((v) => v.id == stepId);
 
   function setFieldMap(name: string, index) {
-    activeImporter.config.fieldMap[name] = activeMapIndex
-    refresh()
+    activeImporter.config.fieldMap[name] = activeMapIndex;
+    refresh();
   }
 
-  const dateFormats = getDateFormats()
+  const dateFormats = getDateFormats();
 
   const fieldMapButtons = [
     {
@@ -118,70 +117,70 @@ import Divider from '../../../components/divider/divider.svelte'
       required: true,
       id: 'end',
       click() {
-        setFieldMap('end', activeMapIndex)
+        setFieldMap('end', activeMapIndex);
       },
     },
     {
       title: 'Start Time',
       id: 'start',
       click() {
-        setFieldMap('start', activeMapIndex)
+        setFieldMap('start', activeMapIndex);
       },
     },
     {
       title: 'Latitude',
       id: 'lat',
       click() {
-        setFieldMap('lat', activeMapIndex)
+        setFieldMap('lat', activeMapIndex);
       },
     },
     {
       title: 'Longitude',
       id: 'lng',
       click() {
-        setFieldMap('lng', activeMapIndex)
+        setFieldMap('lng', activeMapIndex);
       },
     },
     {
       title: 'Location Name',
       id: 'location',
       click() {
-        setFieldMap('location', activeMapIndex)
+        setFieldMap('location', activeMapIndex);
       },
     },
     {
       title: 'Source',
       id: 'source',
       click() {
-        setFieldMap('source', activeMapIndex)
+        setFieldMap('source', activeMapIndex);
       },
     },
-  ]
+  ];
 
   function mapField(fieldIndex) {
-    activeMapIndex = fieldIndex
+    activeMapIndex = fieldIndex;
     Interact.popmenu({
       title: `Map ${activeImporter ? activeImporter.getHeaders()[fieldIndex] : 'Unknown'}`,
       buttons: fieldMapButtons,
       id: 'field-map',
-    })
+    });
   }
 
   function refresh() {
-    refreshing = true
+    refreshing = true;
     wait(100, () => {
-      refreshing = false
-    })
+      refreshing = false;
+    });
   }
 
   function getIndexMap(index) {
-    let response = null
+    let response = null;
     if (activeImporter && activeImporter.config && activeImporter.config.fieldMap) {
       response = Object.keys(activeImporter.config.fieldMap).find((key) => {
-        return activeImporter.config.fieldMap[key] == index
-      })
+        return activeImporter.config.fieldMap[key] == index;
+      });
     }
-    return response
+    return response;
   }
 
   async function startImport() {
@@ -189,50 +188,50 @@ import Divider from '../../../components/divider/divider.svelte'
       `Warning`,
       `This will add ${activeImporter.length()} new records to your data. Be 100% sure everything is accurate.
       If you're unsure, launch Nomie in a private browswer and test on a local only account. Also, backup if you haven't for a while.`
-    )
+    );
     if (confirmed) {
       if (activeImporter.length() > 1000) {
-        Interact.blocker(`Importer starting. With this many records it might freeze the UI, just give it time...`)
+        Interact.blocker(`Importer starting. With this many records it might freeze the UI, just give it time...`);
       } else {
-        Interact.blocker(`Importer starting up...`)
+        Interact.blocker(`Importer starting up...`);
       }
 
-      let importer = new ImportLoader()
+      let importer = new ImportLoader();
       await importer.logs(activeImporter.toLogs()).importLogs((status: any) => {
-        Interact.blocker(status.message)
-      })
+        Interact.blocker(status.message);
+      });
 
-      Interact.stopBlocker()
-      showToast({ message: `Import complete` })
+      Interact.stopBlocker();
+      showToast({ message: `Import complete` });
     }
   }
 
   function back() {
     if (view && view.id == 'note') {
-      stepId = 'home'
+      stepId = 'home';
     } else if (view && view.id == 'template') {
-      activeImporter = undefined
-      previewIndex = undefined
-      stepId = 'home'
+      activeImporter = undefined;
+      previewIndex = undefined;
+      stepId = 'home';
     } else {
-      navigate('/settings')
+      navigate('/settings');
     }
   }
 
   async function addToImporter(evt) {
-    let file = evt.detail
+    let file = evt.detail;
     if (file.data) {
-      activeImporter = activeImporter || new CSVRImport({})
-      activeImporter.csv(file.data)
-      activeImporter.setName(file.file.name)
+      activeImporter = activeImporter || new CSVRImport({});
+      activeImporter.csv(file.data);
+      activeImporter.setName(file.file.name);
     }
-    return true
+    return true;
   }
 
   async function insertField() {
-    let selectedField: any = await _selectField(`Select a field to Insert into the note`)
+    let selectedField: any = await _selectField(`Select a field to Insert into the note`);
     if (selectedField) {
-      activeImporter.config.template = `${activeImporter.config.template || ''}{f${selectedField.index}}`.trim()
+      activeImporter.config.template = `${activeImporter.config.template || ''}{f${selectedField.index}}`.trim();
     }
   }
 
@@ -243,45 +242,44 @@ import Divider from '../../../components/divider/divider.svelte'
           title: `${header}`,
           description: `f${index}: ${truncateText(previewRow[index], 60)}`,
           click() {
-            resolve({ header, index })
+            resolve({ header, index });
           },
-        }
-      })
+        };
+      });
       Interact.popmenu({
         id: 'field-map-menu',
         title: title,
         description: `Which field maps to ${title}?`,
         buttons,
-      })
-    })
+      });
+    });
   }
 
   async function selectField(logField: any) {
-    let selectedField: any = await _selectField(`${logField.title}`)
+    let selectedField: any = await _selectField(`${logField.title}`);
     if (is.truthy(selectedField)) {
-      activeImporter.config.fieldMap[logField.id] = selectedField.index
+      activeImporter.config.fieldMap[logField.id] = selectedField.index;
     }
   }
 
   async function openTemplate(config: IImportConfig) {
-    activeImporter = new CSVRImport(config)
-    stepId = 'template'
+    activeImporter = new CSVRImport(config);
+    stepId = 'template';
   }
 
   async function edit() {
-    stepId = 'note'
+    stepId = 'note';
   }
 
   async function remove(config: IImportConfig) {
-    let confirmed = await Interact.confirm(`Remove ${config.name} Importer?`, 'You can always remake it')
+    let confirmed = await Interact.confirm(`Remove ${config.name} Importer?`, 'You can always remake it');
     if (confirmed) {
-     
-      alert('TODO')
+      alert('TODO');
       // templates = templates.filter((template) => {
       //   return template.id !== config.id
       // })
       // await UserStore.mstore('csv_templates', templates)
-      showToast({ message: 'Removed' })
+      showToast({ message: 'Removed' });
     }
   }
 
@@ -298,20 +296,20 @@ import Divider from '../../../components/divider/divider.svelte'
       // if (!found) {
       //   templates.push(activeImporter.config)
       // }
-      await CsvTemplateStore.upsert(activeImporter.config)
-      alert('Did it work?')
-      showToast({ message: `Import template saved` })
+      await CsvTemplateStore.upsert(activeImporter.config);
+      alert('Did it work?');
+      showToast({ message: `Import template saved` });
     } catch (e) {
-      Interact.error(e.message)
+      Interact.error(e.message);
     }
 
-    return templates
+    return templates;
   }
 
   async function main() {
-    await CsvTemplateStore.init()
+    await CsvTemplateStore.init();
   }
-  onMount(main)
+  onMount(main);
 </script>
 
 <BackdropModal className="import" showCapture={false}>
@@ -321,7 +319,7 @@ import Divider from '../../../components/divider/divider.svelte'
       slot="left"
       className="text-primary-500"
       on:click={() => {
-        closeModal(id)
+        closeModal(id);
       }}>Close</Button
     >
     <div class="ntitle main">Import CSV</div>
@@ -333,7 +331,6 @@ import Divider from '../../../components/divider/divider.svelte'
       {/if}
     </div>
   </ToolbarGrid>
-
 
   <main class="page page-csv-import flex-column">
     {#if activeImporter && activeImporter.name}
@@ -358,8 +355,8 @@ import Divider from '../../../components/divider/divider.svelte'
             accept="csv"
             placeholder="CSV File"
             on:file={async (evt) => {
-              await addToImporter(evt)
-              stepId = 'note'
+              await addToImporter(evt);
+              stepId = 'note';
             }}
           />
         </ListItem>
@@ -374,7 +371,7 @@ import Divider from '../../../components/divider/divider.svelte'
                   color="transparent"
                   size="sm"
                   on:click={() => {
-                    listMode = 'edit'
+                    listMode = 'edit';
                   }}
                 >
                   {Lang.t('general.edit', 'Edit')}
@@ -385,7 +382,7 @@ import Divider from '../../../components/divider/divider.svelte'
                   color="transparent"
                   className="text-red"
                   on:click={() => {
-                    listMode = 'list'
+                    listMode = 'list';
                   }}
                 >
                   {Lang.t('general.done', 'Done')}
@@ -400,7 +397,7 @@ import Divider from '../../../components/divider/divider.svelte'
               clickable={listMode == 'list'}
               on:click={() => {
                 if (listMode == 'list') {
-                  openTemplate(template)
+                  openTemplate(template);
                 }
               }}
             >
@@ -414,7 +411,7 @@ import Divider from '../../../components/divider/divider.svelte'
                     size="sm"
                     color="danger"
                     on:click={(evt) => {
-                      remove(template)
+                      remove(template);
                     }}
                   >
                     Delete
@@ -444,7 +441,7 @@ import Divider from '../../../components/divider/divider.svelte'
             accept="csv"
             label={Lang.t('csv-import.select-csv-file', 'Select CSV File...')}
             on:file={async (evt) => {
-              await addToImporter(evt)
+              await addToImporter(evt);
             }}
           />
         {:else}
@@ -460,7 +457,7 @@ import Divider from '../../../components/divider/divider.svelte'
               clickable
               title={`${logField.title}`}
               on:click={() => {
-                selectField(logField)
+                selectField(logField);
               }}
             >
               {#if is.truthy(activeImporter.config.fieldMap[logField.id])}
@@ -519,7 +516,7 @@ import Divider from '../../../components/divider/divider.svelte'
                         color="clear"
                         className="text-primary-500"
                         on:click={() => {
-                          mapField(index)
+                          mapField(index);
                         }}
                       >
                         Assign
@@ -553,7 +550,7 @@ import Divider from '../../../components/divider/divider.svelte'
               accept="csv"
               label="CSV File"
               on:file={async (evt) => {
-                await addToImporter(evt)
+                await addToImporter(evt);
               }}
             />
           </ListItem>
@@ -561,8 +558,8 @@ import Divider from '../../../components/divider/divider.svelte'
       </div>
     {/if}
     {#if previewLog && is.truthy(previewIndex) && activeImporter.parsed}
-      {#if previewLog.note && previewLog.note !== "null"}
-      <Divider />
+      {#if previewLog.note && previewLog.note !== 'null'}
+        <Divider />
         <div class="examples bg-inverse-2 p-2 px-4">
           <div class="n-toolbar flex pl-2">
             <div class="main dark:text-white text-sm">

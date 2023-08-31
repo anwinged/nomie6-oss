@@ -1,64 +1,63 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
-  import ListItem from '../list-item/list-item.svelte'
+  import { createEventDispatcher } from 'svelte';
+  import ListItem from '../list-item/list-item.svelte';
 
-  import LabelMeta from '../label-meta/label-meta.svelte'
+  import LabelMeta from '../label-meta/label-meta.svelte';
 
-  import type { ITracker } from '../../modules/tracker/TrackerClass'
-  import SearchBar from '../search-bar/search-bar.svelte'
-  import Empty from '../empty/empty.svelte'
-  import { Lang } from '../../store/lang'
-  import type TrackerClass from '../../modules/tracker/TrackerClass'
-import ToggleSwitch from '../toggle-switch/toggle-switch.svelte'
+  import type { ITracker } from '../../modules/tracker/TrackerClass';
+  import SearchBar from '../search-bar/search-bar.svelte';
+  import Empty from '../empty/empty.svelte';
+  import { Lang } from '../../store/lang';
+  import type TrackerClass from '../../modules/tracker/TrackerClass';
+  import ToggleSwitch from '../toggle-switch/toggle-switch.svelte';
 
+  const dispatch = createEventDispatcher();
 
-  const dispatch = createEventDispatcher()
+  export let tracker: ITracker | TrackerClass;
 
-  export let tracker: ITracker | TrackerClass
+  export let active = [];
 
-  export let active = []
-
-  let picks = []
-  let searchFilter: string
+  let picks = [];
+  let searchFilter: string;
 
   $: {
-    picks = tracker && tracker.picks ? tracker.picks : []
+    picks = tracker && tracker.picks ? tracker.picks : [];
     if (searchFilter) {
       picks = picks.filter((p) => {
-        return p.toLowerCase().search(`${searchFilter}`.toLowerCase()) > -1
-      })
+        return p.toLowerCase().search(`${searchFilter}`.toLowerCase()) > -1;
+      });
     }
   }
 
   function toggle(pick) {
     if (active.indexOf(pick) > -1) {
       active = active.filter((p) => {
-        return p !== pick
-      })
+        return p !== pick;
+      });
     } else {
-      active.push(pick)
+      active.push(pick);
     }
-    active = active
+    active = active;
     setTimeout(() => {
       try {
-        const active: any = document.activeElement
-        active.blur()
+        const active: any = document.activeElement;
+        active.blur();
       } catch (e) {}
-    }, 120)
-    fireChange()
+    }, 120);
+    fireChange();
   }
 
   function fireChange() {
-    dispatch('change', active)
+    dispatch('change', active);
   }
 
   function isHeader(pick) {
-    let lastCharacter = pick.trim().substr(pick.trim().length - 1, 1)
-    return lastCharacter === ':'
+    let lastCharacter = pick.trim().substr(pick.trim().length - 1, 1);
+    return lastCharacter === ':';
   }
 </script>
 
-<div class="w-full p-2 bg-gray-100 dark:bg-gray-800 ">
+<div class="w-full p-2 bg-gray-100 dark:bg-gray-800">
   {#if tracker.picks.length > 10}
     <SearchBar
       autocomplete
@@ -66,13 +65,13 @@ import ToggleSwitch from '../toggle-switch/toggle-switch.svelte'
       showClose={true}
       className="p-0 px-2"
       on:clear={() => {
-        searchFilter = undefined
+        searchFilter = undefined;
       }}
       on:change={(evt) => {
         if (evt.detail && evt.detail.length > 0) {
-          searchFilter = evt.detail
+          searchFilter = evt.detail;
         } else {
-          searchFilter = undefined
+          searchFilter = undefined;
         }
       }}
     />
@@ -95,7 +94,7 @@ import ToggleSwitch from '../toggle-switch/toggle-switch.svelte'
           ? 'bg-primary-500 bg-opacity-10 text-white'
           : 'bg-gray-200 dark:bg-gray-800'}"
         on:click={() => {
-          toggle(pick)
+          toggle(pick);
         }}
       >
         <div slot="right" class="stiff flex items-center">

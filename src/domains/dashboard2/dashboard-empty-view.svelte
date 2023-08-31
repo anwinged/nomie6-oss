@@ -1,8 +1,8 @@
 <script lang="ts">
-  import Empty from '../../components/empty/empty.svelte'
+  import Empty from '../../components/empty/empty.svelte';
 
-  import { Lang } from '../../store/lang'
-  import { createNewWidget } from './widget/widget-editor/useWidgetEditorModal'
+  import { Lang } from '../../store/lang';
+  import { createNewWidget } from './widget/widget-editor/useWidgetEditorModal';
 </script>
 
 <Empty
@@ -14,6 +14,6 @@
   )}
   buttonLabel={Lang.t('dashboard.add-a-widget', 'Add a Widget...')}
   buttonClick={() => {
-    createNewWidget()
+    createNewWidget();
   }}
 />

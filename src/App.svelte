@@ -1,83 +1,83 @@
 <script lang="ts">
-  import UpdateAvailable from './components/update-available/update-available.svelte'
+  import UpdateAvailable from './components/update-available/update-available.svelte';
 
   // Svelte
   // import { Router, Route, navigate } from "svelte-routing";
-  import Tailwindcss from './style/Tailwind.svelte'
-  import './style/main.css'
+  import Tailwindcss from './style/Tailwind.svelte';
+  import './style/main.css';
 
-  import { onMount } from 'svelte'
+  import { onMount } from 'svelte';
 
   // import DynamicPage from './DynamicPage.svelte'
 
   // Vendors
-  import { gestures } from '@composi/gestures'
-  import dayjs from 'dayjs'
+  import { gestures } from '@composi/gestures';
+  import dayjs from 'dayjs';
 
   // Components
-  import Confetti from './components/confetti/confetti.svelte'
+  import Confetti from './components/confetti/confetti.svelte';
 
-  import DropdownMenu from './components/menu/dropdown-menu.svelte'
+  import DropdownMenu from './components/menu/dropdown-menu.svelte';
 
   // Domains
-  import Interactions from './domains/interactions/interactions.svelte'
+  import Interactions from './domains/interactions/interactions.svelte';
 
-  import { Prefs, setDocumentTheme } from './domains/preferences/Preferences'
+  import { Prefs, setDocumentTheme } from './domains/preferences/Preferences';
 
   // Utils
 
-  import { wait } from './utils/tick/tick'
+  import { wait } from './utils/tick/tick';
 
   // Storage
-  import Storage from './domains/storage/storage'
+  import Storage from './domains/storage/storage';
 
   // Routes
-  import RouterView from './routes/routes.svelte'
+  import RouterView from './routes/routes.svelte';
 
   // Stores
-  import { Interact } from './store/interact' //  global alerts, popm../deprecated/commandertc
+  import { Interact } from './store/interact'; //  global alerts, popm../deprecated/commandertc
 
-  import AppKeyCommands from './AppKeyCommands.svelte'
+  import AppKeyCommands from './AppKeyCommands.svelte';
 
-  import { showToast, ToastStore } from './components/toast/ToastStore'
-  import Toasts from './components/toast/toasts.svelte'
+  import { showToast, ToastStore } from './components/toast/ToastStore';
+  import Toasts from './components/toast/toasts.svelte';
 
-  import Backdrop2 from './components/backdrop/backdrop2.svelte'
-  import { BackdropStore2 } from './components/backdrop/BackdropStore2'
+  import Backdrop2 from './components/backdrop/backdrop2.svelte';
+  import { BackdropStore2 } from './components/backdrop/BackdropStore2';
 
-  import { bootCoreComponents, bootNomie } from './BootStore'
+  import { bootCoreComponents, bootNomie } from './BootStore';
 
-  import { TrackableStore } from './domains/trackable/TrackableStore'
-  import { GoalStore, loadGoalsForToday } from './domains/goals/GoalStore'
-  import { LedgerStore } from './domains/ledger/LedgerStore'
-  import { loadToday } from './domains/usage/today/TodayStore'
+  import { TrackableStore } from './domains/trackable/TrackableStore';
+  import { GoalStore, loadGoalsForToday } from './domains/goals/GoalStore';
+  import { LedgerStore } from './domains/ledger/LedgerStore';
+  import { loadToday } from './domains/usage/today/TodayStore';
 
-  import { trackLaunch } from './domains/preferences/LaunchCount'
-  import PluginLoader from './domains/plugins/plugin-loader.svelte'
-  import { PluginStore } from './domains/plugins/PluginStore'
-  import Setup from './domains/setup/setup.svelte'
-  import locate from './modules/locate/locate'
+  import { trackLaunch } from './domains/preferences/LaunchCount';
+  import PluginLoader from './domains/plugins/plugin-loader.svelte';
+  import { PluginStore } from './domains/plugins/PluginStore';
+  import Setup from './domains/setup/setup.svelte';
+  import locate from './modules/locate/locate';
 
   // initiailze gestures
-  gestures()
+  gestures();
 
   window['Feature'] = {
     beta() {
-      $Prefs.betaFeatures = true
+      $Prefs.betaFeatures = true;
     },
-  }
+  };
 
   /**
    * Day / Time Change Monitoring
    * Fire off the MinuteChecker30 every 30 minutes
    * This will check if the day changed
    */
-  let todayCheckPeriod = 1000 * 60 * 2
-  let todayCheckFormat = 'YYYY-MM-DD'
-  let todayKey = dayjs().format(todayCheckFormat)
+  let todayCheckPeriod = 1000 * 60 * 2;
+  let todayCheckFormat = 'YYYY-MM-DD';
+  let todayKey = dayjs().format(todayCheckFormat);
 
-  let loading = true
-  let onBoarding: Boolean | undefined = undefined
+  let loading = true;
+  let onBoarding: Boolean | undefined = undefined;
 
   /**
    * Check if New Day
@@ -86,57 +86,57 @@
    * so we can refresh the various views.
    */
   const checkIfNewDay = () => {
-    let checkKey = dayjs().format(todayCheckFormat)
+    let checkKey = dayjs().format(todayCheckFormat);
     // Compare now key to today key
     if (todayKey !== checkKey) {
-      showToast({ message: `It's ${dayjs().format('dddd')}!` })
+      showToast({ message: `It's ${dayjs().format('dddd')}!` });
       // Set today key to check key
-      todayKey = checkKey
-      bootCoreComponents($TrackableStore.trackables)
+      todayKey = checkKey;
+      bootCoreComponents($TrackableStore.trackables);
       setTimeout(() => {
-        boot()
+        boot();
         loadToday({
           knownTrackables: $TrackableStore.trackables,
           date: dayjs(),
-        })
-      }, 500)
+        });
+      }, 500);
     }
-  }
+  };
 
   // Check every X minutes
   setInterval(() => {
-    checkIfNewDay()
+    checkIfNewDay();
     // Check if the theme has Changed
-    setDocParams()
-  }, todayCheckPeriod)
+    setDocParams();
+  }, todayCheckPeriod);
 
   const hideSplashScreen = () => {
     document.querySelectorAll('.delete-on-app').forEach((d) => {
-      d.classList.add('deleted')
+      d.classList.add('deleted');
       setTimeout(() => {
-        d.remove()
-      }, 500)
-    })
-  }
+        d.remove();
+      }, 500);
+    });
+  };
 
   const setDocParams = () => {
-    setDocumentTheme($Prefs.theme)
-  }
+    setDocumentTheme($Prefs.theme);
+  };
   // TODO: Migrate these away from the method.function name - to just function name
   window.addEventListener('load', async () => {
-    setDocParams()
-  })
+    setDocParams();
+  });
 
   // Used to make sure that boards and trackers are loaded
 
   // Initialize Offline Queue regardless if we're offline
   // OfflineQueue.init()
 
-  let mounted = false
+  let mounted = false;
 
   if (window.location.href.search(/\?bypass/gi) > -1) {
-    $Prefs.storageType = 'local'
-    window.location.href = '/'
+    $Prefs.storageType = 'local';
+    window.location.href = '/';
   }
 
   $: if (mounted && !$Prefs.onboarded) {
@@ -144,10 +144,10 @@
      * If we're mounted, and no Storage Type
      * - go to Onboarding
      */
-    onBoarding = !$Prefs.onboarded
-    Interact.stopBlocker()
-    loading = false
-    hideSplashScreen()
+    onBoarding = !$Prefs.onboarded;
+    Interact.stopBlocker();
+    loading = false;
+    hideSplashScreen();
   } else if (mounted && $Prefs.storageType) {
     /**
      * If Mounted and Storage Type set
@@ -155,8 +155,8 @@
      */
 
     wait(200).then(() => {
-      hideSplashScreen()
-    })
+      hideSplashScreen();
+    });
 
     /**
      * Fetch location onload if configured
@@ -164,60 +164,60 @@
      */
     if ($Prefs.alwaysLocate) {
       // Get the Location
-      locate().catch((e) => console.warn('Error fetching initial onload location', e))
+      locate().catch((e) => console.warn('Error fetching initial onload location', e));
     }
 
     Storage.init().then(async () => {
       wait(2000).then(() => {
-        checkGoals('storage-init')
-        trackLaunch()
-      })
-    })
+        checkGoals('storage-init');
+        trackLaunch();
+      });
+    });
   }
 
   const checkGoals = async (caller) => {
-    return loadGoalsForToday($GoalStore, $TrackableStore.trackables, { caller })
-  }
+    return loadGoalsForToday($GoalStore, $TrackableStore.trackables, { caller });
+  };
 
   const boot = async () => {
-    mounted = false
-    loading = true
-    mounted = true
-    Interact.blocker('')
+    mounted = false;
+    loading = true;
+    mounted = true;
+    Interact.blocker('');
     try {
-      await bootNomie($Prefs)
+      await bootNomie($Prefs);
     } catch (e) {
-      Interact.error(e.message)
+      Interact.error(e.message);
     }
-    Interact.stopBlocker()
-    loading = false
-  }
+    Interact.stopBlocker();
+    loading = false;
+  };
 
-  let pluginsInitialized: boolean = false
+  let pluginsInitialized: boolean = false;
 
   onMount(async () => {
-    await boot()
+    await boot();
 
     // Initialize the Plugins
-    PluginStore.init({})
-    pluginsInitialized = true
+    PluginStore.init({});
+    pluginsInitialized = true;
 
     LedgerStore.hook('onLogSaved', (res) => {
       setTimeout(() => {
-        checkGoals('on-log-save')
-      }, 3500)
-    })
+        checkGoals('on-log-save');
+      }, 3500);
+    });
 
     LedgerStore.hook('onLogsDeleted', (res) => {
       setTimeout(() => {
-        checkGoals('on-log-deleted')
-      }, 3500)
-    })
+        checkGoals('on-log-deleted');
+      }, 3500);
+    });
 
     if (document.location.pathname.search('/modal') > -1) {
-      document.location.href = '/'
+      document.location.href = '/';
     }
-  })
+  });
 </script>
 
 <Tailwindcss />
@@ -240,7 +240,7 @@
 
 <Interactions />
 
-<UpdateAvailable />
+<!--<UpdateAvailable />-->
 
 {#if $Interact.confetti.show}
   <Confetti />

@@ -1,50 +1,50 @@
 <script lang="ts">
-  import ProgressBar from '../../components/progress-bar/progress-bar.svelte'
-  import dayjs from 'dayjs'
+  import ProgressBar from '../../components/progress-bar/progress-bar.svelte';
+  import dayjs from 'dayjs';
 
-  import Avatar from '../../components/avatar/avatar.svelte'
+  import Avatar from '../../components/avatar/avatar.svelte';
 
-  import ButtonGroup from '../../components/button-group/button-group.svelte'
-  import Button from '../../components/button/button.svelte'
-  import Calendar from '../../components/calendar/calendar.svelte'
+  import ButtonGroup from '../../components/button-group/button-group.svelte';
+  import Button from '../../components/button/button.svelte';
+  import Calendar from '../../components/calendar/calendar.svelte';
 
-  import Card from '../../components/card/card.svelte'
+  import Card from '../../components/card/card.svelte';
 
-  import Divider from '../../components/divider/divider.svelte'
+  import Divider from '../../components/divider/divider.svelte';
 
-  import Input from '../../components/input/input.svelte'
-  import ListItem from '../../components/list-item/list-item.svelte'
-  import List from '../../components/list/list.svelte'
-  import PositivityBar from '../../components/positivity-bar/positivity-bar.svelte'
-  import PositivitySelector from '../../components/positivity-selector/positivity-selector.svelte'
-  import Row from '../../components/row/row.svelte'
-  import Spinner from '../../components/spinner/spinner.svelte'
+  import Input from '../../components/input/input.svelte';
+  import ListItem from '../../components/list-item/list-item.svelte';
+  import List from '../../components/list/list.svelte';
+  import PositivityBar from '../../components/positivity-bar/positivity-bar.svelte';
+  import PositivitySelector from '../../components/positivity-selector/positivity-selector.svelte';
+  import Row from '../../components/row/row.svelte';
+  import Spinner from '../../components/spinner/spinner.svelte';
 
-  import Text from '../../components/text/text.svelte'
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
+  import Text from '../../components/text/text.svelte';
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
 
-  import Empty from '../../components/empty/empty.svelte'
-  import Layout from '../../domains/layout/layout.svelte'
+  import Empty from '../../components/empty/empty.svelte';
+  import Layout from '../../domains/layout/layout.svelte';
 
-  import { Device } from '../../store/device-store'
-  import { Interact } from '../../store/interact'
-  import ImageCapture from '../../components/image-capture.svelte'
-  import FileUploader from '../../components/file-uploader/file-uploader.svelte'
+  import { Device } from '../../store/device-store';
+  import { Interact } from '../../store/interact';
+  import ImageCapture from '../../components/image-capture.svelte';
+  import FileUploader from '../../components/file-uploader/file-uploader.svelte';
 
-  import { TrackableStore } from '../../domains/trackable/TrackableStore'
+  import { TrackableStore } from '../../domains/trackable/TrackableStore';
 
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import { ChevronUpOutline } from '../../components/icon/nicons'
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import { ChevronUpOutline } from '../../components/icon/nicons';
 
-  import NLog from '../../domains/nomie-log/nomie-log'
-  import logsToTrackableUsage from '../../domains/usage/usage-utils'
-  import type { TrackableUsageMap } from '../../domains/usage/trackable-usage.class'
-  import ScoreNote from '../../modules/scoring/score-note'
+  import NLog from '../../domains/nomie-log/nomie-log';
+  import logsToTrackableUsage from '../../domains/usage/usage-utils';
+  import type { TrackableUsageMap } from '../../domains/usage/trackable-usage.class';
+  import ScoreNote from '../../modules/scoring/score-note';
 
-  import TrackableUsageCalendar from '../../domains/calendar-view/trackableUsageCalendar.svelte'
-  import Calendar4 from '../../domains/calendar-view/Calendar4.svelte'
-  import { Prefs } from '../../domains/preferences/Preferences'
-  import { TrackerStore } from '../../domains/tracker/TrackerStore'
+  import TrackableUsageCalendar from '../../domains/calendar-view/trackableUsageCalendar.svelte';
+  import Calendar4 from '../../domains/calendar-view/Calendar4.svelte';
+  import { Prefs } from '../../domains/preferences/Preferences';
+  import { TrackerStore } from '../../domains/tracker/TrackerStore';
 
   const fakeNotes = [
     { note: 'hello #mood(6)', date: dayjs().toDate() },
@@ -53,12 +53,12 @@
     { note: 'hello #mood(8)', date: dayjs().add(4, 'day').toDate() },
     { note: 'hello #mood(5)', date: dayjs().add(7, 'day').toDate() },
   ].map((d) => {
-    let log = new NLog({ note: d.note, end: d.date })
-    log.score = ScoreNote(log.note, log.end, $TrackerStore)
-    return log
-  })
-  let tu: TrackableUsageMap
-  $: tu = logsToTrackableUsage(fakeNotes, { trackables: $TrackableStore.trackables })
+    let log = new NLog({ note: d.note, end: d.date });
+    log.score = ScoreNote(log.note, log.end, $TrackerStore);
+    return log;
+  });
+  let tu: TrackableUsageMap;
+  $: tu = logsToTrackableUsage(fakeNotes, { trackables: $TrackableStore.trackables });
   // let date = dayjs()
 </script>
 
@@ -195,7 +195,7 @@
             title: '🚚 Oh yea!',
             message: 'Nice job my friend!',
             timeout: 5000,
-          })
+          });
         }}
       >
         Test

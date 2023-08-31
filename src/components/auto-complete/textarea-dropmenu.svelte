@@ -1,37 +1,37 @@
 <script lang="ts">
-  import { onDestroy, onMount } from 'svelte'
+  import { onDestroy, onMount } from 'svelte';
 
-  import getCaretCoordinates from 'textarea-caret'
-  export let textareaId: string
-  export let className: string = ''
+  import getCaretCoordinates from 'textarea-caret';
+  export let textareaId: string;
+  export let className: string = '';
 
-  let listener: any = undefined
+  let listener: any = undefined;
 
-  let top: number = 0
-  let left: number = 0
-  let height: number = 0
-  let bottom: number = 0
-  let ele: HTMLInputElement
-  let menuEle: HTMLElement
+  let top: number = 0;
+  let left: number = 0;
+  let height: number = 0;
+  let bottom: number = 0;
+  let ele: HTMLInputElement;
+  let menuEle: HTMLElement;
 
   const onInput = (evt: any) => {
-    const caret = getCaretCoordinates(evt.target, evt.target.selectionEnd)
-    top = caret.top
-    left = caret.left
-    height = caret.height
-    bottom = menuEle?.clientHeight || 100
-  }
+    const caret = getCaretCoordinates(evt.target, evt.target.selectionEnd);
+    top = caret.top;
+    left = caret.left;
+    height = caret.height;
+    bottom = menuEle?.clientHeight || 100;
+  };
 
   onMount(() => {
-    ele = document.getElementById(textareaId) as HTMLInputElement
+    ele = document.getElementById(textareaId) as HTMLInputElement;
     if (listener) {
-      ele.removeEventListener('input', listener)
+      ele.removeEventListener('input', listener);
     }
-    listener = ele.addEventListener('input', onInput)
-  })
+    listener = ele.addEventListener('input', onInput);
+  });
   onDestroy(() => {
-    ele.removeEventListener('input', onInput)
-  })
+    ele.removeEventListener('input', onInput);
+  });
 </script>
 
 {#if left > 0}

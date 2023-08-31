@@ -1,33 +1,35 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
-  import { navigate } from 'svelte-navigator'
+  import { onMount } from 'svelte';
+  import { navigate } from 'svelte-navigator';
 
-  import NSpinner from '../spinner/spinner.svelte'
-  import NItem from '../list-item/list-item.svelte'
+  import NSpinner from '../spinner/spinner.svelte';
+  import NItem from '../list-item/list-item.svelte';
 
-  import NLayout from '../../domains/layout/layout.svelte'
+  import NLayout from '../../domains/layout/layout.svelte';
 
   // Utils and Modules
-  import Downloader from '../../modules/download/download'
-  import tick from '../../utils/tick/tick'
+  import Downloader from '../../modules/download/download';
+  import tick from '../../utils/tick/tick';
 
-  import Storage from '../../domains/storage/storage'
+  import Storage from '../../domains/storage/storage';
 
-  import { Interact } from '../../store/interact'
+  import { Interact } from '../../store/interact';
 
-  import Button from '../button/button.svelte'
-  import { Lang } from '../../store/lang'
-  import ToggleSwitch from '../toggle-switch/toggle-switch.svelte'
-  import Text from '../text/text.svelte'
+  import Button from '../button/button.svelte';
+  import { Lang } from '../../store/lang';
+  import ToggleSwitch from '../toggle-switch/toggle-switch.svelte';
+  import Text from '../text/text.svelte';
   // import MassEditor from '../../domains/nomie-log/log-mass-editor/mass-editor.svelte'
-  import BackButton from '../back-button/back-button.svelte'
-  import List from '../list/list.svelte'
+  import BackButton from '../back-button/back-button.svelte';
+  import List from '../list/list.svelte';
 
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
-  import { Prefs } from '../../domains/preferences/Preferences'
-  import IonIcon from '../icon/ion-icon.svelte'
-  import { DownloadOutline, TrashOutline } from '../icon/nicons'
-  import { showToast } from '../toast/ToastStore'
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
+  import { Prefs } from '../../domains/preferences/Preferences';
+  import IonIcon from '../icon/ion-icon.svelte';
+  import { DownloadOutline, TrashOutline } from '../icon/nicons';
+  import { showToast } from '../toast/ToastStore';
+
+  import treeify from './treeify';
 
   const state = {
     title: 'File Browser',
@@ -40,82 +42,83 @@
     loading: true,
     edit: false,
     showMassEditor: false,
-  }
+  };
 
-  let fileContent
-  let editor
+  let fileContent;
+  let editor;
 
   // Not working
-  export let path = undefined
+  export let path = undefined;
   // Old fashion way is working
 
-  let lastPath = null
+  let lastPath = null;
 
   $: if (path && path !== lastPath) {
-    init()
+    init();
   }
 
   async function init() {
-    state.file = null
-    state.edit = false
-    lastPath = path
+    state.file = null;
+    state.edit = false;
+    lastPath = path;
     if (path.substr(0, 1) == '/') {
-      path = path.replace('/', '')
+      path = path.replace('/', '');
     }
-    path = path.replace(/\/\//g, '/')
-    let ogPath = path.split('/')
+    path = path.replace(/\/\//g, '/');
+    let ogPath = path.split('/');
     if (ogPath.length > 0) {
-      let fileName = ogPath[ogPath.length - 1]
+      let fileName = ogPath[ogPath.length - 1];
       if (isFile(fileName)) {
-        state.file = fileName
-        state.path = ogPath
-        readFile()
+        state.file = fileName;
+        state.path = ogPath;
+        readFile();
       } else {
-        state.path = ogPath
-
-        state.files = extractFiles()
+        state.path = ogPath;
+        state.files = extractFiles();
       }
     }
-    state.title = ogPath.join('/')
-    state.path = ogPath
+    state.title = ogPath.join('/');
+    state.path = ogPath;
   }
+
   function cancelEdits() {
-    state.edit = false
+    state.edit = false;
   }
+
   async function saveChanges() {
     if (!editor) {
-      editor = document.getElementById('file-editor')
+      editor = document.getElementById('file-editor');
     }
-    let value
+    let value;
     if (editor) {
-      value = editor.value
+      value = editor.value;
       try {
-        let payload = JSON.parse(value)
-        editor.value = JSON.stringify(payload, null, 2)
-        await Storage.put(state.path.join('/'), payload)
+        let payload = JSON.parse(value);
+        editor.value = JSON.stringify(payload, null, 2);
+        await Storage.put(state.path.join('/'), payload);
         showToast({
           message: 'File Saved',
           buttonLabel: 'Reload',
           timeout: 2500,
           buttonClick() {
-            window.location.href = window.location.href
+            window.location.href = window.location.href;
           },
-        })
+        });
       } catch (e) {
-        Interact.error(e.message)
+        Interact.error(e.message);
       }
     }
   }
 
   async function back() {
     if (!state.path.length) {
-      navigate('/settings')
+      navigate('/settings');
     } else {
-      state.path.pop()
-      await tick(10)
-      state.files = extractFiles()
+      state.path.pop();
+      await tick(10);
+      state.files = extractFiles();
       // await tick(100)
-      init()
+      init();
     }
     // if (state.path.length) {
     //   state.path.pop();
@@ -128,107 +131,74 @@
 
   function extractFiles() {
     if (state.path.length) {
-      let obj = { ...state.tree }
+      let obj = { ...state.tree };
       state.path.forEach((name) => {
         if (obj.hasOwnProperty(name)) {
-          obj = obj[name]
+          obj = obj[name];
         }
-      })
-      return Object.keys(obj)
+      });
+      return Object.keys(obj);
     } else {
-      return Object.keys(state.tree)
+      return Object.keys(state.tree);
     }
-  }
-
-  /**
-   * From https://joelgriffith.net/array-reduce-is-pretty-neat/
-   */
-  function Treeify(files) {
-    var fileTree = {}
-
-    if (files instanceof Array === false) {
-      throw new Error('Expected an Array of file paths, but saw ' + files)
-    }
-
-    function mergePathsIntoFileTree(prevDir, currDir, i, filePath) {
-      if (i === filePath.length - 1) {
-        prevDir[currDir] = 'file'
-      }
-
-      if (!prevDir.hasOwnProperty(currDir)) {
-        prevDir[currDir] = {}
-      }
-
-      return prevDir[currDir]
-    }
-
-    function parseFilePath(filePath) {
-      var fileLocation = filePath.split('/')
-      if (fileLocation.length === 1) {
-        return (fileTree[fileLocation[0]] = 'file')
-      }
-      fileLocation.reduce(mergePathsIntoFileTree, fileTree)
-    }
-    files.forEach(parseFilePath)
-    return fileTree
   }
 
   onMount(async () => {
-    state.loading = true
+    state.loading = true;
     Storage.getEngine().onReady(async () => {
-      let files = await Storage.list()
-      state.tree = Treeify(files)
-      state.files = extractFiles()
-      state.loading = false
-    })
-    await Storage.init()
-  })
+      let files = await Storage.list();
+      state.tree = treeify(files);
+      state.files = extractFiles();
+      state.loading = false;
+    });
+    await Storage.init();
+  });
 
   async function deleteFile(file) {
-    let filepath = `${state.path.join('/')}`
+    let filepath = state.path.join('/');
     let confirm = await Interact.confirm(
       `Really delete ${file}?`,
       `This can cause serious issues if you don't know what you're doing. File to delete: ${filepath}`,
       'Yes, Delete'
-    )
+    );
     if (confirm) {
-      await Storage.delete(filepath)
-      showToast({ message: 'Deleted' })
-      back()
+      await Storage.delete(filepath);
+      showToast({ message: 'Deleted' });
+      back();
     }
   }
 
   async function readFile() {
-    const profileRoot = Storage.getEngine().basePath()
-
-    let content = await Storage.get(path.replace(`${profileRoot}/`, ''))
+    let filepath = state.path.join('/');
+    console.log('Read file content from', filepath);
+    let content = await Storage.get(filepath);
     if (content) {
-      fileContent = JSON.stringify(content, null, 2)
+      fileContent = JSON.stringify(content, null, 2);
     }
-    return fileContent
+    return fileContent;
   }
 
   async function download(file) {
-    let filename = state.path[state.path.length - 1]
-    let content = await Storage.get(state.path.join('/'))
-    Downloader.json(filename, content)
+    let filename = state.path[state.path.length - 1];
+    let content = await Storage.get(state.path.join('/'));
+    Downloader.json(filename, content);
   }
 
   function isFile(name) {
-    const filesArray = ['last-usage', 'nomie-capture']
+    const filesArray = ['last-usage', 'nomie-capture'];
     if (name.split('.').length > 1) {
-      return true
+      return true;
     } else if (filesArray.indexOf(name) > -1) {
-      return true
+      return true;
     } else if (state.path[state.path.length - 1] == 'books') {
-      return true
+      return true;
     } else {
-      return false
+      return false;
     }
   }
 
   function onKeyPress(e) {
-    var keyCode = e.code
+    var keyCode = e.code;
 
     if (e.keyCode === 9) {
       // tab was pressed
@@ -236,38 +206,38 @@
       // get caret position/selection
       var val = this.value,
         start = this.selectionStart,
-        end = this.selectionEnd
+        end = this.selectionEnd;
 
       // set textarea value to: text before caret + tab + text after caret
-      this.value = (val || '').substring(0, start) + '\t' + (val || '').substring(end)
+      this.value = (val || '').substring(0, start) + '\t' + (val || '').substring(end);
 
       // put caret at right position again
-      this.selectionStart = this.selectionEnd = (start || 0) + 1
+      this.selectionStart = this.selectionEnd = (start || 0) + 1;
 
       // prevent the focus lose
-      return false
+      return false;
     }
   }
 
   async function editFile() {
-    state.edit = true
-    await tick(200)
-    editor = document.getElementById('file-editor')
-    editor.addEventListener('onkeydown', onKeyPress)
+    state.edit = true;
+    await tick(200);
+    editor = document.getElementById('file-editor');
+    editor.addEventListener('onkeydown', onKeyPress);
   }
 
   function getPath(file) {
-    let path
+    let path;
     if (state.path.length == 1) {
-      let root = state.path[0]
+      let root = state.path[0];
       if (root.substr(0, 1) == '/') {
-        root = root.substr(1, root.length - 2)
+        root = root.substr(1, root.length - 2);
       }
-      path = `/files/${root}/${file}`
+      path = `/files/${root}/${file}`;
     } else {
-      path = `/files/${state.path.join('/')}/${file}`
+      path = `/files/${state.path.join('/')}/${file}`;
     }
-    return path.replace('//', '/')
+    return path.replace('//', '/');
   }
 </script>
 
@@ -291,7 +261,7 @@
                 bottomLine
                 detail
                 on:click={() => {
-                  navigate(getPath(file))
+                  navigate(getPath(file));
                 }}
               >
                 {file}
@@ -304,7 +274,7 @@
                 bottomLine
                 detail
                 on:click={() => {
-                  navigate(getPath(file))
+                  navigate(getPath(file));
                 }}
               >
                 {file}
@@ -348,7 +318,7 @@
         <Button
           icon
           on:click={() => {
-            download(state.file)
+            download(state.file);
           }}
         >
           <IonIcon icon={DownloadOutline} className="text-primary-500" />
@@ -356,7 +326,7 @@
         <Button
           icon
           on:click={() => {
-            deleteFile(state.file)
+            deleteFile(state.file);
           }}
         >
           <IonIcon icon={TrashOutline} className="text-red-500" />

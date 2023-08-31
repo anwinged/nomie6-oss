@@ -1,28 +1,28 @@
 <script lang="ts">
-  import LetterTicker from '../../../components/letter-ticker/letter-ticker.svelte'
-  import { createEventDispatcher, onMount } from 'svelte'
-  import RangeSlider from 'svelte-range-slider-pips'
-  import is from '../../../utils/is/is'
+  import LetterTicker from '../../../components/letter-ticker/letter-ticker.svelte';
+  import { createEventDispatcher, onMount } from 'svelte';
+  import RangeSlider from 'svelte-range-slider-pips';
+  import is from '../../../utils/is/is';
 
-  export let min = '0'
-  export let max = '10'
-  export let value = '5'
-  export let tracker: any = undefined
-  export let step = tracker ? tracker.step : '1'
+  export let min = '0';
+  export let max = '10';
+  export let value = '5';
+  export let tracker: any = undefined;
+  export let step = tracker ? tracker.step : '1';
 
-  let tempValue
-  $: tempValue = value
+  let tempValue;
+  $: tempValue = value;
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
   async function main() {
     // Trigger the change so the parent catches it.
     if (tempValue) {
-      dispatch('change', parseInt(tempValue))
+      dispatch('change', parseInt(tempValue));
     }
   }
 
-  onMount(main)
+  onMount(main);
 </script>
 
 <div class="tracker-input-slider relative">
@@ -42,7 +42,7 @@
     <RangeSlider
       on:change={(evt) => {
         // dispatch('change', evt.detail)
-        dispatch('change', parseInt(evt.detail.value))
+        dispatch('change', parseInt(evt.detail.value));
       }}
       style="--range-slider:{tracker.color};"
       springValues={{
@@ -50,7 +50,7 @@
         damping: 0.7,
       }}
       formatter={(v) => {
-        return tracker.displayValue(v)
+        return tracker.displayValue(v);
       }}
       first={tracker.minLabel}
       last={tracker.maxLabel}

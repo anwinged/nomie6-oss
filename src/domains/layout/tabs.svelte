@@ -1,18 +1,18 @@
 <script lang="ts">
-  import Dot from '../../components/dot/dot.svelte'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import Container from '../../components/container/container.svelte'
+  import Dot from '../../components/dot/dot.svelte';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import Container from '../../components/container/container.svelte';
 
   // Vendors
 
-  import { onMount } from 'svelte'
+  import { onMount } from 'svelte';
 
   // Components
-  import AppTab from '../../components/app-tab/app-tab.svelte'
+  import AppTab from '../../components/app-tab/app-tab.svelte';
 
-  import { Lang } from '../../store/lang'
+  import { Lang } from '../../store/lang';
 
-  import NPaths from '../../paths'
+  import NPaths from '../../paths';
 
   import {
     AppsOutline,
@@ -23,48 +23,48 @@
     EaselSolid,
     RibbonOutline,
     RibbonSolid,
-  } from '../../components/icon/nicons'
-  import { Prefs } from '../../domains/preferences/Preferences'
-  import { Device } from '../../store/device-store'
-  import { RunningTimers } from '../tracker/TrackerStore'
-  import { GoalScoreStore } from '../../domains/goals/GoalStore'
-  import MenuOutline from '../../n-icons/MenuOutline.svelte'
+  } from '../../components/icon/nicons';
+  import { Prefs } from '../../domains/preferences/Preferences';
+  import { Device } from '../../store/device-store';
+  import { RunningTimers } from '../tracker/TrackerStore';
+  import { GoalScoreStore } from '../../domains/goals/GoalStore';
+  import MenuOutline from '../../n-icons/MenuOutline.svelte';
 
-  export let className: string = ''
+  export let className: string = '';
 
   const state = {
     mounted: false,
-  }
+  };
 
-  let path: string = '/'
-  let page: 'track' | 'dashboard' | 'goals' | 'timeline' | 'history'
+  let path: string = '/';
+  let page: 'track' | 'dashboard' | 'goals' | 'timeline' | 'history';
   $: if (state.mounted) {
-    path = document.location.pathname
+    path = document.location.pathname;
     if (path === '/' && $Prefs.startPage === 'track') {
-      page = 'track'
+      page = 'track';
     } else if (path === '/' && $Prefs.startPage === 'dashboard') {
-      page = 'dashboard'
+      page = 'dashboard';
     } else if (path === '/' && $Prefs.startPage === 'goals') {
-      page = 'goals'
+      page = 'goals';
     } else if (path === '/' && $Prefs.startPage === 'timeline') {
-      page = 'timeline'
+      page = 'timeline';
     } else if (path === '/' && $Prefs.startPage === 'history') {
-      page = 'history'
+      page = 'history';
     }
     if (page) {
       try {
         setTimeout(() => {
-          document.querySelector(`.tab-${page} a`).setAttribute('aria-current', 'page')
-        }, 500)
+          document.querySelector(`.tab-${page} a`).setAttribute('aria-current', 'page');
+        }, 500);
       } catch (e) {
-        console.error(e)
+        console.error(e);
       }
     }
   }
 
   onMount(() => {
-    state.mounted = true
-  })
+    state.mounted = true;
+  });
 </script>
 
 {#if state.mounted && $Device.width < 900}

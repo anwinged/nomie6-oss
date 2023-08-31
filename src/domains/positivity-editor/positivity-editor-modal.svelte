@@ -1,101 +1,102 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
+  import { onMount } from 'svelte';
 
-  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte'
-  import { closeModal } from '../../components/backdrop/BackdropStore2'
+  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte';
+  import { closeModal } from '../../components/backdrop/BackdropStore2';
 
-  import Button from '../../components/button/button.svelte'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import ListItem from '../../components/list-item/list-item.svelte'
-  import List from '../../components/list/list.svelte'
+  import Button from '../../components/button/button.svelte';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import ListItem from '../../components/list-item/list-item.svelte';
+  import List from '../../components/list/list.svelte';
 
-  import SortableList2 from '../../components/sortable-list/sortable-list2.svelte'
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
-  import nid from '../../modules/nid/nid'
+  import SortableList2 from '../../components/sortable-list/sortable-list2.svelte';
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
+  import nid from '../../modules/nid/nid';
 
-  import type { ICondition } from '../../modules/scoring/score-tracker'
-  import CloseOutline from '../../n-icons/CloseOutline.svelte'
-  import MenuOutline from '../../n-icons/MenuOutline.svelte'
-  import { Interact } from '../../store/interact'
-  import { Lang } from '../../store/lang'
+  import type { ICondition } from '../../modules/scoring/score-tracker';
+  import CloseOutline from '../../n-icons/CloseOutline.svelte';
+  import MenuOutline from '../../n-icons/MenuOutline.svelte';
+  import { Interact } from '../../store/interact';
+  import { Lang } from '../../store/lang';
 
-  import { wait } from '../../utils/tick/tick'
-  import ConditionItem from './condition-item.svelte'
-  import type { OpenScoreEditorProps } from './PositivityEditorStore'
-  import { md5 } from '../../utils/hash/hash'
+  import { wait } from '../../utils/tick/tick';
+  import ConditionItem from './condition-item.svelte';
+  import type { OpenScoreEditorProps } from './PositivityEditorStore';
+  import { md5 } from '../../utils/hash/hash';
 
-  export let id: string
-  export let props: OpenScoreEditorProps
+  export let id: string;
+  export let props: OpenScoreEditorProps;
 
-  let workingCalc: Array<ICondition> = []
-  let mounted = false
+  let workingCalc: Array<ICondition> = [];
+  let mounted = false;
 
-  const dedupCalcs = (base):Array<ICondition>=>{
-    return base.filter((c,index)=>{
-        let foundIndex = base.findIndex(fc=>fc.key==c.key);
-        if(foundIndex > -1 && foundIndex !== index) {
-          return false;
-        } else {
-          return true;
-        }
-      })
-  }
+  const dedupCalcs = (base): Array<ICondition> => {
+    return base.filter((c, index) => {
+      let foundIndex = base.findIndex((fc) => fc.key == c.key);
+      if (foundIndex > -1 && foundIndex !== index) {
+        return false;
+      } else {
+        return true;
+      }
+    });
+  };
 
   onMount(() => {
     if (props.calc.length) {
-      workingCalc = dedupCalcs([...props.calc]
-      .filter((c) => c)
-      .map((calc) => {
-        calc.key = md5(JSON.stringify(calc))
-        return calc
-      }));
+      workingCalc = dedupCalcs(
+        [...props.calc]
+          .filter((c) => c)
+          .map((calc) => {
+            calc.key = md5(JSON.stringify(calc));
+            return calc;
+          })
+      );
     }
 
     if (workingCalc.length == 0) {
-      addCondition()
+      addCondition();
     }
-    mounted = true
-  })
+    mounted = true;
+  });
 
   const close = () => {
-    closeModal(id)
-  }
+    closeModal(id);
+  };
 
   const saveChanges = () => {
     if (props.onComplete) {
-      props.onComplete(workingCalc)
-      close()
+      props.onComplete(workingCalc);
+      close();
     }
-  }
+  };
 
   const refresh = async () => {
-    mounted = false
-    await wait(10)
-    mounted = true
-  }
+    mounted = false;
+    await wait(10);
+    mounted = true;
+  };
 
   const addCondition = () => {
-    
     let calc: any = {
       is: 'eq',
       sc: 1,
       v: 0,
       if: 'value',
-    }
+    };
     calc.key = nid();
     // calc.key = md5(JSON.stringify(calc))
-    workingCalc.push(calc)
-    workingCalc = workingCalc
-    refresh()
-  }
+    workingCalc.push(calc);
+    workingCalc = workingCalc;
+    refresh();
+  };
 
   const removeCondition = async (condition: ICondition) => {
-    const confirmed = await Interact.confirm('Remove this condition?')
+    const confirmed = await Interact.confirm('Remove this condition?');
     if (confirmed) {
-      workingCalc = workingCalc.filter((w) => w !== condition)
+      workingCalc = workingCalc.filter((w) => w !== condition);
     }
-    refresh()
-  }
+    refresh();
+  };
 </script>
 
 <BackdropModal className="bg-gray-200 dark:bg-gray-800 h-full">
@@ -110,15 +111,15 @@
     </h1>
     <Button clear primary slot="right" on:click={saveChanges}>Done</Button>
   </ToolbarGrid>
-  <div class=" lg:px-2 md:px-1 py-4  filler">
+  <div class=" lg:px-2 md:px-1 py-4 filler">
     <List solo>
       {#if mounted}
         <SortableList2
           direction="y"
           bind:items={workingCalc}
           on:update={(evt) => {
-            workingCalc = evt.detail
-            refresh()
+            workingCalc = evt.detail;
+            refresh();
           }}
           handleClass="menu-handle"
           key="key"
@@ -130,7 +131,7 @@
             {index}
             trackable={props.trackable}
             on:change={(evt) => {
-              workingCalc[index] = evt.detail
+              workingCalc[index] = evt.detail;
               workingCalc = workingCalc;
               // refresh()
             }}

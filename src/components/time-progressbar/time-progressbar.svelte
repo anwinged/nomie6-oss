@@ -1,15 +1,15 @@
 <script lang="ts">
-  import dayjs from 'dayjs'
-  import type { Dayjs } from 'dayjs'
-  import { getDateFormats } from '../../domains/preferences/Preferences'
+  import dayjs from 'dayjs';
+  import type { Dayjs } from 'dayjs';
+  import { getDateFormats } from '../../domains/preferences/Preferences';
 
-  export let date: Dayjs = dayjs()
-  export let timeClass: string = ''
+  export let date: Dayjs = dayjs();
+  export let timeClass: string = '';
 
-  const dateFormats = getDateFormats()
-  let activeDate: Dayjs = dayjs()
+  const dateFormats = getDateFormats();
+  let activeDate: Dayjs = dayjs();
   $: if (date) {
-    activeDate = dayjs(date)
+    activeDate = dayjs(date);
   }
 </script>
 

@@ -1,15 +1,15 @@
 <script lang="ts">
-  import type { IPopMenuOptions } from '../../store/interact'
+  import type { IPopMenuOptions } from '../../store/interact';
 
-  import { Lang } from '../../store/lang'
-  import Button from '../button/button.svelte'
-  import PopButtons from './pop-buttons.svelte'
-  import TrackableAvatar from '../avatar/trackable-avatar.svelte'
-  import { createEventDispatcher } from 'svelte'
-  import { closeModal } from '../backdrop/BackdropStore2'
+  import { Lang } from '../../store/lang';
+  import Button from '../button/button.svelte';
+  import PopButtons from './pop-buttons.svelte';
+  import TrackableAvatar from '../avatar/trackable-avatar.svelte';
+  import { createEventDispatcher } from 'svelte';
+  import { closeModal } from '../backdrop/BackdropStore2';
 
-  export let menu: IPopMenuOptions
-  export let id: string
+  export let menu: IPopMenuOptions;
+  export let id: string;
 </script>
 
 <div class="pop-menu2-wrapper w-full max-w-md" style="min-width:320px;">
@@ -49,7 +49,7 @@
       <PopButtons
         buttons={menu.buttons}
         on:close={(evt) => {
-          closeModal(id)
+          closeModal(id);
         }}
         listType={menu.buttonView}
       />
@@ -58,7 +58,7 @@
       <Button
         size="lg"
         on:click={() => {
-          closeModal(id)
+          closeModal(id);
         }}
         className="w-full bg-red-gradient text-white stiff"
         style="min-height:50px;">{Lang.t('general.close', 'Close')}</Button

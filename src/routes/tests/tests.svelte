@@ -1,17 +1,17 @@
 <script lang="ts">
-  import Scroller from '../../components/scroller/scroller.svelte'
+  import Scroller from '../../components/scroller/scroller.svelte';
 
-  import dayjs from 'dayjs'
+  import dayjs from 'dayjs';
 
-  import Calendar4 from '../../components/calendar4/calendar4.svelte'
-  import List from '../../components/list/list.svelte'
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
+  import Calendar4 from '../../components/calendar4/calendar4.svelte';
+  import List from '../../components/list/list.svelte';
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
 
-  import Layout from '../../domains/layout/layout.svelte'
-  import { Prefs } from '../../domains/preferences/Preferences'
-  import Input from '../../components/input/input.svelte'
-  import Divider from '../../components/divider/divider.svelte'
-  import Button from '../../components/button/button.svelte'
+  import Layout from '../../domains/layout/layout.svelte';
+  import { Prefs } from '../../domains/preferences/Preferences';
+  import Input from '../../components/input/input.svelte';
+  import Divider from '../../components/divider/divider.svelte';
+  import Button from '../../components/button/button.svelte';
 </script>
 
 <Layout>
@@ -43,7 +43,7 @@
           .map((d, i) => i)}
         itemClass=""
       >
-        <div class="item  p-2 P " style="width:10vw">
+        <div class="item p-2 P" style="width:10vw">
           <div class="text-center {item === centerPosItem ? 'bg-green-400' : 'bg-blue-500'} rounded-lg h-10">
             {item}
           </div>

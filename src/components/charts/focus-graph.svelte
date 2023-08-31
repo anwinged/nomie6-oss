@@ -1,18 +1,18 @@
 <script lang="ts">
-  import type { IFocusResults } from '../../domains/focus/focus-utils'
-  import math from '../../utils/math/math'
+  import type { IFocusResults } from '../../domains/focus/focus-utils';
+  import math from '../../utils/math/math';
 
-  export let scores: Array<IFocusResults> = []
+  export let scores: Array<IFocusResults> = [];
 
-  let internalScores: Array<IFocusResults> = []
+  let internalScores: Array<IFocusResults> = [];
   $: if (scores) {
-    const percentages = math.percentile(scores.map((s) => s.score))
+    const percentages = math.percentile(scores.map((s) => s.score));
     internalScores = scores.map((s, index) => {
       return {
         score: percentages[index],
         focus: s.focus,
-      }
-    })
+      };
+    });
   }
 </script>
 

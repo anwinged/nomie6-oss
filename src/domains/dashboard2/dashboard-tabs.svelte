@@ -1,6 +1,6 @@
 <script lang="ts">
-  import HScroller from '../../components/h-scroller/h-scroller.svelte'
-  import { DashStore, selectDashboardByIndex } from './DashStore'
+  import HScroller from '../../components/h-scroller/h-scroller.svelte';
+  import { DashStore, selectDashboardByIndex } from './DashStore';
 </script>
 
 <HScroller
@@ -15,7 +15,7 @@
         ? 'selected'
         : 'inactive opacity-80'}"
       on:click={() => {
-        selectDashboardByIndex(i)
+        selectDashboardByIndex(i);
       }}
     >
       {board.label}

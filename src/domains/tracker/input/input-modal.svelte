@@ -1,5 +1,5 @@
 <script lang="ts">
-  import NoteCombo from './note-combo.svelte'
+  import NoteCombo from './note-combo.svelte';
 
   /**
    * Tracker Input Mege Component
@@ -16,48 +16,48 @@
   // Components
 
   //Container for Slider (range), Keypad and Timer
-  import SliderInput from './slider.svelte'
-  import PickerInput from './picker.svelte'
-  import NTimer from './timer.svelte'
+  import SliderInput from './slider.svelte';
+  import PickerInput from './picker.svelte';
+  import NTimer from './timer.svelte';
 
-  import NCalculator from '../../../components/calculator/calculator.svelte'
+  import NCalculator from '../../../components/calculator/calculator.svelte';
 
   // Utils
 
   // Stores
 
-  import { Lang } from '../../../store/lang'
+  import { Lang } from '../../../store/lang';
 
-  import Button from '../../../components/button/button.svelte'
-  import ToolbarGrid from '../../../components/toolbar/toolbar-grid.svelte'
-  import type { TrackerInputProps } from './TrackerInputStore'
-  import type TrackerClass from '../../../modules/tracker/TrackerClass'
-  import { Device } from '../../../store/device-store'
-  import InputModalFooter from './input-modal-footer.svelte'
-  import IonIcon from '../../../components/icon/ion-icon.svelte'
-  import { MoreVertical } from '../../../components/icon/nicons'
+  import Button from '../../../components/button/button.svelte';
+  import ToolbarGrid from '../../../components/toolbar/toolbar-grid.svelte';
+  import type { TrackerInputProps } from './TrackerInputStore';
+  import type TrackerClass from '../../../modules/tracker/TrackerClass';
+  import { Device } from '../../../store/device-store';
+  import InputModalFooter from './input-modal-footer.svelte';
+  import IonIcon from '../../../components/icon/ion-icon.svelte';
+  import { MoreVertical } from '../../../components/icon/nicons';
 
-  import KeyDown from '../../../modules/keyDown/keyDown.svelte'
-  import { openTrackableEditor } from '../../trackable/trackable-editor/TrackableEditorStore'
-  import { startTimer, stopTimer, resetTimer } from '../TrackerStore'
-  import BackdropModal from '../../../components/backdrop/backdrop-modal.svelte'
-  import { closeModal } from '../../../components/backdrop/BackdropStore2'
-  import type { TrackerInputResponseType } from './tracker-input-utils'
+  import KeyDown from '../../../modules/keyDown/keyDown.svelte';
+  import { openTrackableEditor } from '../../trackable/trackable-editor/TrackableEditorStore';
+  import { startTimer, stopTimer, resetTimer } from '../TrackerStore';
+  import BackdropModal from '../../../components/backdrop/backdrop-modal.svelte';
+  import { closeModal } from '../../../components/backdrop/BackdropStore2';
+  import type { TrackerInputResponseType } from './tracker-input-utils';
 
   // Props
-  export let value = undefined // If a valid is provided
+  export let value = undefined; // If a valid is provided
 
-  export let saveLabel = Lang.t('general.save', 'Save') // The label of the save Button
-  export let nextLabel = Lang.t('general.next', 'Next') // The label of the save Button
+  export let saveLabel = Lang.t('general.save', 'Save'); // The label of the save Button
+  export let nextLabel = Lang.t('general.next', 'Next'); // The label of the save Button
 
-  let tracker: TrackerClass | undefined = undefined
-  let manual: boolean = false
+  let tracker: TrackerClass | undefined = undefined;
+  let manual: boolean = false;
 
-  export let id: string
-  export let payload: TrackerInputProps
+  export let id: string;
+  export let payload: TrackerInputProps;
 
   $: {
-    nextLabel = payload?.nextLabel
+    nextLabel = payload?.nextLabel;
   }
 
   let data = {
@@ -68,7 +68,7 @@
     editing: false,
     saving: false,
     note: undefined as undefined | string,
-  }
+  };
 
   // Set up the Methods
   const methods = {
@@ -76,58 +76,58 @@
     onSave() {
       // Dispatch value and tracker
       if (!data.saving) {
-        data.saving = true
+        data.saving = true;
         const results: TrackerInputResponseType = {
           value: data.value,
           tracker: tracker,
           suffix: data.suffix,
           action: 'save',
           note: `#${tracker.tag}${data.value ? `(${data.value})` : ``} ${tracker.getIncluded(data.value)}`.trim(),
-        }
+        };
         // dispatch('save', results)
-        resetTimer(tracker)
-        payload.onComplete(results)
-        closeModal(id)
-        data.saving = false
+        resetTimer(tracker);
+        payload.onComplete(results);
+        closeModal(id);
+        data.saving = false;
       }
     },
     // When Add is hit
     onAdd() {
       // Dispatch add
-      resetTimer(tracker)
+      resetTimer(tracker);
       payload.onComplete({
         value: data.value,
         action: 'add',
         tracker: tracker,
         suffix: data.suffix,
         note: `#${tracker.tag}${data.value ? `(${data.value})` : ``} ${tracker.getIncluded(data.value)}`.trim(),
-      })
-      closeModal(id)
+      });
+      closeModal(id);
     },
     async onCancel() {
       if (tracker.type === 'timer' && !tracker.started) {
-        await resetTimer(tracker)
+        await resetTimer(tracker);
       }
-      closeModal(id)
+      closeModal(id);
     },
     // When the user starts the time
     async startTimer() {
       // Start the Timer for this tracker
-      tracker = await startTimer(tracker)
-      methods.onCancel()
+      tracker = await startTimer(tracker);
+      methods.onCancel();
     },
     // Stop the Timer
     async stopTimer() {
       // Get the Seconds between now and when the tracker started
       if (tracker.started) {
-        tracker = await stopTimer(tracker)
-        data.value = tracker.timeTracked
+        tracker = await stopTimer(tracker);
+        data.value = tracker.timeTracked;
       }
     },
-  }
+  };
 
   function editTracker() {
-    openTrackableEditor(tracker.toTrackable())
+    openTrackableEditor(tracker.toTrackable());
     // TrackerStore.trackerOptions(tracker, {
     //   click() {
     //     Interact.dismissTrackerInput()
@@ -137,23 +137,23 @@
   }
 
   const initialize = () => {
-    tracker = payload.tracker
+    tracker = payload.tracker;
 
     // If the value changes, and no data.value exists.
     if (value && data.value !== undefined) {
-      data.value = value
+      data.value = value;
     } else {
-      data.value = tracker.default || 0
+      data.value = tracker.default || 0;
     }
 
     if (payload.retrospective) {
-      manual = true
+      manual = true;
     }
 
     setTimeout(() => {
-      data.ready = true
-    }, 12)
-  }
+      data.ready = true;
+    }, 12);
+  };
 
   initialize();
 </script>
@@ -161,11 +161,11 @@
 <BackdropModal className="tracker-input-modal">
   <KeyDown
     on:Escape={() => {
-      methods.onCancel()
+      methods.onCancel();
     }}
     on:key={(key) => {
       if (key.detail == 'Enter') {
-        methods.onSave()
+        methods.onSave();
       }
     }}
   />
@@ -197,38 +197,38 @@
               min={(tracker.min || 0) + ''}
               max={(tracker.max || 0) + ''}
               on:change={(value) => {
-                data.value = value.detail
+                data.value = value.detail;
               }}
             />
           {:else if tracker.type === 'note'}
             <NoteCombo
               {tracker}
               on:note={(evt) => {
-                data.suffix = evt.detail
-                data.value = 1
+                data.suffix = evt.detail;
+                data.value = 1;
               }}
             />
           {:else if tracker.type === 'picker'}
             <PickerInput
               {tracker}
               on:enterEdit={(evt) => {
-                data.editing = true
+                data.editing = true;
               }}
               on:enterView={() => {
-                data.editing = false
+                data.editing = false;
               }}
               on:change={(evt) => {
-                data.suffix = evt.detail.join(' ')
+                data.suffix = evt.detail.join(' ');
               }}
             />
           {:else if tracker.type === 'value' || tracker.type === 'tick'}
             <NCalculator
               value={data.value}
               displayFormat={(input) => {
-                return tracker.displayValue(input || '')
+                return tracker.displayValue(input || '');
               }}
               on:change={(changedValue) => {
-                data.value = changedValue.detail
+                data.value = changedValue.detail;
               }}
             />
           {:else if tracker.type === 'timer'}
@@ -242,8 +242,8 @@
                 value={data.value}
                 on:forceStart={methods.startTimer}
                 on:change={async (event) => {
-                  data.value = event.detail
-                  tracker = await resetTimer(tracker, event.detail)
+                  data.value = event.detail;
+                  tracker = await resetTimer(tracker, event.detail);
                 }}
               />
             </div>
@@ -252,10 +252,10 @@
               <NCalculator
                 {value}
                 displayFormat={(input) => {
-                  return tracker.displayValue(input || '')
+                  return tracker.displayValue(input || '');
                 }}
                 on:change={(value) => {
-                  data.value = value.detail
+                  data.value = value.detail;
                 }}
               />
             </div>

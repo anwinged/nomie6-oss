@@ -1,125 +1,125 @@
 <script lang="ts">
-  import TrackableAvatar from '../../../components/avatar/trackable-avatar.svelte'
-  import BackdropModal from '../../../components/backdrop/backdrop-modal.svelte'
-  import { closeModal } from '../../../components/backdrop/BackdropStore2'
-  import Button from '../../../components/button/button.svelte'
-  import Divider from '../../../components/divider/divider.svelte'
-  import ListItem from '../../../components/list-item/list-item.svelte'
+  import TrackableAvatar from '../../../components/avatar/trackable-avatar.svelte';
+  import BackdropModal from '../../../components/backdrop/backdrop-modal.svelte';
+  import { closeModal } from '../../../components/backdrop/BackdropStore2';
+  import Button from '../../../components/button/button.svelte';
+  import Divider from '../../../components/divider/divider.svelte';
+  import ListItem from '../../../components/list-item/list-item.svelte';
 
-  import RadioButton from '../../../components/radio-button/radio-button.svelte'
-  import SearchBar from '../../../components/search-bar/search-bar.svelte'
-  import ToolbarGrid from '../../../components/toolbar/toolbar-grid.svelte'
+  import RadioButton from '../../../components/radio-button/radio-button.svelte';
+  import SearchBar from '../../../components/search-bar/search-bar.svelte';
+  import ToolbarGrid from '../../../components/toolbar/toolbar-grid.svelte';
 
-  import Toolbar from '../../../components/toolbar/toolbar.svelte'
-  import TrackerClass from '../../../modules/tracker/TrackerClass'
-  import { Lang } from '../../../store/lang'
-  import { wait } from '../../../utils/tick/tick'
-  import Person from '../../people/Person.class'
+  import Toolbar from '../../../components/toolbar/toolbar.svelte';
+  import TrackerClass from '../../../modules/tracker/TrackerClass';
+  import { Lang } from '../../../store/lang';
+  import { wait } from '../../../utils/tick/tick';
+  import Person from '../../people/Person.class';
 
-  import { toTrackableArray } from '../trackable-utils'
-  import type { TrackableTypes } from '../Trackable.class'
-  import { Trackable } from '../Trackable.class'
+  import { toTrackableArray } from '../trackable-utils';
+  import type { TrackableTypes } from '../Trackable.class';
+  import { Trackable } from '../Trackable.class';
 
-  import { TrackableStore } from '../TrackableStore'
-  import type { TrackableSelectorProps } from './TrackableSelectorStore'
+  import { TrackableStore } from '../TrackableStore';
+  import type { TrackableSelectorProps } from './TrackableSelectorStore';
 
-  export let id: string
-  export let payload: TrackableSelectorProps
+  export let id: string;
+  export let payload: TrackableSelectorProps;
 
-  let selected: Array<Trackable> = []
-  let searchTerm: string | undefined = undefined
-  let cleanSearchTerm: string | undefined = undefined
+  let selected: Array<Trackable> = [];
+  let searchTerm: string | undefined = undefined;
+  let cleanSearchTerm: string | undefined = undefined;
 
-  let known: Array<Trackable>
-  let unknownTrackables: Array<Trackable> = []
-  let type: TrackableTypes
+  let known: Array<Trackable>;
+  let unknownTrackables: Array<Trackable> = [];
+  let type: TrackableTypes;
 
-  let headerGroups: any = {}
+  let headerGroups: any = {};
 
   const getHeaderKey = (label) => {
-    return label.substring(0, 1).toUpperCase()
-  }
+    return label.substring(0, 1).toUpperCase();
+  };
   const headerKeyExists = (label) => {
-    const key = getHeaderKey(label)
-    const exists = headerGroups.hasOwnProperty(key)
-    headerGroups[key] = true
-    return exists
-  }
+    const key = getHeaderKey(label);
+    const exists = headerGroups.hasOwnProperty(key);
+    headerGroups[key] = true;
+    return exists;
+  };
 
   $: if (searchTerm) {
-    headerGroups = {}
+    headerGroups = {};
   } else {
-    headerGroups = {}
+    headerGroups = {};
   }
 
   $: if (payload) {
-    headerGroups = {}
-    type = payload.type
+    headerGroups = {};
+    type = payload.type;
     known = toTrackableArray($TrackableStore.trackables).sort((a, b) => {
-      return a.label.toLowerCase() > b.label.toLowerCase() ? 1 : -1
-    })
+      return a.label.toLowerCase() > b.label.toLowerCase() ? 1 : -1;
+    });
   }
 
   /**
    * Close Modal
    */
   const close = async () => {
-    closeModal(id)
-  }
+    closeModal(id);
+  };
 
   const toggleTrackable = async (trackable) => {
     if (payload.multiple) {
-      let foundIndex = selected.findIndex((d) => d == trackable)
+      let foundIndex = selected.findIndex((d) => d == trackable);
       if (foundIndex > -1) {
-        selected = selected.filter((d) => d !== trackable)
+        selected = selected.filter((d) => d !== trackable);
       } else {
-        selected.push(trackable)
+        selected.push(trackable);
       }
     } else {
-      selected = [trackable]
-      await wait(100)
-      onSelect()
+      selected = [trackable];
+      await wait(100);
+      onSelect();
     }
-    selected = selected
-  }
+    selected = selected;
+  };
 
-  const cleanTerm = (str:string):string => {
-    return `${str || ''}`.replace(/(\@|\+|\#)/g, '')
-  }
+  const cleanTerm = (str: string): string => {
+    return `${str || ''}`.replace(/(\@|\+|\#)/g, '');
+  };
 
   const onSearchTerm = (term: string): void => {
     if (term && term.length > 0) {
-      searchTerm = term.toLowerCase()
-      cleanSearchTerm = searchTerm.replace(/(\@|\+|\#)/g, '')
+      searchTerm = term.toLowerCase();
+      cleanSearchTerm = searchTerm.replace(/(\@|\+|\#)/g, '');
       unknownTrackables = [
         getUnknownTrackable('tracker'),
         getUnknownTrackable('person'),
         getUnknownTrackable('context'),
-      ]
+      ];
     } else {
-      searchTerm = undefined
-      cleanSearchTerm = undefined
+      searchTerm = undefined;
+      cleanSearchTerm = undefined;
     }
-  }
+  };
   $: cleanedTerm = cleanTerm(searchTerm);
   $: filtered = known.filter((t) => {
     if (cleanedTerm && payload.type) {
-      return JSON.stringify(t).toLowerCase().search(cleanedTerm) > 1 && t.type === payload.type
+      return JSON.stringify(t).toLowerCase().search(cleanedTerm) > 1 && t.type === payload.type;
     } else if (payload.type) {
-      return t.type === payload.type
+      return t.type === payload.type;
     } else if (searchTerm) {
-      return JSON.stringify(t).toLowerCase().search(cleanedTerm) > 1
+      return JSON.stringify(t).toLowerCase().search(cleanedTerm) > 1;
     }
-    return t
-  })
+    return t;
+  });
 
   /**
    * On User Select
    */
   const onSelect = () => {
-    payload.onSelect(selected)
-    close()
-  }
+    payload.onSelect(selected);
+    close();
+  };
 
   /**
    * Generate a trackable based on the search term
@@ -132,21 +132,21 @@
       return new Trackable({
         type: 'person',
         person: new Person({ username: cleanSearchTerm }),
-      })
+      });
     } else if (type === 'context') {
       return new Trackable({
         type: 'context',
         context: cleanSearchTerm,
-      })
+      });
     } else {
       return new Trackable({
         type: 'tracker',
         tracker: new TrackerClass({
           tag: cleanSearchTerm,
         }),
-      })
+      });
     }
-  }
+  };
 </script>
 
 <BackdropModal className="bg-gray-100 dark:bg-gray-900">
@@ -165,11 +165,11 @@
         showClose={true}
         className="p-0 px-2 mt-1"
         on:clear={() => {
-          searchTerm = undefined
-          cleanSearchTerm = undefined
+          searchTerm = undefined;
+          cleanSearchTerm = undefined;
         }}
         on:change={(evt) => {
-          onSearchTerm(evt.detail)
+          onSearchTerm(evt.detail);
         }}
       >
         <select
@@ -177,7 +177,7 @@
           value={type || ''}
           on:input={(evt) => {
             //@ts-ignore
-            payload.type = evt.target.value
+            payload.type = evt.target.value;
           }}
           class="appearance-none text-right text-base text-primary-500 px-4 bg-transparent focus:outline-none rounded-md h-9 ring-inset focus:ring-1 ring-primary-500"
         >
@@ -193,7 +193,7 @@
   <section class="trackable-list relative">
     {#each filtered.filter((t) => t.tag) as trackable, index (trackable.tag)}
       {#if !headerKeyExists(trackable.label)}
-        <header class="sticky top-0 z-50  text-gray-900 dark:text-gray-100 font-bold px-4 py-2 glass">
+        <header class="sticky top-0 z-50 text-gray-900 dark:text-gray-100 font-bold px-4 py-2 glass">
           {getHeaderKey(trackable.label)}
         </header>
       {/if}

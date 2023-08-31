@@ -1,11 +1,11 @@
 <script lang="ts">
-  import Input from '../../../../components/input/input.svelte'
+  import Input from '../../../../components/input/input.svelte';
 
-  import List from '../../../../components/list/list.svelte'
-  import { parseNumber } from '../../../../utils/parseNumber/parseNumber'
-  import type { Trackable } from '../../Trackable.class'
+  import List from '../../../../components/list/list.svelte';
+  import { parseNumber } from '../../../../utils/parseNumber/parseNumber';
+  import type { Trackable } from '../../Trackable.class';
 
-  export let trackable: Trackable
+  export let trackable: Trackable;
 </script>
 
 <List solo>
@@ -16,7 +16,7 @@
     placeholder="Duration (in Days)"
     value={`${trackable.ctx.duration || 1}`}
     on:change={(evt) => {
-      trackable.ctx.duration = parseNumber(evt.detail)
+      trackable.ctx.duration = parseNumber(evt.detail);
     }}
   >
     {#each Array(30).fill(0) as count, index}

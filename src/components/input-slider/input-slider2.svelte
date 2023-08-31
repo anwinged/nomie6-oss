@@ -1,31 +1,31 @@
 <script lang="ts">
   //@ts-ignore
-  import RangePure from 'rangeslider-pure'
-  import { createEventDispatcher, onMount } from 'svelte'
-  import type { Trackable } from '../../domains/trackable/Trackable.class'
+  import RangePure from 'rangeslider-pure';
+  import { createEventDispatcher, onMount } from 'svelte';
+  import type { Trackable } from '../../domains/trackable/Trackable.class';
 
-  export let min = 0
-  export let max = 10
-  export let value = 5
-  export let className: string = ''
-  export let trackable: Trackable
-  export let mini: boolean = false
-  export let step = 1
+  export let min = 0;
+  export let max = 10;
+  export let value = 5;
+  export let className: string = '';
+  export let trackable: Trackable;
+  export let mini: boolean = false;
+  export let step = 1;
 
-  let smallInput: HTMLInputElement
-  let tempValue: any
-  $: tempValue = value
+  let smallInput: HTMLInputElement;
+  let tempValue: any;
+  $: tempValue = value;
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
   async function main() {
     // Trigger the change so the parent catches it.
     if (tempValue) {
-      dispatch('change', parseInt(tempValue))
+      dispatch('change', parseInt(tempValue));
     }
-    RangePure.create(smallInput)
+    RangePure.create(smallInput);
   }
 
-  onMount(main)
+  onMount(main);
 </script>
 
 <div
@@ -35,7 +35,6 @@
   style={`--trackable-color:${trackable.color};`}
 >
   <div class="slider-wrapper">
-
     <input
       aria-label={trackable.label}
       type="text"
@@ -114,7 +113,6 @@
     @apply bg-white;
   }
 
- 
   .tracker-input .slider-wrapper .rangeSlider__fill {
     background-color: var(--trackable-color);
   }

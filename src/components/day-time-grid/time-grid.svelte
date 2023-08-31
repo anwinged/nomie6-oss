@@ -1,40 +1,40 @@
 <script lang="ts">
-  import dayjs from 'dayjs'
+  import dayjs from 'dayjs';
 
-  import { Prefs } from '../../domains/preferences/Preferences'
-  import type { Trackable } from '../../domains/trackable/Trackable.class'
-  import type { TrackableUsage } from '../../domains/usage/trackable-usage.class'
-  import { Device } from '../../store/device-store'
-  import math from '../../utils/math/math'
-  import { logsToTimeGrid, TimeGridArray } from './time-grid-utils'
-  export let usage: TrackableUsage
-  export let trackable: Trackable
+  import { Prefs } from '../../domains/preferences/Preferences';
+  import type { Trackable } from '../../domains/trackable/Trackable.class';
+  import type { TrackableUsage } from '../../domains/usage/trackable-usage.class';
+  import { Device } from '../../store/device-store';
+  import math from '../../utils/math/math';
+  import { logsToTimeGrid, TimeGridArray } from './time-grid-utils';
+  export let usage: TrackableUsage;
+  export let trackable: Trackable;
   // export let size: number = 4
-  export let className: string = ''
-  export let style: string = ''
+  export let className: string = '';
+  export let style: string = '';
 
   $: if (usage) {
-    render()
+    render();
   }
 
-  let timeGrid: TimeGridArray = []
-  let max: number = 0
+  let timeGrid: TimeGridArray = [];
+  let max: number = 0;
 
   const render = () => {
-    const timeGridResponse = logsToTimeGrid(usage.logs, $Prefs.weekStarts, trackable)
-    timeGrid = timeGridResponse.grid
-    max = timeGridResponse.meta.max
-  }
+    const timeGridResponse = logsToTimeGrid(usage.logs, $Prefs.weekStarts, trackable);
+    timeGrid = timeGridResponse.grid;
+    max = timeGridResponse.meta.max;
+  };
 
   const formatHour = (hour: number) => {
     if ($Prefs.use24hour) {
-      return hour
+      return hour;
     } else {
-      let formated = dayjs().hour(hour).format('h')
-      if ($Device.width < 340) return hour % 2 ? formated : formated
-      return formated
+      let formated = dayjs().hour(hour).format('h');
+      if ($Device.width < 340) return hour % 2 ? formated : formated;
+      return formated;
     }
-  }
+  };
 </script>
 
 <div class="time-grid {className}" style="--color:{trackable.color}; {style}">

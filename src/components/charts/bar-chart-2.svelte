@@ -1,67 +1,67 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte'
-  const dispatch = createEventDispatcher()
+  import { createEventDispatcher, onMount } from 'svelte';
+  const dispatch = createEventDispatcher();
 
-  import Chart from 'chart.js/auto'
+  import Chart from 'chart.js/auto';
 
-  import nid from '../../modules/nid/nid'
-  import { Interact } from '../../store/interact'
-  import ignoreArrayZeros from '../../domains/stats/ignore-zeros'
-  import IonIcon from '../icon/ion-icon.svelte'
-  import { ChevronForwardOutline, CloseOutline } from '../icon/nicons'
-  import { openDateOptionPopMenu } from '../pop-menu/usePopmenu'
+  import nid from '../../modules/nid/nid';
+  import { Interact } from '../../store/interact';
+  import ignoreArrayZeros from '../../domains/stats/ignore-zeros';
+  import IonIcon from '../icon/ion-icon.svelte';
+  import { ChevronForwardOutline, CloseOutline } from '../icon/nicons';
+  import { openDateOptionPopMenu } from '../pop-menu/usePopmenu';
 
-  export let labels = []
-  export let height = 200
+  export let labels = [];
+  export let height = 200;
 
-  export let id: string
+  export let id: string;
 
-  export let title = ''
-  export let color = '#4d84a1'
-  export let points: any
-  export let activeIndex = 2
-  export let xFormat: Function = (x) => x
-  export let yFormat: Function = (y) => y
-  export let hideYTicks: boolean = false
-  export let hideXTicks: boolean = false
-  export let type: string = 'bar'
+  export let title = '';
+  export let color = '#4d84a1';
+  export let points: any;
+  export let activeIndex = 2;
+  export let xFormat: Function = (x) => x;
+  export let yFormat: Function = (y) => y;
+  export let hideYTicks: boolean = false;
+  export let hideXTicks: boolean = false;
+  export let type: string = 'bar';
   // export let beginAtZero: boolean = true;
-  export let showSelected: boolean = true
-  export let ignoreZero: boolean = false
+  export let showSelected: boolean = true;
+  export let ignoreZero: boolean = false;
 
   // Generate a random ID for this Component
-  const chartId = `chart-${nid()}`
+  const chartId = `chart-${nid()}`;
 
   // let showChart = false
-  let _canvas
-  let theChart
-  let lastPoints = []
+  let _canvas;
+  let theChart;
+  let lastPoints = [];
 
-  export let selected = undefined
+  export let selected = undefined;
 
   $: if (points && theChart && points.map((p) => p.y).join() !== lastPoints) {
-    lastPoints = points.map((p) => p.y).join()
-    loadData()
+    lastPoints = points.map((p) => p.y).join();
+    loadData();
   }
 
   $: if ($Interact.stats.focused && points) {
     selected = points.find((p) => {
-      return p.date.format('YYYY-MM-DD') === $Interact.stats.focused.date.format('YYYY-MM-DD')
-    })
+      return p.date.format('YYYY-MM-DD') === $Interact.stats.focused.date.format('YYYY-MM-DD');
+    });
   } else if (points && points.length) {
-    selected = undefined
+    selected = undefined;
   }
 
   function loadData() {
     const lineStyle = {
       backgroundColor: 'transparent',
       borderColor: color,
-    }
+    };
     const barStyle = {
       backgroundColor: color,
-    }
+    };
 
-    theChart.data.labels = labels || points.map((row) => row.x)
+    theChart.data.labels = labels || points.map((row) => row.x);
     theChart.data.datasets = [
       {
         ...(type == 'line' ? lineStyle : barStyle),
@@ -69,25 +69,25 @@
         maxBarThickness: 34,
         minBarLength: 2,
       },
-    ]
-    let dataset = theChart.data.datasets[0].data
+    ];
+    let dataset = theChart.data.datasets[0].data;
 
     if (ignoreZero) {
-      dataset = ignoreArrayZeros(dataset)
+      dataset = ignoreArrayZeros(dataset);
     }
 
-    theChart.data.datasets[0].data = dataset
-    theChart.update()
+    theChart.data.datasets[0].data = dataset;
+    theChart.update();
   }
 
   async function initChart() {
-    var ctx = document.getElementById(chartId)
+    var ctx = document.getElementById(chartId);
     /**
      * Get Min Point so we can
      * adjust the Y scale min to be just below the min point (if it's greater than 0)
      * if its not greater than zero - then  zero will be the min
      */
-    const minPoint: number = Math.min(points.map((p) => p.y))
+    const minPoint: number = Math.min(points.map((p) => p.y));
     // Create chart config
     const chartConfig = {
       type,
@@ -105,7 +105,7 @@
           mode: 'point',
           callbacks: {
             label: function (tooltipItem, data) {
-              return yFormat ? yFormat(tooltipItem.value) : tooltipItem.value
+              return yFormat ? yFormat(tooltipItem.value) : tooltipItem.value;
             },
           },
         },
@@ -128,9 +128,9 @@
               maxTicksLimit: 6,
               callback(value, index, values) {
                 if (yFormat) {
-                  return yFormat(value)
+                  return yFormat(value);
                 } else {
-                  return value
+                  return value;
                 }
               },
               fontSize: 9,
@@ -145,9 +145,9 @@
             ticks: {
               callback(value, index, values) {
                 if (xFormat) {
-                  return xFormat(value)
+                  return xFormat(value);
                 } else {
-                  return value
+                  return value;
                 }
               },
               display: hideXTicks == false,
@@ -156,24 +156,24 @@
           },
         },
       },
-    }
+    };
 
-    theChart = new Chart(ctx, chartConfig)
+    theChart = new Chart(ctx, chartConfig);
     _canvas.addEventListener('click', (evt) => {
-      let passed = theChart.getElementsAtEvent(evt)
+      let passed = theChart.getElementsAtEvent(evt);
       if (passed.length) {
-        selected = points[passed[0]._index]
+        selected = points[passed[0]._index];
       }
-      dispatch('tap', selected)
-    })
+      dispatch('tap', selected);
+    });
   }
 
   onMount(() => {
-    initChart()
+    initChart();
     if (points) {
       // showChart = true
     }
-  })
+  });
 </script>
 
 <div class="wrapper active-{activeIndex}" style="--chart-color:{color}">
@@ -189,7 +189,7 @@
       </button>
       <button
         on:click={() => {
-          openDateOptionPopMenu(selected.date.toDate())
+          openDateOptionPopMenu(selected.date.toDate());
         }}
       >
         <span class="mr-1 text-sm date faded">{xFormat(selected.x)}</span>

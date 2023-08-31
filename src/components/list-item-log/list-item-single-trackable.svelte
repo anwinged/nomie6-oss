@@ -1,39 +1,39 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher } from 'svelte';
 
-  import type NLog from '../../domains/nomie-log/nomie-log'
-  import { getDateFormats } from '../../domains/preferences/Preferences'
-  import type { Trackable } from '../../domains/trackable/Trackable.class'
-  import math from '../../utils/math/math'
-  import TrackableAvatar from '../avatar/trackable-avatar.svelte'
+  import type NLog from '../../domains/nomie-log/nomie-log';
+  import { getDateFormats } from '../../domains/preferences/Preferences';
+  import type { Trackable } from '../../domains/trackable/Trackable.class';
+  import math from '../../utils/math/math';
+  import TrackableAvatar from '../avatar/trackable-avatar.svelte';
 
-  import ProgressBar from '../progress-bar/progress-bar.svelte'
-  import TimeRangeText from '../time-range/time-range-text.svelte'
-  export let log: NLog
-  export let trackable: Trackable
-  export let max: number = undefined
-  export let className: string = ''
+  import ProgressBar from '../progress-bar/progress-bar.svelte';
+  import TimeRangeText from '../time-range/time-range-text.svelte';
+  export let log: NLog;
+  export let trackable: Trackable;
+  export let max: number = undefined;
+  export let className: string = '';
   export let hideTime: boolean = false;
 
-  let value: number = 0
-  const dateFormats = getDateFormats()
-  const dispatch = createEventDispatcher()
+  let value: number = 0;
+  const dateFormats = getDateFormats();
+  const dispatch = createEventDispatcher();
 
   $: if (log || trackable) {
-    value = trackable.tracker ? log.getTrackerValue(trackable.tracker?.tag) : 1
+    value = trackable.tracker ? log.getTrackerValue(trackable.tracker?.tag) : 1;
   }
 </script>
 
 <button
   on:click={() => {
-    dispatch('click', { log, trackable })
+    dispatch('click', { log, trackable });
   }}
   type="menu"
   class="rounded-md mock-item flex pl-1 items-start w-full text-left focus:ring-2 focus:ring-primary-500 {className}"
   id="log-{log._id}"
 >
   <TrackableAvatar {trackable} size={42} className="mr-2 mt-4" />
-  <main class="flex py-3 items-start  flex-col w-full space-y-1">
+  <main class="flex py-3 items-start flex-col w-full space-y-1">
     <div class="flex item-center space-y-1 filler items-center justify-between w-full">
       <h3 class="text-base leading-tight font-bold w-full dark:text-white">
         {trackable.label}

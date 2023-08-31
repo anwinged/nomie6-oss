@@ -1,63 +1,63 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
+  import { onMount } from 'svelte';
 
-  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte'
-  import { closeModal } from '../../components/backdrop/BackdropStore2'
-  import Button from '../../components/button/button.svelte'
-  import Divider from '../../components/divider/divider.svelte'
-  import { openDropMenu } from '../../components/menu/useDropmenu'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import { AddCircleOutline, ChevronDownOutline } from '../../components/icon/nicons'
-  import Input from '../../components/input/input.svelte'
-  import ListItem from '../../components/list-item/list-item.svelte'
-  import List from '../../components/list/list.svelte'
+  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte';
+  import { closeModal } from '../../components/backdrop/BackdropStore2';
+  import Button from '../../components/button/button.svelte';
+  import Divider from '../../components/divider/divider.svelte';
+  import { openDropMenu } from '../../components/menu/useDropmenu';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import { AddCircleOutline, ChevronDownOutline } from '../../components/icon/nicons';
+  import Input from '../../components/input/input.svelte';
+  import ListItem from '../../components/list-item/list-item.svelte';
+  import List from '../../components/list/list.svelte';
 
-  import { showToast } from '../../components/toast/ToastStore'
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
+  import { showToast } from '../../components/toast/ToastStore';
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
 
-  import { Interact } from '../../store/interact'
+  import { Interact } from '../../store/interact';
 
-  import { Lang } from '../../store/lang'
-  import { parseNumber } from '../../utils/parseNumber/parseNumber'
-  import { wait } from '../../utils/tick/tick'
+  import { Lang } from '../../store/lang';
+  import { parseNumber } from '../../utils/parseNumber/parseNumber';
+  import { wait } from '../../utils/tick/tick';
 
-  import TrackablePill from '../trackable/trackable-pill.svelte'
-  import { selectTrackable } from '../trackable/trackable-selector/TrackableSelectorStore'
-  import type { Trackable } from '../trackable/Trackable.class'
-  import { TrackableStore } from '../trackable/TrackableStore'
-  import { getTrackableInputValue } from '../tracker/input/TrackerInputStore'
-  import { GoalClass, GoalComparisonType } from './goal-class'
-  import { GoalComparisonItems } from './goal-utils'
-  import { GoalStore } from './GoalStore'
-  import is from '../../utils/is/is'
+  import TrackablePill from '../trackable/trackable-pill.svelte';
+  import { selectTrackable } from '../trackable/trackable-selector/TrackableSelectorStore';
+  import type { Trackable } from '../trackable/Trackable.class';
+  import { TrackableStore } from '../trackable/TrackableStore';
+  import { getTrackableInputValue } from '../tracker/input/TrackerInputStore';
+  import { GoalClass, GoalComparisonType } from './goal-class';
+  import { GoalComparisonItems } from './goal-utils';
+  import { GoalStore } from './GoalStore';
+  import is from '../../utils/is/is';
 
-  export let id: string
-  export let goal: GoalClass
+  export let id: string;
+  export let goal: GoalClass;
 
-  let goalTargetValue: number
-  let comparison: GoalComparisonType
-  let trackable: Trackable
-  let workingGoal: GoalClass
+  let goalTargetValue: number;
+  let comparison: GoalComparisonType;
+  let trackable: Trackable;
+  let workingGoal: GoalClass;
 
-  let mounted = false
+  let mounted = false;
   $: if (goal && mounted && !workingGoal) {
-    workingGoal = new GoalClass(goal)
-    comparison = workingGoal.comparison
-    trackable = $TrackableStore.trackables[workingGoal.tag]
-    goalTargetValue = workingGoal.target
+    workingGoal = new GoalClass(goal);
+    comparison = workingGoal.comparison;
+    trackable = $TrackableStore.trackables[workingGoal.tag];
+    goalTargetValue = workingGoal.target;
   }
 
   onMount(() => {
-    mounted = true
-  })
+    mounted = true;
+  });
 
   const deleteGoal = async () => {
-    const confirmed = await Interact.confirm('Delete this goal?', 'You can always recreate it later.')
+    const confirmed = await Interact.confirm('Delete this goal?', 'You can always recreate it later.');
     if (confirmed) {
-      await GoalStore.remove(workingGoal)
-      closeModal(id)
+      await GoalStore.remove(workingGoal);
+      closeModal(id);
     }
-  }
+  };
 
   const save = async () => {
     let newGoal = new GoalClass({
@@ -66,29 +66,29 @@
       tag: trackable.tag,
       duration: workingGoal.duration,
       target: goalTargetValue,
-    })
-    Interact.blocker(`Saving ${trackable.label} goal...`)
-    await GoalStore.upsert(newGoal)
-    Interact.stopBlocker()
-    showToast({ message: 'Goal Saved' })
-    close()
-  }
+    });
+    Interact.blocker(`Saving ${trackable.label} goal...`);
+    await GoalStore.upsert(newGoal);
+    Interact.stopBlocker();
+    showToast({ message: 'Goal Saved' });
+    close();
+  };
 
   const select = async () => {
-    await wait(100)
-    trackable = await selectTrackable()
-  }
+    await wait(100);
+    trackable = await selectTrackable();
+  };
 
   const selectTargetValue = async () => {
     // let tracker = trackable?.tracker || new TrackerClass({ emoji: '🎛', tag: 'Input', type: 'value' })
-    const response = await getTrackableInputValue(trackable, $TrackableStore.trackables)
-    const value = parseNumber(response.value)
-    if (is.number(value)) goalTargetValue = value
-  }
+    const response = await getTrackableInputValue(trackable, $TrackableStore.trackables);
+    const value = parseNumber(response.value);
+    if (is.number(value)) goalTargetValue = value;
+  };
 
   const close = () => {
-    closeModal(id)
-  }
+    closeModal(id);
+  };
 </script>
 
 <BackdropModal mainClass="px-2 lg:px-4 py-2 lg:py-4">
@@ -124,11 +124,11 @@
             return {
               title: item.label,
               click() {
-                comparison = item.id
+                comparison = item.id;
               },
-            }
+            };
           })
-        )
+        );
       }}
     >
       <div class="py-2">
@@ -159,7 +159,7 @@
           primary
           icon
           on:click={() => {
-            selectTargetValue()
+            selectTargetValue();
           }}
         >
           <IonIcon icon={AddCircleOutline} />

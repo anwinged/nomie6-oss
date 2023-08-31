@@ -1,47 +1,47 @@
 <script lang="ts">
-  import type { Trackable } from '../../domains/trackable/Trackable.class'
-  import { TrackableStore } from '../../domains/trackable/TrackableStore'
-  import { strToTrackable } from '../../domains/trackable/trackable-utils'
-  import { Token, tokenizeLite } from '../../modules/tokenizer/lite'
+  import type { Trackable } from '../../domains/trackable/Trackable.class';
+  import { TrackableStore } from '../../domains/trackable/TrackableStore';
+  import { strToTrackable } from '../../domains/trackable/trackable-utils';
+  import { Token, tokenizeLite } from '../../modules/tokenizer/lite';
 
-  import TrackableAvatar from '../avatar/trackable-avatar.svelte'
+  import TrackableAvatar from '../avatar/trackable-avatar.svelte';
 
-  export let str = undefined
-  export let titleClass = ''
-  export let className = ''
-  export let selected: boolean = false
+  export let str = undefined;
+  export let titleClass = '';
+  export let className = '';
+  export let selected: boolean = false;
 
-  let tokenized: Array<Token> = []
-  let label = ''
-  let meta = ''
-  let trackable: Trackable | undefined = undefined
+  let tokenized: Array<Token> = [];
+  let label = '';
+  let meta = '';
+  let trackable: Trackable | undefined = undefined;
 
-  let lastStr
+  let lastStr;
   $: if (str !== lastStr) {
-    lastStr = str
-    tokenized = tokenizeLite(str)
+    lastStr = str;
+    tokenized = tokenizeLite(str);
     label = tokenized
       .filter((t) => {
-        return t.type == 'generic'
+        return t.type == 'generic';
       })
       .map((t) => {
-        return t.raw
+        return t.raw;
       })
       .join(' ')
-      .trim()
+      .trim();
 
     meta = tokenized
       .filter((t) => {
-        return t.type !== 'generic'
+        return t.type !== 'generic';
       })
       .map((t) => {
-        return t.raw
+        return t.raw;
       })
       .join(' ')
-      .trim()
+      .trim();
 
     if (meta.length) {
-      trackable = strToTrackable(meta, $TrackableStore.trackables)
+      trackable = strToTrackable(meta, $TrackableStore.trackables);
     }
   }
 </script>
@@ -49,7 +49,7 @@
 <div class="n-label-meta space-x-2 flex items-center {selected ? 'selected' : ''} {className} h-8">
   {#if meta.length && label.length}
     <TrackableAvatar {trackable} />
-    <h2 class="{selected ? 'font-bold' : 'font-medium'}">{trackable.label}</h2>
+    <h2 class={selected ? 'font-bold' : 'font-medium'}>{trackable.label}</h2>
     <div class="opacity-50">
       {trackable.formatValue(trackable.value)}
     </div>

@@ -1,51 +1,51 @@
 <script lang="ts">
-  import Text from '@/components/text/text.svelte'
+  import Text from '@/components/text/text.svelte';
   // Components
-  import Keypad from './keypad.svelte'
+  import Keypad from './keypad.svelte';
   // Stores
-  import nid from '../../modules/nid/nid'
-  import { Interact } from '../../store/interact'
+  import nid from '../../modules/nid/nid';
+  import { Interact } from '../../store/interact';
 
-  import { Lang } from '../../store/lang'
-  import Button from '@/components/button/button.svelte'
+  import { Lang } from '../../store/lang';
+  import Button from '@/components/button/button.svelte';
 
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import { CloseOutline } from '../../components/icon/nicons'
-  import { onMount } from 'svelte'
-  import { closeModal } from '../../components/backdrop/BackdropStore2'
-  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte'
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import { CloseOutline } from '../../components/icon/nicons';
+  import { onMount } from 'svelte';
+  import { closeModal } from '../../components/backdrop/BackdropStore2';
+  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte';
 
-  let _pin = ''
-  export let id: string
-  export let onPin: Function
-  export let title: string = 'Enter a Pin'
-  export let canClose: boolean = false
+  let _pin = '';
+  export let id: string;
+  export let onPin: Function;
+  export let title: string = 'Enter a Pin';
+  export let canClose: boolean = false;
 
   onMount(() => {
-    _pin = ''
-  })
+    _pin = '';
+  });
 
   $: if (_pin.length > 6) {
-    _pin = _pin.substring(0, 6)
+    _pin = _pin.substring(0, 6);
   }
 
   const methods = {
     submit() {
       // encode the pin and send it up
-      let final = _pin || ''
+      let final = _pin || '';
       if (final.length < 7 && final.length > 0) {
-        onPin(nid(_pin))
+        onPin(nid(_pin));
         if (canClose) {
-          closeModal(id)
+          closeModal(id);
         }
       } else {
-        Interact.error('Pin must be between 1 and 6 characters')
+        Interact.error('Pin must be between 1 and 6 characters');
       }
     },
     cancelInput() {
-      closeModal(id)
+      closeModal(id);
     },
-  }
+  };
 </script>
 
 <BackdropModal>
@@ -53,7 +53,7 @@
     aria-modal
     aria-label="Lock Screen"
     style="zIndex: 10000"
-    class="lock-screen relative p-4 w-full rounded-xl shadow-xl 
+    class="lock-screen relative p-4 w-full rounded-xl shadow-xl
     flex-col full-screen bg-primary-500"
   >
     <Text center size="sm" faded className="text-white mb-2">
@@ -62,7 +62,7 @@
     <h1>{title}</h1>
 
     <!-- Pin Display -->
-    <div class="text-2xl text-white pin-holder ">
+    <div class="text-2xl text-white pin-holder">
       {#each _pin.split('') as d}•{/each}
     </div>
     <!-- Keypad Input -->

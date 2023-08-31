@@ -1,141 +1,144 @@
 <script lang="ts">
-  import dayjs from 'dayjs'
-  import escapeRegExp from 'lodash/escapeRegExp'
-  import { onMount } from 'svelte'
+  import dayjs from 'dayjs';
+  import escapeRegExp from 'lodash/escapeRegExp';
+  import { onMount } from 'svelte';
 
-  import TrackableAvatar from '../../components/avatar/trackable-avatar.svelte'
-  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte'
-  import { BackdropStore } from '../../components/backdrop/backdrop-store'
+  import TrackableAvatar from '../../components/avatar/trackable-avatar.svelte';
+  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte';
+  import { BackdropStore } from '../../components/backdrop/backdrop-store';
 
-  import { ActiveBackdropId, closeModal } from '../../components/backdrop/BackdropStore2'
-  import Divider from '../../components/divider/divider.svelte'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import List from '../../components/list/list.svelte'
-  import type { PopMenuButton } from '../../components/pop-menu/usePopmenu'
+  import { ActiveBackdropId, closeModal } from '../../components/backdrop/BackdropStore2';
+  import Divider from '../../components/divider/divider.svelte';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import List from '../../components/list/list.svelte';
+  import type { PopMenuButton } from '../../components/pop-menu/usePopmenu';
 
-  import KeyDown from '../../modules/keyDown/keyDown.svelte'
-  import TrackerClass from '../../modules/tracker/TrackerClass'
-  import AppsOutline from '../../n-icons/AppsOutline.svelte'
+  import KeyDown from '../../modules/keyDown/keyDown.svelte';
+  import TrackerClass from '../../modules/tracker/TrackerClass';
+  import AppsOutline from '../../n-icons/AppsOutline.svelte';
 
-  import CloseOutline from '../../n-icons/CloseOutline.svelte'
-  import CreateOutline from '../../n-icons/CreateOutline.svelte'
+  import CloseOutline from '../../n-icons/CloseOutline.svelte';
+  import CreateOutline from '../../n-icons/CreateOutline.svelte';
 
-  import PulseOutline from '../../n-icons/PulseOutline.svelte'
-  import SearchIcon from '../../n-icons/SearchIcon.svelte'
+  import PulseOutline from '../../n-icons/PulseOutline.svelte';
+  import SearchIcon from '../../n-icons/SearchIcon.svelte';
 
-  import { SearchStore } from './search-store'
+  import { SearchStore } from './search-store';
 
-  import { addNewPerson, showTrackablePopmenu } from '../board/boardActions'
+  import { addNewPerson, showTrackablePopmenu } from '../board/boardActions';
 
-  import { ActiveLogStore } from '../capture-log/CaptureLogStore'
+  import { ActiveLogStore } from '../capture-log/CaptureLogStore';
 
-  import { LedgerStore, saveLog } from '../ledger/LedgerStore'
-  import { openLogDisplay } from '../nomie-log/log-display-modal/LogDisplayStore'
-  import NLog from '../nomie-log/nomie-log'
-  import { getDateFormats } from '../preferences/Preferences'
-  import { openStats2 } from '../stats2/Stats2Store'
-  import { openTrackableEditor } from '../trackable/trackable-editor/TrackableEditorStore'
-  import { TrackableStore } from '../trackable/TrackableStore'
+  import { LedgerStore, saveLog } from '../ledger/LedgerStore';
+  import { openLogDisplay } from '../nomie-log/log-display-modal/LogDisplayStore';
+  import NLog from '../nomie-log/nomie-log';
+  import { getDateFormats } from '../preferences/Preferences';
+  import { openStats2 } from '../stats2/Stats2Store';
+  import { openTrackableEditor } from '../trackable/trackable-editor/TrackableEditorStore';
+  import { TrackableStore } from '../trackable/TrackableStore';
 
-  import { onTrackerTap } from '../tracker/input/TrackerInputStore'
+  import { onTrackerTap } from '../tracker/input/TrackerInputStore';
 
-  import { getUnisearchResults, UnisearchResultsType, UnisearchStore } from './UnisearchStore'
-import { openTimelineModal } from '../timeline/timeline-helpers';
+  import { getUnisearchResults, UnisearchResultsType, UnisearchStore } from './UnisearchStore';
+  import { openTimelineModal } from '../timeline/timeline-helpers';
 
-  export let searchTerm: string
-  export let id: string
+  export let searchTerm: string;
+  export let id: string;
 
-  let results: UnisearchResultsType | undefined
-  let exactMatchOptions: Array<PopMenuButton> = []
+  let results: UnisearchResultsType | undefined;
+  let exactMatchOptions: Array<PopMenuButton> = [];
 
-  let currentIndex: number = -1
+  let currentIndex: number = -1;
 
-  let dateFormats = getDateFormats()
+  let dateFormats = getDateFormats();
 
-  let showLogs = true
-  let showTrackables = true
-  let showCommands = true
+  let showLogs = true;
+  let showTrackables = true;
+  let showCommands = true;
 
   $: if (searchTerm?.length === 0) {
-    results = undefined
+    results = undefined;
   }
 
   onMount(() => {
-    document.getElementById('search-field').focus()
+    document.getElementById('search-field').focus();
     if ($UnisearchStore.term) {
-      debounceSearch($UnisearchStore.term)
+      debounceSearch($UnisearchStore.term);
     }
-  })
+  });
 
-  let searchInitialized = false
+  let searchInitialized = false;
 
   const close = async () => {
-    closeModal(id)
-  }
+    closeModal(id);
+  };
 
-  let searchTimeout
+  let searchTimeout;
   const debounceSearch = async (term: string) => {
-    searchTerm = term
-    clearTimeout(searchTimeout)
+    searchTerm = term;
+    clearTimeout(searchTimeout);
     if (searchTerm.length > 1) {
       searchTimeout = setTimeout(async () => {
-        const newResults = await getUnisearchResults(term)
+        const newResults = await getUnisearchResults(term);
 
-        results = results || { commands: [], trackables: [], exactTrackable: undefined, logs: [] }
-        results.commands = newResults.commands || []
-        results.trackables = newResults.trackables || []
-        results.exactTrackable = newResults.exactTrackable
-        results.logs = await LedgerStore.query({ search: escapeRegExp(searchTerm), start: dayjs().subtract(30, 'day') })
+        results = results || { commands: [], trackables: [], exactTrackable: undefined, logs: [] };
+        results.commands = newResults.commands || [];
+        results.trackables = newResults.trackables || [];
+        results.exactTrackable = newResults.exactTrackable;
+        results.logs = await LedgerStore.query({
+          search: escapeRegExp(searchTerm),
+          start: dayjs().subtract(30, 'day'),
+        });
 
-        exactMatchOptions = getExactMatchButtons()
+        exactMatchOptions = getExactMatchButtons();
 
-        focusElement(0)
-      }, 400)
+        focusElement(0);
+      }, 400);
     }
-  }
+  };
 
   $: if (!searchTerm && $UnisearchStore.term && !searchInitialized) {
-    searchInitialized = true
-    searchTerm = $UnisearchStore.term
+    searchInitialized = true;
+    searchTerm = $UnisearchStore.term;
   }
   $: if (searchTerm && !searchInitialized) {
-    searchInitialized = true
-    debounceSearch(searchTerm)
+    searchInitialized = true;
+    debounceSearch(searchTerm);
   }
 
   const clickSelected = () => {
-    const selectable = document.querySelectorAll('.unisearch .selectable')[currentIndex]
+    const selectable = document.querySelectorAll('.unisearch .selectable')[currentIndex];
     if (selectable) {
       //@ts-ignore
-      selectable.click()
+      selectable.click();
     }
-  }
+  };
 
   function focusElement(dir: number) {
-    const selectables = document.querySelectorAll('.unisearch .selectable')
+    const selectables = document.querySelectorAll('.unisearch .selectable');
     if (dir < 0 && currentIndex < selectables.length && currentIndex > -2) {
-      currentIndex = currentIndex - 1
+      currentIndex = currentIndex - 1;
     } else if (dir > 0 && currentIndex > -2) {
-      currentIndex = currentIndex + 1
+      currentIndex = currentIndex + 1;
     } else {
-      currentIndex = 0
+      currentIndex = 0;
     }
 
-    if (currentIndex < -1) currentIndex = 0
-    if (currentIndex > selectables.length) currentIndex = 0
+    if (currentIndex < -1) currentIndex = 0;
+    if (currentIndex > selectables.length) currentIndex = 0;
 
     selectables.forEach((v, index) => {
       if (index != currentIndex) {
-        v.classList.remove('selected')
+        v.classList.remove('selected');
       } else {
-        v.classList.add('selected')
+        v.classList.add('selected');
         if (index !== 0) {
-          v.scrollIntoView({ behavior: 'smooth' })
+          v.scrollIntoView({ behavior: 'smooth' });
         } else {
-          document.getElementById('unisearch-scroll-point').scrollIntoView({ behavior: 'smooth' })
+          document.getElementById('unisearch-scroll-point').scrollIntoView({ behavior: 'smooth' });
         }
       }
-    })
+    });
   }
 
   const getExactMatchButtons = (): Array<PopMenuButton> => {
@@ -144,7 +147,7 @@ import { openTimelineModal } from '../timeline/timeline-helpers';
         title: `${results?.exactTrackable?.label} Stats`,
         icon: PulseOutline,
         click() {
-          openStats2(results?.exactTrackable, { date: new Date(), known: $TrackableStore.trackables })
+          openStats2(results?.exactTrackable, { date: new Date(), known: $TrackableStore.trackables });
         },
       },
       {
@@ -152,13 +155,13 @@ import { openTimelineModal } from '../timeline/timeline-helpers';
         icon: AppsOutline,
         click() {
           if (results.exactTrackable?.type === 'tracker') {
-            onTrackerTap(results.exactTrackable.tracker, $TrackableStore.trackables)
+            onTrackerTap(results.exactTrackable.tracker, $TrackableStore.trackables);
             // } else if (trackable.type === 'person') {
             //   openPersonModal(trackable.person)
           } else {
-            close()
-            ActiveLogStore.addElement(results?.exactTrackable?.tag)
-            ActiveLogStore.focus()
+            close();
+            ActiveLogStore.addElement(results?.exactTrackable?.tag);
+            ActiveLogStore.focus();
           }
         },
       },
@@ -167,19 +170,19 @@ import { openTimelineModal } from '../timeline/timeline-helpers';
         icon: CreateOutline,
         click() {
           if (results.exactTrackable.type == 'tracker') {
-            openTrackableEditor(results.exactTrackable.tracker.toTrackable())
+            openTrackableEditor(results.exactTrackable.tracker.toTrackable());
           }
         },
       },
-    ]
-  }
+    ];
+  };
 
   $: if ($BackdropStore[$BackdropStore.length - 1] === 'unisearch') {
     //@ts-ignore
-    document.querySelector('.unisearch input')?.focus()
+    document.querySelector('.unisearch input')?.focus();
   } else {
     //@ts-ignore
-    document.querySelector('.unisearch input')?.blur()
+    document.querySelector('.unisearch input')?.blur();
   }
 </script>
 
@@ -190,18 +193,18 @@ import { openTimelineModal } from '../timeline/timeline-helpers';
   {#if $ActiveBackdropId === id}
     <KeyDown
       on:Escape={() => {
-        closeModal(id)
+        closeModal(id);
       }}
       on:key={(key) => {
-        key.preventDefault()
-        key.stopPropagation()
-        key.stopImmediatePropagation()
+        key.preventDefault();
+        key.stopPropagation();
+        key.stopImmediatePropagation();
         if (key.detail == 'ArrowDown') {
-          focusElement(1)
+          focusElement(1);
         } else if (key.detail == 'ArrowUp') {
-          focusElement(-1)
+          focusElement(-1);
         } else if (key.detail == 'Enter') {
-          clickSelected()
+          clickSelected();
         }
       }}
     />
@@ -223,7 +226,7 @@ import { openTimelineModal } from '../timeline/timeline-helpers';
       bind:value={searchTerm}
       on:input={(evt) => {
         //@ts-ignore
-        debounceSearch(evt.target.value)
+        debounceSearch(evt.target.value);
       }}
       type="text"
       placeholder="Search your Nomie"
@@ -243,7 +246,7 @@ import { openTimelineModal } from '../timeline/timeline-helpers';
             <button
               class="selectable capitalize"
               on:click={() => {
-                button.click()
+                button.click();
               }}
             >
               <TrackableAvatar trackable={results.exactTrackable} size={22} />
@@ -261,7 +264,7 @@ import { openTimelineModal } from '../timeline/timeline-helpers';
       {#if results.commands.length}
         <header
           on:click={() => {
-            showCommands = !showCommands
+            showCommands = !showCommands;
           }}
           class="list-header {!showCommands ? 'opacity-50' : ''}"
         >
@@ -273,7 +276,7 @@ import { openTimelineModal } from '../timeline/timeline-helpers';
               <button
                 class="selectable"
                 on:click={() => {
-                  command.click()
+                  command.click();
                 }}
               >
                 <main>{command.title}</main>
@@ -293,7 +296,7 @@ import { openTimelineModal } from '../timeline/timeline-helpers';
       {#if results.trackables.length > 0 || searchTerm?.substring(0, 1) === '#' || searchTerm?.substring(0, 1) === '@' || searchTerm?.substring(0, 1) === '+'}
         <header
           on:click={() => {
-            showTrackables = !showTrackables
+            showTrackables = !showTrackables;
           }}
           class="list-header {!showTrackables ? 'opacity-50' : ''}"
         >
@@ -306,7 +309,7 @@ import { openTimelineModal } from '../timeline/timeline-helpers';
             <button
               class="selectable"
               on:click={() => {
-                showTrackablePopmenu(trackable)
+                showTrackablePopmenu(trackable);
               }}
             >
               <TrackableAvatar {trackable} size={22} />
@@ -321,7 +324,7 @@ import { openTimelineModal } from '../timeline/timeline-helpers';
             <button
               class="selectable"
               on:click={() => {
-                openTrackableEditor(new TrackerClass({ label: searchTerm.replace('#', '') }).toTrackable())
+                openTrackableEditor(new TrackerClass({ label: searchTerm.replace('#', '') }).toTrackable());
               }}
             >
               <main>
@@ -333,7 +336,7 @@ import { openTimelineModal } from '../timeline/timeline-helpers';
             <button
               class="selectable"
               on:click={() => {
-                addNewPerson(searchTerm.replace('@', ''))
+                addNewPerson(searchTerm.replace('@', ''));
               }}
             >
               <main>
@@ -347,7 +350,7 @@ import { openTimelineModal } from '../timeline/timeline-helpers';
       <Divider left={1} />
       <header
         on:click={() => {
-          showLogs = !showLogs
+          showLogs = !showLogs;
         }}
         class="list-header {!showLogs ? 'opacity-50' : ''}"
       >
@@ -360,14 +363,14 @@ import { openTimelineModal } from '../timeline/timeline-helpers';
             <button
               class="selectable log"
               on:click={() => {
-                openLogDisplay(log)
+                openLogDisplay(log);
               }}
             >
               <main>
                 <div class="time text-xs text-gray-500">
                   {log.endDayjs().format(`${dateFormats.date} ${dateFormats.time}`)}
                 </div>
-                <p class="text-sm line-clamp-2 ">{log.note}</p>
+                <p class="text-sm line-clamp-2">{log.note}</p>
               </main>
             </button>
             <Divider left={1} />
@@ -376,9 +379,9 @@ import { openTimelineModal } from '../timeline/timeline-helpers';
             class="selectable"
             on:click={() => {
               openTimelineModal({
-                  search: searchTerm,
-                  notes: true
-                })
+                search: searchTerm,
+                notes: true,
+              });
               // SearchStore.view('history', escapeRegExp(searchTerm))
             }}
           >
@@ -397,7 +400,7 @@ import { openTimelineModal } from '../timeline/timeline-helpers';
             new NLog({
               note: searchTerm,
             })
-          )
+          );
         }}
       >
         <main class="line-clamp-2">"{searchTerm}"</main>

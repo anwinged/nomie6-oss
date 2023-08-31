@@ -1,29 +1,29 @@
 <script lang="ts">
-  import tick from '../../utils/tick/tick'
-  import { createEventDispatcher } from 'svelte'
-  import { dismissTrackerInputModal, getTrackerInputAsString } from '../../domains/tracker/input/TrackerInputStore'
-  import { TrackableStore } from '../../domains/trackable/TrackableStore'
-  import type { Trackable } from '../../domains/trackable/Trackable.class'
-  import TrackableAvatar from '../avatar/trackable-avatar.svelte'
+  import tick from '../../utils/tick/tick';
+  import { createEventDispatcher } from 'svelte';
+  import { dismissTrackerInputModal, getTrackerInputAsString } from '../../domains/tracker/input/TrackerInputStore';
+  import { TrackableStore } from '../../domains/trackable/TrackableStore';
+  import type { Trackable } from '../../domains/trackable/Trackable.class';
+  import TrackableAvatar from '../avatar/trackable-avatar.svelte';
 
-  import { toTrackableArray } from '../../domains/trackable/trackable-utils'
-  import { removePrefix } from '../../utils/text/text'
-  import { encodeRegex } from '../../utils/regex'
-  import { slide } from 'svelte/transition'
+  import { toTrackableArray } from '../../domains/trackable/trackable-utils';
+  import { removePrefix } from '../../utils/text/text';
+  import { encodeRegex } from '../../utils/regex';
+  import { slide } from 'svelte/transition';
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  export let input = null
-  export let scroller = false
-  export let className = ''
-  export let style = ''
+  export let input = null;
+  export let scroller = false;
+  export let className = '';
+  export let style = '';
 
   let state = {
     partialTag: null,
     results: [],
     tag: null,
     cursorIndex: 0,
-  }
+  };
 
   // function close() {
   //   state.results = []
@@ -38,101 +38,102 @@
 
   const autoCompleteSearch = (searchTag: string, type: string = 'tracker'): Array<Trackable> => {
     // Search for Trackers
-    state.tag = searchTag
+    state.tag = searchTag;
 
     try {
       return toTrackableArray($TrackableStore.trackables).filter((t) => {
-        const term = removePrefix(searchTag)
-        return t.tag.search(encodeRegex(term)) > -1
-      })
+        const term = removePrefix(searchTag);
+        return t.tag.search(encodeRegex(term)) > -1;
+      });
     } catch (e) {
-      console.error(e)
-      return []
+      console.error(e);
+      return [];
     }
-  }
+  };
 
   const onSelect = async (trackable: Trackable) => {
-    let note: string = ''
+    let note: string = '';
     if (trackable.type == 'tracker') {
       const inputResponse = await getTrackerInputAsString({
         trackables: $TrackableStore.trackables,
         tracker: trackable.tracker,
-        expandNote: true
-      })
-      
-      dismissTrackerInputModal()
+        expandNote: true,
+      });
+
+      dismissTrackerInputModal();
       // note = trackable.tracker.toNoteString(inputResponse.value)
       note = inputResponse.raw;
     } else if (trackable.type == 'person') {
-      note = trackable.tag
+      note = trackable.tag;
     } else if (trackable.type == 'context') {
-      note = trackable.tagWithValue()
+      note = trackable.tagWithValue();
     }
 
     // Dispatch the Select
-    const splitInput = input.split(' ')
+    const splitInput = input.split(' ');
     const inputParts = splitInput.filter((word, index) => {
-      return index < splitInput.length - 1
-    })
+      return index < splitInput.length - 1;
+    });
 
-    let finalNote = `${inputParts.join(' ')} ${note} `
+    let finalNote = `${inputParts.join(' ')} ${note} `;
 
-    dispatch('select', { trackable, note: finalNote })
-    await tick(120)
-    state.partialTag = null
-    state.tag = null
-    state.results = null
-  }
+    dispatch('select', { trackable, note: finalNote });
+    await tick(120);
+    state.partialTag = null;
+    state.tag = null;
+    state.results = null;
+  };
 
   const onInput = (str) => {
     if (str) {
-      let value = str
-      let last = value?.charAt(value.length - 1)
+      let value = str;
+      let last = value?.charAt(value.length - 1);
       if (last == ' ') {
-        state.results = null
+        state.results = null;
       } else if (value.length) {
-        let arr = value.split(' ')
-        let tag = arr[arr.length - 1]
-        state.cursorIndex = arr.length - 1
+        let arr = value.split(' ');
+        let tag = arr[arr.length - 1];
+        state.cursorIndex = arr.length - 1;
         // If its a tag
         if (tag.charAt(0) === '#' && tag.length > 1) {
-          state.partialTag = tag
-          state.results = autoCompleteSearch(tag, 'tracker')
+          state.partialTag = tag;
+          state.results = autoCompleteSearch(tag, 'tracker');
           // If its a person
         } else if (tag.charAt(0) === '@' && tag.length > 1) {
-          state.partialTag = tag.replace(/\@/gi, '')
-          state.results = autoCompleteSearch(state.partialTag, 'person')
+          state.partialTag = tag.replace(/\@/gi, '');
+          state.results = autoCompleteSearch(state.partialTag, 'person');
           // If it's context
         } else if (tag.charAt(0) === '+' && tag.length > 1) {
-          state.partialTag = tag
-          state.results = autoCompleteSearch(tag, 'context')
+          state.partialTag = tag;
+          state.results = autoCompleteSearch(tag, 'context');
         } else {
-          state.partialTag = null
-          state.results = null
+          state.partialTag = null;
+          state.results = null;
         }
       } else {
-        state.partialTag = null
-        state.results = null
+        state.partialTag = null;
+        state.results = null;
       }
     }
-  }
+  };
 
   /**
    * Main Mount
    */
 
-  let lastInput
+  let lastInput;
   $: if (lastInput !== input) {
-    lastInput = input
-    onInput(input)
+    lastInput = input;
+    onInput(input);
   }
   $: if (!input) {
-    state.results = undefined
+    state.results = undefined;
   }
 </script>
 
 {#if state.results && state.results.length}
-  <div style={style}
+  <div
+    {style}
     transition:slide={{ duration: 100 }}
     class="{scroller ? 'scroller' : 'no-scroller'} autocomplete-results animate {className}"
   >
@@ -140,7 +141,7 @@
       {#each state.results || [] as trackable, index (index)}
         <button
           on:click={() => {
-            onSelect(trackable)
+            onSelect(trackable);
           }}
         >
           <TrackableAvatar {trackable} size={16} />

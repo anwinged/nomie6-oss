@@ -1,28 +1,28 @@
 <script lang="ts">
-  import TrackableAvatar from '../../components/avatar/trackable-avatar.svelte'
-  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte'
-  import { closeModal } from '../../components/backdrop/BackdropStore2'
-  import ButtonGroup from '../../components/button-group/button-group.svelte'
-  import Button from '../../components/button/button.svelte'
-  import DateRangeController from '../../components/date-range-controller/date-range-controller.svelte'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import { CloseOutline } from '../../components/icon/nicons'
+  import TrackableAvatar from '../../components/avatar/trackable-avatar.svelte';
+  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte';
+  import { closeModal } from '../../components/backdrop/BackdropStore2';
+  import ButtonGroup from '../../components/button-group/button-group.svelte';
+  import Button from '../../components/button/button.svelte';
+  import DateRangeController from '../../components/date-range-controller/date-range-controller.svelte';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import { CloseOutline } from '../../components/icon/nicons';
 
-  import Toolbar from '../../components/toolbar/toolbar.svelte'
-  import CalendarOutline from '../../n-icons/CalendarOutline.svelte'
-  import { wait } from '../../utils/tick/tick'
-  import { openCalendarView } from '../calendar-view/CalendarViewStore'
+  import Toolbar from '../../components/toolbar/toolbar.svelte';
+  import CalendarOutline from '../../n-icons/CalendarOutline.svelte';
+  import { wait } from '../../utils/tick/tick';
+  import { openCalendarView } from '../calendar-view/CalendarViewStore';
 
-  import Map from '../map/map.svelte'
-  import RelatedView from '../related/related-view.svelte'
+  import Map from '../map/map.svelte';
+  import RelatedView from '../related/related-view.svelte';
 
-  import type { Trackable } from '../trackable/Trackable.class'
-  import { TrackableStore } from '../trackable/TrackableStore'
-  import { uomSymbol } from '../uom/uom-utils'
+  import type { Trackable } from '../trackable/Trackable.class';
+  import { TrackableStore } from '../trackable/TrackableStore';
+  import { uomSymbol } from '../uom/uom-utils';
 
-  import Overview from './overview/overview.svelte'
+  import Overview from './overview/overview.svelte';
 
-  import { Stats2TimeTypes } from './stats2-time-formats'
+  import { Stats2TimeTypes } from './stats2-time-formats';
   import {
     changeStats2StoreTime,
     initStatsStore,
@@ -30,42 +30,42 @@
     previousStatsPeriod,
     Stats2DateRange,
     Stats2Store,
-  } from './Stats2Store'
+  } from './Stats2Store';
 
-  import WhenView from './when-view.svelte'
+  import WhenView from './when-view.svelte';
 
-  export let id: string
+  export let id: string;
 
-  let loading: boolean = false
-  let showRelated: boolean = false
+  let loading: boolean = false;
+  let showRelated: boolean = false;
   // let activeIndex: number = 0
 
   /**
    * On TimeSpan Change
    * */
-  let lastTimeSpan = ''
-  let lastTrackable: Trackable
+  let lastTimeSpan = '';
+  let lastTrackable: Trackable;
   $: if ($Stats2Store.time !== lastTimeSpan || lastTrackable !== $Stats2Store.trackable) {
-    lastTrackable = $Stats2Store.trackable
-    lastTimeSpan = $Stats2Store.time
-    initStats()
+    lastTrackable = $Stats2Store.trackable;
+    lastTimeSpan = $Stats2Store.time;
+    initStats();
   }
 
   const initStats = async () => {
-    loading = true
+    loading = true;
     await initStatsStore($Stats2Store.trackable, {
       known: $TrackableStore.trackables,
       date: new Date(),
-    })
-    loading = false
-  }
+    });
+    loading = false;
+  };
 
   /**
    * Close The Moda
    */
   const close = () => {
-    closeModal(id)
-  }
+    closeModal(id);
+  };
 </script>
 
 <BackdropModal headerClass="shadow-lg z-40">
@@ -86,16 +86,16 @@
               value: id,
               click() {
                 //@ts-ignore
-                changeStats2StoreTime(id)
+                changeStats2StoreTime(id);
               },
-            }
+            };
           })}
         />
         <Button
           icon
           on:click={async () => {
-            await wait(100)
-            openCalendarView({ trackable: $Stats2Store.trackable })
+            await wait(100);
+            openCalendarView({ trackable: $Stats2Store.trackable });
           }}
         >
           <IonIcon icon={CalendarOutline} size={28} className="text-primary-500" />
@@ -110,16 +110,17 @@
       end={$Stats2DateRange.end}
       on:next={() => nextStatsPeriod()}
       on:previous={() => previousStatsPeriod()}
-     >
-     <h1 class="text-black text-center flex items-center justify-center dark:text-white font-bold leading-none line-clamp-1 w-full">
-      <TrackableAvatar trackable={$Stats2Store.trackable} size={20} className="mr-2" />
-      <span>{$Stats2Store.trackable.label}</span>
-    </h1>
+    >
+      <h1
+        class="text-black text-center flex items-center justify-center dark:text-white font-bold leading-none line-clamp-1 w-full"
+      >
+        <TrackableAvatar trackable={$Stats2Store.trackable} size={20} className="mr-2" />
+        <span>{$Stats2Store.trackable.label}</span>
+      </h1>
     </DateRangeController>
-     
   </header>
 
-  <section class="pt-2 px-3 w-full grid grid-cols-1 pb-4  overflow-y-auto gap-4 relative bg-gray-200 dark:bg-gray-800">
+  <section class="pt-2 px-3 w-full grid grid-cols-1 pb-4 overflow-y-auto gap-4 relative bg-gray-200 dark:bg-gray-800">
     <!-- <div  class="flex items-center justify-center pt-1 px-4">
       {#if $Stats2Store.trackable}
         

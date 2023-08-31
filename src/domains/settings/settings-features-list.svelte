@@ -1,46 +1,43 @@
 <script lang="ts">
-  import capitalize from 'lodash/capitalize'
-  import ListItem from '../../components/list-item/list-item.svelte'
-  import ToggleSwitch from '../../components/toggle-switch/toggle-switch.svelte'
+  import capitalize from 'lodash/capitalize';
+  import ListItem from '../../components/list-item/list-item.svelte';
+  import ToggleSwitch from '../../components/toggle-switch/toggle-switch.svelte';
 
-  import { Lang } from '../../store/lang'
+  import { Lang } from '../../store/lang';
 
-  import { Interact } from '../../store/interact'
+  import { Interact } from '../../store/interact';
 
-  import tick from '../../utils/tick/tick'
-  import { onMount } from 'svelte'
+  import tick from '../../utils/tick/tick';
+  import { onMount } from 'svelte';
 
-  import List from '../../components/list/list.svelte'
-  import { Prefs, setDocumentTheme, ThemeTypes } from '../preferences/Preferences'
+  import List from '../../components/list/list.svelte';
+  import { Prefs, setDocumentTheme, ThemeTypes } from '../preferences/Preferences';
 
-  import Avatar from '../../components/avatar/avatar.svelte'
-  import ButtonGroup from '../../components/button-group/button-group.svelte'
-  import Button from '../../components/button/button.svelte'
-  import { Device, setFontSize } from '../../store/device-store'
-  import { openPinLock } from '../pin-lock/pin-helper'
-  import { showToast } from '../../components/toast/ToastStore'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
+  import Avatar from '../../components/avatar/avatar.svelte';
+  import ButtonGroup from '../../components/button-group/button-group.svelte';
+  import Button from '../../components/button/button.svelte';
+  import { Device, setFontSize } from '../../store/device-store';
+  import { openPinLock } from '../pin-lock/pin-helper';
+  import { showToast } from '../../components/toast/ToastStore';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
 
-  import AllBoardIcon from '../../n-icons/board-tab-icons/AllBoardIcon.svelte'
-  import PeopleBoardIcon from '../../n-icons/board-tab-icons/PeopleBoardIcon.svelte'
-  import ContextBoardIcon from '../../n-icons/board-tab-icons/ContextBoardIcon.svelte'
-  import SelectPop from '../../select-pop/select-pop.svelte'
+  import AllBoardIcon from '../../n-icons/board-tab-icons/AllBoardIcon.svelte';
+  import PeopleBoardIcon from '../../n-icons/board-tab-icons/PeopleBoardIcon.svelte';
+  import ContextBoardIcon from '../../n-icons/board-tab-icons/ContextBoardIcon.svelte';
+  import SelectPop from '../../select-pop/select-pop.svelte';
 
-  const themes: Array<ThemeTypes> = ['light', 'dark', 'auto']
-  let hasPin: boolean = false
-
-
+  const themes: Array<ThemeTypes> = ['light', 'dark', 'auto'];
+  let hasPin: boolean = false;
 
   $: if (($Prefs.usePin || '').length) {
-    hasPin = true
+    hasPin = true;
   }
-  
 
   onMount(() => {
     if ($Prefs.usePin) {
-      hasPin = true
+      hasPin = true;
     }
-  })
+  });
 
   let methods = {
     // settingChange() {
@@ -48,32 +45,32 @@
     // },
 
     async lockToggle(change) {
-      await tick(100)
-      let shouldLock = change
+      await tick(100);
+      let shouldLock = change;
       if (shouldLock === true) {
-        hasPin = false
+        hasPin = false;
         let pin: any = await openPinLock({
           canClose: true,
           isMatch(pin) {
-            return true
+            return true;
           },
-        })
+        });
         if (!pin) {
-          $Prefs.usePin = undefined
+          $Prefs.usePin = undefined;
         } else {
-          $Prefs.usePin = pin
-          showToast({ message: '🔐 Pin Enabled' })
+          $Prefs.usePin = pin;
+          showToast({ message: '🔐 Pin Enabled' });
         }
       } else {
-        let confirmDisable = await Interact.confirm(' Disable Pin?')
+        let confirmDisable = await Interact.confirm(' Disable Pin?');
         if (confirmDisable) {
-          $Prefs.usePin = undefined
-          hasPin = false
-          showToast({ message: '🔓 Pin Disabled' })
+          $Prefs.usePin = undefined;
+          hasPin = false;
+          showToast({ message: '🔓 Pin Disabled' });
         }
       }
     },
-  }
+  };
 </script>
 
 <List solo outside title="Customize">
@@ -83,10 +80,10 @@
         id="start-page"
         value={capitalize($Prefs.startPage)}
         on:change={(evt) => {
-          $Prefs.startPage = evt.detail.key
+          $Prefs.startPage = evt.detail.key;
         }}
         options={['track', 'dashboard', 'goals', 'timeline', 'history'].map((t) => {
-          return { key: t, value: capitalize(t), selected: $Prefs.startPage == t }
+          return { key: t, value: capitalize(t), selected: $Prefs.startPage == t };
         })}
       />
       <!-- <select title="Select a Start Page" class="nselect clear" bind:value={$Prefs.startPage} on:change={(event) => {}}>
@@ -113,7 +110,7 @@
         <button
           class=" toggle-pin-button whitespace-nowrap text-primary-500 text-right"
           on:click={() => {
-            methods.lockToggle(false)
+            methods.lockToggle(false);
           }}
         >
           {Lang.t('settings.disable', 'Disable Pin')}
@@ -122,7 +119,7 @@
         <button
           class=" toggle-pin-button whitespace-nowrap text-primary-500 text-right"
           on:click={() => {
-            methods.lockToggle(true)
+            methods.lockToggle(true);
           }}
         >
           {Lang.t('settings.set-pin', 'Set Lock Pin')}
@@ -132,8 +129,6 @@
       {hasPin ? 'has pin' : 'has no pin'} -->
     </div>
   </ListItem>
-
-  
 </List>
 
 <div class="mb-4" />
@@ -144,8 +139,8 @@
       <SelectPop
         id="theme"
         on:change={(evt) => {
-          $Prefs.theme = evt.detail.key
-          setDocumentTheme($Prefs.theme)
+          $Prefs.theme = evt.detail.key;
+          setDocumentTheme($Prefs.theme);
         }}
         value={capitalize($Prefs.theme)}
         options={themes.map((theme) => {
@@ -153,7 +148,7 @@
             key: theme,
             value: capitalize(theme),
             selected: $Prefs.theme == theme,
-          }
+          };
         })}
       />
       <!-- <ButtonGroup className="h-9" style="width:170px;">
@@ -187,7 +182,7 @@
             size="sm"
             className={`${$Device.fontSize === size ? 'active' : ''}`}
             on:click={() => {
-              setFontSize(size)
+              setFontSize(size);
             }}
           >
             {#if size == 'xs'}<div class="text-xs leading-7">A</div>{/if}

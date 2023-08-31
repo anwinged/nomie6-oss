@@ -1,14 +1,14 @@
 <script lang="ts">
-  export let text: string = ''
-  export let className: string = ''
-  export let style: string = ''
+  export let text: string = '';
+  export let className: string = '';
+  export let style: string = '';
 
-  let items: Array<string> = []
-  let lastItems: Array<string> = []
+  let items: Array<string> = [];
+  let lastItems: Array<string> = [];
 
   $: if (text) {
-    lastItems = items || []
-    items = `${text || ''}`.split('')
+    lastItems = items || [];
+    items = `${text || ''}`.split('');
   }
 </script>
 

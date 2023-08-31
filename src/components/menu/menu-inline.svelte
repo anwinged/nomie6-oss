@@ -1,33 +1,36 @@
 <script lang="ts">
-  import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@rgossiaux/svelte-headlessui'
-  import { AwardStore } from '../../domains/awards/AwardsStore'
-  import { getAwardById } from '../../domains/awards/helpers/usage-awards'
-  import { Interact } from '../../store/interact'
-  import Avatar from '../avatar/avatar.svelte'
-  import IonIcon from '../icon/ion-icon.svelte'
-  import './n-menu.css'
+  import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@rgossiaux/svelte-headlessui';
+  import { AwardStore } from '../../domains/awards/AwardsStore';
+  import { getAwardById } from '../../domains/awards/helpers/usage-awards';
+  import { Interact } from '../../store/interact';
+  import Avatar from '../avatar/avatar.svelte';
+  import IonIcon from '../icon/ion-icon.svelte';
+  import './n-menu.css';
 
-  import type { PopMenuButton } from '../pop-menu/usePopmenu'
-  import MenuBlocker from './menu-blocker.svelte'
-  import CheckmarkCircle from '../../n-icons/CheckmarkCircle.svelte'
-import Divider from '../divider/divider.svelte'
+  import type { PopMenuButton } from '../pop-menu/usePopmenu';
+  import MenuBlocker from './menu-blocker.svelte';
+  import CheckmarkCircle from '../../n-icons/CheckmarkCircle.svelte';
+  import Divider from '../divider/divider.svelte';
 
-  export let x: 'right' | 'left' = 'left'
-  export let y: 'top' | 'bottom' = 'top'
-  export let buttonClass: string = undefined
-  export let buttonStyle: string = ""
-  export let id: string
-  export let title: string = ""
+  export let x: 'right' | 'left' = 'left';
+  export let y: 'top' | 'bottom' = 'top';
+  export let buttonClass: string = undefined;
+  export let buttonStyle: string = '';
+  export let id: string;
+  export let title: string = '';
   export let compact: boolean = false;
 
-  export let menuButtons: Array<PopMenuButton> = []
+  export let menuButtons: Array<PopMenuButton> = [];
   let accessorySize: number = compact ? 18 : 24;
   let menu;
 </script>
 
 <Menu {id} bind:this={menu} class="id-{id} {compact ? 'compact' : ''} relative  menu-inline" let:open>
-  <MenuButton title={title} id="{id}-button" style={buttonStyle} class="{buttonClass} flex items-center justify-center {open ? 'isOpen' : ''}"
-    ><slot /></MenuButton
+  <MenuButton
+    {title}
+    id="{id}-button"
+    style={buttonStyle}
+    class="{buttonClass} flex items-center justify-center {open ? 'isOpen' : ''}"><slot /></MenuButton
   >
 
   <Transition
@@ -57,57 +60,58 @@ import Divider from '../divider/divider.svelte'
             } else if (button.awardRequired && !$AwardStore.awards.find((a) => a.id == button.awardRequired)) {
               Interact.alert(
                 `You need the ${getAwardById(button.awardRequired).name} Award before you can use this feature`
-              )
+              );
             } else {
-              button.click()
-            
+              button.click();
             }
           }}
         >
           {#if button.component}
-            <svelte:component closeEvent={()=>{
-              button.click()
-            }} this={button.component} />
+            <svelte:component
+              this={button.component}
+              closeEvent={() => {
+                button.click();
+              }}
+            />
           {:else}
-          <button
-            disabled={button.disabled}
-            class="pop-button {active ? 'focused' : ''} nbtn-left pop-button-{index} {button.awardRequired
-              ? $AwardStore.awards.find((a) => a.id == button.awardRequired)
-                ? 'unlocked'
-                : 'locked'
-              : ''} {button.description ? 'nbtn-desc' : ''}"
-          >
-            {#if button.checked}
-              <div class="w-5 flex items-center">
-                <IonIcon size={compact ? 20 : 28} className="text-black dark:text-white" icon={CheckmarkCircle} />
+            <button
+              disabled={button.disabled}
+              class="pop-button {active ? 'focused' : ''} nbtn-left pop-button-{index} {button.awardRequired
+                ? $AwardStore.awards.find((a) => a.id == button.awardRequired)
+                  ? 'unlocked'
+                  : 'locked'
+                : ''} {button.description ? 'nbtn-desc' : ''}"
+            >
+              {#if button.checked}
+                <div class="w-5 flex items-center">
+                  <IonIcon size={compact ? 20 : 28} className="text-black dark:text-white" icon={CheckmarkCircle} />
+                </div>
+              {/if}
+              <main class="flex-fill w-full">
+                <h1
+                  class="{button.title.length > 25
+                    ? 'text-sm'
+                    : 'text-lg'} leading-tight line-clamp-1 text-black font-medium dark:text-white"
+                >
+                  {button.title}
+                </h1>
+                {#if button.description}
+                  <p class="text-sm text-gray-500 leading-snug">{button.description}</p>
+                {/if}
+              </main>
+              <div class="flex items-center">
+                {#if button.icon}
+                  <IonIcon icon={button.icon} className="text-black dark:text-white" size={accessorySize} />
+                {:else if button.emoji}
+                  <Avatar emoji={button.emoji} size={compact ? 22 : 32} />
+                {/if}
               </div>
-            {/if}
-            <main class="flex-fill w-full">
-              <h1
-                class="{button.title.length > 25
-                  ? 'text-sm'
-                  : 'text-lg'} leading-tight line-clamp-1 text-black font-medium dark:text-white"
-              >
-                {button.title}
-              </h1>
-              {#if button.description}
-                <p class="text-sm text-gray-500 leading-snug">{button.description}</p>
-              {/if}
-            </main>
-            <div class="flex items-center">
-              {#if button.icon}
-                <IonIcon icon={button.icon} className="text-black dark:text-white" size={accessorySize} />
-              {:else if button.emoji}
-                <Avatar emoji={button.emoji} size={compact ? 22 : 32} />
-              {/if}
-            </div>
-          </button>
+            </button>
           {/if}
         </MenuItem>
         {#if index < menuButtons.length - 1}
-        <Divider left={16} />
+          <Divider left={16} />
         {/if}
-
       {/each}
     </MenuItems>
   </Transition>
@@ -161,11 +165,11 @@ import Divider from '../divider/divider.svelte'
   .menu-inline .n-menu .pop-button {
     @apply overflow-hidden;
     @apply rounded-none;
-    @apply border-b border-gray-500 dark:border-gray-700
+    @apply border-b border-gray-500 dark:border-gray-700;
   }
   .menu-inline.compact .n-menu .pop-button,
   .menu-inline.compact .n-menu .pop-button h1 {
-    font-size:0.9rem !important;
+    font-size: 0.9rem !important;
   }
   .menu-inline .n-menu .pop-button:hover {
     @apply bg-black dark:bg-white bg-opacity-10 dark:bg-opacity-20;

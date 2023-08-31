@@ -1,14 +1,14 @@
 <script lang="ts">
-  import Button from '../../components/button/button.svelte'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import { AddIcon, CheckmarkCircle, ChevronForwardOutline, RibbonOutline } from '../../components/icon/nicons'
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
+  import Button from '../../components/button/button.svelte';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import { AddIcon, CheckmarkCircle, ChevronForwardOutline, RibbonOutline } from '../../components/icon/nicons';
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
 
-  import { Lang } from '../../store/lang'
-  import List from '../../components/list/list.svelte'
-  import Layout from '../layout/layout.svelte'
+  import { Lang } from '../../store/lang';
+  import List from '../../components/list/list.svelte';
+  import Layout from '../layout/layout.svelte';
 
-  import { GoalClass, GoalDurationType } from './goal-class'
+  import { GoalClass, GoalDurationType } from './goal-class';
 
   import {
     getGoalUsage,
@@ -17,106 +17,106 @@
     GoalUsageResponseType,
     openGoalDetail,
     openGoalEditor,
-  } from './GoalStore'
+  } from './GoalStore';
 
-  import Empty from '../../components/empty/empty.svelte'
-  import Spinner from '../../components/spinner/spinner.svelte'
-  import ListItem from '../../components/list-item/list-item.svelte'
-  import TrackableAvatar from '../../components/avatar/trackable-avatar.svelte'
+  import Empty from '../../components/empty/empty.svelte';
+  import Spinner from '../../components/spinner/spinner.svelte';
+  import ListItem from '../../components/list-item/list-item.svelte';
+  import TrackableAvatar from '../../components/avatar/trackable-avatar.svelte';
 
-  import ProgressBar from '../../components/progress-bar/progress-bar.svelte'
+  import ProgressBar from '../../components/progress-bar/progress-bar.svelte';
 
-  import { TrackableStore } from '../trackable/TrackableStore'
-  import { Interact } from '../../store/interact'
+  import { TrackableStore } from '../trackable/TrackableStore';
+  import { Interact } from '../../store/interact';
 
-  import { showTrackablePopmenu } from '../board/boardActions'
+  import { showTrackablePopmenu } from '../board/boardActions';
 
-  import debounce from 'lodash/debounce'
+  import debounce from 'lodash/debounce';
 
-  import RemoveCircle from '../../n-icons/RemoveCircle.svelte'
-  import CreateOutline from '../../n-icons/CreateOutline.svelte'
+  import RemoveCircle from '../../n-icons/RemoveCircle.svelte';
+  import CreateOutline from '../../n-icons/CreateOutline.svelte';
 
-  import { onDestroy, onMount } from 'svelte'
+  import { onDestroy, onMount } from 'svelte';
   // import Toolbar from '../../components/toolbar/toolbar.svelte'
   // import DateRangeController from '../../components/date-range-controller/date-range-controller.svelte'
-  import dayjs from 'dayjs'
-  import { LedgerStore } from '../ledger/LedgerStore'
-  import UpgradeMessage from '../../components/upgrade-message/upgrade-message.svelte'
+  import dayjs from 'dayjs';
+  import { LedgerStore } from '../ledger/LedgerStore';
+  import UpgradeMessage from '../../components/upgrade-message/upgrade-message.svelte';
 
-  let view: GoalDurationType = 'day'
-  let goals: Array<GoalClass> = []
-  let goalUsages: Array<GoalUsageResponseType> = []
-  let loading: boolean = true
-  let mounted = false
-  let activeDate = dayjs()
-  let allowOpen: boolean = true
+  let view: GoalDurationType = 'day';
+  let goals: Array<GoalClass> = [];
+  let goalUsages: Array<GoalUsageResponseType> = [];
+  let loading: boolean = true;
+  let mounted = false;
+  let activeDate = dayjs();
+  let allowOpen: boolean = true;
 
   const blockOpen = () => {
-    allowOpen = false
+    allowOpen = false;
     setTimeout(() => {
-      allowOpen = true
-    }, 500)
-  }
+      allowOpen = true;
+    }, 500);
+  };
 
   const initialzeGoalPage = debounce(() => {
     try {
       if ($GoalStore.length) {
-        loading = true
-        goals = [...$GoalStore]
+        loading = true;
+        goals = [...$GoalStore];
         getGoalUsage(goals, $TrackableStore.trackables, activeDate).then((gu) => {
-          goalUsages = gu
-        })
+          goalUsages = gu;
+        });
       }
-      loading = false
+      loading = false;
     } catch (e) {
-      Interact.error(e.message)
-      loading = false
+      Interact.error(e.message);
+      loading = false;
     }
-    goalUsages = [...goalUsages]
-  }, 1000)
+    goalUsages = [...goalUsages];
+  }, 1000);
 
-  let lastGoalStore = ''
+  let lastGoalStore = '';
   $: if ($GoalScoreStore.join(',') !== lastGoalStore && mounted) {
-    lastGoalStore = $GoalScoreStore.join(',')
-    initialzeGoalPage()
+    lastGoalStore = $GoalScoreStore.join(',');
+    initialzeGoalPage();
   }
 
   $: if ($GoalStore) {
-    initialzeGoalPage()
+    initialzeGoalPage();
   }
 
   const createGoal = () => {
-    const goal = new GoalClass({ duration: view })
-    openGoalEditor(goal)
-  }
+    const goal = new GoalClass({ duration: view });
+    openGoalEditor(goal);
+  };
   const usageClicked = (usage) => {
     if (!editMode && allowOpen) {
-      openGoalDetail(usage.goal)
+      openGoalDetail(usage.goal);
     }
-  }
+  };
 
   const deleteGoal = async (goal: GoalClass) => {
-    const confirmed = await Interact.confirm(`Delete the ${goal.tag} goal?`, 'You can always recreate it')
+    const confirmed = await Interact.confirm(`Delete the ${goal.tag} goal?`, 'You can always recreate it');
     if (confirmed) {
-      await GoalStore.remove(goal)
-      initialzeGoalPage()
+      await GoalStore.remove(goal);
+      initialzeGoalPage();
     }
-  }
+  };
 
-  let editMode: boolean = false
+  let editMode: boolean = false;
 
-  let newPostListener
+  let newPostListener;
 
   onMount(() => {
-    mounted = true
+    mounted = true;
     newPostListener = LedgerStore.hook('onLogSaved', (res) => {
-      initialzeGoalPage()
-    })
-  })
+      initialzeGoalPage();
+    });
+  });
 
   onDestroy(() => {
-    if (newPostListener) newPostListener()
-  })
+    if (newPostListener) newPostListener();
+  });
 </script>
 
 <Layout pageTitle={Lang.t('goals.goals', 'Goals')}>
@@ -134,7 +134,7 @@
             clear
             primary
             on:click={() => {
-              editMode = false
+              editMode = false;
             }}>Done</Button
           >
         {:else if goals.length}
@@ -142,7 +142,7 @@
             clear
             primary
             on:click={() => {
-              editMode = true
+              editMode = true;
             }}>Edit</Button
           >
         {/if}
@@ -183,14 +183,14 @@
             bottomLine={72}
             className="relative transition-all duration-200"
             on:click={(evt) => {
-              usageClicked(item)
+              usageClicked(item);
             }}
           >
             <div slot="left" class="flex items-center space-x-2 stiff">
               <button
                 on:click|preventDefault|stopPropagation|capture={(evt) => {
-                  blockOpen()
-                  showTrackablePopmenu($TrackableStore.trackables[item.goal.tag])
+                  blockOpen();
+                  showTrackablePopmenu($TrackableStore.trackables[item.goal.tag]);
                 }}
               >
                 <TrackableAvatar
@@ -212,7 +212,7 @@
                 {#if !editMode}
                   <div class="filler whitespace-nowrap text-right">
                     <span>
-                      <span class="usage-value font-semibold ">
+                      <span class="usage-value font-semibold">
                         {#if !item.trackableUsage}
                           0
                         {:else}
@@ -253,9 +253,9 @@
                     clear
                     icon
                     on:click={(evt) => {
-                      evt.detail.preventDefault()
-                      evt.detail.stopPropagation()
-                      openGoalEditor(item.goal)
+                      evt.detail.preventDefault();
+                      evt.detail.stopPropagation();
+                      openGoalEditor(item.goal);
                     }}
                   >
                     <IonIcon icon={CreateOutline} size={28} className="text-black dark:text-white" />
@@ -264,9 +264,9 @@
                     clear
                     icon
                     on:click={(evt) => {
-                      evt.detail.preventDefault()
-                      evt.detail.stopPropagation()
-                      deleteGoal(item.goal)
+                      evt.detail.preventDefault();
+                      evt.detail.stopPropagation();
+                      deleteGoal(item.goal);
                     }}
                   >
                     <IonIcon icon={RemoveCircle} size={28} className="text-red-500" />

@@ -1,35 +1,34 @@
 <script lang="ts">
-  import type { Dayjs } from 'dayjs'
-  import dayjs from 'dayjs'
-  import { onMount } from 'svelte'
-  
+  import type { Dayjs } from 'dayjs';
+  import dayjs from 'dayjs';
+  import { onMount } from 'svelte';
 
-  import TrackableAvatar from '../../../components/avatar/trackable-avatar.svelte'
-  
-  import ListItem from '../../../components/list-item/list-item.svelte'
-  
-  import ProgressCircle from '../../../components/progress-circle/progress-circle.svelte'
-  import { getTrackableUsage } from '../../ledger/LedgerStore'
-  import { TrackableStore } from '../../trackable/TrackableStore'
-  import type { TrackableUsage } from '../../usage/trackable-usage.class'
+  import TrackableAvatar from '../../../components/avatar/trackable-avatar.svelte';
 
-  import type { GoalClass, GoalScoreType } from '../goal-class'
+  import ListItem from '../../../components/list-item/list-item.svelte';
 
-  export let goal: GoalClass
+  import ProgressCircle from '../../../components/progress-circle/progress-circle.svelte';
+  import { getTrackableUsage } from '../../ledger/LedgerStore';
+  import { TrackableStore } from '../../trackable/TrackableStore';
+  import type { TrackableUsage } from '../../usage/trackable-usage.class';
 
-  let usage: TrackableUsage
-  let base: Dayjs = dayjs().endOf('week')
-  let scores: Array<GoalScoreType>
+  import type { GoalClass, GoalScoreType } from '../goal-class';
+
+  export let goal: GoalClass;
+
+  let usage: TrackableUsage;
+  let base: Dayjs = dayjs().endOf('week');
+  let scores: Array<GoalScoreType>;
 
   const getPast = async () => {
     // getGoalUsage([goal], $TrackableStore.trackables, base);
-    usage = await getTrackableUsage(goal.trackable, base.subtract(6, 'months'), base, $TrackableStore.trackables)
-    scores = goal.calculateScores(usage)
-  }
+    usage = await getTrackableUsage(goal.trackable, base.subtract(6, 'months'), base, $TrackableStore.trackables);
+    scores = goal.calculateScores(usage);
+  };
 
   onMount(() => {
-    getPast()
-  })
+    getPast();
+  });
 </script>
 
 {#if goal}

@@ -1,22 +1,22 @@
 <script lang="ts">
-  import ListItem from '../../../components/list-item/list-item.svelte'
-  import List from '../../../components/list/list.svelte'
-  import { Lang } from '../../../store/lang'
+  import ListItem from '../../../components/list-item/list-item.svelte';
+  import List from '../../../components/list/list.svelte';
+  import { Lang } from '../../../store/lang';
 
-  import type { Trackable } from '../Trackable.class'
+  import type { Trackable } from '../Trackable.class';
 
-  export let trackable: Trackable
+  export let trackable: Trackable;
 
-  const remove = () => {}
+  const remove = () => {};
   // const duplicate = () => {
-  
+
   // }
 </script>
 
 <List className="pb-10">
   <ListItem
     on:click={() => {
-      alert('Todo:// make download trackable')
+      alert('Todo:// make download trackable');
     }}
     className="bottom-line"
   >

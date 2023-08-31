@@ -1,23 +1,23 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher } from 'svelte';
   // import ListItem from '../../../components/list-item/list-item.svelte'
-  import PickerListEditor from '../../../components/picker-list/picker-editor.svelte'
-  import PickerSelect from '../../../components/picker-list/picker-select.svelte'
+  import PickerListEditor from '../../../components/picker-list/picker-editor.svelte';
+  import PickerSelect from '../../../components/picker-list/picker-select.svelte';
   // import { objectHash } from '../../../modules/object-hash/object-hash'
-  import type TrackerClass from '../../../modules/tracker/TrackerClass'
+  import type TrackerClass from '../../../modules/tracker/TrackerClass';
   // import { PermissionsStore } from '../../my-account/PermissionsStore'
 
   // import { saveTrackable, TrackableStore } from '../../trackable/TrackableStore'
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  export let tracker: TrackerClass
+  export let tracker: TrackerClass;
 
-  let selected = []
-  let mode: 'view' | 'edit' = 'view'
+  let selected = [];
+  let mode: 'view' | 'edit' = 'view';
 
   function fireChange(evt) {
-    dispatch('change', evt.detail)
+    dispatch('change', evt.detail);
   }
 
   // let lastHash: string = objectHash(tracker.asObject)
@@ -50,7 +50,7 @@
       className="mx-3 mt-3"
       list={tracker.picks}
       on:change={(evt) => {
-        tracker.picks = evt.detail
+        tracker.picks = evt.detail;
       }}
       showHeaderContent={false}
     />

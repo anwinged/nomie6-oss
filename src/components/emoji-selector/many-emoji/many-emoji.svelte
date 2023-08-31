@@ -1,7 +1,7 @@
 <script lang="ts">
-  export let emojis: Array<string> = []
-  export let size: number = 42
-  export let className: string = ''
+  export let emojis: Array<string> = [];
+  export let size: number = 42;
+  export let className: string = '';
 </script>
 
 <div class="many-emoji {className}" style="--size:{size}px">

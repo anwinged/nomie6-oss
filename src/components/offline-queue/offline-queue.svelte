@@ -1,18 +1,18 @@
 <script lang="ts">
-  import { OfflineQueue } from '../../store/offline-queue-store'
-  import Text from '../text/text.svelte'
-  import Spinner from '../spinner/spinner.svelte'
-  import { Device } from '../../store/device-store'
-  import { Lang } from '../../store/lang'
-  import Button from '../button/button.svelte'
+  import { OfflineQueue } from '../../store/offline-queue-store';
+  import Text from '../text/text.svelte';
+  import Spinner from '../spinner/spinner.svelte';
+  import { Device } from '../../store/device-store';
+  import { Lang } from '../../store/lang';
+  import Button from '../button/button.svelte';
 
-  import List from '../list/list.svelte'
-  import ListItemLog from '../list-item-log/list-item-log.svelte'
-  import { TrashOutline } from '../icon/nicons'
-  import IonIcon from '../icon/ion-icon.svelte'
+  import List from '../list/list.svelte';
+  import ListItemLog from '../list-item-log/list-item-log.svelte';
+  import { TrashOutline } from '../icon/nicons';
+  import IonIcon from '../icon/ion-icon.svelte';
 
   // declare var window: any;
-  let showLogs: boolean = false
+  let showLogs: boolean = false;
 </script>
 
 {#if $OfflineQueue.logs && $OfflineQueue.logs.length}
@@ -25,7 +25,7 @@
         size="sm"
         color="light"
         on:click={() => {
-          showLogs = !showLogs
+          showLogs = !showLogs;
         }}
       >
         {#if $OfflineQueue.status !== 'syncing'}
@@ -62,7 +62,7 @@
             <Button
               icon
               on:click={() => {
-                OfflineQueue.removeLog(log)
+                OfflineQueue.removeLog(log);
               }}
             >
               <IonIcon icon={TrashOutline} size={24} className="text-red-500" />

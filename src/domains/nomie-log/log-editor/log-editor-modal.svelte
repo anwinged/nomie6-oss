@@ -1,67 +1,67 @@
 <script lang="ts">
-  import { Prefs } from './../../preferences/Preferences'
-  import MagnetSolid from './../../../n-icons/MagnetSolid.svelte'
+  import { Prefs } from './../../preferences/Preferences';
+  import MagnetSolid from './../../../n-icons/MagnetSolid.svelte';
   // Utils
 
   //Svelte
-  import { onMount } from 'svelte'
+  import { onMount } from 'svelte';
 
   // Vendor
   // import dayjs from 'dayjs'
 
   // Modules
-  import NomieLog, { NLog } from '../nomie-log'
+  import NomieLog, { NLog } from '../nomie-log';
 
   // Components
 
   // import HScroller from '../../components/h-scroller/h-scroller.svelte'
   // import NMap from '../../domains/map/map.svelte'
 
-  import { Lang } from '../../../store/lang'
+  import { Lang } from '../../../store/lang';
 
-  import Button from '../../../components/button/button.svelte'
+  import Button from '../../../components/button/button.svelte';
 
-  import ToolbarGrid from '../../../components/toolbar/toolbar-grid.svelte'
+  import ToolbarGrid from '../../../components/toolbar/toolbar-grid.svelte';
 
-  import DatePicker from '../../../components/date-picker/date-picker.svelte'
+  import DatePicker from '../../../components/date-picker/date-picker.svelte';
 
-  import math from '../../../utils/math/math'
-  import { Interact } from '../../../store/interact'
-  import type Location from '../../locations/LocationClass'
+  import math from '../../../utils/math/math';
+  import { Interact } from '../../../store/interact';
+  import type Location from '../../locations/LocationClass';
 
-  import BackdropModal from '../../../components/backdrop/backdrop-modal.svelte'
-  import { closeModal } from '../../../components/backdrop/BackdropStore2'
+  import BackdropModal from '../../../components/backdrop/backdrop-modal.svelte';
+  import { closeModal } from '../../../components/backdrop/BackdropStore2';
 
-  import { getEmojiFromScore } from '../../../utils/positivity/positivity'
+  import { getEmojiFromScore } from '../../../utils/positivity/positivity';
 
-  import { LedgerStore } from '../../ledger/LedgerStore'
-  import { showToast } from '../../../components/toast/ToastStore'
-  import { ActiveLogStore } from '../../capture-log/CaptureLogStore'
-  import MenuInline from '../../../components/menu/menu-inline.svelte'
+  import { LedgerStore } from '../../ledger/LedgerStore';
+  import { showToast } from '../../../components/toast/ToastStore';
+  import { ActiveLogStore } from '../../capture-log/CaptureLogStore';
+  import MenuInline from '../../../components/menu/menu-inline.svelte';
 
-  import { getPositivityButtons } from '../../board/boardActions'
-  import { trackEvent } from '../../usage/stat-ping'
+  import { getPositivityButtons } from '../../board/boardActions';
+  import { trackEvent } from '../../usage/stat-ping';
 
-  import { wait } from '../../../utils/tick/tick'
-  import CaptureTextarea from '../../capture-log/capture-textarea.svelte'
-  import IonIcon from '../../../components/icon/ion-icon.svelte'
+  import { wait } from '../../../utils/tick/tick';
+  import CaptureTextarea from '../../capture-log/capture-textarea.svelte';
+  import IonIcon from '../../../components/icon/ion-icon.svelte';
 
-  import MagnetOutline from '../../../n-icons/MagnetOutline.svelte'
-  import locate from '../../../modules/locate/locate'
-  import { findNearestLocationHeavy } from '../../locations/LocationStore'
-  import CloseOutline from '../../../n-icons/CloseOutline.svelte'
+  import MagnetOutline from '../../../n-icons/MagnetOutline.svelte';
+  import locate from '../../../modules/locate/locate';
+  import { findNearestLocationHeavy } from '../../locations/LocationStore';
+  import CloseOutline from '../../../n-icons/CloseOutline.svelte';
 
   // Props
-  export let log: NLog
-  export let id: string
+  export let log: NLog;
+  export let id: string;
 
-  let textarea
+  let textarea;
   // consts
 
   interface LogEditorState {
-    log: NLog | undefined
-    saving: boolean
-    mapReady: boolean
+    log: NLog | undefined;
+    saving: boolean;
+    mapReady: boolean;
   }
 
   // Setup state
@@ -69,7 +69,7 @@
     saving: false,
     mapReady: false,
     log: log as undefined | NLog,
-  }
+  };
 
   // Watch for Log
   // $: if (log) {
@@ -79,82 +79,82 @@
   // Set up Methods
   const methods = {
     async init() {
-      let getLocation: boolean = $Prefs.alwaysLocate
+      let getLocation: boolean = $Prefs.alwaysLocate;
       if (log) {
-        state.log = new NomieLog(log)
-        state.log.note = `${state.log.note} `
+        state.log = new NomieLog(log);
+        state.log.note = `${state.log.note} `;
         if (state.log.lat && $Prefs.alwaysLocate) {
-          getLocation = false
+          getLocation = false;
         }
       }
       if (getLocation) {
-        const geo = await locate()
+        const geo = await locate();
         if (geo.latitude) {
-          state.log.lat = geo.latitude
-          state.log.lng = geo.longitude
-          let location = await findNearestLocationHeavy({ lat: geo.latitude, lng: geo.longitude })
+          state.log.lat = geo.latitude;
+          state.log.lng = geo.longitude;
+          let location = await findNearestLocationHeavy({ lat: geo.latitude, lng: geo.longitude });
           if (location && location.name) {
-            state.log.location = location.name
+            state.log.location = location.name;
           }
         }
       }
-      state.mapReady = true
+      state.mapReady = true;
     },
     getLocations() {
-      let locations = []
+      let locations = [];
       if (state.log.lat) {
         locations.push({
           lat: state.log.lat,
           lng: state.log.lng,
           name: state.log.location,
-        })
+        });
       }
-      return locations
+      return locations;
     },
     async save() {
       try {
-        state.saving = true
-        await LedgerStore.updateLog(state.log, log.end)
-        ActiveLogStore.clear()
+        state.saving = true;
+        await LedgerStore.updateLog(state.log, log.end);
+        ActiveLogStore.clear();
         showToast({
           message: `Saved: ${state.log.note.substring(0, 100)}`,
-        })
-        close()
+        });
+        close();
       } catch (e) {
-        Interact.error(e.message)
+        Interact.error(e.message);
       }
       // dispatch("close");
     },
-  }
+  };
 
   async function selectLocation() {
     // let location = await Locations.selectLocation();
-    let _location: any = await Interact.pickLocation()
+    let _location: any = await Interact.pickLocation();
 
     if (_location) {
-      let location: Location = _location
-      state.log.lat = location.lat
-      state.log.lng = location.lng
-      state.log.location = location.name
+      let location: Location = _location;
+      state.log.lat = location.lat;
+      state.log.lng = location.lng;
+      state.log.location = location.name;
     }
   }
 
   const removeLocation = async () => {
-    state.log.lat = undefined
-    state.log.lng = undefined
-    state.log.location = undefined
-  }
+    state.log.lat = undefined;
+    state.log.lng = undefined;
+    state.log.location = undefined;
+  };
 
   const close = () => {
-    closeModal(id)
-  }
+    closeModal(id);
+  };
 
   onMount(async () => {
-    methods.init()
-    trackEvent('journal-editor')
-    await wait(200)
-    textarea?.focus()
-  })
+    methods.init();
+    trackEvent('journal-editor');
+    await wait(200);
+    textarea?.focus();
+  });
 </script>
 
 <BackdropModal mainClass="bg-white dark:bg-black filler" className="h-full bg-white dark:bg-gray-800">
@@ -185,7 +185,7 @@
         buttonClass="text-lg "
         menuButtons={[
           ...getPositivityButtons(state.log.score, (pos) => {
-            state.log.score = pos.score
+            state.log.score = pos.score;
           }),
         ]}
       >
@@ -199,7 +199,7 @@
       <DatePicker
         size="sm"
         on:change={(evt) => {
-          state.log.end = evt.detail
+          state.log.end = evt.detail;
         }}
         time={state.log.end}
         date={state.log.end}
@@ -211,7 +211,7 @@
         clear
         icon
         on:click={() => {
-          state.log.pinned = !state.log.pinned
+          state.log.pinned = !state.log.pinned;
         }}
       >
         {#if state.log.pinned}
@@ -230,7 +230,7 @@
       <button
         class="control"
         on:click={() => {
-          selectLocation()
+          selectLocation();
         }}
       >
         {#if state.log?.lat}

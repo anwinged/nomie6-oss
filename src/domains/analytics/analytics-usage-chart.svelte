@@ -1,97 +1,97 @@
 <script lang="ts">
-  import ButtonGroup from '../../components/button-group/button-group.svelte'
+  import ButtonGroup from '../../components/button-group/button-group.svelte';
 
-  import Button from '../../components/button/button.svelte'
+  import Button from '../../components/button/button.svelte';
 
-  import Card from '../../components/card/card.svelte'
-  import Chartjs from '../../components/charts/chartjs.svelte'
+  import Card from '../../components/card/card.svelte';
+  import Chartjs from '../../components/charts/chartjs.svelte';
 
-  import appConfig from '../../config/appConfig'
-  import type NLog from '../nomie-log/nomie-log'
-  import CalendarMap, { getCalendarMapFormats } from '../../utils/calendar-map/calendar-map'
-  import type { TimeGroupType } from '../../utils/calendar-map/calendar-map'
-  import { openOnThisDayModal } from '../on-this-day/useOnThisDayModal'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import dayjs from 'dayjs'
-  import { EyeSolid } from '../../components/icon/nicons'
+  import appConfig from '../../config/appConfig';
+  import type NLog from '../nomie-log/nomie-log';
+  import CalendarMap, { getCalendarMapFormats } from '../../utils/calendar-map/calendar-map';
+  import type { TimeGroupType } from '../../utils/calendar-map/calendar-map';
+  import { openOnThisDayModal } from '../on-this-day/useOnThisDayModal';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import dayjs from 'dayjs';
+  import { EyeSolid } from '../../components/icon/nicons';
 
-  import { onMount } from 'svelte'
-  import Spinner from '../../components/spinner/spinner.svelte'
-  import { wait } from '../../utils/tick/tick'
-  import { getDateFormats } from '../preferences/Preferences'
+  import { onMount } from 'svelte';
+  import Spinner from '../../components/spinner/spinner.svelte';
+  import { wait } from '../../utils/tick/tick';
+  import { getDateFormats } from '../preferences/Preferences';
 
-  export let results: Array<NLog> = []
-  export let className: string = ''
-  export let bodyClass: string = ''
-  export let cardTitle: string = 'Usage'
-  export let loading: boolean = false
+  export let results: Array<NLog> = [];
+  export let className: string = '';
+  export let bodyClass: string = '';
+  export let cardTitle: string = 'Usage';
+  export let loading: boolean = false;
 
-  let selectedDate: Date | undefined = undefined
-  let timeGroup: TimeGroupType = 'day'
-  let chartData: any | undefined = undefined
-  let map
-  let ready = false
+  let selectedDate: Date | undefined = undefined;
+  let timeGroup: TimeGroupType = 'day';
+  let chartData: any | undefined = undefined;
+  let map;
+  let ready = false;
 
   // Reactive
-  $: dateFormats = getDateFormats()
+  $: dateFormats = getDateFormats();
 
   $: if (ready && results && results.length && !loading && timeGroup) {
-    render()
+    render();
   }
 
   const setSelectedDate = (date) => {
-    selectedDate = date
-  }
+    selectedDate = date;
+  };
 
   const onIndexClick = (index: number) => {
-    const dateTimeString = map.times[index]
-    setSelectedDate(new Date(dateTimeString))
-  }
+    const dateTimeString = map.times[index];
+    setSelectedDate(new Date(dateTimeString));
+  };
 
   const openDayDetail = (date: Date) => {
-    openOnThisDayModal(date)
-  }
+    openOnThisDayModal(date);
+  };
 
   const render = async () => {
     const sortedResults = results.sort((a, b) => {
-      return a.end > b.end ? 1 : -1
-    })
-    chartData = undefined
-    await wait(100)
+      return a.end > b.end ? 1 : -1;
+    });
+    chartData = undefined;
+    await wait(100);
     map = CalendarMap({
       start: sortedResults[0].end,
       end: sortedResults[results.length - 1].end,
       timeGroup: timeGroup,
-    })
+    });
 
-    const formats = getCalendarMapFormats(map.meta.timeGroup)
+    const formats = getCalendarMapFormats(map.meta.timeGroup);
 
     const incrementValue = (node, index, value) => {
       if (isNaN(node[index])) {
-        return value
+        return value;
       } else {
-        return node[index] + value
+        return node[index] + value;
       }
-    }
+    };
 
-    const negative = [...map.value]
-    const positive = [...map.value]
+    const negative = [...map.value];
+    const positive = [...map.value];
 
     results.map((log: NLog) => {
-      const slot = log.endDayjs().format(formats.slotFormat)
-      const mapIndex = map.slots.indexOf(slot)
+      const slot = log.endDayjs().format(formats.slotFormat);
+      const mapIndex = map.slots.indexOf(slot);
       if (mapIndex > -1) {
-        map.value[mapIndex] = incrementValue(map.value, mapIndex, 1)
-        map.positivity[mapIndex] = incrementValue(map.positivity, mapIndex, log.score)
+        map.value[mapIndex] = incrementValue(map.value, mapIndex, 1);
+        map.positivity[mapIndex] = incrementValue(map.positivity, mapIndex, log.score);
         if (log.score > 0) {
-          positive[mapIndex] = incrementValue(positive, mapIndex, log.score)
+          positive[mapIndex] = incrementValue(positive, mapIndex, log.score);
         } else if (log.score < 0) {
-          negative[mapIndex] = incrementValue(negative, mapIndex, log.score)
+          negative[mapIndex] = incrementValue(negative, mapIndex, log.score);
         }
       }
-    })
+    });
 
-    const labels = map.label
+    const labels = map.label;
     chartData = {
       type: 'stacked',
       options: {
@@ -140,12 +140,12 @@
           },
         ],
       },
-    }
-  }
+    };
+  };
 
   onMount(() => {
-    ready = true
-  })
+    ready = true;
+  });
 </script>
 
 <Card {className} {bodyClass} title={cardTitle}>
@@ -156,7 +156,7 @@
         type="clear"
         className="text-xs font-bold mr-1"
         on:click={() => {
-          openDayDetail(selectedDate)
+          openDayDetail(selectedDate);
         }}
       >
         <IonIcon icon={EyeSolid} size={12} className="text-primary-500 mr-1" />
@@ -167,7 +167,7 @@
       className="w-24 stiff"
       bind:value={timeGroup}
       on:change={() => {
-        render()
+        render();
       }}
       buttons={[
         { label: 'D', value: 'day' },
@@ -182,7 +182,7 @@
       id="analytics"
       chartjsPayload={chartData}
       on:click={(evt) => {
-        onIndexClick(evt.detail)
+        onIndexClick(evt.detail);
       }}
     />
   {:else}

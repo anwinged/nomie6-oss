@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { Lang } from '../../store/lang'
+  import { Lang } from '../../store/lang';
 
-  import Container from '../../components/container/container.svelte'
-  import { Prefs } from '../../domains/preferences/Preferences'
+  import Container from '../../components/container/container.svelte';
+  import { Prefs } from '../../domains/preferences/Preferences';
 
-  import Button from '../../components/button/button.svelte'
+  import Button from '../../components/button/button.svelte';
 </script>
 
 <Container className="filler  flex items-center justify-center  flex-col pt-3 px-5 slide-location -mt-8">
-  <h1 class="mb-1 text-xl font-bold text-center leading-tight  dark:text-white">
+  <h1 class="mb-1 text-xl font-bold text-center leading-tight dark:text-white">
     {Lang.t('setup.use-location-tracking', `Track Location?`)}
   </h1>
   <div
@@ -29,7 +29,7 @@
       type="clear"
       delay={20}
       on:click={() => {
-        $Prefs.alwaysLocate = false
+        $Prefs.alwaysLocate = false;
       }}
     >
       Disabled
@@ -43,7 +43,7 @@
       size="lg"
       delay={20}
       on:click={() => {
-        $Prefs.alwaysLocate = true
+        $Prefs.alwaysLocate = true;
       }}
     >
       Enabled

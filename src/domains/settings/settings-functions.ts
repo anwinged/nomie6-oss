@@ -1,7 +1,7 @@
 import localforage from 'localforage';
 import { CheckmarkCircle, CircleOutline } from '../../components/icon/nicons';
 import { openPopMenu } from '../../components/pop-menu/usePopmenu';
-import Storage, { StorageEngines } from '../../domains/storage/storage';
+import Storage from '../../domains/storage/storage';
 import { Interact } from '../../store/interact';
 import { Lang } from '../../store/lang';
 
@@ -10,6 +10,7 @@ import { deleteAllFromCache } from '../ledger/ledger-cache';
 
 import { getRawPrefs, saveStorageType } from '../preferences/Preferences';
 import { trackEvent } from '../usage/stat-ping';
+import { StorageEngineDescriptions } from '../storage/storage-description';
 
 type selectNewStorageProps = {
   current: 'local' | 'pouchdb' | string;
@@ -56,7 +57,7 @@ export const switchStorage = async (type, ignoreConfirm: boolean = false) => {
 export const useStorageSelectMenu = async (props: selectNewStorageProps) => {
   const prefs = getRawPrefs();
 
-  let buttons = StorageEngines.map((storageEngine) => {
+  let buttons = StorageEngineDescriptions.map((storageEngine) => {
     let disabled: boolean = false;
 
     return {

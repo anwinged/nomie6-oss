@@ -1,34 +1,34 @@
 <script lang="ts">
-  import dayjs from 'dayjs'
-  import type { Trackable } from '../../domains/trackable/Trackable.class'
-  import type { TrackableUsage } from '../../domains/usage/trackable-usage.class'
-  export let usage: TrackableUsage
-  export let trackable: Trackable
+  import dayjs from 'dayjs';
+  import type { Trackable } from '../../domains/trackable/Trackable.class';
+  import type { TrackableUsage } from '../../domains/usage/trackable-usage.class';
+  export let usage: TrackableUsage;
+  export let trackable: Trackable;
 
-  export let size: number = 4
-  export let base: Array<number> = Array.from(Array(24), (d, i) => i)
-  export let format: string = 'H'
-  export let className: string = ''
-  export let style: string = ''
+  export let size: number = 4;
+  export let base: Array<number> = Array.from(Array(24), (d, i) => i);
+  export let format: string = 'H';
+  export let className: string = '';
+  export let style: string = '';
 
-  let timeMap: any = {}
-  let units: Array<any> = []
+  let timeMap: any = {};
+  let units: Array<any> = [];
   $: if (usage.dates && usage.dates.length) {
-    timeMap = {}
+    timeMap = {};
     usage.dates.forEach((date: Date) => {
-      let key = dayjs(date).format(format)
-      timeMap[key] = timeMap[key] || { key, count: 1 }
-    })
-    units = Object.keys(timeMap)
+      let key = dayjs(date).format(format);
+      timeMap[key] = timeMap[key] || { key, count: 1 };
+    });
+    units = Object.keys(timeMap);
   }
 
   $: if (usage.hours && usage.hours.length) {
-    timeMap = {}
+    timeMap = {};
     usage.hours.forEach((hour: number) => {
-      const unit = dayjs().hour(hour).format(format)
-      timeMap[`${unit}`] = timeMap[`${unit}`] || { hour: unit, count: 1 }
-    })
-    units = Object.keys(timeMap)
+      const unit = dayjs().hour(hour).format(format);
+      timeMap[`${unit}`] = timeMap[`${unit}`] || { hour: unit, count: 1 };
+    });
+    units = Object.keys(timeMap);
   }
 </script>
 

@@ -1,11 +1,11 @@
 <script lang="ts">
-  export let icon: any = undefined
-  export let className: string = ''
-  export let style: string = ''
+  export let icon: any = undefined;
+  export let className: string = '';
+  export let style: string = '';
   // export let name: string | undefined = undefined
   // export let dynamicIcon: any | undefined = undefined
   // export let title: string = 'Icon'
-  export let size: number = 24
+  export let size: number = 24;
 </script>
 
 {#if icon}

@@ -1,14 +1,14 @@
 <script lang="ts">
-  import Toolbar from '../toolbar/toolbar.svelte'
-  import Text from '../text/text.svelte'
+  import Toolbar from '../toolbar/toolbar.svelte';
+  import Text from '../text/text.svelte';
 
-  export let className = ''
-  export let style = ''
-  export let title = undefined
-  export let pad = false
-  export let compact = false
-  export let shadow = true
-  export let bodyClass = ''
+  export let className = '';
+  export let style = '';
+  export let title = undefined;
+  export let pad = false;
+  export let compact = false;
+  export let shadow = true;
+  export let bodyClass = '';
 </script>
 
 <div class="n-card {className} {pad ? 'p-3' : ''} {compact ? 'comapct' : ''} {!shadow ? 'box-shadow-off' : ''}" {style}>

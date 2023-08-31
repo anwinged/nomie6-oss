@@ -1,58 +1,58 @@
 <script lang="ts">
-  import EaselOutline from '../../n-icons/EaselOutline.svelte'
+  import EaselOutline from '../../n-icons/EaselOutline.svelte';
 
-  import RibbonOutline from '../../n-icons/RibbonOutline.svelte'
+  import RibbonOutline from '../../n-icons/RibbonOutline.svelte';
 
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import { openUnisearch } from '../../domains/search/UnisearchStore'
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import { openUnisearch } from '../../domains/search/UnisearchStore';
 
-  import CalendarOutline from '../../n-icons/CalendarOutline.svelte'
-  import { Lang } from '../../store/lang'
+  import CalendarOutline from '../../n-icons/CalendarOutline.svelte';
+  import { Lang } from '../../store/lang';
 
-  import AppsOutline from '../../n-icons/AppsOutline.svelte'
-  import AppsSolid from '../../n-icons/AppsSolid.svelte'
+  import AppsOutline from '../../n-icons/AppsOutline.svelte';
+  import AppsSolid from '../../n-icons/AppsSolid.svelte';
 
-  import EaselSolid from '../../n-icons/EaselSolid.svelte'
-  import RibbonSolid from '../../n-icons/RibbonSolid.svelte'
-  import CalendarSolid from '../../n-icons/CalendarSolid.svelte'
+  import EaselSolid from '../../n-icons/EaselSolid.svelte';
+  import RibbonSolid from '../../n-icons/RibbonSolid.svelte';
+  import CalendarSolid from '../../n-icons/CalendarSolid.svelte';
 
-  import { navigate } from 'svelte-navigator'
-  import { Device } from '../../store/device-store'
-  import SearchIcon from '../../n-icons/SearchIcon.svelte'
-  import Dot from '../../components/dot/dot.svelte'
-  import { RunningTimers } from '../tracker/TrackerStore'
+  import { navigate } from 'svelte-navigator';
+  import { Device } from '../../store/device-store';
+  import SearchIcon from '../../n-icons/SearchIcon.svelte';
+  import Dot from '../../components/dot/dot.svelte';
+  import { RunningTimers } from '../tracker/TrackerStore';
 
-  import { Prefs } from '../preferences/Preferences'
+  import { Prefs } from '../preferences/Preferences';
 
-  import { GoalScoreStore } from '../goals/GoalStore'
+  import { GoalScoreStore } from '../goals/GoalStore';
 
-  import LetterTicker from '../../components/letter-ticker/letter-ticker.svelte'
-  import MenuOutline from '../../n-icons/MenuOutline.svelte'
+  import LetterTicker from '../../components/letter-ticker/letter-ticker.svelte';
+  import MenuOutline from '../../n-icons/MenuOutline.svelte';
 
-  import Badge from '../../components/badge/badge.svelte'
-  import CalendarNumberSolid from '../../n-icons/CalendarNumberSolid.svelte'
-  import CalendarNumberOutline from './../../n-icons/CalendarNumberOutline.svelte'
+  import Badge from '../../components/badge/badge.svelte';
+  import CalendarNumberSolid from '../../n-icons/CalendarNumberSolid.svelte';
+  import CalendarNumberOutline from './../../n-icons/CalendarNumberOutline.svelte';
 
-  export let loggedIn: boolean = false
+  export let loggedIn: boolean = false;
 
-  let goalPercentage: number | undefined = undefined
+  let goalPercentage: number | undefined = undefined;
 
   type NavType = {
-    id: string
-    path: string
-    title: string
-    icon: any
-    activeIcon: any
+    id: string;
+    path: string;
+    title: string;
+    icon: any;
+    activeIcon: any;
     right?: {
-      props: any
-      component: any
-    }
-  }
+      props: any;
+      component: any;
+    };
+  };
 
   $: if ($GoalScoreStore[1]) {
-    const _goalPercent = Math.round(($GoalScoreStore[0] / $GoalScoreStore[1]) * 100)
+    const _goalPercent = Math.round(($GoalScoreStore[0] / $GoalScoreStore[1]) * 100);
     if (!isNaN(_goalPercent)) {
-      goalPercentage = _goalPercent
+      goalPercentage = _goalPercent;
     }
   }
 
@@ -106,7 +106,7 @@
       icon: MenuOutline,
       activeIcon: MenuOutline,
     },
-  ]
+  ];
 </script>
 
 <aside
@@ -128,7 +128,7 @@
         role="menuitem"
         href={item.path}
         on:click|preventDefault|stopPropagation={() => {
-          navigate(item.path)
+          navigate(item.path);
         }}
         class="nav-item ntitle {window.location.pathname == item.path ? 'current' : ''} {window.location.pathname ==
           '/' && $Prefs.startPage == item.id
@@ -165,7 +165,7 @@
     {#if Device.isDesktop()}
       <button
         on:click={() => {
-          openUnisearch()
+          openUnisearch();
         }}
         class="focus:outline-none focus:ring-2 ring-primary-500 py-2 rounded-md flex items-center space-x-2 text-sm leading-tight px-4 text-left text-gray-500 my-10"
       >
@@ -174,7 +174,7 @@
       </button>
     {/if}
   {:else}
-    <div class="text-gray-500 px-4 h-full text-sm flex flex-col  justify-center space-y-4">
+    <div class="text-gray-500 px-4 h-full text-sm flex flex-col justify-center space-y-4">
       <!-- <p class="font-bold dark:text-white text-black ">Welcome to Nomie 6!</p>
       <p>
         Nomie was created to enable neurodivergent people keep track of and monitor their lives in whichever way they

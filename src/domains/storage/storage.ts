@@ -16,55 +16,15 @@ import { PouchDBEngine } from './engines/pouchdb/engine.pouchdb';
 
 export type StorageEngineType = 'local' | 'dumb' | 'pouchdb';
 
-export interface StorageEngineDescription {
-  id: StorageEngineType;
-  name: string;
-  shortName: string;
-  description: string;
-  price?: string;
-  accountRequired?: boolean;
-  multipleDevices?: boolean;
-  engine: StorageEngine;
-  advanced?: boolean;
-}
-
-export const StorageEngines: Array<StorageEngineDescription> = [
-  {
-    id: 'local',
-    name: 'Local Only',
-    shortName: 'Local',
-    description: 'Data is stored on this device only.',
-    price: 'FREE',
-    multipleDevices: false,
-    engine: LocalForageEngine,
-  },
-  {
-    id: 'pouchdb',
-    name: 'CouchDB',
-    shortName: 'CouchDB',
-    description: 'Sync to your own CouchDB server',
-    price: 'FREE',
-    multipleDevices: false,
-    engine: PouchDBEngine,
-    advanced: true,
-  },
-];
-
-export function getStorageEngineDescription(id: StorageEngineType): StorageEngineDescription {
-  return StorageEngines.find((engine) => engine.id === id);
-}
-
-const engines: { [id in StorageEngineType]?: StorageEngine } = {};
-StorageEngines.map((e) => {
-  engines[e.id] = e.engine;
-});
-
 export class StorageManager implements StorageEngine {
-  engines: { [id in StorageEngineType]?: StorageEngine };
+  readonly engines: { [id in StorageEngineType]?: StorageEngine };
   engineType: StorageEngineType;
 
   constructor() {
-    this.engines = engines;
+    this.engines = {
+      local: LocalForageEngine,
+      pouchdb: PouchDBEngine,
+    };
     this.engineType = getStorageType() || 'local';
   }
 
@@ -100,7 +60,7 @@ export class StorageManager implements StorageEngine {
         `${e}.\n Restart with Local Storage?`
       );
       if (loadLocal) {
-        switchToLocal();
+        await switchToLocal();
       }
     }
   }
@@ -111,7 +71,7 @@ export class StorageManager implements StorageEngine {
   }
 
   // Put a file
-  async put(path: string, content) {
+  async put(path: string, content: any) {
     return await this.getEngine().put(path, content);
   }
 

@@ -1,42 +1,42 @@
 <script lang="ts">
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
 
-  import NMap from '../../domains/map/map.svelte'
+  import NMap from '../../domains/map/map.svelte';
 
-  import NItem from '../../components/list-item/list-item.svelte'
+  import NItem from '../../components/list-item/list-item.svelte';
 
-  import { Interact } from '../../store/interact'
+  import { Interact } from '../../store/interact';
 
-  import Location from '../locations/LocationClass'
-  import locate from '../../modules/locate/locate'
-  import math from '../../utils/math/math'
+  import Location from '../locations/LocationClass';
+  import locate from '../../modules/locate/locate';
+  import math from '../../utils/math/math';
 
-  import { Lang } from '../../store/lang'
-  import Button from '../../components/button/button.svelte'
+  import { Lang } from '../../store/lang';
+  import Button from '../../components/button/button.svelte';
 
-  import Spinner from '../../components/spinner/spinner.svelte'
-  import List from '../../components/list/list.svelte'
-  import Divider from '../../components/divider/divider.svelte'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import { CheckmarkCircle, MenuOutline, PencilOutline, StarFilled, TrashOutline } from '../../components/icon/nicons'
-  import SortableList2 from '../../components/sortable-list/sortable-list2.svelte'
+  import Spinner from '../../components/spinner/spinner.svelte';
+  import List from '../../components/list/list.svelte';
+  import Divider from '../../components/divider/divider.svelte';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import { CheckmarkCircle, MenuOutline, PencilOutline, StarFilled, TrashOutline } from '../../components/icon/nicons';
+  import SortableList2 from '../../components/sortable-list/sortable-list2.svelte';
   import {
     LocationStore,
     lookupLocationToLocation,
     LookupLocationType,
     searchForLocations,
-  } from '../locations/LocationStore'
-  import SearchBar from '../../components/search-bar/search-bar.svelte'
-  import ListItem from '../../components/list-item/list-item.svelte'
+  } from '../locations/LocationStore';
+  import SearchBar from '../../components/search-bar/search-bar.svelte';
+  import ListItem from '../../components/list-item/list-item.svelte';
 
-  import StarSolid from '../../n-icons/StarSolid.svelte'
-  import { wait } from '../../utils/tick/tick'
-  import { closeModal } from '../../components/backdrop/BackdropStore2'
-  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte'
-  import Empty from '../../components/empty/empty.svelte'
+  import StarSolid from '../../n-icons/StarSolid.svelte';
+  import { wait } from '../../utils/tick/tick';
+  import { closeModal } from '../../components/backdrop/BackdropStore2';
+  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte';
+  import Empty from '../../components/empty/empty.svelte';
 
-  export let id: string
-  export let onSelect: Function
+  export let id: string;
+  export let onSelect: Function;
 
   const state = {
     locations: [],
@@ -44,22 +44,22 @@
     mode: 'view',
     mapLocation: null,
     locating: false,
-  }
+  };
 
   // $: state.locations = $LocationStore
 
   $: {
-    state.locations = $LocationStore
+    state.locations = $LocationStore;
   }
 
-  let lastLocation = null
-  let mapLocation = null
+  let lastLocation = null;
+  let mapLocation = null;
 
-  let showMap = false
-  let locationSearchTerm: string | undefined = undefined
-  let resultsHidden = true
-  let searchResults: Array<LookupLocationType> = []
-  let ready = true
+  let showMap = false;
+  let locationSearchTerm: string | undefined = undefined;
+  let resultsHidden = true;
+  let searchResults: Array<LookupLocationType> = [];
+  let ready = true;
 
   // function goto(location) {
   //   state.active = location;
@@ -67,8 +67,8 @@
   // }
 
   const close = async () => {
-    closeModal(id)
-  }
+    closeModal(id);
+  };
 
   /**
    * If Location changes
@@ -79,116 +79,116 @@
   //   // showFavoriteButton = !exists
   // }
 
-  let sortedTimeout
+  let sortedTimeout;
 
-  let saving = false
+  let saving = false;
 
   function sorted(evt): void {
-    clearTimeout(sortedTimeout)
+    clearTimeout(sortedTimeout);
     if (state.mode == 'edit') {
-      saving = true
-      let locations = evt.detail
+      saving = true;
+      let locations = evt.detail;
       sortedTimeout = setTimeout(() => {
         LocationStore.updateSync((state) => {
-          return locations
+          return locations;
         }).then(() => {
-          saving = false
-        })
-      }, 300)
+          saving = false;
+        });
+      }, 300);
     }
   }
 
   const setViewMode = async (view) => {
-    ready = false
-    state.mode = view
-    await wait(100)
-    ready = true
-  }
+    ready = false;
+    state.mode = view;
+    await wait(100);
+    ready = true;
+  };
 
   function mapChange(evt) {
-    let location = evt.detail
+    let location = evt.detail;
     if (lastLocation !== location.hash) {
-      lastLocation = location.hash
-      mapLocation = location
+      lastLocation = location.hash;
+      mapLocation = location;
     }
   }
 
   async function unfavorite(location) {
-    let confirmed = await Interact.confirm('Remove Location?', 'You can add it later')
+    let confirmed = await Interact.confirm('Remove Location?', 'You can add it later');
     if (confirmed) {
-      state.mode = 'view'
-      ready = false
-      await LocationStore.remove(location)
-      await wait(100)
-      setViewMode('edit')
+      state.mode = 'view';
+      ready = false;
+      await LocationStore.remove(location);
+      await wait(100);
+      setViewMode('edit');
     }
     // removing = false
   }
 
   async function currentLocation() {
-    state.locating = true
+    state.locating = true;
     try {
-      let rawLoc: any = await locate()
+      let rawLoc: any = await locate();
       if (rawLoc) {
         let location = new Location({
           lat: rawLoc.latitude,
           lng: rawLoc.longitude,
           name: rawLoc.location,
-        })
-        select(location)
+        });
+        select(location);
       }
     } catch (e) {
-      Interact.error(`${Lang.t('location.unable-to-get-your-location', 'Unable to get your location')}`)
+      Interact.error(`${Lang.t('location.unable-to-get-your-location', 'Unable to get your location')}`);
     }
-    state.locating = false
+    state.locating = false;
   }
 
   async function rename(location) {
     let name = await Interact.prompt('New Name', null, {
       value: location.name,
-    })
+    });
     if (name) {
-      location.name = name
-      LocationStore.upsert(location)
+      location.name = name;
+      LocationStore.upsert(location);
     }
   }
 
   function select(location) {
     if ($Interact.locationFinder.onInteract) {
-      $Interact.locationFinder.onInteract(location)
+      $Interact.locationFinder.onInteract(location);
     }
     if (onSelect) {
-      onSelect(location)
+      onSelect(location);
     }
-    close()
+    close();
   }
 
   async function favorite(item?: Location) {
-    let loc
+    let loc;
     if (item || mapLocation) {
-      loc = item || mapLocation
+      loc = item || mapLocation;
     } else if (state.active) {
-      loc = state.active
+      loc = state.active;
     }
 
     if (loc) {
       if (!loc.name) {
         let name = await Interact.prompt('📍 Name this location', null, {
           value: loc.name,
-        })
-        loc.name = name
+        });
+        loc.name = name;
       }
-      if(loc.name) {
-        await LocationStore.upsert(loc)
+      if (loc.name) {
+        await LocationStore.upsert(loc);
       }
     }
   }
 
   const search = async (term: string) => {
-    let networkResults = await searchForLocations(term)
+    let networkResults = await searchForLocations(term);
     let localResults = $LocationStore
       .filter((l: Location) => {
-        return JSON.stringify(l).toLowerCase().search(term.toLowerCase()) > -1
+        return JSON.stringify(l).toLowerCase().search(term.toLowerCase()) > -1;
       })
       .map((l: Location) => {
         return {
@@ -197,20 +197,20 @@
           lng: l.lng,
           magicKey: null,
           saved: true,
-        }
-      })
+        };
+      });
 
-    searchResults = [...localResults, ...networkResults]
-  }
+    searchResults = [...localResults, ...networkResults];
+  };
 
   const addLocationByResultItem = async (item: LookupLocationType) => {
-    const location = await lookupLocationToLocation(item)
+    const location = await lookupLocationToLocation(item);
     if (location && !item.saved) {
-      await favorite(location)
+      await favorite(location);
     }
-    select(location)
-    resultsHidden = true
-  }
+    select(location);
+    resultsHidden = true;
+  };
 </script>
 
 <BackdropModal className="h-full bg-white dark:bg-gray-900 w-full">
@@ -236,7 +236,7 @@
               primary
               type="clear"
               on:click={() => {
-                setViewMode('view')
+                setViewMode('view');
               }}
             >
               Done
@@ -247,7 +247,7 @@
             clear
             primary
             on:click={() => {
-              setViewMode('edit')
+              setViewMode('edit');
             }}
           >
             {Lang.t('general.edit', 'Edit')}
@@ -259,13 +259,13 @@
       <SearchBar
         bind:searchTerm={locationSearchTerm}
         on:focus={() => {
-          resultsHidden = false
+          resultsHidden = false;
         }}
         on:blur={() => {
-          resultsHidden = true
+          resultsHidden = true;
         }}
         on:change={(evt) => {
-          search(evt.detail)
+          search(evt.detail);
         }}
       />
       {#if searchResults.length && locationSearchTerm?.length && !resultsHidden}
@@ -276,7 +276,7 @@
                 bottomLine={24}
                 autofocus
                 on:click={() => {
-                  addLocationByResultItem(locationType)
+                  addLocationByResultItem(locationType);
                 }}
               >
                 <div slot="left">
@@ -304,15 +304,16 @@
         </div>
       {/if}
       <!-- List Panel -->
-      <div class="flex-grow flex-shrink h-full overflow-y-auto ">
+      <div class="flex-grow flex-shrink h-full overflow-y-auto">
         <div class="list-wrapper px-2 lg:px-4 space-y-4">
           {#if mapLocation && mapLocation.lat}
             <List solo className="mb-2">
-              <NItem bottomLine={18}
+              <NItem
+                bottomLine={18}
                 clickable
                 aria-label="Save this Location"
                 on:click={() => {
-                  favorite(mapLocation)
+                  favorite(mapLocation);
                 }}
               >
                 Favorite <strong>{math.round(mapLocation.lat, 10000)},{math.round(mapLocation.lng, 10000)}</strong>
@@ -321,8 +322,7 @@
                 clickable
                 aria-label="Use this area"
                 on:click={() => {
-                  
-                  select(mapLocation)
+                  select(mapLocation);
                 }}
               >
                 Select <strong>{math.round(mapLocation.lat, 10000)},{math.round(mapLocation.lng, 10000)}</strong>
@@ -334,7 +334,7 @@
               clickable
               className="clickable py-1 dark:bg-gray-900 bg-white text-primary {state.locating ? 'opacity-50' : ''}"
               on:click={() => {
-                currentLocation()
+                currentLocation();
               }}
             >
               {#if !state.locating}
@@ -350,7 +350,7 @@
             <NItem
               clickable
               on:click={() => {
-                showMap = !showMap
+                showMap = !showMap;
               }}>Find on Map...</NItem
             >
           </List>
@@ -392,7 +392,7 @@
                           icon
                           className="tap-icon"
                           on:click={() => {
-                            rename(item)
+                            rename(item);
                           }}
                         >
                           <IonIcon icon={PencilOutline} />
@@ -400,7 +400,7 @@
                         <Button
                           icon
                           on:click={(evt) => {
-                            unfavorite(item)
+                            unfavorite(item);
                           }}
                         >
                           <IonIcon icon={TrashOutline} className="text-red-500" />
@@ -414,7 +414,7 @@
                       className=" dark:bg-gray-900 bg-white"
                       on:click={() => {
                         if (state.mode == 'view') {
-                          select(item)
+                          select(item);
                         }
                       }}
                     >

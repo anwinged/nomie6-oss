@@ -1,7 +1,7 @@
 <script lang="ts">
-  export let checked: boolean = false
-  export let className: string = ''
-  export let sm: boolean = false
+  export let checked: boolean = false;
+  export let className: string = '';
+  export let sm: boolean = false;
 </script>
 
 <input type="checkbox" class:sm bind:checked class="n-radio {className}" />

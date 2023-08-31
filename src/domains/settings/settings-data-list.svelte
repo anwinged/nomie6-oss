@@ -1,31 +1,32 @@
 <script lang="ts">
-  import { useStorageSelectMenu } from './settings-functions'
+  import { useStorageSelectMenu } from './settings-functions';
 
-  import ListItem from '../../components/list-item/list-item.svelte'
-  import { Lang } from '../../store/lang'
+  import ListItem from '../../components/list-item/list-item.svelte';
+  import { Lang } from '../../store/lang';
 
   // import PouchDBOptions from '@/components/storage/pouchdb.svelte'
 
-  import List from '../../components/list/list.svelte'
+  import List from '../../components/list/list.svelte';
 
-  import { navigate } from 'svelte-navigator'
+  import { navigate } from 'svelte-navigator';
 
-  import { Prefs, saveStorageType } from '../preferences/Preferences'
-  import { wait } from '../../utils/tick/tick'
-  import { Device } from '../../store/device-store'
-  import { Interact } from '../../store/interact'
-  import Divider from '../../components/divider/divider.svelte'
+  import { Prefs, saveStorageType } from '../preferences/Preferences';
+  import { wait } from '../../utils/tick/tick';
+  import { Device } from '../../store/device-store';
+  import { Interact } from '../../store/interact';
+  import Divider from '../../components/divider/divider.svelte';
 
-  import { TrackableStore } from '../trackable/TrackableStore'
+  import { TrackableStore } from '../trackable/TrackableStore';
 
-  import { updateAllLastUsed } from '../usage/UsageStore'
-  import PouchdbSettings from '../storage/engines/pouchdb/pouchdb.svelte'
-  import { getStorageEngineDescription, StorageEngineDescription } from '../storage/storage'
+  import { updateAllLastUsed } from '../usage/UsageStore';
+  import PouchdbSettings from '../storage/engines/pouchdb/pouchdb.svelte';
 
-  import { showImportModal } from '../import-export/ImporterStore'
-  import { showToast } from '../../components/toast/ToastStore'
+  import { showImportModal } from '../import-export/ImporterStore';
+  import { showToast } from '../../components/toast/ToastStore';
 
-  import BackupListItems from '../../components/backup-message/backup-list-items.svelte'
+  import BackupListItems from '../../components/backup-message/backup-list-items.svelte';
+  import type { StorageEngineDescription } from '../storage/storage-description';
+  import { getStorageEngineDescription } from '../storage/storage-description';
 
   // let fileInputF
   // let showImporter = false
@@ -36,15 +37,15 @@
     const confirmed = await Interact.confirm(
       'Update all streaks and last used data?',
       `Depending on how much you track, this can take a while.`
-    )
+    );
     if (confirmed) {
-      await wait(100)
-      Interact.blocker('Analyzing Usage Data...')
-      await updateAllLastUsed($TrackableStore.trackables)
-      Interact.stopBlocker()
-      showToast({ message: 'Update Complete' })
+      await wait(100);
+      Interact.blocker('Analyzing Usage Data...');
+      await updateAllLastUsed($TrackableStore.trackables);
+      Interact.stopBlocker();
+      showToast({ message: 'Update Complete' });
     }
-  }
+  };
 
   const showStorageOptions = () => {
     useStorageSelectMenu({
@@ -53,20 +54,20 @@
         const confirmed = await Interact.confirm(
           'Switch storage?',
           'You can always switch back. No data is shared between storage types.'
-        )
+        );
 
         if (confirmed) {
-          saveStorageType(storage)
-          await wait(500)
-          Device.reload()
+          saveStorageType(storage);
+          await wait(500);
+          Device.reload();
         }
       },
-    })
-  }
+    });
+  };
 
-  let storageDetails: StorageEngineDescription
+  let storageDetails: StorageEngineDescription;
   $: {
-    storageDetails = getStorageEngineDescription($Prefs.storageType)
+    storageDetails = getStorageEngineDescription($Prefs.storageType);
   }
 </script>
 
@@ -109,7 +110,7 @@
     detail
     title={Lang.t('general.import-data', 'Import Data')}
     on:click={() => {
-      showImportModal()
+      showImportModal();
     }}
   >
     <div slot="right" class="opacity-50 text-sm">CSV or Nomie Backup</div>
@@ -123,7 +124,7 @@
     detail
     title={Lang.t('general.browse-files', 'Browse Files')}
     on:click={() => {
-      navigate('/files')
+      navigate('/files');
     }}
   />
 

@@ -1,96 +1,96 @@
 <script lang="ts">
-  import dayjs from 'dayjs'
+  import dayjs from 'dayjs';
 
-  import { onMount } from 'svelte'
-  import Badge from '../../../components/badge/badge.svelte'
+  import { onMount } from 'svelte';
+  import Badge from '../../../components/badge/badge.svelte';
 
-  import ListItem from '../../../components/list-item/list-item.svelte'
-  import List from '../../../components/list/list.svelte'
+  import ListItem from '../../../components/list-item/list-item.svelte';
+  import List from '../../../components/list/list.svelte';
 
-  import { openDateOptionPopMenu } from '../../../components/pop-menu/usePopmenu'
+  import { openDateOptionPopMenu } from '../../../components/pop-menu/usePopmenu';
 
-  import nid from '../../../modules/nid/nid'
+  import nid from '../../../modules/nid/nid';
 
-  import { objectHash } from '../../../modules/object-hash/object-hash'
+  import { objectHash } from '../../../modules/object-hash/object-hash';
 
-  import { getEmojiFromScore } from '../../../utils/positivity/positivity'
+  import { getEmojiFromScore } from '../../../utils/positivity/positivity';
 
-  import { wait } from '../../../utils/tick/tick'
+  import { wait } from '../../../utils/tick/tick';
 
-  import { LedgerStore } from '../../ledger/LedgerStore'
-  import { openLogDisplay } from '../../nomie-log/log-display-modal/LogDisplayStore'
+  import { LedgerStore } from '../../ledger/LedgerStore';
+  import { openLogDisplay } from '../../nomie-log/log-display-modal/LogDisplayStore';
 
-  import { getDateFormats } from '../../preferences/Preferences'
+  import { getDateFormats } from '../../preferences/Preferences';
 
-  import type { Trackable } from '../../trackable/Trackable.class'
-  import { TrackerStore } from '../../tracker/TrackerStore'
-  import type { TrackableLastUsedType } from '../../usage/UsageStore'
+  import type { Trackable } from '../../trackable/Trackable.class';
+  import { TrackerStore } from '../../tracker/TrackerStore';
+  import type { TrackableLastUsedType } from '../../usage/UsageStore';
 
-  import { TrackableUsage } from '../../usage/trackable-usage.class'
-  import UsageChart from '../../usage/usage-chart.svelte'
+  import { TrackableUsage } from '../../usage/trackable-usage.class';
+  import UsageChart from '../../usage/usage-chart.svelte';
 
-  import { getDateRange, Stats2Store } from '../Stats2Store'
+  import { getDateRange, Stats2Store } from '../Stats2Store';
   // import OverviewRange from './overview-range.svelte'
   // import OverviewTimer from './overview-timer.svelte'
   // import OverviewValue from './overview-value.svelte'
 
-  export let trackable: Trackable
-  export let usage: TrackableUsage
-  export let className: string = ''
+  export let trackable: Trackable;
+  export let usage: TrackableUsage;
+  export let className: string = '';
 
-  const dateFormats = getDateFormats()
+  const dateFormats = getDateFormats();
 
-  let usageByDay: TrackableUsage
-  let lastUsageData: TrackableLastUsedType
+  let usageByDay: TrackableUsage;
+  let lastUsageData: TrackableLastUsedType;
 
   const openLatest = async (usage: TrackableLastUsedType) => {
-    const date = usage.last.d
-    const logId = usage.logId
-    const logs = await LedgerStore.query({ start: dayjs(date).startOf('day'), end: dayjs(date).endOf('day') })
-    const found = logs.find((l) => l._id === logId)
+    const date = usage.last.d;
+    const logId = usage.logId;
+    const logs = await LedgerStore.query({ start: dayjs(date).startOf('day'), end: dayjs(date).endOf('day') });
+    const found = logs.find((l) => l._id === logId);
     if (found) {
-      openLogDisplay(found)
+      openLogDisplay(found);
     }
-  }
+  };
 
   const renderChart = async () => {
-    localUsage = undefined
-    await wait(10)
-    let chartUsage = new TrackableUsage({ ...usage, ...{ trackable } })
-    usageByDay = chartUsage.byDay
+    localUsage = undefined;
+    await wait(10);
+    let chartUsage = new TrackableUsage({ ...usage, ...{ trackable } });
+    usageByDay = chartUsage.byDay;
     if ($Stats2Store.time === '1y') {
-      chartUsage = chartUsage.groupBy('month', 'YYYY-MM-W')
-    // } else if ($Stats2Store.time === '6m') {
+      chartUsage = chartUsage.groupBy('month', 'YYYY-MM-W');
+      // } else if ($Stats2Store.time === '6m') {
       // chartUsage = chartUsage.groupBy('day', 'YYYY-MM-W')
     } else {
-      chartUsage = chartUsage.byDay
+      chartUsage = chartUsage.byDay;
     }
 
-    const dateRange = getDateRange($Stats2Store.endDate, $Stats2Store.time)
-    chartUsage = chartUsage.backfill(dateRange.start.toDate(), dateRange.end.toDate())
-    localUsage = chartUsage
+    const dateRange = getDateRange($Stats2Store.endDate, $Stats2Store.time);
+    chartUsage = chartUsage.backfill(dateRange.start.toDate(), dateRange.end.toDate());
+    localUsage = chartUsage;
 
     // const timeDetails = expandStats2TimeType($Stats2Store.time)
     // localUsage = chartUsage.groupBy(timeDetails.unit, timeDetails.groupByFormat)
-  }
+  };
 
-  let lastUsageHash = ''
-  let mounted: boolean = false
-  let localUsage: TrackableUsage
+  let lastUsageHash = '';
+  let mounted: boolean = false;
+  let localUsage: TrackableUsage;
   $: if (objectHash(usage) !== lastUsageHash && mounted) {
-    lastUsageHash = objectHash(usage)
+    lastUsageHash = objectHash(usage);
     // totalScore =
-    renderChart()
+    renderChart();
   }
 
   // let unsub
   onMount(() => {
-    mounted = true
-  })
+    mounted = true;
+  });
   // onDestroy(() => unsub())
 </script>
 
-<div class="bg-white p-2 dark:bg-black  relative {className}">
+<div class="bg-white p-2 dark:bg-black relative {className}">
   {#if localUsage}
     <UsageChart
       id={`usage-${nid(localUsage.trackable.tag)}`}
@@ -136,7 +136,7 @@
         bottomLine={18}
         className="dark:bg-black bg-white shadow-md h-24 rounded-xl"
         on:click={() => {
-          openLatest(lastUsageData)
+          openLatest(lastUsageData);
         }}
       >
         Latest: {dayjs(lastUsageData.last.d).format(dateFormats.mmm_d_yyyy)}
@@ -147,8 +147,8 @@
       bottomLine={18}
       detail
       on:click={() => {
-        let date = usageByDay.max.date
-        openDateOptionPopMenu(date.toDate())
+        let date = usageByDay.max.date;
+        openDateOptionPopMenu(date.toDate());
       }}
     >
       <strong>Max </strong>
@@ -164,7 +164,7 @@
       bottomLine={18}
       detail
       on:click={() => {
-        openDateOptionPopMenu(usageByDay.min.date.toDate())
+        openDateOptionPopMenu(usageByDay.min.date.toDate());
       }}
     >
       <strong>Min </strong>

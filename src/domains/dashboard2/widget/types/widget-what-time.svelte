@@ -1,20 +1,20 @@
 <script lang="ts">
-  import TrackerLogsToTime from '../../../../utils/tracker-logs-to-time/tracker-logs-to-time'
+  import TrackerLogsToTime from '../../../../utils/tracker-logs-to-time/tracker-logs-to-time';
 
   // import type { TrackableUsage } from '../../../usage/trackable-usage.class'
 
   // import type { Trackable } from '../../../trackable/Trackable.class'
 
-  import type { WidgetClass } from '../widget-class'
+  import type { WidgetClass } from '../widget-class';
 
-  export let widget: WidgetClass
+  export let widget: WidgetClass;
   // // export let trackable: Trackable
   // export let usage: TrackableUsage
 
-  let times = []
+  let times = [];
 
   async function init() {
-    times = TrackerLogsToTime(widget.token.id, widget.logs)
+    times = TrackerLogsToTime(widget.token.id, widget.logs);
   }
 </script>
 

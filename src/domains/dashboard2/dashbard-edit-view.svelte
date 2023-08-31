@@ -1,58 +1,56 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+  import { CloseOutline } from '../../components/icon/nicons';
+  import { createEventDispatcher } from 'svelte';
+  import { DashboardClass } from './dashboard-class';
+  import { dedupArray } from '../../utils/array/array_utils';
+  import { Interact } from '../../store/interact';
+  import { Lang } from '../../store/lang';
+  import { TrackableStore } from '../trackable/TrackableStore';
+  import { getWidgetTypes, IWidgetType } from './widget/widget-types';
+  import Button from '../../components/button/button.svelte';
+  import Container from '../../components/container/container.svelte';
+  import Input from '../../components/input/input.svelte';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import SortableList2 from '../../components/sortable-list/sortable-list2.svelte';
+  import TrackablePill from '../trackable/trackable-pill.svelte';
+  import { PluginStore } from '../plugins/PluginStore';
+  import { deleteWidget } from './DashStore';
 
+  export let dashboard: DashboardClass;
 
-  import { onMount } from 'svelte'
-  import { CloseOutline } from '../../components/icon/nicons'
-  import { createEventDispatcher } from 'svelte'
-  import { DashboardClass } from './dashboard-class'
-  import { dedupArray } from '../../utils/array/array_utils'
-  import { Interact } from '../../store/interact'
-  import { Lang } from '../../store/lang'
-  import { TrackableStore } from '../trackable/TrackableStore'
-  import { getWidgetTypes , IWidgetType } from './widget/widget-types'
-  import Button from '../../components/button/button.svelte'
-  import Container from '../../components/container/container.svelte'
-  import Input from '../../components/input/input.svelte'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import SortableList2 from '../../components/sortable-list/sortable-list2.svelte'
-  import TrackablePill from '../trackable/trackable-pill.svelte'
-  import { PluginStore } from '../plugins/PluginStore'
-  import { deleteWidget } from './DashStore'
+  const dispatch = createEventDispatcher();
 
-  export let dashboard: DashboardClass
-
-  const dispatch = createEventDispatcher()
-
-  let workingDashboard: DashboardClass
-  let allWidgetTypes: Array<IWidgetType> = []
-  let mounted = false
+  let workingDashboard: DashboardClass;
+  let allWidgetTypes: Array<IWidgetType> = [];
+  let mounted = false;
 
   $: if (mounted && !allWidgetTypes.length) {
-    allWidgetTypes = getWidgetTypes($PluginStore)
+    allWidgetTypes = getWidgetTypes($PluginStore);
   }
 
   $: if (dashboard && !workingDashboard) {
-    workingDashboard = new DashboardClass(dashboard)
-    workingDashboard.widgets = dedupArray(workingDashboard.widgets, 'id')
+    workingDashboard = new DashboardClass(dashboard);
+    workingDashboard.widgets = dedupArray(workingDashboard.widgets, 'id');
   }
 
   const removeWidget = async (widget) => {
-    const confirmed = await Interact.confirm('Remove Widget?', 'You can always add it back later.')
+    const confirmed = await Interact.confirm('Remove Widget?', 'You can always add it back later.');
     if (confirmed) {
       //workingDashboard.widgets = dedupArray(workingDashboard.widgets, 'id')
-     await deleteWidget(widget);
+      await deleteWidget(widget);
     }
-    workingDashboard.widgets = dashboard.widgets
-  }
+    workingDashboard.widgets = dashboard.widgets;
+  };
 
   onMount(() => {
-    mounted = true
-  })
+    mounted = true;
+  });
 </script>
 
 <section class="max-w-full w-96 lg:w-full lg:max-w-screen-xl mx-auto">
   <Container size="md" className="px-4 lg:px-0">
-    <div class="bg-white rounded-md dark:bg-black mt-4 ">
+    <div class="bg-white rounded-md dark:bg-black mt-4">
       <Input
         listItem
         label="Dashboard Label"
@@ -67,7 +65,7 @@
               shape="round"
               size="sm"
               on:click={() => {
-                dispatch('save', workingDashboard)
+                dispatch('save', workingDashboard);
               }}
             >
               {Lang.t('general.save', 'Save Changes')}
@@ -84,9 +82,9 @@
       items={workingDashboard.widgets}
       key="id"
       on:update={(evt) => {
-        workingDashboard.widgets = evt.detail
-        workingDashboard = new DashboardClass(workingDashboard)
-        dispatch('update', workingDashboard)
+        workingDashboard.widgets = evt.detail;
+        workingDashboard = new DashboardClass(workingDashboard);
+        dispatch('update', workingDashboard);
       }}
       let:item
     >
@@ -106,13 +104,15 @@
           {item.token.raw}
         {/if}
         <div class="text-gray-500 text-sm">
-        {#if item.type == "plugin"}
-          <span class="text-2xl">{allWidgetTypes.find((a) => a.data && a.data.pluginId === item.data.pluginId)?.emoji}</span>
-          <span> {allWidgetTypes.find((a) => a.data && a.data.pluginId === item.data.pluginId)?.label}</span>
-        {:else}
-          {allWidgetTypes.find((a) => a.id === item.type)?.label}
-          {item.timeRange}
-        {/if}
+          {#if item.type == 'plugin'}
+            <span class="text-2xl"
+              >{allWidgetTypes.find((a) => a.data && a.data.pluginId === item.data.pluginId)?.emoji}</span
+            >
+            <span> {allWidgetTypes.find((a) => a.data && a.data.pluginId === item.data.pluginId)?.label}</span>
+          {:else}
+            {allWidgetTypes.find((a) => a.id === item.type)?.label}
+            {item.timeRange}
+          {/if}
         </div>
       </div>
     </SortableList2>

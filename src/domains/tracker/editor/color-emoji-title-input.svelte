@@ -1,56 +1,56 @@
 <script lang="ts">
-  import { Interact } from '../../../store/interact'
-  import { Lang } from '../../../store/lang'
-  import type { ITracker } from 'modules/tracker/TrackerClass'
-  import { onMount, createEventDispatcher } from 'svelte'
-  import NInput from '../../../components/input/input.svelte'
+  import { Interact } from '../../../store/interact';
+  import { Lang } from '../../../store/lang';
+  import type { ITracker } from 'modules/tracker/TrackerClass';
+  import { onMount, createEventDispatcher } from 'svelte';
+  import NInput from '../../../components/input/input.svelte';
 
-  import Avatar from '../../../components/avatar/avatar.svelte'
-  import TrackerClass from '../../../modules/tracker/TrackerClass'
-  import IonIcon from '../../../components/icon/ion-icon.svelte'
-  import { PencilOutline } from '../../../components/icon/nicons'
-  import { strToTagSafe } from '../../trackable/trackable-utils'
+  import Avatar from '../../../components/avatar/avatar.svelte';
+  import TrackerClass from '../../../modules/tracker/TrackerClass';
+  import IonIcon from '../../../components/icon/ion-icon.svelte';
+  import { PencilOutline } from '../../../components/icon/nicons';
+  import { strToTagSafe } from '../../trackable/trackable-utils';
 
-  export let tracker: ITracker | any
-  export let className: string = ''
+  export let tracker: ITracker | any;
+  export let className: string = '';
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  let isDirty: boolean = false
-  let localTracker: TrackerClass
+  let isDirty: boolean = false;
+  let localTracker: TrackerClass;
 
   const getFreshTracker = () => {
-    return new TrackerClass(tracker)
-  }
+    return new TrackerClass(tracker);
+  };
 
   $: if (
     ((tracker?.emoji || '').length && localTracker?.emoji !== tracker.emoji) ||
     ((tracker?.avatar || '').length && localTracker?.avatar !== tracker.avatar)
   ) {
-    localTracker = getFreshTracker()
+    localTracker = getFreshTracker();
   }
 
   $: if ((tracker?.color || '').length && localTracker?.color !== tracker.color) {
-    localTracker = getFreshTracker()
+    localTracker = getFreshTracker();
   }
 
   onMount(() => {
-    localTracker = getFreshTracker()
-    isDirty = localTracker.tag?.length === 0
+    localTracker = getFreshTracker();
+    isDirty = localTracker.tag?.length === 0;
     setTimeout(() => {
-      document.getElementById('trackable-label-input').focus()
-    }, 10)
-  })
+      document.getElementById('trackable-label-input').focus();
+    }, 10);
+  });
 
   const labelChanged = (evt: any) => {
-    const input = evt.detail.target
-    if (input) localTracker.label = input.value
+    const input = evt.detail.target;
+    if (input) localTracker.label = input.value;
     if (isDirty && input) {
-      let tag = strToTagSafe(input.value)
-      localTracker.tag = tag
+      let tag = strToTagSafe(input.value);
+      localTracker.tag = tag;
     }
-    dispatch('label', localTracker.label)
-  }
+    dispatch('label', localTracker.label);
+  };
 
   const editTag = async () => {
     let tag: any = await Interact.prompt(
@@ -62,12 +62,12 @@
       {
         value: localTracker.tag,
       }
-    )
+    );
     if (tag) {
       // tagHardcoded = true
-      localTracker.tag = tag
+      localTracker.tag = tag;
     }
-  }
+  };
 </script>
 
 {#if localTracker}
@@ -76,7 +76,7 @@
       style="background-color:{localTracker.color};"
       class="p-1 rounded-2xl"
       on:click={() => {
-        dispatch('selectEmoji')
+        dispatch('selectEmoji');
       }}
     >
       {#key localTracker.avatar}
@@ -94,7 +94,7 @@
         placeholder={Lang.t('tracker.label', 'Tracker Label')}
         value={localTracker.label}
         on:keyup={(evt) => {
-          labelChanged(evt)
+          labelChanged(evt);
         }}
       />
       {#if localTracker.tag}

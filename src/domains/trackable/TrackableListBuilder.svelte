@@ -1,105 +1,105 @@
 <script lang="ts">
-  import { AllTrackables, TrackableStore } from './TrackableStore'
-  import { getTrackerInputAsString } from '../tracker/input/TrackerInputStore'
-  import { MenuOutline, SearchIcon } from '../../components/icon/nicons'
-  import { selectTrackables } from './trackable-selector/TrackableSelectorStore'
-  import { showToast } from '../../components/toast/ToastStore'
-  import { strToToken, Token, tokenizeLite } from '../../modules/tokenizer/lite'
-  import { tokenToTrackable } from '../../modules/tokenizer/tokenToTrackable'
-  import { Trackable } from './Trackable.class'
-  import { wait } from '../../utils/tick/tick'
+  import { AllTrackables, TrackableStore } from './TrackableStore';
+  import { getTrackerInputAsString } from '../tracker/input/TrackerInputStore';
+  import { MenuOutline, SearchIcon } from '../../components/icon/nicons';
+  import { selectTrackables } from './trackable-selector/TrackableSelectorStore';
+  import { showToast } from '../../components/toast/ToastStore';
+  import { strToToken, Token, tokenizeLite } from '../../modules/tokenizer/lite';
+  import { tokenToTrackable } from '../../modules/tokenizer/tokenToTrackable';
+  import { Trackable } from './Trackable.class';
+  import { wait } from '../../utils/tick/tick';
 
-  import Badge from '../../components/badge/badge.svelte'
-  import Button from '../../components/button/button.svelte'
-  import Divider from '../../components/divider/divider.svelte'
-  import Input from '../../components/input/input.svelte'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import List from '../../components/list/list.svelte'
-  import ListItem from '../../components/list-item/list-item.svelte'
-  import SortableList2 from '../../components/sortable-list/sortable-list2.svelte'
-  import TrackableAvatar from '../../components/avatar/trackable-avatar.svelte'
+  import Badge from '../../components/badge/badge.svelte';
+  import Button from '../../components/button/button.svelte';
+  import Divider from '../../components/divider/divider.svelte';
+  import Input from '../../components/input/input.svelte';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import List from '../../components/list/list.svelte';
+  import ListItem from '../../components/list-item/list-item.svelte';
+  import SortableList2 from '../../components/sortable-list/sortable-list2.svelte';
+  import TrackableAvatar from '../../components/avatar/trackable-avatar.svelte';
 
-  export let value: string = ''
-  export let className: string = ''
+  export let value: string = '';
+  export let className: string = '';
 
-  let trackables: Array<Trackable> = []
-  let manualAdd: string = ''
-  let ready: boolean = true
+  let trackables: Array<Trackable> = [];
+  let manualAdd: string = '';
+  let ready: boolean = true;
 
-  let lastValueHash: any
+  let lastValueHash: any;
   $: if (value && value !== lastValueHash) {
-    lastValueHash = value
+    lastValueHash = value;
     trackables = tokenizeLite(`${value || ''}`).map((token) => {
-      return tokenToTrackable(token, $AllTrackables)
-    })
+      return tokenToTrackable(token, $AllTrackables);
+    });
   }
 
   // Adding a token to the trackables array.
   async function addToken(token: Token) {
-    const trackable = tokenToTrackable(token, $AllTrackables)
+    const trackable = tokenToTrackable(token, $AllTrackables);
     if (!trackables.find((t) => t.tag == trackable.tag)) {
-      trackables.push(trackable)
-      trackables = trackables
-      update()
+      trackables.push(trackable);
+      trackables = trackables;
+      update();
     }
   }
 
   // Adding a trackable to the trackables array.
   async function addTrackable(trackable?: Trackable) {
     if (!trackables.includes(trackable)) {
-      trackables.push(trackable)
-      trackables = trackables
+      trackables.push(trackable);
+      trackables = trackables;
     }
   }
 
   // A function that allows the user to select trackables from a list of trackables.
   async function pickTrackables() {
-    let picked = await selectTrackables()
+    let picked = await selectTrackables();
     picked.forEach((trackable) => {
-      addTrackable(trackable)
-    })
-    update()
+      addTrackable(trackable);
+    });
+    update();
   }
 
   // Converting the trackables array into a string that can be used as a note.
   function trackablesToNote() {
     let note = trackables
       .map((trackable) => {
-        return trackable.getNoteValue(trackable.value, false)
+        return trackable.getNoteValue(trackable.value, false);
       })
-      .join(' ')
+      .join(' ');
 
-    return note
+    return note;
   }
 
   // Updating the value of the trackable list builder.
   async function update() {
-    value = trackablesToNote()
-    ready = false
-    await wait(10)
-    ready = true
+    value = trackablesToNote();
+    ready = false;
+    await wait(10);
+    ready = true;
   }
 
   // Removing a trackable from the trackables array.
   async function remove(trackable: Trackable) {
     trackables = trackables.filter((d: Trackable) => {
-      return d.tag !== trackable.tag
-    })
-    update()
+      return d.tag !== trackable.tag;
+    });
+    update();
   }
 
   // Adding a token to the trackables array.
   const addManualItem = () => {
-    const token = strToToken(manualAdd)
+    const token = strToToken(manualAdd);
     if (token && token.type !== 'generic') {
-      addToken(token)
-      manualAdd = ''
+      addToken(token);
+      manualAdd = '';
     } else {
       showToast({
         message: `${manualAdd} is not valid`,
-      })
+      });
     }
-  }
+  };
 
   // Updating the default value of a tracker.
   const updateDefault = async (trackable: Trackable) => {
@@ -108,22 +108,22 @@
         tracker: trackable.tracker,
         trackables: $TrackableStore.trackables,
         allowSave: false,
-      })
+      });
 
       if (value) {
         const updatedTokens = trackables.map((t, index) => {
           if (t.tag == trackable.tag) {
-            t.value = value.value
-            t.tracker.default = value.value
+            t.value = value.value;
+            t.tracker.default = value.value;
           }
-          return t
-        })
+          return t;
+        });
 
-        trackables = updatedTokens
-        update()
+        trackables = updatedTokens;
+        update();
       }
     }
-  }
+  };
 </script>
 
 <div class="trackable-list-builder-bound">
@@ -144,7 +144,7 @@
             color="success"
             className="mr-2"
             on:click={() => {
-              addManualItem()
+              addManualItem();
             }}>+</Button
           >
         {/if}
@@ -165,9 +165,9 @@
       on:update={(evt) => {
         if (evt.detail.length) {
           trackables = evt.detail.map((rawTrackable) => {
-            return new Trackable(rawTrackable)
-          })
-          update()
+            return new Trackable(rawTrackable);
+          });
+          update();
         }
       }}
       let:item

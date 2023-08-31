@@ -1,41 +1,41 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
-  import SvelteMarkdown from 'svelte-markdown'
+  import { onMount } from 'svelte';
+  import SvelteMarkdown from 'svelte-markdown';
 
-  import Button from '../button/button.svelte'
-  import Empty from '../empty/empty.svelte'
-  import IonIcon from '../icon/ion-icon.svelte'
-  import { CloseOutline } from '../icon/nicons'
+  import Button from '../button/button.svelte';
+  import Empty from '../empty/empty.svelte';
+  import IonIcon from '../icon/ion-icon.svelte';
+  import { CloseOutline } from '../icon/nicons';
 
-  import Spinner from '../spinner/spinner.svelte'
+  import Spinner from '../spinner/spinner.svelte';
 
-  import type { MarkdownModalStoreProps } from './MarkdownModalStore'
-  import { closeModal } from '../backdrop/BackdropStore2'
-  import BackdropModal from '../backdrop/backdrop-modal.svelte'
-  import ToolbarGrid from '../toolbar/toolbar-grid.svelte'
-  import { composeEmail } from '../../utils/text/text'
+  import type { MarkdownModalStoreProps } from './MarkdownModalStore';
+  import { closeModal } from '../backdrop/BackdropStore2';
+  import BackdropModal from '../backdrop/backdrop-modal.svelte';
+  import ToolbarGrid from '../toolbar/toolbar-grid.svelte';
+  import { composeEmail } from '../../utils/text/text';
 
-  let loading: boolean = true
-  let content: string
+  let loading: boolean = true;
+  let content: string;
 
-  export let id: string
-  export let props: MarkdownModalStoreProps
+  export let id: string;
+  export let props: MarkdownModalStoreProps;
 
   const getContent = async () => {
-    loading = true
-    const call = await fetch(props.path)
-    const data = await call.text()
-    content = data
-    loading = false
-  }
+    loading = true;
+    const call = await fetch(props.path);
+    const data = await call.text();
+    content = data;
+    loading = false;
+  };
 
   onMount(() => {
-    getContent()
-  })
+    getContent();
+  });
 
   const close = () => {
-    closeModal(id)
-  }
+    closeModal(id);
+  };
 </script>
 
 <BackdropModal className="min-h-75vh">
@@ -50,7 +50,7 @@
       size="sm"
       clear
       on:click={() => {
-        composeEmail('support@happydata.org', `RE: ${props.title}`, '')
+        composeEmail('support@happydata.org', `RE: ${props.title}`, '');
       }}
     >
       <span class="text-sm">Reply</span>

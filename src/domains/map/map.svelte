@@ -1,76 +1,76 @@
 <script lang="ts">
   //svelte
-  import { onMount } from 'svelte'
-  import { createEventDispatcher } from 'svelte'
+  import { onMount } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
 
   // components
   // modules
-  import locate from '../../modules/locate/locate'
-  import distance from '../../modules/locate/distance'
-  import Location from '../locations/LocationClass'
+  import locate from '../../modules/locate/locate';
+  import distance from '../../modules/locate/distance';
+  import Location from '../locations/LocationClass';
 
-  import { slide } from 'svelte/transition'
+  import { slide } from 'svelte/transition';
   // stores
 
-  import { Interact } from '../../store/interact'
-  import { Lang } from '../../store/lang'
+  import { Interact } from '../../store/interact';
+  import { Lang } from '../../store/lang';
 
-  import Button from '../../components/button/button.svelte'
-  import NLog from '../nomie-log/nomie-log'
-  import { NavigateCircleSolid, StarSolid } from '../../components/icon/nicons'
-  import { openLogDisplay } from '../nomie-log/log-display-modal/LogDisplayStore'
-  import { wait } from '../../utils/tick/tick'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import LockClosedSolid from '../../n-icons/LockClosedSolid.svelte'
-  import { quintOut } from 'svelte/easing'
-  import { showToast } from '../../components/toast/ToastStore'
-  import { LocationStore } from '../locations/LocationStore'
+  import Button from '../../components/button/button.svelte';
+  import NLog from '../nomie-log/nomie-log';
+  import { NavigateCircleSolid, StarSolid } from '../../components/icon/nicons';
+  import { openLogDisplay } from '../nomie-log/log-display-modal/LogDisplayStore';
+  import { wait } from '../../utils/tick/tick';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import LockClosedSolid from '../../n-icons/LockClosedSolid.svelte';
+  import { quintOut } from 'svelte/easing';
+  import { showToast } from '../../components/toast/ToastStore';
+  import { LocationStore } from '../locations/LocationStore';
 
   // props
-  export let locations: Array<NLocationType> = []
+  export let locations: Array<NLocationType> = [];
 
-  export let records: Array<NLog> = []
+  export let records: Array<NLog> = [];
 
-  export let small: boolean = undefined
-  export let picker: boolean = undefined
-  export let height = undefined
-  export let className = ''
-  export let style = ''
-  export let lock: boolean = false
-  export let hideFavorite: boolean = false
+  export let small: boolean = undefined;
+  export let picker: boolean = undefined;
+  export let height = undefined;
+  export let className = '';
+  export let style = '';
+  export let lock: boolean = false;
+  export let hideFavorite: boolean = false;
   // export let activeLogs: Array<NLog> = []
 
   // const L: any = window['L']
 
   // Import CSS from Leaflet and plugins.
-  import 'leaflet/dist/leaflet.css'
+  import 'leaflet/dist/leaflet.css';
 
   // Import images directly that got missed via the CSS imports above.
-  import 'leaflet/dist/images/marker-icon-2x.png'
-  import 'leaflet/dist/images/marker-shadow.png'
+  import 'leaflet/dist/images/marker-icon-2x.png';
+  import 'leaflet/dist/images/marker-shadow.png';
 
   // Import JS from Leaflet and plugins.
   // import 'leaflet/dist/leaflet'
-  import L from 'leaflet'
-  import * as esri_geo from 'esri-leaflet-geocoder'
+  import L from 'leaflet';
+  import * as esri_geo from 'esri-leaflet-geocoder';
 
   // consts
-  const dispatch = createEventDispatcher()
-  const id = `map-${Math.random().toString().replace('.', '')}`
+  const dispatch = createEventDispatcher();
+  const id = `map-${Math.random().toString().replace('.', '')}`;
 
   // Setup GeoCode SErvice
-  const geocodeService = esri_geo.geocodeService()
+  const geocodeService = esri_geo.geocodeService();
 
   // Leaflet Map Holder
-  let MAP = undefined
-  let _el
+  let MAP = undefined;
+  let _el;
 
   type NLocationType = {
-    name: string
-    lat: number
-    lng: number
-    log?: NLog
-  }
+    name: string;
+    lat: number;
+    lng: number;
+    log?: NLog;
+  };
 
   // Local State
   let data = {
@@ -81,25 +81,25 @@
     lng: null,
     showLocations: false,
     height: `100px`,
-  }
+  };
 
-  let lastLocations
+  let lastLocations;
 
   $: if (locations && JSON.stringify(locations) !== lastLocations) {
     try {
-      lastLocations = JSON.stringify(locations)
-      initAndRender()
+      lastLocations = JSON.stringify(locations);
+      initAndRender();
     } catch (e) {
-      console.error(`Location change error`, e.message)
+      console.error(`Location change error`, e.message);
     }
   }
 
   async function initAndRender() {
     try {
-      await methods.init()
-      methods.renderMap()
+      await methods.init();
+      methods.renderMap();
     } catch (e) {
-      console.error(`init and render error`, e.message)
+      console.error(`init and render error`, e.message);
     }
   }
 
@@ -113,11 +113,11 @@
             lng: record.lng,
             name: record.location,
             log: record,
-          }
-        })
-      locations = locs
+          };
+        });
+      locations = locs;
     } catch (e) {
-      console.error(`Location || record length reaction error`, e.mesasge)
+      console.error(`Location || record length reaction error`, e.mesasge);
     }
   }
 
@@ -129,12 +129,12 @@
             lat: location.latitude,
             lng: location.longitude,
             name: 'Unnamed',
-          })
-          MAP.setView(L.latLng(location.latitude, location.longitude), 12)
+          });
+          MAP.setView(L.latLng(location.latitude, location.longitude), 12);
         })
-        .catch((e) => {})
+        .catch((e) => {});
     } catch (e) {
-      console.error('Picker reaction error', e.message)
+      console.error('Picker reaction error', e.message);
     }
   }
 
@@ -144,36 +144,36 @@
         title: loc.name,
         icon: NavigateCircleSolid,
         click: () => {
-          methods.setLocation(loc)
+          methods.setLocation(loc);
 
-          dispatch('change', loc)
+          dispatch('change', loc);
         },
-      }
-    })
+      };
+    });
 
     Interact.popmenu({
       id: `locations-view`,
       title: `${Lang.t('location.saved-locations', 'Saved Locations')}`,
       buttons,
-    })
+    });
   }
 
-  let markers: Array<any> = []
+  let markers: Array<any> = [];
 
   // methods
   export let methods = {
     init() {
-      markers = []
+      markers = [];
       if (_el) {
-        data.height = _el?.parentElement?.clientHeight
+        data.height = _el?.parentElement?.clientHeight;
       }
 
       /** Initialize map **/
       return new Promise((resolve, reject) => {
         if (document.getElementById(id)) {
-          MAP = new L.Map(id).fitWorld()
+          MAP = new L.Map(id).fitWorld();
 
-          var arcgisOnline = esri_geo.arcgisOnlineProvider()
+          var arcgisOnline = esri_geo.arcgisOnlineProvider();
 
           let searchController = esri_geo.geosearch({
             zoomToResult: true,
@@ -188,7 +188,7 @@
                 searchFields: ['NAME', 'STATE_NAME'],
               }),
             ],
-          })
+          });
 
           searchController.on('results', (data) => {
             if (data.latlng) {
@@ -196,18 +196,18 @@
                 lat: data.latlng.lat,
                 lng: data.latlng.lng,
                 name: data.text,
-              })
-              methods.setLocation(location)
+              });
+              methods.setLocation(location);
             }
-          })
+          });
 
-          let moveTimeout
+          let moveTimeout;
           const onMove = () => {
-            let center = MAP.getCenter()
-            let lat = center.lat
-            let lng = center.lng
-            data.lat = lat
-            data.lng = lng
+            let center = MAP.getCenter();
+            let lat = center.lat;
+            let lng = center.lng;
+            data.lat = lat;
+            data.lng = lng;
             // Stop this from being called multiple times.
 
             /**
@@ -224,58 +224,58 @@
                   ...{ location: data.locationName },
                   ...{ name: data.locationName },
                 })
-              )
-            }
+              );
+            };
             // Clear Timeout
-            clearTimeout(moveTimeout)
+            clearTimeout(moveTimeout);
             // Set 1s timeout
             moveTimeout = setTimeout(() => {
               // Fire Move
-              fireMove()
-            }, 1000)
-          }
+              fireMove();
+            }, 1000);
+          };
 
           // Clear any moveend listeners
-          MAP.off('moveend', onMove)
+          MAP.off('moveend', onMove);
           // If we're picking an address do the following
           if (picker) {
             // Add the Search Controller
-            searchController.addTo(MAP)
-            MAP.on('moveend', onMove)
+            searchController.addTo(MAP);
+            MAP.on('moveend', onMove);
           }
 
           // Clean up the layers
           MAP.eachLayer(function (layer) {
-            MAP.removeLayer(layer)
-          })
+            MAP.removeLayer(layer);
+          });
 
           // return map
 
-          resolve(MAP)
+          resolve(MAP);
         } // end no map
-      })
+      });
     },
     deleteLocation(location) {
       Interact.confirm(`${Lang.t('general.delete')} ${location.name}?`).then((res) => {
         if (res) {
-          LocationStore.remove(location)
+          LocationStore.remove(location);
         }
-      })
+      });
     },
     editName(location) {
       Interact.prompt('Location Name', null, { value: location.name }).then((res) => {
-        location.name = res
-        LocationStore.upsert(location)
-      })
+        location.name = res;
+        LocationStore.upsert(location);
+      });
     },
     setLocation(location) {
-      data.locationName = location.name
-      data.lat = location.lat
-      data.lng = location.lng
-      locations = [location]
-      data.showLocations = false
-      MAP.setView(L.latLng(location.lat, location.lng), 12)
-      dispatch('location', location)
+      data.locationName = location.name;
+      data.lat = location.lat;
+      data.lng = location.lng;
+      locations = [location];
+      data.showLocations = false;
+      MAP.setView(L.latLng(location.lat, location.lng), 12);
+      dispatch('location', location);
     },
     /**
      * Save the current Location
@@ -288,8 +288,8 @@
           lng: data.lng,
         })
       ).then((loc) => {
-        showToast({ message: `${Lang.t('general.saved', 'Saved')}` })
-      })
+        showToast({ message: `${Lang.t('general.saved', 'Saved')}` });
+      });
       // Locations.save({
       //   name: data.locationName,
       //   lat:
@@ -298,17 +298,17 @@
 
     renderMap() {
       let copy =
-        '&copy; <a href="https://www.openstreetmap.org/">OSM</a> <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
-      let mapTheme = `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png`
+        '&copy; <a href="https://www.openstreetmap.org/">OSM</a> <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>';
+      let mapTheme = `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png`;
       if (_el) {
         if (document.documentElement.classList.contains('mode-dark')) {
-          mapTheme = `https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png`
+          mapTheme = `https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png`;
         }
         // Add Attribution
         L.tileLayer(mapTheme, {
           attribution: copy,
           maxZoom: 18,
-        }).addTo(MAP)
+        }).addTo(MAP);
 
         var myIcon = L.icon({
           iconUrl: '/images/map/map-marker.svg',
@@ -316,7 +316,7 @@
           iconSize: [32, 32],
           iconAnchor: [9, 21],
           popupAnchor: [0, -14],
-        })
+        });
 
         // let latLngArray = locations.map((loc) => {
         //   return new L.marker([loc.lat, loc.lng])
@@ -326,83 +326,83 @@
         let addMarker = (latLng, name, click) => {
           let mkr = new L.marker(latLng, {
             icon: myIcon,
-          })
+          });
 
           // If location name is present (TODO) show it in a popup
           if (name) {
-            mkr.bindPopup(name)
+            mkr.bindPopup(name);
           }
-          mkr.on('click', click)
-          mkr.addTo(MAP)
+          mkr.on('click', click);
+          mkr.addTo(MAP);
 
-          markers.push(mkr)
-        }
+          markers.push(mkr);
+        };
 
         /**
          * PIN RENDERING
          * If maxDistance between them is greater than 0.1 km
          */
         let latLngArray = locations.map((l: NLocationType): Array<number> => {
-          return [l.lat, l.lng]
-        })
+          return [l.lat, l.lng];
+        });
         //@ts-ignore
-        let maxDistance: any = distance.furthest(latLngArray, 'nm')
+        let maxDistance: any = distance.furthest(latLngArray, 'nm');
 
         if (maxDistance > 0.5) {
           // Loop over locaitons provided in props
           locations.forEach((loc) => {
             addMarker([loc.lat, loc.lng], loc.name, () => {
               // On Marker Click
-              data.activeLocation = loc
+              data.activeLocation = loc;
               // If a log exists - show the Share Log popup
               if (loc.log) {
                 // Interact.shareLog(loc.log)
-                openLogDisplay(loc.log)
+                openLogDisplay(loc.log);
               }
-            })
-          })
+            });
+          });
 
           let connectTheDots = (data) => {
             // TODO: Look at making this curved dotted lines - and not just straight ones
-            var c = []
+            var c = [];
             data.forEach((location) => {
-              c.push([location.lat, location.lng])
-            })
-            return c
-          }
+              c.push([location.lat, location.lng]);
+            });
+            return c;
+          };
           //let pathLine =
           L.polyline(connectTheDots(locations), {
             color: 'rgba(2.7%, 52.5%, 100%, 0.378)',
-          }).addTo(MAP)
+          }).addTo(MAP);
         } else {
           // Max Distance is not enough to justify rendering a bunch of pins
           if (locations.length) {
-            let runner: any
+            let runner: any;
             addMarker([locations[0].lat, locations[0].lng], locations[0].name, () => {
-              data.activeLocation = locations[0]
-              const megaNote = locations.map((l) => l.log.note).join('\n\n')
-              const firstLog = locations.find((l) => l.log.end).log
-              clearTimeout(runner)
+              data.activeLocation = locations[0];
+              const megaNote = locations.map((l) => l.log.note).join('\n\n');
+              const firstLog = locations.find((l) => l.log.end).log;
+              clearTimeout(runner);
               runner = setTimeout(() => {
-                openLogDisplay(new NLog({ note: megaNote, created: firstLog?.end }))
-              }, 100)
-            })
+                openLogDisplay(new NLog({ note: megaNote, created: firstLog?.end }));
+              }, 100);
+            });
           }
         }
 
         // Make the map fit the bounds of all locations provided
 
-        MAP.invalidateSize()
-        methods.centerMap()
+        MAP.invalidateSize();
+        methods.centerMap();
       }
     },
     centerMap() {
       if (markers.length) {
         try {
-          var group = new L.featureGroup(markers)
-          MAP.fitBounds(group.getBounds())
+          var group = new L.featureGroup(markers);
+          MAP.fitBounds(group.getBounds());
         } catch (e) {
-          console.error(`Caught error trying to center ma`, e)
+          console.error(`Caught error trying to center ma`, e);
         }
       }
     },
@@ -412,11 +412,11 @@
           .reverse()
           .latlng([lat, lng])
           .run((error, result) => {
-            resolve((result || {}).address || 'Unknown')
-          })
-      })
+            resolve((result || {}).address || 'Unknown');
+          });
+      });
     },
-  }
+  };
 
   // Reactive Location Lookup
   // $: getLocation = () => {
@@ -439,9 +439,9 @@
 
   // On Mount
   onMount(async () => {
-    await wait(600)
-    initAndRender()
-  })
+    await wait(600);
+    initAndRender();
+  });
 </script>
 
 <div
@@ -454,9 +454,9 @@
     <button
       transition:slide={{ duration: 200, easing: quintOut }}
       on:click={() => {
-        lock = false
+        lock = false;
       }}
-      class="map-lock-cover absolute top-0 left-0 right-0 bottom-0 w-full flex bg-opacity-10 p-5 justify-end items-start bg-black  z-10"
+      class="map-lock-cover absolute top-0 left-0 right-0 bottom-0 w-full flex bg-opacity-10 p-5 justify-end items-start bg-black z-10"
     >
       <IonIcon icon={LockClosedSolid} />
     </button>

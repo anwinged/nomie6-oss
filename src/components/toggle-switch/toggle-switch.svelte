@@ -1,26 +1,26 @@
 <script lang="ts">
   //utils
-  import { createEventDispatcher } from 'svelte'
-  import { Switch } from '@rgossiaux/svelte-headlessui'
+  import { createEventDispatcher } from 'svelte';
+  import { Switch } from '@rgossiaux/svelte-headlessui';
 
   // consts
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  export let value: boolean = false
-  export let locked: boolean | undefined = undefined
-  export let className: string = ''
-  export let title: string
+  export let value: boolean = false;
+  export let locked: boolean | undefined = undefined;
+  export let className: string = '';
+  export let title: string;
 
   const methods = {
     onChange(evt) {
-      evt.preventDefault()
-      evt.stopPropagation()
+      evt.preventDefault();
+      evt.stopPropagation();
       if (locked === undefined) {
-        value = evt.detail
-        dispatch('change', value)
+        value = evt.detail;
+        dispatch('change', value);
       }
     },
-  }
+  };
 </script>
 
 <div class="onoffswitch {className}">

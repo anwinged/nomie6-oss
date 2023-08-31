@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { Prefs } from './../preferences/Preferences'
-  import Title from './../../components/title/title.svelte'
-  import Button from '../../components/button/button.svelte'
+  import { Prefs } from './../preferences/Preferences';
+  import Title from './../../components/title/title.svelte';
+  import Button from '../../components/button/button.svelte';
 
-  import TrackablePill from '../trackable/trackable-pill.svelte'
-  import { Trackable } from '../trackable/Trackable.class'
-  import type { Template } from './templates-utils'
-  import { useTemplate } from './templates-svelte-helpers'
+  import TrackablePill from '../trackable/trackable-pill.svelte';
+  import { Trackable } from '../trackable/Trackable.class';
+  import type { Template } from './templates-utils';
+  import { useTemplate } from './templates-svelte-helpers';
 
-  export let template: Template
+  export let template: Template;
 </script>
 
 <div class="template-view">

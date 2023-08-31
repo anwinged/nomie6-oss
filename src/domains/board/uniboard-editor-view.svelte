@@ -1,69 +1,68 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher } from 'svelte';
 
-  import Container from '../../components/container/container.svelte'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import { CloseOutline } from '../../components/icon/nicons'
-  import Input from '../../components/input/input.svelte'
-  import List from '../../components/list/list.svelte'
-  import ShortcutButton from '../../components/shortcut-button/shortcut-button.svelte'
-  import SortableList2 from '../../components/sortable-list/sortable-list2.svelte'
+  import Container from '../../components/container/container.svelte';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import { CloseOutline } from '../../components/icon/nicons';
+  import Input from '../../components/input/input.svelte';
+  import List from '../../components/list/list.svelte';
+  import ShortcutButton from '../../components/shortcut-button/shortcut-button.svelte';
+  import SortableList2 from '../../components/sortable-list/sortable-list2.svelte';
 
-  import { Device } from '../../store/device-store'
-  import { Interact } from '../../store/interact'
-  
-  import time from '../../utils/time/time'
-  
-  import { Prefs } from '../preferences/Preferences'
-  import { toTrackableArray } from '../trackable/trackable-utils'
-  import { Trackable } from '../trackable/Trackable.class'
-  import { TrackableStore } from '../trackable/TrackableStore'
+  import { Device } from '../../store/device-store';
+  import { Interact } from '../../store/interact';
 
-  import { TodayStore } from '../usage/today/TodayStore'
-  import { UsageLast } from '../usage/UsageStore'
-  import type { UniboardType } from './UniboardStore'
+  import time from '../../utils/time/time';
 
+  import { Prefs } from '../preferences/Preferences';
+  import { toTrackableArray } from '../trackable/trackable-utils';
+  import { Trackable } from '../trackable/Trackable.class';
+  import { TrackableStore } from '../trackable/TrackableStore';
 
-  export let board: UniboardType
+  import { TodayStore } from '../usage/today/TodayStore';
+  import { UsageLast } from '../usage/UsageStore';
+  import type { UniboardType } from './UniboardStore';
 
-  const dispatch = createEventDispatcher()
+  export let board: UniboardType;
 
-  let workingBoard: UniboardType
-  let allTrackables: Array<Trackable>
-  let boardTrackables: Array<Trackable>
+  const dispatch = createEventDispatcher();
+
+  let workingBoard: UniboardType;
+  let allTrackables: Array<Trackable>;
+  let boardTrackables: Array<Trackable>;
 
   $: if (board && !workingBoard) {
-    workingBoard = { ...board }
-    allTrackables = toTrackableArray($TrackableStore.trackables)
-    boardTrackables = getBoardTrackables()
+    workingBoard = { ...board };
+    allTrackables = toTrackableArray($TrackableStore.trackables);
+    boardTrackables = getBoardTrackables();
   }
 
   const getBoardTrackables = (): Array<Trackable> => {
     return workingBoard.elements
       .map((tag) => {
-        return allTrackables.find((at) => at.tag === tag)
+        return allTrackables.find((at) => at.tag === tag);
       })
-      .filter((n) => n)
-  }
+      .filter((n) => n);
+  };
 
   const dispatchChange = () => {
-    dispatch('updated', workingBoard)
-  }
+    dispatch('updated', workingBoard);
+  };
 
   const localRemoveTrackable = async (trackable: Trackable) => {
     const confirmed = await Interact.confirm(
       `Remove ${trackable.tag} from this tab?`,
       'You can always add it back later.'
-    )
+    );
     if (confirmed) {
       workingBoard.elements = workingBoard.elements.filter((w) => {
-        return w !== trackable.tag
-      })
-      dispatchChange()
+        return w !== trackable.tag;
+      });
+      dispatchChange();
     }
-    workingBoard.elements = workingBoard.elements
-    boardTrackables = getBoardTrackables()
-  }
+    workingBoard.elements = workingBoard.elements;
+    boardTrackables = getBoardTrackables();
+  };
 </script>
 
 <section aria-label="Edit this Tabs name and trackables">
@@ -74,7 +73,7 @@
         listItem
         placeholder="Tab Label"
         on:input={() => {
-          dispatchChange()
+          dispatchChange();
         }}
         bind:value={workingBoard.label}
       />
@@ -88,9 +87,9 @@
         direction="xy"
         let:item
         on:update={(evt) => {
-          let trackablesArrayData = evt.detail
-          workingBoard.elements = trackablesArrayData.map((t) => new Trackable(t).tag)
-          dispatchChange()
+          let trackablesArrayData = evt.detail;
+          workingBoard.elements = trackablesArrayData.map((t) => new Trackable(t).tag);
+          dispatchChange();
         }}
       >
         <ShortcutButton

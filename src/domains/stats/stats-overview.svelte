@@ -1,22 +1,22 @@
 <script lang="ts">
-  import ListItem from '../../components/list-item/list-item.svelte'
-  import math from '../../utils/math/math'
-  import { Lang } from '../../store/lang'
-  import type { Trackable } from '../trackable/Trackable.class'
-  import type { IStats } from './stats-types'
+  import ListItem from '../../components/list-item/list-item.svelte';
+  import math from '../../utils/math/math';
+  import { Lang } from '../../store/lang';
+  import type { Trackable } from '../trackable/Trackable.class';
+  import type { IStats } from './stats-types';
 
-  export let stats: IStats
-  export let trackable: Trackable
+  export let stats: IStats;
+  export let trackable: Trackable;
 
   function formatValue(value: number, includeUnit?: boolean) {
     if (trackable) {
-      return trackable.formatValue(value, includeUnit)
+      return trackable.formatValue(value, includeUnit);
     }
-    return value
+    return value;
   }
   function getScore() {
-    let score = stats._stats.getScore()
-    return `${score.score} ${score.emoji}`
+    let score = stats._stats.getScore();
+    return `${score.score} ${score.emoji}`;
   }
 </script>
 

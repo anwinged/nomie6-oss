@@ -1,33 +1,33 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
-  import type { UomType } from '../../../utils/nomie-uom/uoms'
-  import ListItem from '../../components/list-item/list-item.svelte'
-  import List from '../../components/list/list.svelte'
-  import { getGroupedUoms } from '../uom-utils'
-  import Storage from '../../../domains/storage/storage'
+  import { onMount } from 'svelte';
+  import type { UomType } from '../../../utils/nomie-uom/uoms';
+  import ListItem from '../../components/list-item/list-item.svelte';
+  import List from '../../components/list/list.svelte';
+  import { getGroupedUoms } from '../uom-utils';
+  import Storage from '../../../domains/storage/storage';
 
-  import { openUomEditor } from './useUomModal'
-  import NPaths from '../../../paths'
+  import { openUomEditor } from './useUomModal';
+  import NPaths from '../../../paths';
 
   //
-  const groupedUoms = getGroupedUoms()
-  const customUoms: Array<UomType> = []
+  const groupedUoms = getGroupedUoms();
+  const customUoms: Array<UomType> = [];
 
   const mounted = async () => {
-    const customUomsFromStorage: Array<UomType> = await Storage.get(NPaths.storage.uom())
+    const customUomsFromStorage: Array<UomType> = await Storage.get(NPaths.storage.uom());
     // Lets really check the data quality here
     if (customUomsFromStorage instanceof Array) {
       customUomsFromStorage.forEach((uom: UomType) => {
         // customUoms.push(NomieUOM.toUom(uom))
-      })
+      });
     }
-  }
+  };
 
   const createUom = () => {
     openUomEditor({
       onSave(ele) {},
-    })
-  }
+    });
+  };
 
   // const editUom = (uom: UomType) => {
   //   openUomEditor({
@@ -38,7 +38,7 @@
   //   })
   // }
 
-  onMount(mounted)
+  onMount(mounted);
 </script>
 
 <section aria-label="Units of Measurment">

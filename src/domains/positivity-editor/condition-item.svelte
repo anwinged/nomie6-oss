@@ -1,78 +1,78 @@
 <script lang="ts">
-  import dayjs from 'dayjs'
+  import dayjs from 'dayjs';
 
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher } from 'svelte';
 
-  import appConfig from '../../config/appConfig'
-  import { ConditionIfs, ICondition, IConditionIfUnit, IConditionIsUnit } from '../../modules/scoring/score-tracker'
-  import { ConditionIs } from '../../modules/scoring/score-tracker'
-  import Ordinal from '../../utils/ordinal/ordinal'
-  import { parseNumber } from '../../utils/parseNumber/parseNumber'
-  import { Prefs } from '../preferences/Preferences'
-  import type { Trackable } from '../trackable/Trackable.class'
-  import { TrackableStore } from '../trackable/TrackableStore'
-  import { getTrackableInputValue } from '../tracker/input/TrackerInputStore'
-  export let condition: ICondition
-  export let index: number
-  export let trackable: Trackable
+  import appConfig from '../../config/appConfig';
+  import { ConditionIfs, ICondition, IConditionIfUnit, IConditionIsUnit } from '../../modules/scoring/score-tracker';
+  import { ConditionIs } from '../../modules/scoring/score-tracker';
+  import Ordinal from '../../utils/ordinal/ordinal';
+  import { parseNumber } from '../../utils/parseNumber/parseNumber';
+  import { Prefs } from '../preferences/Preferences';
+  import type { Trackable } from '../trackable/Trackable.class';
+  import { TrackableStore } from '../trackable/TrackableStore';
+  import { getTrackableInputValue } from '../tracker/input/TrackerInputStore';
+  export let condition: ICondition;
+  export let index: number;
+  export let trackable: Trackable;
 
-  let workingCondition: ICondition
-  const dispatch = createEventDispatcher()
+  let workingCondition: ICondition;
+  const dispatch = createEventDispatcher();
 
   $: if (!workingCondition && condition) {
-    workingCondition = { ...condition }
+    workingCondition = { ...condition };
   }
 
   $: if (workingCondition) {
-    dispatch('change', workingCondition)
+    dispatch('change', workingCondition);
   }
 
   const getTrackableValue = async () => {
     const res = await getTrackableInputValue(trackable, $TrackableStore.trackables, 'Add Condition →', {
       value: condition.v,
-    })
+    });
 
-    workingCondition.v = res.value
-  }
+    workingCondition.v = res.value;
+  };
 
   const convertValueType = (type: IConditionIfUnit) => {
-    if (type == 'value') return 'Value'
-    if (type == 'hour') return 'Hour'
-    if (type == 'month') return 'Day'
-    return 'Value'
-  }
+    if (type == 'value') return 'Value';
+    if (type == 'hour') return 'Hour';
+    if (type == 'month') return 'Day';
+    return 'Value';
+  };
 
   const convertCondition = (is: IConditionIsUnit) => {
-    if (is === 'gt') return `>`
-    if (is === 'gte') return `>=`
-    if (is === 'lt') return '<'
-    if (is === 'lte') return `<=`
-    if (is === 'eq') return '='
-    return '='
-  }
+    if (is === 'gt') return `>`;
+    if (is === 'gte') return `>=`;
+    if (is === 'lt') return '<';
+    if (is === 'lte') return `<=`;
+    if (is === 'eq') return '=';
+    return '=';
+  };
 
   const getDays = () => {
-    let days = []
+    let days = [];
     for (let i = 0; i < 31; i++) {
       days.push({
         value: Ordinal(i + 1),
         index: i + 1,
-      })
+      });
     }
-    return days
-  }
+    return days;
+  };
   const getHours = () => {
-    let hours = []
+    let hours = [];
     for (let i = 0; i < 24; i++) {
-      let date = dayjs().startOf('day').add(i, 'hour')
+      let date = dayjs().startOf('day').add(i, 'hour');
 
       hours.push({
         value: $Prefs.use24hour ? date.format('HH:mm') : date.format('h:mm a'),
         index: i + 1,
-      })
+      });
     }
-    return hours
-  }
+    return hours;
+  };
 </script>
 
 <div class="w-full py-2 flex flex-col items-center text-black dark:text-white">
@@ -132,7 +132,7 @@
       class="condition-select emoji"
       on:change={(evt) => {
         //@ts-ignore
-        workingCondition.sc = parseNumber(evt.target.value)
+        workingCondition.sc = parseNumber(evt.target.value);
       }}
     >
       {#each appConfig.positivity as positivity}

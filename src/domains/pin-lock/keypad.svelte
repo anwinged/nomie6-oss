@@ -1,24 +1,24 @@
 <script lang="ts">
   //svelte
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher } from 'svelte';
 
-  import Button from '../../components/button/button.svelte'
+  import Button from '../../components/button/button.svelte';
 
   // Props
-  export let value = ''
+  export let value = '';
 
   // Consts
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
   // Methods
-  const select = (num) => () => (value += num)
-  const clear = () => (value = '')
+  const select = (num) => () => (value += num);
+  const clear = () => (value = '');
   const submit = (event) => {
     setTimeout(() => {
-      dispatch('submit')
-      event.stopPropagation()
-    }, 10)
-  }
+      dispatch('submit');
+      event.stopPropagation();
+    }, 10);
+  };
 </script>
 
 <div class="keypad">

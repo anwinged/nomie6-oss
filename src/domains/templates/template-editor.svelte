@@ -1,56 +1,56 @@
 <script lang="ts">
-  import { strToTokens } from './../../modules/tokenizer/lite'
-  import { CombinedBoards } from './../board/UniboardStore'
-  
-  import TrackableAvatar from '../../components/avatar/trackable-avatar.svelte'
+  import { strToTokens } from './../../modules/tokenizer/lite';
+  import { CombinedBoards } from './../board/UniboardStore';
 
-  import Button from '../../components/button/button.svelte'
+  import TrackableAvatar from '../../components/avatar/trackable-avatar.svelte';
 
-  import Empty from '../../components/empty/empty.svelte'
-  import { openPopMenu, PopMenuButton } from '../../components/pop-menu/usePopmenu'
-  
-  import type { DashboardClass } from '../dashboard2/dashboard-class'
-  import DashboardListItem from '../dashboard2/dashboard-list-item.svelte'
-  import { openTrackableEditor } from '../trackable/trackable-editor/TrackableEditorStore'
-  import { selectTrackables } from '../trackable/trackable-selector/TrackableSelectorStore'
-  import { Trackable } from '../trackable/Trackable.class'
+  import Button from '../../components/button/button.svelte';
 
-  import Input from './../../components/input/input.svelte'
-  import List from './../../components/list/list.svelte'
-  import type { Template } from './templates-utils'
-  import { TrackableStore } from '../trackable/TrackableStore'
-  import type { UniboardType } from '../board/UniboardStore'
-  import { tokenToTrackable } from '../../modules/tokenizer/tokenToTrackable'
-  import { strToToken, Token } from '../../modules/tokenizer/lite'
+  import Empty from '../../components/empty/empty.svelte';
+  import { openPopMenu, PopMenuButton } from '../../components/pop-menu/usePopmenu';
 
-  import ListItem from '../../components/list-item/list-item.svelte'
-  import { onMount } from 'svelte/internal'
-  import array_utils from '../../utils/array/array_utils'
-  import { DashStore, initializeDashStore } from '../dashboard2/DashStore'
-  import type { ITrackables } from '../ledger/ledger-tools'
-  import { GoalStore } from '../goals/GoalStore'
-  import type { GoalClass } from '../goals/goal-class'
+  import type { DashboardClass } from '../dashboard2/dashboard-class';
+  import DashboardListItem from '../dashboard2/dashboard-list-item.svelte';
+  import { openTrackableEditor } from '../trackable/trackable-editor/TrackableEditorStore';
+  import { selectTrackables } from '../trackable/trackable-selector/TrackableSelectorStore';
+  import { Trackable } from '../trackable/Trackable.class';
+
+  import Input from './../../components/input/input.svelte';
+  import List from './../../components/list/list.svelte';
+  import type { Template } from './templates-utils';
+  import { TrackableStore } from '../trackable/TrackableStore';
+  import type { UniboardType } from '../board/UniboardStore';
+  import { tokenToTrackable } from '../../modules/tokenizer/tokenToTrackable';
+  import { strToToken, Token } from '../../modules/tokenizer/lite';
+
+  import ListItem from '../../components/list-item/list-item.svelte';
+  import { onMount } from 'svelte/internal';
+  import array_utils from '../../utils/array/array_utils';
+  import { DashStore, initializeDashStore } from '../dashboard2/DashStore';
+  import type { ITrackables } from '../ledger/ledger-tools';
+  import { GoalStore } from '../goals/GoalStore';
+  import type { GoalClass } from '../goals/goal-class';
   // import download from '../../modules/download/download'
   // import { strToTagSafe } from '../trackable/trackable-utils'
 
-  export let template: Template
+  export let template: Template;
 
   const strToTrackable = (str: string): Trackable => {
-    return tokenToTrackable(strToToken(str), $TrackableStore.trackables)
-  }
+    return tokenToTrackable(strToToken(str), $TrackableStore.trackables);
+  };
 
   const addTrackableFromTag = (str) => {
-    const trackable = strToTrackable(str)
-    addTrackableToTemplate(trackable)
-  }
+    const trackable = strToTrackable(str);
+    addTrackableToTemplate(trackable);
+  };
 
   const templateTrackablesToMap = (): ITrackables => {
-    const localTrackables: ITrackables = {}
+    const localTrackables: ITrackables = {};
     template.trackables.forEach((trackable) => {
-      localTrackables[trackable.tag] = trackable
-    })
-    return localTrackables
-  }
+      localTrackables[trackable.tag] = trackable;
+    });
+    return localTrackables;
+  };
 
   // const exportTemplate = () => {
   //   const obj = template.asObject
@@ -60,31 +60,31 @@
   // }
 
   const addTokenToTemplate = (token: Token) => {
-    const allKnown = { ...$TrackableStore.trackables, ...templateTrackablesToMap() }
-    const trackable = tokenToTrackable(token, allKnown)
-    addTrackableToTemplate(trackable)
-  }
+    const allKnown = { ...$TrackableStore.trackables, ...templateTrackablesToMap() };
+    const trackable = tokenToTrackable(token, allKnown);
+    addTrackableToTemplate(trackable);
+  };
 
   const addTrackableToTemplate = (trackable: Trackable) => {
     if (!template.trackables.find((t) => t.id == trackable.id)) {
-      template.trackables.push(trackable)
+      template.trackables.push(trackable);
 
       // Import Combo / Note Trackables too
       if (trackable.type == 'tracker' && trackable.tracker.type == 'note') {
-        const tokens = strToTokens(trackable.tracker.note || '')
-       
+        const tokens = strToTokens(trackable.tracker.note || '');
+
         tokens.forEach((token: Token) => {
-          const includedTrackable = tokenToTrackable(token, $TrackableStore.trackables)
-          addTrackableToTemplate(includedTrackable)
-        })
+          const includedTrackable = tokenToTrackable(token, $TrackableStore.trackables);
+          addTrackableToTemplate(includedTrackable);
+        });
       }
     }
-    template.trackables = template.trackables
-  }
+    template.trackables = template.trackables;
+  };
 
   onMount(() => {
-    initializeDashStore()
-  })
+    initializeDashStore();
+  });
 
   const getTrackerOptions = (trackable: Trackable) => {
     const buttons = [
@@ -95,27 +95,27 @@
           openTrackableEditor(trackable, (trackable) => {
             template.trackables = template.trackables.map((t) => {
               if (t.id == trackable.id) {
-                return trackable
+                return trackable;
               }
-              return t
-            })
-          })
+              return t;
+            });
+          });
         },
       },
       {
         id: 'remove',
         title: 'Remove from Template',
         click() {
-          template.trackables = template.trackables.filter((t) => t.id != trackable.id)
-          template.trackables = template.trackables
+          template.trackables = template.trackables.filter((t) => t.id != trackable.id);
+          template.trackables = template.trackables;
         },
       },
-    ]
+    ];
     openPopMenu({
       id: 'trackable-options',
       buttons,
-    })
-  }
+    });
+  };
 
   const importFromExistingTabs = () => {
     const boardButtons = $CombinedBoards.map((board: UniboardType) => {
@@ -124,24 +124,24 @@
         title: board.label,
         click() {
           board.elements.map((tag) => {
-            addTrackableFromTag(tag)
-          })
+            addTrackableFromTag(tag);
+          });
           if (!template.boards.find((b) => b.id === board.id)) {
-            board.elements = array_utils.unique(board.elements) as Array<string>
-            template.boards.push(board)
+            board.elements = array_utils.unique(board.elements) as Array<string>;
+            template.boards.push(board);
           }
         },
-      }
-    })
+      };
+    });
     openPopMenu({
       title: 'Which Tab would you like to import?',
       id: 'existing-boards',
       buttons: boardButtons,
-    })
-  }
+    });
+  };
 
   const addBoardTab = () => {
-    importFromExistingTabs()
+    importFromExistingTabs();
     // const createTab: PopMenuButton = {
     //   id: 'create-tab',
     //   title: 'Create new Tab',
@@ -158,20 +158,20 @@
     //   id: 'add-board-options',
     //   buttons: [createTab, existingTab],
     // })
-  }
+  };
 
   const trackerAddButtons: Array<PopMenuButton> = [
     {
       id: 'existing',
       title: 'Pick from my Trackables',
       async click() {
-        const selected = await selectTrackables()
-       
+        const selected = await selectTrackables();
+
         if (selected) {
           selected.forEach((trackable) => {
-            addTrackableToTemplate(trackable)
-          })
-          template.trackables = template.trackables
+            addTrackableToTemplate(trackable);
+          });
+          template.trackables = template.trackables;
         }
       },
     },
@@ -180,10 +180,9 @@
       title: 'Create a Tracker',
       async click() {
         openTrackableEditor(new Trackable({ type: 'tracker' }), (trackable) => {
-          
-          template.trackables.push(trackable)
-          template.trackables = template.trackables
-        })
+          template.trackables.push(trackable);
+          template.trackables = template.trackables;
+        });
       },
     },
     {
@@ -191,10 +190,9 @@
       title: 'Create a Person',
       async click() {
         openTrackableEditor(new Trackable({ type: 'person' }), (trackable) => {
-          
-          template.trackables.push(trackable)
-          template.trackables = template.trackables
-        })
+          template.trackables.push(trackable);
+          template.trackables = template.trackables;
+        });
       },
     },
     {
@@ -202,50 +200,48 @@
       title: 'Create a Context',
       async click() {
         openTrackableEditor(new Trackable({ type: 'context' }), (trackable) => {
-          
-          template.trackables.push(trackable)
-          template.trackables = template.trackables
-        })
+          template.trackables.push(trackable);
+          template.trackables = template.trackables;
+        });
       },
     },
-  ]
+  ];
 
   const addRequiredTrackablesFromDashboard = (dashboard: DashboardClass) => {
     const tokens = dashboard.widgets.map((widget) => {
-      return widget.token
-    })
+      return widget.token;
+    });
     tokens.forEach((token) => {
-      addTokenToTemplate(token)
-    })
-  }
+      addTokenToTemplate(token);
+    });
+  };
 
   const openDashboardImporter = (dashboards: Array<DashboardClass>) => {
-    
     const boardButtons = dashboards.map((dashboard: DashboardClass) => {
       return {
         id: dashboard.id,
         title: dashboard.label,
         click() {
-          const index = template.dashboards.findIndex((d) => d.id == dashboard.id)
+          const index = template.dashboards.findIndex((d) => d.id == dashboard.id);
           if (index > -1) {
-            template.dashboards[index] = dashboard
+            template.dashboards[index] = dashboard;
           } else {
-            template.dashboards.push(dashboard)
+            template.dashboards.push(dashboard);
           }
-          addRequiredTrackablesFromDashboard(dashboard)
-          template.dashboards = template.dashboards
+          addRequiredTrackablesFromDashboard(dashboard);
+          template.dashboards = template.dashboards;
         },
-      }
-    })
+      };
+    });
     openPopMenu({
       title: 'Which dashboard would you like to import?',
       id: 'existing-dsahboards',
       buttons: boardButtons,
-    })
-  }
+    });
+  };
 
   const addDashboard = async () => {
-    openDashboardImporter($DashStore.dashboards)
+    openDashboardImporter($DashStore.dashboards);
     // const addNewDashboard: PopMenuButton = {
     //   id: 'new-dashboard',
     //   title: 'Create new Dashboard',
@@ -270,7 +266,7 @@
     //   id: 'add-trackable',
     //   buttons: [addNewDashboard, importDashboard],
     // })
-  }
+  };
 
   const openGoalImporter = (goals: Array<GoalClass>) => {
     const buttons = goals.map((goal: GoalClass) => {
@@ -278,27 +274,27 @@
         title: `${goal.tag} ${goal.comparison} ${goal.target}`,
         id: goal.tag,
         click() {
-          let index = template.goals.findIndex((g) => g.id === goal.id)
+          let index = template.goals.findIndex((g) => g.id === goal.id);
           if (index > -1) {
-            template.goals[index] = goal
+            template.goals[index] = goal;
           } else {
-            template.goals.push(goal)
+            template.goals.push(goal);
           }
-          template.goals = template.goals
-          addTrackableFromTag(goal.tag)
+          template.goals = template.goals;
+          addTrackableFromTag(goal.tag);
         },
-      }
-    })
-    
+      };
+    });
+
     openPopMenu({
       id: 'import-goal',
       title: 'Which goal would you like to import?',
       buttons: buttons,
-    })
-  }
+    });
+  };
 
   const addGoal = async () => {
-    openGoalImporter($GoalStore)
+    openGoalImporter($GoalStore);
     // const addNewGoal: PopMenuButton = {
     //   id: 'new-goal',
     //   title: 'Create new Goal',
@@ -316,14 +312,14 @@
     //   id: 'add-goal',
     //   buttons: [addNewGoal, importGoal],
     // })
-  }
+  };
 
   const addTrackableOptions = () => {
     openPopMenu({
       id: 'add-trackable',
       buttons: trackerAddButtons,
-    })
-  }
+    });
+  };
 </script>
 
 {#if template}
@@ -345,7 +341,7 @@
         {#each template.trackables as trackable}
           <button
             on:click={() => {
-              getTrackerOptions(trackable)
+              getTrackerOptions(trackable);
             }}
             class="pill"
             on:click={() => {}}

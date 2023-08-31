@@ -1,15 +1,15 @@
 <script lang="ts">
-  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte'
-  import { closeModal } from '../../components/backdrop/BackdropStore2'
-  import CloseButton from '../../components/button/close-button.svelte'
-  import Title from '../../components/title/title.svelte'
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
-  import { wait } from '../../utils/tick/tick'
-  import PluginInstaller from './plugin-installer.svelte'
-  import { closePluginInstaller } from './PluginStore'
+  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte';
+  import { closeModal } from '../../components/backdrop/BackdropStore2';
+  import CloseButton from '../../components/button/close-button.svelte';
+  import Title from '../../components/title/title.svelte';
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
+  import { wait } from '../../utils/tick/tick';
+  import PluginInstaller from './plugin-installer.svelte';
+  import { closePluginInstaller } from './PluginStore';
 
-  export let id: string
-  export let url: string
+  export let id: string;
+  export let url: string;
 </script>
 
 <BackdropModal mainClass="px-4 py-4">
@@ -18,8 +18,8 @@
       slot="left"
       on:click={() => {
         wait(10).then(() => {
-          closeModal(id)
-        })
+          closeModal(id);
+        });
       }}
     />
     <Title>Install a Plugin</Title>
@@ -27,10 +27,10 @@
   <PluginInstaller
     {url}
     on:cancel={() => {
-      closePluginInstaller()
+      closePluginInstaller();
     }}
     on:installed={() => {
-      closePluginInstaller()
+      closePluginInstaller();
     }}
   />
 

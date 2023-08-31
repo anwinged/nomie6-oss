@@ -10,9 +10,9 @@
     BarController,
     LineController,
     Filler,
-  } from 'chart.js'
-  import type { ChartConfiguration } from 'chart.js'
-  import { createEventDispatcher, onMount } from 'svelte'
+  } from 'chart.js';
+  import type { ChartConfiguration } from 'chart.js';
+  import { createEventDispatcher, onMount } from 'svelte';
 
   Chart.register(
     BarElement,
@@ -24,14 +24,14 @@
     LogarithmicScale,
     BarController,
     LineController
-  )
+  );
 
-  export let id: string
-  export let chartjsPayload: ChartConfiguration
+  export let id: string;
+  export let chartjsPayload: ChartConfiguration;
 
-  let chart: Chart
-  let ctx: HTMLCanvasElement
-  const dispatch = createEventDispatcher()
+  let chart: Chart;
+  let ctx: HTMLCanvasElement;
+  const dispatch = createEventDispatcher();
 
   const render = () => {
     try {
@@ -41,32 +41,32 @@
           // events: ['click','touchmove'],
           onClick: (e, a) => {
             if (a.length) {
-              const index: number = a[0].index
-              dispatch('click', index)
+              const index: number = a[0].index;
+              dispatch('click', index);
             }
           },
           onHover: (e, a) => {
             if (a.length) {
-              const index: number = a[0].index
-              dispatch('click', index)
+              const index: number = a[0].index;
+              dispatch('click', index);
             } else {
               // dispatch('click', undefined);
             }
           },
         },
-      }
+      };
 
-      chart = new Chart(ctx, chartjsPayload)
-      return chart
+      chart = new Chart(ctx, chartjsPayload);
+      return chart;
     } catch (e) {
-      console.error('Caught an error on the cartjs chart', e)
+      console.error('Caught an error on the cartjs chart', e);
     }
-    return undefined
-  }
+    return undefined;
+  };
 
   onMount(() => {
-    render()
-  })
+    render();
+  });
 </script>
 
 <canvas height="100%" id={`chart-${id}`} bind:this={ctx} />

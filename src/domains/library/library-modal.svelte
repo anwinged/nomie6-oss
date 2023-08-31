@@ -1,57 +1,57 @@
 <script lang="ts">
   // Stores
 
-  import { Lang } from '../../store/lang'
-  import { TrackerLibrary } from './tracker-library'
-  import { Interact } from '../../store/interact'
+  import { Lang } from '../../store/lang';
+  import { TrackerLibrary } from './tracker-library';
+  import { Interact } from '../../store/interact';
 
-  import Button from '../../components/button/button.svelte'
+  import Button from '../../components/button/button.svelte';
 
-  import { saveTrackable, TrackableStore } from '../trackable/TrackableStore'
-  import TrackerClass from '../../modules/tracker/TrackerClass'
+  import { saveTrackable, TrackableStore } from '../trackable/TrackableStore';
+  import TrackerClass from '../../modules/tracker/TrackerClass';
 
-  import { ActiveBoard, addTrackablesToBoard, UniboardStore } from '../board/UniboardStore'
+  import { ActiveBoard, addTrackablesToBoard, UniboardStore } from '../board/UniboardStore';
 
-  import { Prefs } from '../preferences/Preferences'
+  import { Prefs } from '../preferences/Preferences';
 
-  import { onMount } from 'svelte'
-  import type { LibraryTrackerType } from './library-manager/LibraryManagerStore'
-  import LibraryTrackerItem from './library-tracker-item.svelte'
-  import LibraryTrackerItemDetails from './library-tracker-item-details.svelte'
-  import { UOMClass } from '../uom/uom.class'
-  import { wait } from '../../utils/tick/tick'
+  import { onMount } from 'svelte';
+  import type { LibraryTrackerType } from './library-manager/LibraryManagerStore';
+  import LibraryTrackerItem from './library-tracker-item.svelte';
+  import LibraryTrackerItemDetails from './library-tracker-item-details.svelte';
+  import { UOMClass } from '../uom/uom.class';
+  import { wait } from '../../utils/tick/tick';
 
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
-  import List from '../../components/list/list.svelte'
-  import { showToast } from '../../components/toast/ToastStore'
-  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte'
-  import { closeModal } from '../../components/backdrop/BackdropStore2'
-  import Spinner from '../../components/spinner/spinner.svelte'
-  import SearchBar from '../../components/search-bar/search-bar.svelte'
-  import Empty from '../../components/empty/empty.svelte'
-  import ListItem from '../../components/list-item/list-item.svelte'
-  import type { Trackable } from '../trackable/Trackable.class'
-  import TrackableAvatar from '../../components/avatar/trackable-avatar.svelte'
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
+  import List from '../../components/list/list.svelte';
+  import { showToast } from '../../components/toast/ToastStore';
+  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte';
+  import { closeModal } from '../../components/backdrop/BackdropStore2';
+  import Spinner from '../../components/spinner/spinner.svelte';
+  import SearchBar from '../../components/search-bar/search-bar.svelte';
+  import Empty from '../../components/empty/empty.svelte';
+  import ListItem from '../../components/list-item/list-item.svelte';
+  import type { Trackable } from '../trackable/Trackable.class';
+  import TrackableAvatar from '../../components/avatar/trackable-avatar.svelte';
 
-  import AvailableTemplatesList from '../templates/available-templates-list.svelte'
+  import AvailableTemplatesList from '../templates/available-templates-list.svelte';
 
-  export let id: string
+  export let id: string;
 
-  let ready = false
-  let libraryTrackers: Array<LibraryTrackerType> = []
-  let searchResults: Array<Trackable> = []
-  let searchTerm: string
+  let ready = false;
+  let libraryTrackers: Array<LibraryTrackerType> = [];
+  let searchResults: Array<Trackable> = [];
+  let searchTerm: string;
   onMount(() => {
-    ready = true
-  })
+    ready = true;
+  });
 
   $: if ($TrackerLibrary && !libraryTrackers.length && ready) {
     // getAllLibraryTrackers().then((lts: Array<LibraryTrackerType>) => {
     //   libraryTrackers = lts.sort((a, b) => (a?.title.toLowerCase() > b?.title.toLowerCase() ? 1 : -1))
     // })
-    libraryTrackers = []
+    libraryTrackers = [];
   }
-  let activeId: any
+  let activeId: any;
 
   /**
    * Toggle the Active Category
@@ -59,29 +59,29 @@
    */
   const setActive = (index: number) => {
     if (index == activeId) {
-      activeId = undefined
+      activeId = undefined;
     } else {
-      activeId = index
+      activeId = index;
     }
-  }
+  };
 
   /**
    * Install a block of Trackables
    * @param trackers
    */
   async function installAll(trackers: Array<TrackerClass> = []) {
-    const filtered = trackers.filter((t) => !$TrackableStore.trackables[`#${t.tag}`])
+    const filtered = trackers.filter((t) => !$TrackableStore.trackables[`#${t.tag}`]);
     if (filtered.length) {
-      Interact.blocker(`Installing ${filtered.length}`)
-      await wait(300)
+      Interact.blocker(`Installing ${filtered.length}`);
+      await wait(300);
       for (let i = 0; i < filtered.length; i++) {
-        Interact.blocker(`Installing ${filtered[i].emoji} ${filtered[i].label}`)
-        await install(filtered[i])
-        await wait(300)
+        Interact.blocker(`Installing ${filtered[i].emoji} ${filtered[i].label}`);
+        await install(filtered[i]);
+        await wait(300);
       }
-      Interact.stopBlocker()
+      Interact.stopBlocker();
     } else {
-      showToast({ message: 'You already have them all!' })
+      showToast({ message: 'You already have them all!' });
     }
   }
 
@@ -90,19 +90,19 @@
    * @param _tracker
    */
   async function install(_tracker) {
-    const tracker = _tracker instanceof TrackerClass ? _tracker : new TrackerClass(_tracker)
+    const tracker = _tracker instanceof TrackerClass ? _tracker : new TrackerClass(_tracker);
 
     // Convert the UOM to right measurement system - if needed
-    const uom = new UOMClass(tracker.uom)
-    const userSystem = $Prefs.useMetric ? 'metric' : 'imperial'
+    const uom = new UOMClass(tracker.uom);
+    const userSystem = $Prefs.useMetric ? 'metric' : 'imperial';
     if (uom.system !== userSystem && uom.system !== 'both') {
-      tracker.uom = uom.convertTo(userSystem).id
-      tracker.default = uom.convertValueTo(tracker.default || 0, userSystem)
+      tracker.uom = uom.convertTo(userSystem).id;
+      tracker.default = uom.convertValueTo(tracker.default || 0, userSystem);
     }
 
-    const trackable = tracker.toTrackable()
+    const trackable = tracker.toTrackable();
     if ($TrackableStore.trackables.hasOwnProperty(`#${tracker.tag}`)) {
-      showToast({ message: 'Already installed' })
+      showToast({ message: 'Already installed' });
     } else {
       // Let's make sure we're on the right type .
       // const currentUOM = tracker.uom
@@ -113,36 +113,36 @@
         saveToActiveBoard: false,
         permissions: {},
         prompt: false,
-      })
+      });
       if (saved) {
-        await addTrackablesToBoard([trackable], $ActiveBoard)
-        UniboardStore.update((b) => b)
-        showToast({ message: `${trackable.tag} added` })
+        await addTrackablesToBoard([trackable], $ActiveBoard);
+        UniboardStore.update((b) => b);
+        showToast({ message: `${trackable.tag} added` });
       }
     }
   }
 
   $: if (searchTerm) {
-    searchResults = searchTrackables(searchTerm)
+    searchResults = searchTrackables(searchTerm);
   }
 
   const searchTrackables = (term): Array<Trackable> => {
-    const matches: Array<Trackable> = []
+    const matches: Array<Trackable> = [];
     libraryTrackers.forEach((col) => {
       col.trackers.forEach((t: TrackerClass) => {
-        matches.push(t.toTrackable())
-      })
-    })
+        matches.push(t.toTrackable());
+      });
+    });
 
-    return matches.filter((t) => JSON.stringify(t).toLowerCase().search(term.toLowerCase()) > -1)
-  }
+    return matches.filter((t) => JSON.stringify(t).toLowerCase().search(term.toLowerCase()) > -1);
+  };
 
   /**
    * Close The Modal
    */
   const close = async () => {
-    closeModal(id)
-  }
+    closeModal(id);
+  };
 </script>
 
 <BackdropModal>
@@ -172,7 +172,7 @@
               {#if !$TrackableStore.trackables[item.tag]}
                 <Button
                   on:click={() => {
-                    install(item.tracker)
+                    install(item.tracker);
                   }}
                   size="sm"
                   shape="round"

@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher } from 'svelte';
 
-  import type { Trackable } from '../../domains/trackable/Trackable.class'
-  import TrackableAvatar from '../avatar/trackable-avatar.svelte'
+  import type { Trackable } from '../../domains/trackable/Trackable.class';
+  import TrackableAvatar from '../avatar/trackable-avatar.svelte';
 
-  export let date: Date | undefined
-  export let trackable: Trackable
-  export let value: number
+  export let date: Date | undefined;
+  export let trackable: Trackable;
+  export let value: number;
 
-  const emit = createEventDispatcher()
+  const emit = createEventDispatcher();
 </script>
 
 <button class="tiny-trackable" on:click={() => emit('click')}>

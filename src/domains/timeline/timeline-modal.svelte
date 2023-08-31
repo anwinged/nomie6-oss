@@ -1,27 +1,27 @@
 <script lang="ts">
-import dayjs from 'dayjs';
+  import dayjs from 'dayjs';
 
-  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte'
-  import { closeModal } from '../../components/backdrop/BackdropStore2'
-  import Button from '../../components/button/button.svelte'
-import LetterTicker from '../../components/letter-ticker/letter-ticker.svelte';
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
+  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte';
+  import { closeModal } from '../../components/backdrop/BackdropStore2';
+  import Button from '../../components/button/button.svelte';
+  import LetterTicker from '../../components/letter-ticker/letter-ticker.svelte';
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
 
-  import { Lang } from '../../store/lang'
-import { getDateFormats } from '../preferences/Preferences';
-import TimelineLoader from './timeline-loader.svelte';
-import type { TimelineFilterProps } from './timeline-utils';
+  import { Lang } from '../../store/lang';
+  import { getDateFormats } from '../preferences/Preferences';
+  import TimelineLoader from './timeline-loader.svelte';
+  import type { TimelineFilterProps } from './timeline-utils';
 
-  export let id: string
+  export let id: string;
   export let filters: TimelineFilterProps = {};
   export let startingDate: Date = new Date();
   const dateFormats = getDateFormats();
 
-  let titleDate = dayjs(startingDate || new Date())
+  let titleDate = dayjs(startingDate || new Date());
 
   const close = () => {
-    closeModal(id)
-  }
+    closeModal(id);
+  };
 </script>
 
 <BackdropModal>
@@ -37,8 +37,12 @@ import type { TimelineFilterProps } from './timeline-utils';
     </Button> -->
   </ToolbarGrid>
   <div class="pb-10">
-    <TimelineLoader bind:startingDate={startingDate} bind:filters={filters} on:topItem={(evt)=>{
-      titleDate = dayjs(evt.detail.time);
-    }} />
+    <TimelineLoader
+      bind:startingDate
+      bind:filters
+      on:topItem={(evt) => {
+        titleDate = dayjs(evt.detail.time);
+      }}
+    />
   </div>
 </BackdropModal>

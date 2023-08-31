@@ -1,74 +1,68 @@
 <script lang="ts">
-  import Button from '../button/button.svelte'
-  import Text from '../text/text.svelte'
-  import type { AlertType } from '../../store/interact'
-  import KeyDown from '../../modules/keyDown/keyDown.svelte'
-  import { closeModal } from '../backdrop/BackdropStore2'
-import Markdown from '../markdown/markdown.svelte'
+  import Button from '../button/button.svelte';
+  import Text from '../text/text.svelte';
+  import type { AlertType } from '../../store/interact';
+  import KeyDown from '../../modules/keyDown/keyDown.svelte';
+  import { closeModal } from '../backdrop/BackdropStore2';
+  import Markdown from '../markdown/markdown.svelte';
 
-  export let payload: AlertType
-  export let id: string
+  export let payload: AlertType;
+  export let id: string;
 
-  let hasSlot = false
+  let hasSlot = false;
 
-  let showBase = false
+  let showBase = false;
 
   const methods = {
     onOk() {
       if (payload.onInteract) {
-        payload.value = payload.value || true
-        payload.onInteract(payload)
-        closeModal(id)
+        payload.value = payload.value || true;
+        payload.onInteract(payload);
+        closeModal(id);
       }
     },
     onCancel() {
       if (payload.onInteract) {
-        payload.value = payload.value || false
-        payload.onInteract(payload)
-        closeModal(id)
+        payload.value = payload.value || false;
+        payload.onInteract(payload);
+        closeModal(id);
       }
     },
-  }
+  };
 </script>
 
 <KeyDown
   on:Escape={() => {
-    methods.onCancel()
+    methods.onCancel();
   }}
 />
 <div class="alert-dialog-window card" role="alertdialog" aria-modal="true" aria-hidden={!showBase}>
   <div class="px-3 pt-3">
     {#if payload.title}
-    <h2 role="alert" class="card-title {!hasSlot && !payload.message ? 'message-less' : 'has-message'}">
-      {payload.title}
-    </h2>
-  {/if}
+      <h2 role="alert" class="card-title {!hasSlot && !payload.message ? 'message-less' : 'has-message'}">
+        {payload.title}
+      </h2>
+    {/if}
 
-  {#if payload.message && !hasSlot}
-    <div role="alert" class="card-body message">
-      <Markdown content={payload.message} />
-    </div>
-  {:else if hasSlot && !payload.message}
-    <div class="pt-0 slot-holder card-body">
-      <slot />
-    </div>
-  {:else if hasSlot && payload.message}
-    <div class="pt-0 slot-holder card-body">
-      <Text size="sm">{payload.message}</Text>
-      <slot />
-    </div>
-  {/if}
-  <slot />
+    {#if payload.message && !hasSlot}
+      <div role="alert" class="card-body message">
+        <Markdown content={payload.message} />
+      </div>
+    {:else if hasSlot && !payload.message}
+      <div class="pt-0 slot-holder card-body">
+        <slot />
+      </div>
+    {:else if hasSlot && payload.message}
+      <div class="pt-0 slot-holder card-body">
+        <Text size="sm">{payload.message}</Text>
+        <slot />
+      </div>
+    {/if}
+    <slot />
   </div>
 
-
   <div class="footer">
-    <button
-      id="alert-ok"
-      aria-label={payload.ok}
-      class="primary"
-      on:click={methods.onOk}
-    >
+    <button id="alert-ok" aria-label={payload.ok} class="primary" on:click={methods.onOk}>
       {payload.ok}
     </button>
     {#if payload.cancel}
@@ -127,7 +121,6 @@ import Markdown from '../markdown/markdown.svelte'
     @apply flex-grow-0;
     @apply flex-shrink;
     @apply space-y-2;
-  
 
     transition: all 0.2s ease-in-out;
     max-width: 400px;
@@ -144,7 +137,7 @@ import Markdown from '../markdown/markdown.svelte'
     align-content: stretch;
     color: var(--color-inverse-2);
   }
-  .alert-dialog-window .card-title  {
+  .alert-dialog-window .card-title {
     line-height: 115%;
     @apply text-gray-900 dark:text-gray-50;
     @apply font-bold;
@@ -186,7 +179,7 @@ import Markdown from '../markdown/markdown.svelte'
   .alert-dialog-window .footer {
     @apply flex flex-col;
     @apply pt-2;
-    
+
     /* @apply space-y-2; */
   }
 
@@ -201,15 +194,14 @@ import Markdown from '../markdown/markdown.svelte'
     @apply border-t dark:border-gray-700 border-gray-300;
   }
   .alert-dialog-window .footer button.cancel {
-    @apply text-red-500 dark:text-red-400
+    @apply text-red-500 dark:text-red-400;
   }
   .alert-dialog-window .footer button.primary {
-    @apply text-primary-500 dark:text-primary-400
+    @apply text-primary-500 dark:text-primary-400;
   }
   .alert-dialog-window .footer button:last-child {
     @apply rounded-b-2xl;
     @apply pb-3;
-    
   }
   .alert-dialog-window .btn-toolbar .btn {
     /* min-width: 100px; */

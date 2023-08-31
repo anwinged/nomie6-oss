@@ -1,19 +1,19 @@
 <script lang="ts">
-  import { WidgetClass } from './widget/widget-class.ts'
-  import ListItem from '../../components/list-item/list-item.svelte'
-  import type { DashboardClass } from './dashboard-class'
-  import { openWidgetEditor } from './widget/widget-editor/useWidgetEditorModal'
+  import { WidgetClass } from './widget/widget-class.ts';
+  import ListItem from '../../components/list-item/list-item.svelte';
+  import type { DashboardClass } from './dashboard-class';
+  import { openWidgetEditor } from './widget/widget-editor/useWidgetEditorModal';
 
-  export let dashboard: DashboardClass
+  export let dashboard: DashboardClass;
 
   const createWidget = () => {
     openWidgetEditor({
       widget: new WidgetClass(),
       onSave(widget) {
-        console.log({widget});
-      }
-    })
-  }
+        console.log({ widget });
+      },
+    });
+  };
 </script>
 
 <ListItem>
@@ -25,16 +25,14 @@
           <button class="pill sm space-x- flex">
             <strong>{widget.getTitle()}</strong>
             <span>{widget.type}</span>
-            <span>{widget.getLabel().replace('days','')}</span>
+            <span>{widget.getLabel().replace('days', '')}</span>
           </button>
         {/each}
-      {:else}
-      
-      {/if}
+      {:else}{/if}
       <div>
         <button
           on:click={() => {
-            createWidget()
+            createWidget();
           }}>+ Widget</button
         >
       </div>

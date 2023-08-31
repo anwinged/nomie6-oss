@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { showConfetti } from './ConfettiStore'
+  import { showConfetti } from './ConfettiStore';
   // Pulled from https://svelte.dev/tutorial/congratulations
-  import { onMount } from 'svelte'
-  import { fade } from 'svelte/transition'
+  import { onMount } from 'svelte';
+  import { fade } from 'svelte/transition';
 
   onMount(() => {
-    showConfetti()
-  })
+    showConfetti();
+  });
 </script>
 
 <div class="confetti-wrapper" transition:fade>

@@ -1,19 +1,20 @@
 <script lang="ts">
-  import Container from '../../components/container/container.svelte'
+  import Container from '../../components/container/container.svelte';
 
-  import Menu from '../../components/menu/menu.svelte'
-  import type { PopMenuButton } from '../../components/pop-menu/usePopmenu'
+  import Menu from '../../components/menu/menu.svelte';
+  import type { PopMenuButton } from '../../components/pop-menu/usePopmenu';
 
-  import { Prefs } from '../preferences/Preferences'
+  import { Prefs } from '../preferences/Preferences';
 
-  import { StorageEngines, StorageEngineType } from '../storage/storage'
+  import { StorageEngineType } from '../storage/storage';
+  import { StorageEngineDescriptions } from '../storage/storage-description';
 
-  const engines = StorageEngines
-  let selected: StorageEngineType = 'local'
-  selected = $Prefs.storageType
-  let showAdvanced: boolean = false
+  const engines = StorageEngineDescriptions;
+  let selected: StorageEngineType = 'local';
+  selected = $Prefs.storageType;
+  let showAdvanced: boolean = false;
 
-  let buttons: Array<PopMenuButton> = []
+  let buttons: Array<PopMenuButton> = [];
   $: {
     buttons = engines
       .map((engine) => {
@@ -25,19 +26,19 @@
           checked: `${selected}` == `${engine.id}`,
           click() {
             //@ts-ignore
-            selected = engine.id
-            $Prefs.storageType = selected
+            selected = engine.id;
+            $Prefs.storageType = selected;
           },
-        }
+        };
       })
       .filter((e) => {
         if (showAdvanced) {
-          return true
+          return true;
         } else {
-          return e.id !== 'pouchdb'
+          return e.id !== 'pouchdb';
         }
-      })
-    buttons = buttons
+      });
+    buttons = buttons;
   }
 </script>
 
@@ -51,7 +52,7 @@
     <div class="flex items-center justify-center pt-4">
       <button
         on:click={() => {
-          showAdvanced = !showAdvanced
+          showAdvanced = !showAdvanced;
         }}
         class="nbtn-badge bg-gray-500 bg-opacity-10 text-gray-600 dark:text-gray-300 text-xs"
       >

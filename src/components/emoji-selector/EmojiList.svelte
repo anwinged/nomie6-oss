@@ -1,6 +1,6 @@
 <script lang="ts">
-  import Emoji from './Emoji.svelte'
-  export let emojis
+  import Emoji from './Emoji.svelte';
+  export let emojis;
 </script>
 
 <!-- <h3 class="mb-4 text-xs text-center">{name}</h3> -->

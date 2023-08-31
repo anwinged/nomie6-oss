@@ -1,28 +1,28 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher } from 'svelte';
 
-  import TrackableAvatar from '../../components/avatar/trackable-avatar.svelte'
-  import type { Trackable } from './Trackable.class'
+  import TrackableAvatar from '../../components/avatar/trackable-avatar.svelte';
+  import type { Trackable } from './Trackable.class';
 
-  export let trackable: Trackable
-  export let size: number = 40
-  export let className: string = ''
-  export let transparent: boolean = false
-  export let outlined: boolean = false
-  export let value: string | number | undefined = undefined
-  export let hideValue: boolean = false
-  export let solid: boolean = false
+  export let trackable: Trackable;
+  export let size: number = 40;
+  export let className: string = '';
+  export let transparent: boolean = false;
+  export let outlined: boolean = false;
+  export let value: string | number | undefined = undefined;
+  export let hideValue: boolean = false;
+  export let solid: boolean = false;
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 </script>
 
 {#if trackable}
   <button
     type="button"
     on:click={(evt) => {
-      dispatch('click', evt)
+      dispatch('click', evt);
     }}
-    class:solid={solid}
+    class:solid
     class="trackable-pill {className} {transparent
       ? 'transparent shadow-none'
       : outlined

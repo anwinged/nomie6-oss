@@ -1,9 +1,9 @@
 <script lang="ts">
-  export let h1: boolean = true
-  export let className: string = ''
-  export let style: string = ''
-  export let listHeader: boolean = false
-  export let subTitle: string = undefined
+  export let h1: boolean = true;
+  export let className: string = '';
+  export let style: string = '';
+  export let listHeader: boolean = false;
+  export let subTitle: string = undefined;
 </script>
 
 {#if listHeader}

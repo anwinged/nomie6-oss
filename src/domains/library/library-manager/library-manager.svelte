@@ -1,22 +1,22 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
-  import Avatar from '../../../components/avatar/avatar.svelte'
-  import { openModal } from '../../../components/backdrop/BackdropStore2'
-  import Button from '../../../components/button/button.svelte'
-  import Divider from '../../../components/divider/divider.svelte'
+  import { onMount } from 'svelte';
+  import Avatar from '../../../components/avatar/avatar.svelte';
+  import { openModal } from '../../../components/backdrop/BackdropStore2';
+  import Button from '../../../components/button/button.svelte';
+  import Divider from '../../../components/divider/divider.svelte';
 
-  import IonIcon from '../../../components/icon/ion-icon.svelte'
-  import { AddIcon } from '../../../components/icon/nicons'
+  import IonIcon from '../../../components/icon/ion-icon.svelte';
+  import { AddIcon } from '../../../components/icon/nicons';
 
-  import ListItem from '../../../components/list-item/list-item.svelte'
-  import List from '../../../components/list/list.svelte'
-  import Panel from '../../../components/panel/panel.svelte'
-  import ToolbarGrid from '../../../components/toolbar/toolbar-grid.svelte'
-  import TrackerClass from '../../../modules/tracker/TrackerClass'
-  import { firebaseAuth } from '../../firebase/FirebaseStore'
+  import ListItem from '../../../components/list-item/list-item.svelte';
+  import List from '../../../components/list/list.svelte';
+  import Panel from '../../../components/panel/panel.svelte';
+  import ToolbarGrid from '../../../components/toolbar/toolbar-grid.svelte';
+  import TrackerClass from '../../../modules/tracker/TrackerClass';
+  import { firebaseAuth } from '../../firebase/FirebaseStore';
 
-  import LibraryTrackerItem from '../library-tracker-item.svelte'
-  import LibraryTrackerEditor from './library-tracker-editor.svelte'
+  import LibraryTrackerItem from '../library-tracker-item.svelte';
+  import LibraryTrackerEditor from './library-tracker-editor.svelte';
   import {
     getAllLibraryTrackers,
     getLibraryCategories,
@@ -24,14 +24,14 @@
     LibraryCategoryType,
     LibraryManagerStore,
     LibraryTrackerType,
-  } from './LibraryManagerStore'
+  } from './LibraryManagerStore';
 
-  let categories: Array<any> = []
-  let activeCategory: LibraryCategoryType
+  let categories: Array<any> = [];
+  let activeCategory: LibraryCategoryType;
 
-  let activeTrackers: Array<LibraryTrackerType> = []
+  let activeTrackers: Array<LibraryTrackerType> = [];
 
-  let expanded = {}
+  let expanded = {};
 
   // const toggleExpand = (index: number) => {
   //   const key = `index-${index}`
@@ -45,21 +45,21 @@
 
   const setActiveTrackers = (docs) => {
     activeTrackers = docs.map((doc: LibraryTrackerType) => {
-      doc.trackers = doc.trackers.map((t) => new TrackerClass(t))
-      return doc
-    })
-  }
+      doc.trackers = doc.trackers.map((t) => new TrackerClass(t));
+      return doc;
+    });
+  };
 
   const getTrackers = async () => {
     if (activeCategory) {
-      const docs = await getLibraryTrackersByCategory(activeCategory)
-      setActiveTrackers(docs)
+      const docs = await getLibraryTrackersByCategory(activeCategory);
+      setActiveTrackers(docs);
     }
-  }
+  };
 
   const selectCategory = (category) => {
-    activeCategory = category
-  }
+    activeCategory = category;
+  };
 
   const addTrackers = async () => {
     const libTracker: LibraryTrackerType = {
@@ -67,19 +67,19 @@
       title: undefined,
       tags: [activeCategory.id],
       uid: firebaseAuth.currentUser?.uid,
-    }
-    $LibraryManagerStore.libraryTracker = libTracker
-  }
+    };
+    $LibraryManagerStore.libraryTracker = libTracker;
+  };
 
   const getAllTrackers = async () => {
-    const trackers = await getAllLibraryTrackers()
-    setActiveTrackers(trackers)
-  }
+    const trackers = await getAllLibraryTrackers();
+    setActiveTrackers(trackers);
+  };
 
   $: if (!$LibraryManagerStore.libraryTracker && activeCategory) {
-    getTrackers()
+    getTrackers();
   } else if (!activeCategory) {
-    getAllTrackers()
+    getAllTrackers();
   }
 
   $: if ($LibraryManagerStore.libraryTracker) {
@@ -87,12 +87,12 @@
       id: 'library-tracker-editor',
       component: LibraryTrackerEditor,
       componentProps: {},
-    })
+    });
   }
 
   onMount(async () => {
-    categories = await getLibraryCategories()
-  })
+    categories = await getLibraryCategories();
+  });
 </script>
 
 <main class="w-screen h-screen grid-cols-12 grid bg-gray-200 dark:bg-gray-800">
@@ -107,7 +107,7 @@
           solo={activeCategory == category}
           className={activeCategory == category ? 'bg-primary-600' : ''}
           on:click={() => {
-            selectCategory(category)
+            selectCategory(category);
           }}
         >
           <Avatar emoji={category.emoji} slot="left" />
@@ -131,7 +131,7 @@
               {libraryTracker}
               on:click={() => {
                 // toggleExpand(index)
-                $LibraryManagerStore.libraryTracker = libraryTracker
+                $LibraryManagerStore.libraryTracker = libraryTracker;
               }}
             />
 

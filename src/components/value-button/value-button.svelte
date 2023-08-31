@@ -1,17 +1,17 @@
 <script lang="ts">
-  import type { Dayjs } from 'dayjs'
-  import { createEventDispatcher } from 'svelte'
+  import type { Dayjs } from 'dayjs';
+  import { createEventDispatcher } from 'svelte';
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  export let percentage: number
-  export let value: string
-  export let color: string
-  export let size: number
-  export let className: string = ''
-  export let wrapperClass: string = ''
-  export let date: Dayjs
-  export let topLabel: string
+  export let percentage: number;
+  export let value: string;
+  export let color: string;
+  export let size: number;
+  export let className: string = '';
+  export let wrapperClass: string = '';
+  export let date: Dayjs;
+  export let topLabel: string;
 </script>
 
 <div class="value-button-wrapper {wrapperClass}" style="--size:{size}px">
@@ -22,7 +22,7 @@
     type="button"
     title={`${topLabel} ${date.toISOString()}`}
     on:click={() => {
-      dispatch('click')
+      dispatch('click');
     }}
     class="value-button {className}"
     style="background-color:{color}"
@@ -64,7 +64,7 @@
   }
   .value-button-wrapper .top-label {
     font-size: calc(var(--size) * 0.23) !important;
-    
+
     @apply dark:text-white;
     @apply opacity-50;
     @apply lg:pb-1;

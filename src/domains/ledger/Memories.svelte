@@ -1,17 +1,17 @@
 <script lang="ts">
-  import Container from '../../components/container/container.svelte'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import ListItemLog from '../../components/list-item-log/list-item-log.svelte'
-  import dayjs from 'dayjs'
-  import ChevronForwardOutline from '../../n-icons/ChevronForwardOutline.svelte'
-  import { createEventDispatcher, onMount } from 'svelte'
+  import Container from '../../components/container/container.svelte';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import ListItemLog from '../../components/list-item-log/list-item-log.svelte';
+  import dayjs from 'dayjs';
+  import ChevronForwardOutline from '../../n-icons/ChevronForwardOutline.svelte';
+  import { createEventDispatcher, onMount } from 'svelte';
 
-  import { LedgerStore } from './LedgerStore'
-  const dispatch = createEventDispatcher()
+  import { LedgerStore } from './LedgerStore';
+  const dispatch = createEventDispatcher();
 
   onMount(async () => {
-    await LedgerStore.getMemories()
-  })
+    await LedgerStore.getMemories();
+  });
 </script>
 
 {#if $LedgerStore.memories.length > 0}
@@ -27,7 +27,7 @@
               class="flex items-center justify-center w-full py-2
                   font-medium text-black bg-primary-500"
               on:click={() => {
-                dispatch('date', log.end)
+                dispatch('date', log.end);
               }}
             >
               <span class="text-sm">{dayjs(log.end).fromNow()}</span>
@@ -39,7 +39,7 @@
             className="aged"
             {log}
             on:textClick={(event) => {
-              dispatch('text', event)
+              dispatch('text', event);
             }}
           />
         {/each}

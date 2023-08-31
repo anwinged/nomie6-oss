@@ -1,10 +1,14 @@
 <script lang="ts">
-  export let className: string = ''
-  export let style: string = ''
-  export let solid: boolean = true
-  export let tint: boolean = false
-  export let pad: boolean = false
+  export let className: string = '';
+  export let style: string = '';
+  export let solid: boolean = true;
+  export let tint: boolean = false;
+  export let pad: boolean = false;
 </script>
+
+<div class:pad class:tint class:solid class="form-group {className}" {style}>
+  <slot />
+</div>
 
 <style lang="postcss" global>
   .form-group {
@@ -25,7 +29,3 @@
     @apply bg-gray-100 dark:bg-gray-800;
   }
 </style>
-
-<div class:pad class:tint class:solid class="form-group {className}" {style}>
-  <slot />
-</div>

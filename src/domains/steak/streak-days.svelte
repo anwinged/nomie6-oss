@@ -1,34 +1,34 @@
 <script lang="ts">
-  import dayjs from 'dayjs'
+  import dayjs from 'dayjs';
 
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import { CheckmarkCircle } from '../../components/icon/nicons'
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import { CheckmarkCircle } from '../../components/icon/nicons';
 
-  import Text from '../../components/text/text.svelte'
-  import appConfig from '../../config/appConfig'
-  import type NLog from '../nomie-log/nomie-log'
+  import Text from '../../components/text/text.svelte';
+  import appConfig from '../../config/appConfig';
+  import type NLog from '../nomie-log/nomie-log';
 
-  export let logs: Array<NLog>
-  export let date = dayjs()
-  export let days: number = 7
-  export let color: string = appConfig.primary_color
-  export let size: number = 24
+  export let logs: Array<NLog>;
+  export let date = dayjs();
+  export let days: number = 7;
+  export let color: string = appConfig.primary_color;
+  export let size: number = 24;
 
-  let loopOver: Array<any> = []
+  let loopOver: Array<any> = [];
 
   $: if (days || date) {
     loopOver = Array(days)
       .fill(0)
       .map((d, i) => {
-        let loopDate = date.subtract(i, 'day')
+        let loopDate = date.subtract(i, 'day');
         return {
           date: loopDate,
           used: logs.find((nlog: NLog) => nlog.endDayjs().format('YYYY-MM-DD') === loopDate.format('YYYY-MM-DD'))
             ? true
             : false,
-        }
+        };
       })
-      .reverse()
+      .reverse();
   }
 </script>
 

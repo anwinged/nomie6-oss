@@ -1,23 +1,23 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
+  import { onMount } from 'svelte';
 
-  import CSVRImport from './csvr-import'
+  import CSVRImport from './csvr-import';
 
   class CSVExporter {
-    search: string
+    search: string;
   }
 
   const state = {
     saved: [],
-  }
+  };
 
   async function main() {
-    let savedImports = await UserStore.mstore('csv_exports')
+    let savedImports = await UserStore.mstore('csv_exports');
     state.saved = (savedImports || []).map((importConfig) => {
-      return new CSVRImport(importConfig)
-    })
+      return new CSVRImport(importConfig);
+    });
   }
-  onMount(main)
+  onMount(main);
 </script>
 
 Import Builder

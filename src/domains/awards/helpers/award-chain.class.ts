@@ -44,8 +44,8 @@ export default class AwardChain {
   /**
    * Save to storage
    */
-  async save(): Promise<AwardChain> {
-    return await this.storage.put(this.path, this.chain);
+  async save(): Promise<void> {
+    await this.storage.put(this.path, this.chain);
   }
 
   getById(id: string): Award | undefined {

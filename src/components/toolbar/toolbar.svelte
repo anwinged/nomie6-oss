@@ -1,7 +1,7 @@
 <script lang="ts">
-  export let pinTop = undefined
-  export let className = ''
-  export let style = ''
+  export let pinTop = undefined;
+  export let className = '';
+  export let style = '';
 </script>
 
 <div class="n-toolbar {pinTop ? 'pin-top' : ''} {className}" {style}>

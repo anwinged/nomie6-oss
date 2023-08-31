@@ -1,80 +1,87 @@
 <script lang="ts">
-  import Divider from './../../components/divider/divider.svelte'
+  import Divider from './../../components/divider/divider.svelte';
 
-  import Button from '../../components/button/button.svelte'
+  import Button from '../../components/button/button.svelte';
   // import Divider from '../../components/divider/divider.svelte'
-  import { Lang } from '../../store/lang'
+  import { Lang } from '../../store/lang';
 
-  import { closeModal } from '../../components/backdrop/BackdropStore2'
-  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte'
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
-  import { closeWritingPromptModal, openWritingPrompt, StaticWritingPrompts, WritingPrompt, WritingPromptStore, WritingPromptType } from './useWritingPrompts'
-  import Toolbar from '../../components/toolbar/toolbar.svelte'
-  import ButtonGroup from '../../components/button-group/button-group.svelte'
-  import List from '../../components/list/list.svelte'
-  import Input from '../../components/input/input.svelte'
-  import ListItem from '../../components/list-item/list-item.svelte'
-  import { showToast } from '../../components/toast/ToastStore'
+  import { closeModal } from '../../components/backdrop/BackdropStore2';
+  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte';
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
+  import {
+    closeWritingPromptModal,
+    openWritingPrompt,
+    StaticWritingPrompts,
+    WritingPrompt,
+    WritingPromptStore,
+    WritingPromptType,
+  } from './useWritingPrompts';
+  import Toolbar from '../../components/toolbar/toolbar.svelte';
+  import ButtonGroup from '../../components/button-group/button-group.svelte';
+  import List from '../../components/list/list.svelte';
+  import Input from '../../components/input/input.svelte';
+  import ListItem from '../../components/list-item/list-item.svelte';
+  import { showToast } from '../../components/toast/ToastStore';
 
-  import { onMount } from 'svelte'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
+  import { onMount } from 'svelte';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
 
-  import TrashOutline from '../../n-icons/TrashOutline.svelte'
-  import { Interact } from '../../store/interact'
+  import TrashOutline from '../../n-icons/TrashOutline.svelte';
+  import { Interact } from '../../store/interact';
 
-  import type { DayPartUnit } from '../../modules/time/time'
-  import Textarea from '../../components/textarea/textarea.svelte'
-  import CreateOutline from '../../n-icons/CreateOutline.svelte'
+  import type { DayPartUnit } from '../../modules/time/time';
+  import Textarea from '../../components/textarea/textarea.svelte';
+  import CreateOutline from '../../n-icons/CreateOutline.svelte';
 
-  export let id: string
+  export let id: string;
 
-  export let editMode: boolean = false
-  export let onSelect: (wp: WritingPrompt) => void | undefined
-  let activeTimeframe: DayPartUnit | 'any' = 'any'
+  export let editMode: boolean = false;
+  export let onSelect: (wp: WritingPrompt) => void | undefined;
+  let activeTimeframe: DayPartUnit | 'any' = 'any';
 
-  let editing: WritingPrompt | undefined
-  let canSave: boolean = false
+  let editing: WritingPrompt | undefined;
+  let canSave: boolean = false;
 
-  $: canSave = editing?.text?.length > 1 && editing?.time ? true : false
+  $: canSave = editing?.text?.length > 1 && editing?.time ? true : false;
 
   const editPrompt = (prompt: WritingPromptType) => {
-    editing = new WritingPrompt(prompt)
-  }
+    editing = new WritingPrompt(prompt);
+  };
 
-  onMount(() => {})
-  let prompts: Array<WritingPrompt> = []
+  onMount(() => {});
+  let prompts: Array<WritingPrompt> = [];
   $: if ($WritingPromptStore && $WritingPromptStore.length) {
-    initData()
+    initData();
   }
 
   const initData = () => {
-    prompts = [...$WritingPromptStore]
-  }
+    prompts = [...$WritingPromptStore];
+  };
 
   const saveEditing = async () => {
     if (editing?.text.length > 1) {
-      await WritingPromptStore.upsert(editing)
-      editing = undefined
-      showToast({ message: 'Saved' })
+      await WritingPromptStore.upsert(editing);
+      editing = undefined;
+      showToast({ message: 'Saved' });
     }
-  }
+  };
 
   const clicked = async (item) => {
     if (!editMode) {
       closeWritingPromptModal();
       openWritingPrompt(item);
-      if(onSelect) onSelect(item);
+      if (onSelect) onSelect(item);
     }
-  }
+  };
 
   const deletePrompt = async (prompt: WritingPrompt) => {
-    const confirmed = await Interact.confirm('Delete this Prompt?')
+    const confirmed = await Interact.confirm('Delete this Prompt?');
     if (confirmed) {
-      await WritingPromptStore.remove(prompt)
-      showToast({ message: 'Deleted' })
-      initData()
+      await WritingPromptStore.remove(prompt);
+      showToast({ message: 'Deleted' });
+      initData();
     }
-  }
+  };
 </script>
 
 <BackdropModal mainClass="px-2 lg:px-4">
@@ -104,28 +111,28 @@
             label: 'All',
             active: activeTimeframe == 'any',
             click: () => {
-              activeTimeframe = 'any'
+              activeTimeframe = 'any';
             },
           },
           {
             label: 'Morning',
             active: activeTimeframe == 'morning',
             click: () => {
-              activeTimeframe = 'morning'
+              activeTimeframe = 'morning';
             },
           },
           {
             label: 'Afternoon',
             active: activeTimeframe == 'afternoon',
             click: () => {
-              activeTimeframe = 'afternoon'
+              activeTimeframe = 'afternoon';
             },
           },
           {
             label: 'Evening',
             active: activeTimeframe == 'evening',
             click: () => {
-              activeTimeframe = 'evening'
+              activeTimeframe = 'evening';
             },
           },
         ]}
@@ -163,7 +170,7 @@
         <ListItem
           clickable
           on:click={() => {
-            editing = undefined
+            editing = undefined;
           }}
         >
           <div class="w-full text-center text-red-500">Cancel</div>
@@ -178,9 +185,9 @@
     {#each prompts.filter((prompt) => {
       // return true;
       if (activeTimeframe === 'any') {
-        return true
+        return true;
       } else {
-        return prompt.time == activeTimeframe
+        return prompt.time == activeTimeframe;
       }
     }) as item}
       <ListItem on:click={() => clicked(item)} bottomLine={16} detail={!editMode}>
@@ -190,7 +197,7 @@
           {#if editMode}
             <Button
               on:click={() => {
-                deletePrompt(item)
+                deletePrompt(item);
               }}
               className="text-red-500"
               icon><IonIcon icon={TrashOutline} /></Button
@@ -206,7 +213,7 @@
         editPrompt({
           text: '',
           time: activeTimeframe,
-        })
+        });
       }}
     >
       <span class="text-primary-500">Add Custom Prompt</span>
@@ -217,9 +224,9 @@
     {#each StaticWritingPrompts.filter((prompt) => {
       // return true;
       if (activeTimeframe === 'any') {
-        return true
+        return true;
       } else {
-        return prompt.time == activeTimeframe
+        return prompt.time == activeTimeframe;
       }
     }) as item}
       <ListItem on:click={() => clicked(item)} bottomLine={16} detail={!editMode}>

@@ -1,30 +1,30 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
+  import { onMount } from 'svelte';
 
-  import Avatar from '../avatar/avatar.svelte'
-  import Button from '../button/button.svelte'
-  import IonIcon from '../icon/ion-icon.svelte'
+  import Avatar from '../avatar/avatar.svelte';
+  import Button from '../button/button.svelte';
+  import IonIcon from '../icon/ion-icon.svelte';
 
-  export let emoji: string = undefined
-  export let icon: any = undefined
-  export let title: string = undefined
-  export let description: string = undefined
-  export let className: string = ''
-  export let style: string = ''
-  export let buttonLabel: string = undefined
-  export let buttonClick: any = undefined
+  export let emoji: string = undefined;
+  export let icon: any = undefined;
+  export let title: string = undefined;
+  export let description: string = undefined;
+  export let className: string = '';
+  export let style: string = '';
+  export let buttonLabel: string = undefined;
+  export let buttonClick: any = undefined;
   export let small: boolean = false;
 
-  let loaded: boolean = false
+  let loaded: boolean = false;
 
   onMount(() => {
     setTimeout(() => {
-      loaded = true
-    }, 200)
-  })
+      loaded = true;
+    }, 200);
+  });
 </script>
 
-<div class="empty-box {className} {loaded ? 'finish' : 'start'}" class:small={small} {style}>
+<div class="empty-box {className} {loaded ? 'finish' : 'start'}" class:small {style}>
   <slot name="emoji" />
   {#if emoji}
     <Avatar {emoji} size={80} className="mb-4" />

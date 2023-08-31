@@ -1,34 +1,34 @@
 <script lang="ts">
-  import type { Dayjs } from 'dayjs'
-  import dayjs from 'dayjs'
+  import type { Dayjs } from 'dayjs';
+  import dayjs from 'dayjs';
 
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher } from 'svelte';
 
-  import HScroller from '../../components/h-scroller/h-scroller.svelte'
-  import TimeSelect from '../../components/time-select/time-select.svelte'
-  import { TodayStore } from '../usage/today/TodayStore'
+  import HScroller from '../../components/h-scroller/h-scroller.svelte';
+  import TimeSelect from '../../components/time-select/time-select.svelte';
+  import { TodayStore } from '../usage/today/TodayStore';
 
-  export let time: any = new Date().getTime()
-  export let is24Hour: boolean = false
+  export let time: any = new Date().getTime();
+  export let is24Hour: boolean = false;
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  $: activeDate = dayjs(new Date(time))
+  $: activeDate = dayjs(new Date(time));
 
   const days: Array<Dayjs> = Array(30)
     .fill(0)
     .map((zero, daysBack) => {
-      return dayjs(new Date()).subtract(daysBack, 'day')
+      return dayjs(new Date()).subtract(daysBack, 'day');
     })
-    .reverse()
+    .reverse();
 
-  $: selectedDayIndex = days.findIndex((d) => d.format('YYYY-MM-DD') === $TodayStore.date.format('YYYY-MM-DD'))
+  $: selectedDayIndex = days.findIndex((d) => d.format('YYYY-MM-DD') === $TodayStore.date.format('YYYY-MM-DD'));
 
   const onDayMonthSelected = (day: Dayjs, index: number) => {
-    selectedDayIndex = index
-    const newDate = day.hour(activeDate.hour()).minute(activeDate.minute()).toDate()
-    dispatch('change', newDate)
-  }
+    selectedDayIndex = index;
+    const newDate = day.hour(activeDate.hour()).minute(activeDate.minute()).toDate();
+    dispatch('change', newDate);
+  };
 </script>
 
 <section aria-label="date-time-setting" class="flex items-center justify-items-stretch">
@@ -37,11 +37,11 @@
       {#each days as day, index}
         <button
           on:click={() => {
-            onDayMonthSelected(day, index)
+            onDayMonthSelected(day, index);
           }}
           class="snap-end {selectedDayIndex == index
             ? 'selected active bg-primary-500 my-1 px-2 text-white font-bold '
-            : ' text-primary-500'}  text-xs p-1 stiff rounded-full "
+            : ' text-primary-500'}  text-xs p-1 stiff rounded-full"
         >
           {day.format('MMM')}
           {day.format('D')}

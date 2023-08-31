@@ -7,24 +7,24 @@
    */
 
   // svelte
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher } from 'svelte';
 
   // Components
-  import Counter from '../../../components/counter/counter.svelte'
-  import ManualTime from '../../../components/counter/manual-time.svelte'
-  import type TrackerClass from '../../../modules/tracker/TrackerClass'
+  import Counter from '../../../components/counter/counter.svelte';
+  import ManualTime from '../../../components/counter/manual-time.svelte';
+  import type TrackerClass from '../../../modules/tracker/TrackerClass';
 
   // Stores
 
-  import { Lang } from '../../../store/lang'
+  import { Lang } from '../../../store/lang';
 
   // Consts
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
   // Props
-  export let value: number
-  export let tracker: TrackerClass
-  export let manual: boolean = false
+  export let value: number;
+  export let tracker: TrackerClass;
+  export let manual: boolean = false;
 </script>
 
 <div class="n-timer-input w-full">
@@ -41,14 +41,14 @@
       <ManualTime
         {value}
         on:change={(event) => {
-          dispatch('change', event.detail)
+          dispatch('change', event.detail);
         }}
       />
       {#if !manual && value}
         <button
           aria-label="Resume Timer"
           on:click={() => {
-            dispatch('forceStart')
+            dispatch('forceStart');
           }}
           class="bg-gray-300 rounded-md px-3 py-1 mt-2 font-medium dark:bg-gray-700 dark:text-white"
         >

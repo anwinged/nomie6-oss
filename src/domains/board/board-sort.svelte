@@ -1,56 +1,56 @@
 <script lang="ts">
-  import NItem from '../../components/list-item/list-item.svelte'
+  import NItem from '../../components/list-item/list-item.svelte';
 
-  import NToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
+  import NToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
   // Utils
 
   // Stores
-  import { Lang } from '../../store/lang'
-  import { Interact } from '../../store/interact'
+  import { Lang } from '../../store/lang';
+  import { Interact } from '../../store/interact';
 
-  import Button from '../../components/button/button.svelte'
-  import List from '../../components/list/list.svelte'
+  import Button from '../../components/button/button.svelte';
+  import List from '../../components/list/list.svelte';
 
-  import Text from '../../components/text/text.svelte'
+  import Text from '../../components/text/text.svelte';
 
-  import { saveBoardsToStorage, UniboardStore } from './UniboardStore'
+  import { saveBoardsToStorage, UniboardStore } from './UniboardStore';
 
-  import { CloseOutline, MenuOutline, RemoveCircleOutline } from '../../components/icon/nicons'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
+  import { CloseOutline, MenuOutline, RemoveCircleOutline } from '../../components/icon/nicons';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
 
-  import { removeBoard } from './boardActions'
-  import SortableList2 from '../../components/sortable-list/sortable-list2.svelte'
-  import { showToast } from '../../components/toast/ToastStore'
-  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte'
-  import { closeModal } from '../../components/backdrop/BackdropStore2'
+  import { removeBoard } from './boardActions';
+  import SortableList2 from '../../components/sortable-list/sortable-list2.svelte';
+  import { showToast } from '../../components/toast/ToastStore';
+  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte';
+  import { closeModal } from '../../components/backdrop/BackdropStore2';
 
-  export let id: string
+  export let id: string;
 
   function boardsSorted(evt) {
     if (evt.detail instanceof Array) {
-      const boards = evt.detail
-      saveBoardsToStorage(boards)
+      const boards = evt.detail;
+      saveBoardsToStorage(boards);
       UniboardStore.update((b) => {
-        b.boards = boards
-        return b
-      })
+        b.boards = boards;
+        return b;
+      });
     }
   }
   async function deleteBoard(board) {
     let confirmed = await Interact.confirm(
       'Delete ' + board.label + ' tab?',
       "You can recreate it later, but it's not super easy."
-    )
+    );
     if (confirmed === true) {
-      removeBoard(board)
+      removeBoard(board);
 
-      showToast({ message: Lang.t('general.deleted', 'Deleted') })
+      showToast({ message: Lang.t('general.deleted', 'Deleted') });
     }
   }
 
   const close = () => {
-    closeModal(id)
-  }
+    closeModal(id);
+  };
 </script>
 
 <BackdropModal>
@@ -76,7 +76,7 @@
               icon
               className="text-red-500"
               on:click={() => {
-                deleteBoard(item)
+                deleteBoard(item);
               }}
             >
               <IonIcon icon={RemoveCircleOutline} />

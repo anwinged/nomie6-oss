@@ -1,71 +1,71 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
-  import { fade, fly } from 'svelte/transition'
+  import { createEventDispatcher } from 'svelte';
+  import { fade, fly } from 'svelte/transition';
 
   // import flyin from "../../modules/actions/flyin";
 
-  import { BackdropStore } from './backdrop-store'
-  import ScrollStopper from './scroll-stopper.svelte'
+  import { BackdropStore } from './backdrop-store';
+  import ScrollStopper from './scroll-stopper.svelte';
   // import { pan } from "svelte-hammer";
 
-  export let visible: boolean = true
-  export let stopPropagation: boolean = true
-  export let tappable: boolean = true
-  export let opacity: number = 0.75
-  export let className: string = ''
-  export let position: 'center' | 'bottom' | 'top' | 'bottom-center' = 'center'
-  export let id: string
+  export let visible: boolean = true;
+  export let stopPropagation: boolean = true;
+  export let tappable: boolean = true;
+  export let opacity: number = 0.75;
+  export let className: string = '';
+  export let position: 'center' | 'bottom' | 'top' | 'bottom-center' = 'center';
+  export let id: string;
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  let activeId: string
+  let activeId: string;
 
-  let indexLevel: number = 0
-  let scale: number = 100
-  let translateY: number = 0
+  let indexLevel: number = 0;
+  let scale: number = 100;
+  let translateY: number = 0;
 
   function remove() {
-    BackdropStore.remove(activeId)
-    activeId = undefined
+    BackdropStore.remove(activeId);
+    activeId = undefined;
 
-    dispatch('closed')
+    dispatch('closed');
   }
 
   function emitTap(ev: Event) {
     if (stopPropagation) {
-      ev.preventDefault()
-      ev.stopPropagation()
+      ev.preventDefault();
+      ev.stopPropagation();
     }
     if (tappable) {
-      dispatch('tap')
-      remove()
+      dispatch('tap');
+      remove();
     }
   }
 
-  let windowChangeListener: boolean = false
+  let windowChangeListener: boolean = false;
 
   $: if (visible && !activeId) {
-    activeId = id
-    BackdropStore.add(id)
+    activeId = id;
+    BackdropStore.add(id);
     if (!windowChangeListener) {
-      window.addEventListener('popstate', windowPathChanged)
-      windowChangeListener = true
+      window.addEventListener('popstate', windowPathChanged);
+      windowChangeListener = true;
     }
   } else if (!visible && activeId) {
-    remove()
+    remove();
   } else if (!visible && !activeId) {
-    window.removeEventListener('popstate', windowPathChanged)
-    windowChangeListener = false
+    window.removeEventListener('popstate', windowPathChanged);
+    windowChangeListener = false;
   }
 
   const windowPathChanged = () => {
-    remove()
-  }
+    remove();
+  };
 
   $: {
-    indexLevel = $BackdropStore.findIndex((b) => b == id)
-    scale = (98 - (indexLevel + 2)) / 100
-    translateY = -20 / scale
+    indexLevel = $BackdropStore.findIndex((b) => b == id);
+    scale = (98 - (indexLevel + 2)) / 100;
+    translateY = -20 / scale;
   }
 </script>
 
@@ -114,7 +114,6 @@
     @apply flex-grow-0;
     @apply backdrop-filter backdrop-saturate-150 backdrop-blur-sm;
     padding-bottom: calc(env(safe-area-inset-bottom));
- 
   }
   .nui-backdrop.nui-pos-center {
     @apply justify-center;
@@ -135,7 +134,7 @@
     @apply flex-shrink-0;
     @apply flex-grow-0;
     background-color: transparent;
-    
+
     @apply transition-all;
   }
   .nui-backdrop--children.nui-pos-bottom {

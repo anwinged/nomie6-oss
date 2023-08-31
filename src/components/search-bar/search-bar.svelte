@@ -1,52 +1,52 @@
 <script lang="ts">
-  import Input from '../input/input.svelte'
+  import Input from '../input/input.svelte';
 
-  import { createEventDispatcher } from 'svelte'
-  import Button from '../button/button.svelte'
+  import { createEventDispatcher } from 'svelte';
+  import Button from '../button/button.svelte';
 
-  import Toolbar from '../toolbar/toolbar.svelte'
-  import Container from '../container/container.svelte'
-  import { CloseOutline, SearchIcon } from '../icon/nicons'
-  import IonIcon from '../icon/ion-icon.svelte'
-  const dispatch = createEventDispatcher()
+  import Toolbar from '../toolbar/toolbar.svelte';
+  import Container from '../container/container.svelte';
+  import { CloseOutline, SearchIcon } from '../icon/nicons';
+  import IonIcon from '../icon/ion-icon.svelte';
+  const dispatch = createEventDispatcher();
 
-  export let searchTerm: string | undefined = undefined
-  export let placeholder = `Search...`
-  export let style: string = ''
-  export let className: string = ''
-  export let inputClass: string = ''
-  export let compact: boolean = false
+  export let searchTerm: string | undefined = undefined;
+  export let placeholder = `Search...`;
+  export let style: string = '';
+  export let className: string = '';
+  export let inputClass: string = '';
+  export let compact: boolean = false;
 
-  export let showClose: boolean = true
-  export let autofocus: boolean = false
-  export const autocomplete: boolean = false
-  export let searchButton: boolean = false
+  export let showClose: boolean = true;
+  export let autofocus: boolean = false;
+  export const autocomplete: boolean = false;
+  export let searchButton: boolean = false;
 
-  let _elInput: any
+  let _elInput: any;
   // export let hasResults = false;
 
   // FIre off changes when input changes
-  let timeout: any
+  let timeout: any;
   function fireChange() {
-    clearTimeout(timeout)
+    clearTimeout(timeout);
     timeout = setTimeout(() => {
-      dispatch('change', searchTerm)
-    }, 400)
+      dispatch('change', searchTerm);
+    }, 400);
   }
 
   export function focus() {
     if (_elInput.doFocus) {
-      _elInput.doFocus()
+      _elInput.doFocus();
     }
   }
   // Fire off when search is hit
   function fireSearch() {
-    dispatch('search', searchTerm)
+    dispatch('search', searchTerm);
   }
   // Fire off clearing
   function fireClear() {
-    dispatch('clear')
-    searchTerm = undefined
+    dispatch('clear');
+    searchTerm = undefined;
   }
   // Watch for enter keys
   // function searchKeypress(event:any) {
@@ -71,10 +71,10 @@
       on:input={fireChange}
       on:enter={fireSearch}
       on:focus={() => {
-        dispatch('focus')
+        dispatch('focus');
       }}
       on:blur={() => {
-        dispatch('blur')
+        dispatch('blur');
       }}
       {placeholder}
     >
@@ -107,7 +107,7 @@
     @apply flex-grow flex-shrink;
   }
   .search-bar input {
-    background:transparent !important;
+    background: transparent !important;
   }
 
   .search-bar .btn-action-clear {

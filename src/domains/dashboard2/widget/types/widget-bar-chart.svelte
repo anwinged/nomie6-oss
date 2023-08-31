@@ -1,37 +1,37 @@
 <script lang="ts">
-  import type { TrackableUsage } from '../../../usage/trackable-usage.class'
+  import type { TrackableUsage } from '../../../usage/trackable-usage.class';
   // import type { Trackable } from '../../../trackable/Trackable.class'
-  import type { WidgetClass } from '../widget-class'
-  import UsageChart from '../../../usage/usage-chart.svelte'
+  import type { WidgetClass } from '../widget-class';
+  import UsageChart from '../../../usage/usage-chart.svelte';
 
-  import nid from '../../../../modules/nid/nid'
-  import { Prefs } from '../../../preferences/Preferences'
-  export let widget: WidgetClass
+  import nid from '../../../../modules/nid/nid';
+  import { Prefs } from '../../../preferences/Preferences';
+  export let widget: WidgetClass;
   // export let trackable: Trackable | undefined = undefined
-  export let usage: TrackableUsage
+  export let usage: TrackableUsage;
 
-  let type: 'bar' | 'line' = 'bar'
+  let type: 'bar' | 'line' = 'bar';
 
-  let reverseUsage: TrackableUsage
+  let reverseUsage: TrackableUsage;
 
   $: if (usage) {
     if (['last-365', 'this-year'].indexOf(widget.timeframe.details.id) > -1) {
       reverseUsage = usage
         .reverse()
         .groupBy('week', 'YYYY-MM-D')
-        .backfill(widget.getStartDate($Prefs.weekStarts).toDate(), widget.getEndDate($Prefs.weekStarts).toDate())
+        .backfill(widget.getStartDate($Prefs.weekStarts).toDate(), widget.getEndDate($Prefs.weekStarts).toDate());
     } else {
       reverseUsage = usage
         .reverse()
-        .byDay.backfill(widget.getStartDate($Prefs.weekStarts).toDate(), widget.getEndDate($Prefs.weekStarts).toDate())
+        .byDay.backfill(widget.getStartDate($Prefs.weekStarts).toDate(), widget.getEndDate($Prefs.weekStarts).toDate());
     }
   }
 
   $: if (usage) {
     if (widget.type == 'barchart') {
-      type = 'bar'
+      type = 'bar';
     } else {
-      type = 'line'
+      type = 'line';
     }
   }
 </script>

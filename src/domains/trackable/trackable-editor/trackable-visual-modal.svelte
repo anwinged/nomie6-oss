@@ -1,64 +1,64 @@
 <script lang="ts">
-  import Avatar from '../../../components/avatar/avatar.svelte'
-  import BackdropModal from '../../../components/backdrop/backdrop-modal.svelte'
-  import { closeModal } from '../../../components/backdrop/BackdropStore2'
+  import Avatar from '../../../components/avatar/avatar.svelte';
+  import BackdropModal from '../../../components/backdrop/backdrop-modal.svelte';
+  import { closeModal } from '../../../components/backdrop/BackdropStore2';
 
-  import ButtonGroup from '../../../components/button-group/button-group.svelte'
+  import ButtonGroup from '../../../components/button-group/button-group.svelte';
 
-  import Button from '../../../components/button/button.svelte'
+  import Button from '../../../components/button/button.svelte';
 
-  import ColorPicker from '../../../components/color-picker/color-picker.svelte'
-  import EmojiSelector from '../../../components/emoji-selector/EmojiSelector.svelte'
-  import IonIcon from '../../../components/icon/ion-icon.svelte'
-  import Input from '../../../components/input/input.svelte'
-  import List from '../../../components/list/list.svelte'
+  import ColorPicker from '../../../components/color-picker/color-picker.svelte';
+  import EmojiSelector from '../../../components/emoji-selector/EmojiSelector.svelte';
+  import IonIcon from '../../../components/icon/ion-icon.svelte';
+  import Input from '../../../components/input/input.svelte';
+  import List from '../../../components/list/list.svelte';
 
-  import Toolbar from '../../../components/toolbar/toolbar.svelte'
-  import ImageUploader from '../../../components/uploader/image-uploader.svelte'
-  import { objectHash } from '../../../modules/object-hash/object-hash'
-  import ArrowBack from '../../../n-icons/ArrowBack.svelte'
-  import { wait } from '../../../utils/tick/tick'
-  import { getTrackableVisuals } from '../trackable-utils'
-  import type { Trackable } from '../Trackable.class'
+  import Toolbar from '../../../components/toolbar/toolbar.svelte';
+  import ImageUploader from '../../../components/uploader/image-uploader.svelte';
+  import { objectHash } from '../../../modules/object-hash/object-hash';
+  import ArrowBack from '../../../n-icons/ArrowBack.svelte';
+  import { wait } from '../../../utils/tick/tick';
+  import { getTrackableVisuals } from '../trackable-utils';
+  import type { Trackable } from '../Trackable.class';
 
-  export let id: string
-  export let trackable: Trackable
-  export let onComplete: Function
+  export let id: string;
+  export let trackable: Trackable;
+  export let onComplete: Function;
   // export let onCancel: Function
 
-  let emojiOrColor: 'color' | 'emoji' | 'image' = 'emoji'
+  let emojiOrColor: 'color' | 'emoji' | 'image' = 'emoji';
 
-  let color: string
-  let emoji: string
-  let avatar: string
+  let color: string;
+  let emoji: string;
+  let avatar: string;
 
-  let ready: boolean = true
+  let ready: boolean = true;
 
   const refresh = async () => {
-    ready = false
-    await wait(2)
-    ready = true
-  }
+    ready = false;
+    await wait(2);
+    ready = true;
+  };
 
   const manualEmoji = () => {
-    const multiEmoji = prompt('Want multiple emojis? Do it here:', trackable.emoji)
+    const multiEmoji = prompt('Want multiple emojis? Do it here:', trackable.emoji);
     if (multiEmoji) {
-      trackable.emoji = multiEmoji
+      trackable.emoji = multiEmoji;
     }
-  }
+  };
 
   const removeImage = () => {
-    trackable.avatar = undefined
-    avatar = undefined
-  }
+    trackable.avatar = undefined;
+    avatar = undefined;
+  };
 
-  let lastTrackableHash = ''
+  let lastTrackableHash = '';
   $: if (trackable && objectHash(trackable) !== lastTrackableHash) {
-    lastTrackableHash = objectHash(trackable)
-    const visuals = getTrackableVisuals(trackable)
-    color = visuals.color
-    emoji = visuals.emoji
-    avatar = visuals.avatar
+    lastTrackableHash = objectHash(trackable);
+    const visuals = getTrackableVisuals(trackable);
+    color = visuals.color;
+    emoji = visuals.emoji;
+    avatar = visuals.avatar;
   }
 
   const close = () => {
@@ -66,10 +66,10 @@
       emoji,
       avatar,
       color,
-    })
+    });
 
-    closeModal(id)
-  }
+    closeModal(id);
+  };
 </script>
 
 <BackdropModal className="" mainClass="bg-white dark:bg-gray-900">
@@ -80,7 +80,7 @@
         primary
         icon
         on:click={() => {
-          close()
+          close();
         }}
       >
         <IonIcon icon={ArrowBack} />
@@ -93,21 +93,21 @@
             label: 'Emoji',
             active: emojiOrColor === 'emoji',
             click() {
-              emojiOrColor = 'emoji'
+              emojiOrColor = 'emoji';
             },
           },
           {
             label: 'Color',
             active: emojiOrColor === 'color',
             click() {
-              emojiOrColor = 'color'
+              emojiOrColor = 'color';
             },
           },
           {
             label: 'Image',
             active: emojiOrColor === 'image',
             click() {
-              emojiOrColor = 'image'
+              emojiOrColor = 'image';
             },
           },
         ]}
@@ -120,7 +120,7 @@
           <Avatar
             {emoji}
             on:click={() => {
-              manualEmoji()
+              manualEmoji();
             }}
             src={avatar}
             className="bg-white p-5 rounded-xl shadow-lg"
@@ -131,8 +131,8 @@
         {#if avatar}
           <button
             on:click={() => {
-              removeImage()
-              refresh()
+              removeImage();
+              refresh();
               // fireChange()
             }}
             class="text-xs absolute top-2 right-3 py-1 px-3 rounded-full bg-black text-white"
@@ -146,7 +146,7 @@
   {#if emojiOrColor === 'emoji'}
     <EmojiSelector
       on:emoji={(evt) => {
-        emoji = evt.detail
+        emoji = evt.detail;
       }}
     />
   {:else if emojiOrColor === 'color'}
@@ -154,7 +154,7 @@
       grid={true}
       value={color}
       on:color={(evt) => {
-        color = evt.detail
+        color = evt.detail;
       }}
     />
   {:else if emojiOrColor === 'image'}
@@ -163,11 +163,11 @@
         label="Select Image..."
         className="w-full"
         on:image={(evt) => {
-          avatar = evt.detail
+          avatar = evt.detail;
           setTimeout(() => {
-            avatar = evt.detail
-          }, 10)
-          refresh()
+            avatar = evt.detail;
+          }, 10);
+          refresh();
           // fireChange()
         }}
       />

@@ -1,27 +1,27 @@
 <script lang="ts">
-  import Button from '../../components/button/button.svelte'
+  import Button from '../../components/button/button.svelte';
 
-  import ListItem from '../../components/list-item/list-item.svelte'
-  import Text from '../../components/text/text.svelte'
-  import { Lang } from '../../store/lang'
-  import { SearchStore } from './search-store'
-  import type { SearchTerm } from './search-store'
+  import ListItem from '../../components/list-item/list-item.svelte';
+  import Text from '../../components/text/text.svelte';
+  import { Lang } from '../../store/lang';
+  import { SearchStore } from './search-store';
+  import type { SearchTerm } from './search-store';
 
   // import TrackerClass from '../../modules/tracker/TrackerClass'
 
   // import { TrackerStore } from '../tracker/TrackerStore'
 
-  let mode = 'view'
-  let savedTerms: Array<SearchTerm>
+  let mode = 'view';
+  let savedTerms: Array<SearchTerm>;
   // let savedTrackers: Array<TrackerClass>
 
   $: if ($SearchStore.saved.length || $SearchStore.view) {
     // Get SavedTerms array
     savedTerms = $SearchStore.saved
       .filter((st: SearchTerm) => {
-        return st.type === $SearchStore.view
+        return st.type === $SearchStore.view;
       })
-      .reverse()
+      .reverse();
 
     // if ($SearchStore.view === 'trackers') {
     //   savedTrackers = savedTerms.map((searchTerm: SearchTerm) => {
@@ -31,11 +31,11 @@
     // } else if ($SearchStore.view === 'people') {
     // }
 
-    savedTerms = savedTerms
+    savedTerms = savedTerms;
   }
 
   function toggleEditMode() {
-    mode = mode === 'view' ? 'edit' : 'view'
+    mode = mode === 'view' ? 'edit' : 'view';
   }
 </script>
 
@@ -48,7 +48,7 @@
           color="transparent"
           size="sm"
           on:click={() => {
-            toggleEditMode()
+            toggleEditMode();
           }}
         >
           {Lang.t('general.edit', 'Edit')}
@@ -59,7 +59,7 @@
           color="transparent"
           className="text-red"
           on:click={() => {
-            toggleEditMode()
+            toggleEditMode();
           }}
         >
           {Lang.t('general.done', 'Done')}
@@ -97,7 +97,7 @@
               size="sm"
               style="color:var(--color-red)"
               on:click={() => {
-                SearchStore.remove(searchTerm)
+                SearchStore.remove(searchTerm);
               }}
             >
               Delete
@@ -114,10 +114,10 @@
         on:click={(evt) => {
           if (mode == 'view') {
             SearchStore.update((state) => {
-              state.active = searchTerm
-              state.view = searchTerm.type
-              return state
-            })
+              state.active = searchTerm;
+              state.view = searchTerm.type;
+              return state;
+            });
           }
         }}
       >
@@ -128,7 +128,7 @@
               size="sm"
               color="danger"
               on:click={() => {
-                SearchStore.remove(searchTerm)
+                SearchStore.remove(searchTerm);
               }}
             >
               Delete

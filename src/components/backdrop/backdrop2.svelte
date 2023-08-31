@@ -1,32 +1,29 @@
 <script lang="ts">
-  import { quadInOut } from 'svelte/easing'
-import type { SvelteComponentDev } from 'svelte/internal';
+  import { quadInOut } from 'svelte/easing';
+  import type { SvelteComponentDev } from 'svelte/internal';
 
-  import { fade, fly } from 'svelte/transition'
+  import { fade, fly } from 'svelte/transition';
 
-  import { BackdropStore2 } from './BackdropStore2'
-  import ScrollStopper from './scroll-stopper.svelte'
+  import { BackdropStore2 } from './BackdropStore2';
+  import ScrollStopper from './scroll-stopper.svelte';
 
-  const zIndex: number = 5000
+  const zIndex: number = 5000;
   let focusedId: string;
-  let last = $BackdropStore2[$BackdropStore2.length - 1]
+  let last = $BackdropStore2[$BackdropStore2.length - 1];
   $: last = $BackdropStore2[$BackdropStore2.length - 1];
 
-  
-  
   // Monitor the Opening and closing of this modal
   // We do this because we use fly:out -
-  // this keeps the component alive, so we need 
-  // to manually $destroy it. 
-  let modalComponent:SvelteComponentDev;
-  $: if(last && focusedId !== last.id) {
+  // this keeps the component alive, so we need
+  // to manually $destroy it.
+  let modalComponent: SvelteComponentDev;
+  $: if (last && focusedId !== last.id) {
     focusedId = last.id;
-  } else if(!last && focusedId) {
+  } else if (!last && focusedId) {
     try {
       modalComponent.$destroy();
-    } catch(e) {}
+    } catch (e) {}
   }
-  
 </script>
 
 {#if $BackdropStore2.length}
@@ -35,16 +32,14 @@ import type { SvelteComponentDev } from 'svelte/internal';
 
 <div
   on:click|self={() => {
-    
     if (last.tappable) {
-      $BackdropStore2 = $BackdropStore2.slice(0, -1)
+      $BackdropStore2 = $BackdropStore2.slice(0, -1);
     }
   }}
   class="backdrop2 {last.transparent ? 'bg-transparent' : 'bg-nnormal'}"
-
   style="--zIndex: {zIndex}"
 >
-<!-- -->
+  <!-- -->
 
   {#each $BackdropStore2 as modal, index (modal.id)}
     <div
@@ -56,7 +51,7 @@ import type { SvelteComponentDev } from 'svelte/internal';
       id={modal.id}
       style="--zIndex:{zIndex + (index + 2)}; --index:{index + 2}"
     >
-      <svelte:component bind:this={modalComponent} this={modal.component} id={modal.id} {...modal.componentProps} />
+      <svelte:component this={modal.component} bind:this={modalComponent} id={modal.id} {...modal.componentProps} />
     </div>
     {#if index < $BackdropStore2.length - 1}
       <div
@@ -124,7 +119,7 @@ import type { SvelteComponentDev } from 'svelte/internal';
   }
 
   .backdrop2.bg-transparent {
-    background:transparent !important;
+    background: transparent !important;
     @apply backdrop-filter-none;
   }
 

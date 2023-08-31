@@ -1,28 +1,28 @@
 <script lang="ts">
-  import ChartjsEle from '../../components/charts/chartjs.svelte'
-  import TimeGrid from '../../components/day-time-grid/time-grid.svelte'
+  import ChartjsEle from '../../components/charts/chartjs.svelte';
+  import TimeGrid from '../../components/day-time-grid/time-grid.svelte';
 
-  import { objectHash } from '../../modules/object-hash/object-hash'
-  import { wait } from '../../utils/tick/tick'
+  import { objectHash } from '../../modules/object-hash/object-hash';
+  import { wait } from '../../utils/tick/tick';
 
-  import type NLog from '../nomie-log/nomie-log'
-  import { Prefs } from '../preferences/Preferences'
-  import DayOfWeek, { IDow } from './day-of-week'
-  import type { Trackable } from '../trackable/Trackable.class'
-  import type { TrackableUsage } from '../usage/trackable-usage.class'
+  import type NLog from '../nomie-log/nomie-log';
+  import { Prefs } from '../preferences/Preferences';
+  import DayOfWeek, { IDow } from './day-of-week';
+  import type { Trackable } from '../trackable/Trackable.class';
+  import type { TrackableUsage } from '../usage/trackable-usage.class';
 
-  export let logs: Array<NLog>
-  export let usage: TrackableUsage
-  export let trackable: Trackable
+  export let logs: Array<NLog>;
+  export let usage: TrackableUsage;
+  export let trackable: Trackable;
 
-  let dayOfWeek: IDow
-  let loading: boolean = true
+  let dayOfWeek: IDow;
+  let loading: boolean = true;
 
-  let logHash = ''
+  let logHash = '';
   $: if (objectHash(logs) !== logHash) {
-    logHash = objectHash(logs)
+    logHash = objectHash(logs);
 
-    main()
+    main();
   }
 
   const getDowChartData = () => {
@@ -55,22 +55,22 @@
           ].filter((d) => d),
         },
       ],
-    }
-  }
+    };
+  };
 
-  let rendering: boolean = false
+  let rendering: boolean = false;
   const main = async () => {
     if (!rendering) {
-      rendering = true
-      loading = true
+      rendering = true;
+      loading = true;
 
-      dayOfWeek = DayOfWeek(logs)
-      await wait(10)
+      dayOfWeek = DayOfWeek(logs);
+      await wait(10);
 
-      loading = false
-      rendering = false
+      loading = false;
+      rendering = false;
     }
-  }
+  };
 </script>
 
 {#if loading}

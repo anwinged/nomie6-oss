@@ -1,137 +1,145 @@
 <script lang="ts">
-  import ButtonGroup from '../../../../components/button-group/button-group.svelte'
-  import Button from '../../../../components/button/button.svelte'
-  import TinyColorPicker from '../../../../components/color-picker/tiny-color-picker.svelte'
-  import Divider from '../../../../components/divider/divider.svelte'
-  import IonIcon from '../../../../components/icon/ion-icon.svelte'
-  import { AddIcon } from '../../../../components/icon/nicons'
-  import Input from '../../../../components/input/input.svelte'
-  import ListItem from '../../../../components/list-item/list-item.svelte'
-  import List from '../../../../components/list/list.svelte'
+  import ButtonGroup from '../../../../components/button-group/button-group.svelte';
+  import Button from '../../../../components/button/button.svelte';
+  import TinyColorPicker from '../../../../components/color-picker/tiny-color-picker.svelte';
+  import Divider from '../../../../components/divider/divider.svelte';
+  import IonIcon from '../../../../components/icon/ion-icon.svelte';
+  import { AddIcon } from '../../../../components/icon/nicons';
+  import Input from '../../../../components/input/input.svelte';
+  import ListItem from '../../../../components/list-item/list-item.svelte';
+  import List from '../../../../components/list/list.svelte';
 
-  import ToggleSwitch from '../../../../components/toggle-switch/toggle-switch.svelte'
-  import ToolbarGrid from '../../../../components/toolbar/toolbar-grid.svelte'
-  import { objectHash } from '../../../../modules/object-hash/object-hash'
-  import { tokenToTrackable } from '../../../../modules/tokenizer/tokenToTrackable'
-  import { Interact } from '../../../../store/interact'
-  import { Lang } from '../../../../store/lang'
+  import ToggleSwitch from '../../../../components/toggle-switch/toggle-switch.svelte';
+  import ToolbarGrid from '../../../../components/toolbar/toolbar-grid.svelte';
+  import { objectHash } from '../../../../modules/object-hash/object-hash';
+  import { tokenToTrackable } from '../../../../modules/tokenizer/tokenToTrackable';
+  import { Interact } from '../../../../store/interact';
+  import { Lang } from '../../../../store/lang';
 
-  import TrackablePill from '../../../trackable/trackable-pill.svelte'
-  import { TrackableStore } from '../../../trackable/TrackableStore'
-  import { trackableToToken } from '../../../trackable/trackable-utils'
-  import { upsertWidget } from '../../DashStore'
-  import { WidgetClass } from '../widget-class'
-  import { timeFrames } from '../widget-timeframe'
-  import { getWidgetTypes, IWidgetType } from '../widget-types'
-  import { canSaveWidget } from '../widget-utils'
+  import TrackablePill from '../../../trackable/trackable-pill.svelte';
+  import { TrackableStore } from '../../../trackable/TrackableStore';
+  import { trackableToToken } from '../../../trackable/trackable-utils';
+  import { upsertWidget } from '../../DashStore';
+  import { WidgetClass } from '../widget-class';
+  import { timeFrames } from '../widget-timeframe';
+  import { getWidgetTypes, IWidgetType } from '../widget-types';
+  import { canSaveWidget } from '../widget-utils';
   // import { activeTypes } from '../widget-types'
 
-  import type { WidgetEditorProps } from './useWidgetEditorModal'
-  import WidgetTypeSelector from './widget-type-selector.svelte'
-  import { selectTrackable } from '../../../trackable/trackable-selector/TrackableSelectorStore'
-  import { isTruthy } from '../../../../utils/truthy/truthy'
-  import { closeModal } from '../../../../components/backdrop/BackdropStore2'
-  import BackdropModal from '../../../../components/backdrop/backdrop-modal.svelte'
-  import CloseOutline from '../../../../n-icons/CloseOutline.svelte'
-  import { PluginStore } from "../../../plugins/PluginStore";
-  import Storage from '../../../../domains/storage/storage'
+  import type { WidgetEditorProps } from './useWidgetEditorModal';
+  import WidgetTypeSelector from './widget-type-selector.svelte';
+  import { selectTrackable } from '../../../trackable/trackable-selector/TrackableSelectorStore';
+  import { isTruthy } from '../../../../utils/truthy/truthy';
+  import { closeModal } from '../../../../components/backdrop/BackdropStore2';
+  import BackdropModal from '../../../../components/backdrop/backdrop-modal.svelte';
+  import CloseOutline from '../../../../n-icons/CloseOutline.svelte';
+  import { PluginStore } from '../../../plugins/PluginStore';
+  import Storage from '../../../../domains/storage/storage';
 
-  let visible: boolean = false
-  let editingWidget: WidgetClass | undefined
+  let visible: boolean = false;
+  let editingWidget: WidgetClass | undefined;
 
-  export let props: WidgetEditorProps
-  export let id: string
+  export let props: WidgetEditorProps;
+  export let id: string;
 
-  let activeType: IWidgetType | undefined
-  let conditionalStyling: boolean = false
-  let canSave: boolean = false
+  let activeType: IWidgetType | undefined;
+  let conditionalStyling: boolean = false;
+  let canSave: boolean = false;
 
   $: if (props.widget && !visible) {
-    visible = true
-    editingWidget = new WidgetClass(props.widget)
+    visible = true;
+    editingWidget = new WidgetClass(props.widget);
     if (isTruthy(editingWidget.compareValue)) {
-      conditionalStyling = true
+      conditionalStyling = true;
     }
   }
 
   let widgetTypes = getWidgetTypes($PluginStore);
 
   $: if (editingWidget.type) {
-    activeType = widgetTypes.find((wt) => wt.id === editingWidget.type)
-    if (editingWidget.type == "plugin"){
+    activeType = widgetTypes.find((wt) => wt.id === editingWidget.type);
+    if (editingWidget.type == 'plugin') {
       pluginGetWidgets(editingWidget.data.pluginId);
     }
   }
 
-  let lastWidgetHash: string | undefined = undefined
+  let lastWidgetHash: string | undefined = undefined;
   $: if (objectHash(editingWidget) !== lastWidgetHash) {
-    lastWidgetHash = objectHash(editingWidget)
+    lastWidgetHash = objectHash(editingWidget);
     try {
       canSave = canSaveWidget(editingWidget, widgetTypes);
     } catch (e) {
-      console.error(e)
-      canSave = false
+      console.error(e);
+      canSave = false;
     }
   }
 
   let pluginWidgets = [];
-  async function pluginGetWidgets(pluginId:String) {
-    let path = `plugins/${pluginId}/prefs.json`
-    let data: any = undefined
+  async function pluginGetWidgets(pluginId: String) {
+    let path = `plugins/${pluginId}/prefs.json`;
+    let data: any = undefined;
     try {
-      data = await Storage.get(path) || {widgets:[]};
+      data = (await Storage.get(path)) || { widgets: [] };
       pluginWidgets = data.widgets;
-      if (pluginWidgets == undefined || !validateWidgetParams(data.widgets)){pluginWidgets = [];}
+      if (pluginWidgets == undefined || !validateWidgetParams(data.widgets)) {
+        pluginWidgets = [];
+      }
     } catch (e) {
-      console.error(e)
+      console.error(e);
       pluginWidgets = [];
     }
   }
 
-  function validateWidgetParams(widgets){
+  function validateWidgetParams(widgets) {
     let valid = true;
     let i = 0;
     while (i < widgets.length) {
-    if (!widgets[i].emoji || !widgets[i].name || !widgets[i].widgetid || widgets[i].emoji =="" || widgets[i].name =="" || widgets[i].widgetid ==""){
-      valid = false;
+      if (
+        !widgets[i].emoji ||
+        !widgets[i].name ||
+        !widgets[i].widgetid ||
+        widgets[i].emoji == '' ||
+        widgets[i].name == '' ||
+        widgets[i].widgetid == ''
+      ) {
+        valid = false;
       }
       i++;
-    }   
+    }
     return valid;
   }
 
   const close = async () => {
-    closeModal(id)
-  }
+    closeModal(id);
+  };
 
   const localSelectTrackables = async (multiple: boolean) => {
-    const selected = await selectTrackable()
-    let token = trackableToToken(selected)
-    editingWidget.token = token
-  }
+    const selected = await selectTrackable();
+    let token = trackableToToken(selected);
+    editingWidget.token = token;
+  };
 
   const saveWidget = async () => {
     try {
-
-      if([...activeType.requires, ...activeType.optional].indexOf('timeframe') === -1) {
+      if ([...activeType.requires, ...activeType.optional].indexOf('timeframe') === -1) {
         editingWidget.timeRange = undefined;
       }
 
-      if(props.onSave) {
+      if (props.onSave) {
         props.onSave(editingWidget);
         await upsertWidget(editingWidget).catch((e) => {
-          throw e
-        })
+          throw e;
+        });
       } else {
         await upsertWidget(editingWidget).catch((e) => {
-          throw e
-        })
+          throw e;
+        });
       }
-      close()
+      close();
     } catch (e) {
-      Interact.error(e)
+      Interact.error(e);
     }
-  }
+  };
 </script>
 
 <BackdropModal mainClass="bg-gray-100 dark:bg-gray-800" className="bg-white dark:bg-black h-full">
@@ -161,17 +169,17 @@
   <main class="px-2">
     <!-- Select the Trackable if its required the by the active ttype  -->
     <List solo>
-      {#if (activeType?.requires?.indexOf('token') > -1) || activeType?.optional?.indexOf('token') > -1}
+      {#if activeType?.requires?.indexOf('token') > -1 || activeType?.optional?.indexOf('token') > -1}
         <ListItem
           on:click={() => {
-            localSelectTrackables(activeType?.requires?.indexOf('tokens') > -1)
+            localSelectTrackables(activeType?.requires?.indexOf('tokens') > -1);
           }}
           className="h-16"
         >
           Trackable
           {#if !editingWidget.token}
             <span class="opacity-50 text-black dark:text-white">
-              {#if (activeType?.requires?.indexOf('token') > -1)}
+              {#if activeType?.requires?.indexOf('token') > -1}
                 (required)
               {:else}
                 (optional)
@@ -182,9 +190,18 @@
             {#if !editingWidget.tokens.length}
               <div class="text-primary-500">{Lang.t('general.select', 'Select')}</div>
             {:else if editingWidget.token}
-              <TrackablePill size={28} hideValue trackable={tokenToTrackable(editingWidget.token, $TrackableStore.trackables)} />
-              {#if (activeType?.requires?.indexOf('token') === -1)}
-                <button class="flex items-center justify-center" on:click={()=>{editingWidget.token = undefined}}>
+              <TrackablePill
+                size={28}
+                hideValue
+                trackable={tokenToTrackable(editingWidget.token, $TrackableStore.trackables)}
+              />
+              {#if activeType?.requires?.indexOf('token') === -1}
+                <button
+                  class="flex items-center justify-center"
+                  on:click={() => {
+                    editingWidget.token = undefined;
+                  }}
+                >
                   <IonIcon icon={CloseOutline} />
                 </button>
               {/if}
@@ -246,27 +263,27 @@
 
     <!-- Plugins -->
     {#if activeType?.id == 'plugin'}
-    {#if pluginWidgets.length > 0}
-    <List solo className="mt-4">
-    <Input listItem bind:value={editingWidget.data.widgetindex} type="select" label="Widget">
-      <div
-        slot="left"
-        class="{!editingWidget.data.widgetindex
-          ? 'pl-2 pt-3 w-full'
-          : ''} text-black dark:text-white pointer-events-none absolute"
-      >
-        {#if !editingWidget.data.widgetindex}
-          Select a Widget
-        {/if}
-      </div>
-      {#each pluginWidgets as pluginWidget}
-        <option value={pluginWidget.widgetid}>{pluginWidget.emoji} {pluginWidget.name}</option>
-      {/each}
-    </Input>
-      
-        <div class="text-gray-500 leading-tight px-4 text-sm pb-4">Select your Widget for this Plugin</div>
-      </List>
-    {/if}
+      {#if pluginWidgets.length > 0}
+        <List solo className="mt-4">
+          <Input listItem bind:value={editingWidget.data.widgetindex} type="select" label="Widget">
+            <div
+              slot="left"
+              class="{!editingWidget.data.widgetindex
+                ? 'pl-2 pt-3 w-full'
+                : ''} text-black dark:text-white pointer-events-none absolute"
+            >
+              {#if !editingWidget.data.widgetindex}
+                Select a Widget
+              {/if}
+            </div>
+            {#each pluginWidgets as pluginWidget}
+              <option value={pluginWidget.widgetid}>{pluginWidget.emoji} {pluginWidget.name}</option>
+            {/each}
+          </Input>
+
+          <div class="text-gray-500 leading-tight px-4 text-sm pb-4">Select your Widget for this Plugin</div>
+        </List>
+      {/if}
     {/if}
 
     <!-- Start Conditional Styling -->
@@ -278,9 +295,9 @@
             bind:value={conditionalStyling}
             on:change={(evt) => {
               if (evt.detail === false) {
-                editingWidget.compareUnderColor = undefined
-                editingWidget.compareOverColor = undefined
-                editingWidget.compareValue = undefined
+                editingWidget.compareUnderColor = undefined;
+                editingWidget.compareOverColor = undefined;
+                editingWidget.compareValue = undefined;
               }
             }}
           />
@@ -302,7 +319,7 @@
                   icon
                   className="mr-2 text-primary-500"
                   on:click={async () => {
-                    alert('get Conditional Value?')
+                    alert('get Conditional Value?');
                     // getConditionalValue()
                   }}
                 >
@@ -319,7 +336,7 @@
               size={16}
               value={editingWidget.compareOverColor}
               on:change={(evt) => {
-                editingWidget.compareOverColor = evt.detail
+                editingWidget.compareOverColor = evt.detail;
               }}
             />
           </ListItem>
@@ -331,7 +348,7 @@
               size={16}
               value={editingWidget.compareUnderColor}
               on:change={(evt) => {
-                editingWidget.compareUnderColor = evt.detail
+                editingWidget.compareUnderColor = evt.detail;
               }}
             />
           </ListItem>

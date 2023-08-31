@@ -1,30 +1,30 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher } from 'svelte';
 
-  import { LedgerStore } from '../ledger/LedgerStore'
+  import { LedgerStore } from '../ledger/LedgerStore';
 
-  import ShortcutButton from '../../components/shortcut-button/shortcut-button.svelte'
+  import ShortcutButton from '../../components/shortcut-button/shortcut-button.svelte';
 
-  import Counter from '../../components/counter/counter.svelte'
+  import Counter from '../../components/counter/counter.svelte';
 
-  import time from '../../utils/time/time'
+  import time from '../../utils/time/time';
 
-  import type { Trackable } from '../trackable/Trackable.class'
-  import { Prefs } from '../preferences/Preferences'
-  import { loadToday, TodayStore } from '../usage/today/TodayStore'
-  import { TrackableStore } from '../trackable/TrackableStore'
+  import type { Trackable } from '../trackable/Trackable.class';
+  import { Prefs } from '../preferences/Preferences';
+  import { loadToday, TodayStore } from '../usage/today/TodayStore';
+  import { TrackableStore } from '../trackable/TrackableStore';
 
-  import { UsageLast } from '../usage/UsageStore'
-  import { removePrefix } from '../../utils/text/text'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import AddIcon from '../../n-icons/AddIcon.svelte'
+  import { UsageLast } from '../usage/UsageStore';
+  import { removePrefix } from '../../utils/text/text';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import AddIcon from '../../n-icons/AddIcon.svelte';
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  export let trackables: Array<Trackable> = []
-  export let hideMore: boolean = false
-  export let hideAdd: boolean = false
-  export let searching: boolean = false
+  export let trackables: Array<Trackable> = [];
+  export let hideMore: boolean = false;
+  export let hideAdd: boolean = false;
+  export let searching: boolean = false;
 
   /**
    * Gets Todays Usage for a given Trackable
@@ -32,10 +32,10 @@
    * @param format
    */
 
-  let lastLedgerHash: string = ''
+  let lastLedgerHash: string = '';
   $: if ($LedgerStore.hash !== lastLedgerHash) {
-    lastLedgerHash = $LedgerStore.hash
-    loadToday({ knownTrackables: $TrackableStore.trackables, date: $TodayStore.date })
+    lastLedgerHash = $LedgerStore.hash;
+    loadToday({ knownTrackables: $TrackableStore.trackables, date: $TodayStore.date });
   }
 </script>
 
@@ -58,20 +58,24 @@
         oneTap={trackable.tracker?.one_tap}
         color={trackable.color}
         on:longpress={() => {
-          dispatch('longpress', trackable)
+          dispatch('longpress', trackable);
         }}
         className="{trackable.type}-{removePrefix(trackable.tag)} tracker-board-button"
         {hideMore}
         on:click={() => {
-          dispatch('tap', trackable)
+          dispatch('tap', trackable);
         }}
         on:more={() => {
-          dispatch('more', trackable)
+          dispatch('more', trackable);
         }}
       >
         <div slot="subtitle">
           {#if trackable.tracker?.started}
-            <Counter initialDuration={trackable.tracker.timeTracked} started={trackable.tracker.started} color={trackable.tracker.color} />
+            <Counter
+              initialDuration={trackable.tracker.timeTracked}
+              started={trackable.tracker.started}
+              color={trackable.tracker.color}
+            />
           {/if}
         </div>
       </ShortcutButton>
@@ -84,7 +88,7 @@
         ? 'h-14'
         : 'h-28 lg:h-32'}"
       on:click={() => {
-        dispatch('add')
+        dispatch('add');
       }}
     >
       <IonIcon className="text-gray-500" icon={AddIcon} />

@@ -1,24 +1,24 @@
 <script lang="ts">
-  import dayjs from 'dayjs'
+  import dayjs from 'dayjs';
 
-  export let variable: Object
+  export let variable: Object;
 
-  let type: string = 'string'
+  let type: string = 'string';
   $: if (variable) {
     if (variable instanceof Array) {
-      type = 'array'
+      type = 'array';
     }
     if (variable instanceof Date) {
-      type = 'date'
+      type = 'date';
     } else if (typeof variable === 'object') {
-      type = 'object'
+      type = 'object';
     } else {
-      type = typeof variable
+      type = typeof variable;
     }
   }
 </script>
 
-<div class="nd-object my-px text-xs  bg-gray-500 bg-opacity-20 border-gray-400 py-1 px-2 rounded-md {type}">
+<div class="nd-object my-px text-xs bg-gray-500 bg-opacity-20 border-gray-400 py-1 px-2 rounded-md {type}">
   {#if variable}
     {#each Object.keys(variable) as key}
       <div class="values grid grid-cols-2">

@@ -1,83 +1,83 @@
 <script lang="ts">
   // import { createEventDispatcher } from "svelte";
 
-  import Menu from './menu.svelte'
+  import Menu from './menu.svelte';
 
-  import { DropdownMenuStore } from './dropdown-menu.store'
+  import { DropdownMenuStore } from './dropdown-menu.store';
 
-  import { getElementPositionMap } from '../../utils/dom/dom-utils'
-  import { wait } from '../../utils/tick/tick'
+  import { getElementPositionMap } from '../../utils/dom/dom-utils';
+  import { wait } from '../../utils/tick/tick';
   // import { App } from "../../app.store";
 
-  let caller: Element
-  let top: number | undefined = undefined
-  let bottom: number | undefined = undefined
-  let left: number
-  let right: number
+  let caller: Element;
+  let top: number | undefined = undefined;
+  let bottom: number | undefined = undefined;
+  let left: number;
+  let right: number;
 
-  let showMenu: boolean = false
-  let showMenuFull: boolean = false
+  let showMenu: boolean = false;
+  let showMenuFull: boolean = false;
 
-  $: caller = $DropdownMenuStore.caller
+  $: caller = $DropdownMenuStore.caller;
 
   $: if ($DropdownMenuStore.visible) {
-    left = undefined
-    right = undefined
+    left = undefined;
+    right = undefined;
     setTimeout(() => {
-      main()
-    }, 10)
+      main();
+    }, 10);
   }
 
   async function main() {
-    showMenu = false
+    showMenu = false;
     if (caller) {
-      const callerPosition = getElementPositionMap(caller)
-      let menuWidth = 250
-      showMenu = true
+      const callerPosition = getElementPositionMap(caller);
+      let menuWidth = 250;
+      showMenu = true;
 
-      let menuPosition = getElementPositionMap(document.getElementById('dropdown-store-menu'))
+      let menuPosition = getElementPositionMap(document.getElementById('dropdown-store-menu'));
 
       if (menuPosition && callerPosition) {
-        top = Math.abs(callerPosition.y + callerPosition.height) + 10
-        left = Math.abs(callerPosition.x)
+        top = Math.abs(callerPosition.y + callerPosition.height) + 10;
+        left = Math.abs(callerPosition.x);
 
-        await wait(40)
+        await wait(40);
         // Check again now that it's shown
         // menuPosition = getElementPositionMap(document.getElementById('dropdown-store-menu'))
 
         if (top + (menuPosition.height || 200) > window.innerHeight) {
           // top = window.innerHeight - (menuPosition.height + callerPosition.height)
-          top = undefined
-          bottom = 10
+          top = undefined;
+          bottom = 10;
         }
 
         if (left + menuWidth > window.innerWidth) {
-          right = 10
+          right = 10;
         } else if (left < 0) {
-          left = 10
+          left = 10;
         }
 
-        showMenuFull = true
+        showMenuFull = true;
       }
     }
   }
 
   const closeMenu = async () => {
-    showMenu = false
-    showMenuFull = false
-    await wait(200)
-    DropdownMenuStore.close()
-  }
+    showMenu = false;
+    showMenuFull = false;
+    await wait(200);
+    DropdownMenuStore.close();
+  };
 </script>
 
 {#if $DropdownMenuStore.visible}
   <div
-    class="drop-menu-background cursor-pointer "
+    class="drop-menu-background cursor-pointer"
     id="drop-menu"
     on:click|self={() => {
       wait(200).then(() => {
-        closeMenu()
-      })
+        closeMenu();
+      });
       // App.allowScroll();
     }}
   >
@@ -90,7 +90,7 @@
       size="md"
       buttons={$DropdownMenuStore.buttons}
       on:click={() => {
-        closeMenu()
+        closeMenu();
         // App.allowScroll();
       }}
     />

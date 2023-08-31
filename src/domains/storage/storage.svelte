@@ -1,36 +1,36 @@
 <script lang="ts">
   // Svelte
-  import { navigate } from 'svelte-navigator'
+  import { navigate } from 'svelte-navigator';
 
   // Modules
-  import Storage from './storage'
+  import Storage from './storage';
 
   // Components
-  import NItem from '../../components/list-item/list-item.svelte'
+  import NItem from '../../components/list-item/list-item.svelte';
 
   // Stores
-  import { Interact } from '../../store/interact'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import { ChevronForwardOutline } from '../../components/icon/nicons'
+  import { Interact } from '../../store/interact';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import { ChevronForwardOutline } from '../../components/icon/nicons';
 
   const state = {
     showFiles: false,
     files: [],
-  }
+  };
 
   const methods = {
     initialize() {
-      state.files = []
+      state.files = [];
       return Storage.list().then((files) => {
         state.files = files.sort((a, b) => {
-          return a > b ? 1 : -1
-        })
-        return state.files
-      })
+          return a > b ? 1 : -1;
+        });
+        return state.files;
+      });
     },
     addFilesRef(name) {
       if (state.files.indexOf(name) == -1) {
-        state.files.push(name)
+        state.files.push(name);
       }
     },
 
@@ -43,13 +43,13 @@
         if (res === true) {
           Storage.delete(file).then(() => {
             setTimeout(() => {
-              methods.initialize()
-            })
-          })
+              methods.initialize();
+            });
+          });
         }
-      })
+      });
     },
-  }
+  };
 
   // onMount(() => {
   //   // methods.initialize();
@@ -61,7 +61,7 @@
     <NItem
       title="Browse Storage..."
       on:click={() => {
-        navigate('/files')
+        navigate('/files');
       }}
       className="clickable"
     >

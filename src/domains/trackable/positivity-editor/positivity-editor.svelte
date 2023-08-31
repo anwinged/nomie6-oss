@@ -1,46 +1,46 @@
 <script lang="ts">
   // Svelte
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher } from 'svelte';
 
   // components
 
-  import NInput from '../../../components/input/input.svelte'
+  import NInput from '../../../components/input/input.svelte';
 
   // Modules
 
-  import PositivityCondition from '../../../modules/tracker/positivity-condition'
+  import PositivityCondition from '../../../modules/tracker/positivity-condition';
 
   // Stores
 
-  import { Lang } from '../../../store/lang'
+  import { Lang } from '../../../store/lang';
 
-  import dayjs from 'dayjs'
+  import dayjs from 'dayjs';
 
-  import { Ordinal } from '../../../utils/ordinal/ordinal'
-  import ListItem from '../../../components/list-item/list-item.svelte'
+  import { Ordinal } from '../../../utils/ordinal/ordinal';
+  import ListItem from '../../../components/list-item/list-item.svelte';
 
-  import Divider from '../../../components/divider/divider.svelte'
-  import appConfig from '../../../config/appConfig'
-  import { Prefs } from '../../../domains/preferences/Preferences'
-  import { saveTrackable, TrackableStore } from '../../trackable/TrackableStore'
-  import { openScoreEditor } from '../../positivity-editor/PositivityEditorStore'
-  import type TrackerClass from '../../../modules/tracker/TrackerClass'
-  import { wait } from '../../../utils/tick/tick'
-  import { showToast } from '../../../components/toast/ToastStore'
+  import Divider from '../../../components/divider/divider.svelte';
+  import appConfig from '../../../config/appConfig';
+  import { Prefs } from '../../../domains/preferences/Preferences';
+  import { saveTrackable, TrackableStore } from '../../trackable/TrackableStore';
+  import { openScoreEditor } from '../../positivity-editor/PositivityEditorStore';
+  import type TrackerClass from '../../../modules/tracker/TrackerClass';
+  import { wait } from '../../../utils/tick/tick';
+  import { showToast } from '../../../components/toast/ToastStore';
 
   // Prosp
-  export let tracker: TrackerClass | undefined = undefined
-  export let className = ''
+  export let tracker: TrackerClass | undefined = undefined;
+  export let className = '';
 
   // consts
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
   // State
   let state = {
     showConditionForm: false,
     genesisCalc: new PositivityCondition({}),
     selectedIndex: -1,
-  }
+  };
 
   // const getTrackerInput = async () => {
   //   const response = await Interact.trackerInput(tracker, {
@@ -54,69 +54,69 @@
 
   const methods = {
     async change() {
-      await wait(10)
-      dispatch('trackerChange', tracker)
+      await wait(10);
+      dispatch('trackerChange', tracker);
 
       if (tracker.score == 'custom' && !tracker.score_calc) {
         openScoreEditor({
           trackable: tracker.toTrackable(),
           show: true,
           onComplete(calc) {
-            tracker.score_calc = calc
+            tracker.score_calc = calc;
           },
-        })
+        });
       }
     },
     newCondition() {
-      state.showConditionForm = true
-      methods.change()
+      state.showConditionForm = true;
+      methods.change();
     },
     getDays() {
-      let days = []
+      let days = [];
       for (let i = 0; i < 31; i++) {
         days.push({
           value: Ordinal(i + 1),
           index: i + 1,
-        })
+        });
       }
-      return days
+      return days;
     },
     getHours() {
-      let hours = []
+      let hours = [];
       for (let i = 0; i < 24; i++) {
-        let date = dayjs().startOf('day').add(i, 'hour')
+        let date = dayjs().startOf('day').add(i, 'hour');
 
         hours.push({
           value: $Prefs.use24hour ? date.format('HH:mm') : date.format('h:mm a'),
           index: i + 1,
-        })
+        });
       }
-      return hours
+      return hours;
     },
     saveCondition() {
-      tracker.score_calc = tracker.score_calc || []
-      tracker.score_calc.push({ ...state.genesisCalc })
-      state.showConditionForm = false
-      methods.change()
+      tracker.score_calc = tracker.score_calc || [];
+      tracker.score_calc.push({ ...state.genesisCalc });
+      state.showConditionForm = false;
+      methods.change();
     },
     async save() {
       let saved = await saveTrackable({
         trackable: tracker.toTrackable(),
         known: $TrackableStore.trackables,
         permissions: {},
-      })
+      });
       if (saved) {
-        dispatch('save', tracker)
-        showToast({ message: `${tracker.label} saved` })
+        dispatch('save', tracker);
+        showToast({ message: `${tracker.label} saved` });
       }
     },
     removeCondition(index) {
       tracker.score_calc = tracker.score_calc.filter((row, ind) => {
-        return ind !== index
-      })
-      methods.change()
+        return ind !== index;
+      });
+      methods.change();
     },
-  }
+  };
 </script>
 
 {#if tracker}
@@ -149,9 +149,9 @@
                 show: true,
                 trackable: tracker.toTrackable(),
                 onComplete(scoreCalc) {
-                  tracker.score_calc = scoreCalc
+                  tracker.score_calc = scoreCalc;
                 },
-              })
+              });
             }}
           >
             <div class="text-center text-primary-500">Edit {tracker.score_calc?.length || ''} Conditions</div>

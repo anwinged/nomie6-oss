@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
+  import { onMount } from 'svelte';
 
   // class CSVExporter {
   //   search: string;
@@ -12,5 +12,5 @@
   async function main() {
     // let savedExports = await UserStore.mstore("csv_exports");
   }
-  onMount(main)
+  onMount(main);
 </script>

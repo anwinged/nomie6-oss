@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher } from 'svelte';
 
-  export let className = ''
-  export let style = ''
-  export let isActive: boolean = false
-  export let index: number
-  const dispatch = createEventDispatcher()
+  export let className = '';
+  export let style = '';
+  export let isActive: boolean = false;
+  export let index: number;
+  const dispatch = createEventDispatcher();
 </script>
 
 <button

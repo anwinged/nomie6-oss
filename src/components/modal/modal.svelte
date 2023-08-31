@@ -1,62 +1,62 @@
 <script lang="ts">
-  import { onDestroy, createEventDispatcher } from 'svelte'
+  import { onDestroy, createEventDispatcher } from 'svelte';
 
-  import NToolbarGrid from '../toolbar/toolbar-grid.svelte'
+  import NToolbarGrid from '../toolbar/toolbar-grid.svelte';
 
-  import Button from '../button/button.svelte'
-  import IonIcon from '../icon/ion-icon.svelte'
-  import { CloseOutline } from '../icon/nicons'
+  import Button from '../button/button.svelte';
+  import IonIcon from '../icon/ion-icon.svelte';
+  import { CloseOutline } from '../icon/nicons';
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
   // Props
-  export let padding: boolean = false
-  export let title = 'Modal'
-  export let allowClose: boolean | undefined = undefined
-  export let fullscreen: boolean = false
-  export let flexBody = undefined
-  export let show: boolean = true // Defaulted to true so it can be controlled by a parent component
-  export let className: string = ''
-  export let type: string = 'normal' // cover, fullscreen, bottom, bottom-slide-up
-  export let bodyClass: string = ''
-  export let closeOnBackgroundTap: boolean = false
-  export let ariaLabel: string = 'modal'
-  export let level: number = undefined
+  export let padding: boolean = false;
+  export let title = 'Modal';
+  export let allowClose: boolean | undefined = undefined;
+  export let fullscreen: boolean = false;
+  export let flexBody = undefined;
+  export let show: boolean = true; // Defaulted to true so it can be controlled by a parent component
+  export let className: string = '';
+  export let type: string = 'normal'; // cover, fullscreen, bottom, bottom-slide-up
+  export let bodyClass: string = '';
+  export let closeOnBackgroundTap: boolean = false;
+  export let ariaLabel: string = 'modal';
+  export let level: number = undefined;
 
   // declare var arguments: Array<any>;
 
-  const has_header = (arguments[1].$$slots || {}).hasOwnProperty('header')
-  const has_raw_header = (arguments[1].$$slots || {}).hasOwnProperty('raw-header')
-  const has_footer = (arguments[1].$$slots || {}).hasOwnProperty('footer')
+  const has_header = (arguments[1].$$slots || {}).hasOwnProperty('header');
+  const has_raw_header = (arguments[1].$$slots || {}).hasOwnProperty('raw-header');
+  const has_footer = (arguments[1].$$slots || {}).hasOwnProperty('footer');
 
-  let domVisible = false
-  let showModal = false
+  let domVisible = false;
+  let showModal = false;
 
   // Stagger showing and dom showing for CSS effects
   $: if (show) {
     // document.body.classList.add("no-scroll");
-    showModal = true
+    showModal = true;
     setTimeout(() => {
-      domVisible = true
-    }, 100)
+      domVisible = true;
+    }, 100);
   }
 
   $: if (show == false) {
     // document.body.classList.remove("no-scroll");
-    domVisible = false
+    domVisible = false;
     setTimeout(() => {
-      showModal = false
-    }, 400)
+      showModal = false;
+    }, 400);
   }
 
   function backgroundTap() {
     if (closeOnBackgroundTap == true) {
-      dispatch('close')
+      dispatch('close');
     }
   }
 
   onDestroy(() => {
     // document.body.classList.remove("no-scroll");
-  })
+  });
 </script>
 
 <div
@@ -89,7 +89,7 @@
                   icon
                   className="tap-icon"
                   on:click={() => {
-                    dispatch('close')
+                    dispatch('close');
                   }}
                 >
                   <IonIcon icon={CloseOutline} />

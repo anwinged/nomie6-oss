@@ -1,18 +1,18 @@
 <script lang="ts">
-  import Button from '../../components/button/button.svelte'
+  import Button from '../../components/button/button.svelte';
 
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
 
-  import Map from './map.svelte'
-  import type { GeoType } from './LocationModalStore'
-  import { closeModal } from '../../components/backdrop/BackdropStore2'
-  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte'
-  import type NLog from '../nomie-log/nomie-log'
-import Title from '../../components/title/title.svelte';
+  import Map from './map.svelte';
+  import type { GeoType } from './LocationModalStore';
+  import { closeModal } from '../../components/backdrop/BackdropStore2';
+  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte';
+  import type NLog from '../nomie-log/nomie-log';
+  import Title from '../../components/title/title.svelte';
 
-  export let id: string
-  export let locations: Array<GeoType>
-  export let logs: Array<NLog>
+  export let id: string;
+  export let locations: Array<GeoType>;
+  export let logs: Array<NLog>;
 
   // export let show = false
 
@@ -23,8 +23,8 @@ import Title from '../../components/title/title.svelte';
   // }
 
   const close = () => {
-    closeModal(id)
-  }
+    closeModal(id);
+  };
 </script>
 
 <BackdropModal>

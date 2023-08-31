@@ -1,37 +1,37 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher } from 'svelte';
 
-  import EmojiList from './EmojiList.svelte'
-  import EmojiSearch from './EmojiSearch.svelte'
-  import EmojiSearchResults from './EmojiSearchResults.svelte'
-  import VariantPopup from './VariantPopup.svelte'
+  import EmojiList from './EmojiList.svelte';
+  import EmojiSearch from './EmojiSearch.svelte';
+  import EmojiSearchResults from './EmojiSearchResults.svelte';
+  import VariantPopup from './VariantPopup.svelte';
 
-  import emojiData from './data/emoji-light'
-  import ButtonGroup from '../button-group/button-group.svelte'
-  import Panel from '../panel/panel.svelte'
+  import emojiData from './data/emoji-light';
+  import ButtonGroup from '../button-group/button-group.svelte';
+  import Panel from '../panel/panel.svelte';
 
-  export let maxRecents = 50
-  export let autoClose = true
+  export let maxRecents = 50;
+  export let autoClose = true;
 
-  let variantsVisible = false
+  let variantsVisible = false;
 
-  let variants
-  let currentEmoji
-  let searchText
-  let recentEmojis = JSON.parse(localStorage.getItem('recent-emojis')) || []
+  let variants;
+  let currentEmoji;
+  let searchText;
+  let recentEmojis = JSON.parse(localStorage.getItem('recent-emojis')) || [];
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  const emojiCategories = {}
+  const emojiCategories = {};
   emojiData.forEach((emoji) => {
-    let categoryList = emojiCategories[emoji.c]
+    let categoryList = emojiCategories[emoji.c];
     if (!categoryList) {
-      categoryList = emojiCategories[emoji.c] = []
+      categoryList = emojiCategories[emoji.c] = [];
     }
-    categoryList.push(emoji)
-  })
+    categoryList.push(emoji);
+  });
 
-  const categoryOrder = ['People', 'Nature', 'Eat', 'Activities', 'Places', 'Objects', 'Symbols', 'Flags']
+  const categoryOrder = ['People', 'Nature', 'Eat', 'Activities', 'Places', 'Objects', 'Symbols', 'Flags'];
 
   const categoryIcons = {
     People: '😀',
@@ -42,7 +42,7 @@
     Objects: '💡',
     Symbols: '🎵',
     Flags: '🏴‍☠️',
-  }
+  };
 
   function onKeyDown(event) {
     if (event.key === 'Escape') {
@@ -51,26 +51,26 @@
   }
 
   function showEmojiDetails(event) {
-    currentEmoji = event.detail
+    currentEmoji = event.detail;
   }
 
   function onEmojiClick(event) {
     // Does it have Variants?
     if (event.detail.v.length) {
-      variants = [...[event.detail.e], ...event.detail.v]
-      variantsVisible = true
+      variants = [...[event.detail.e], ...event.detail.v];
+      variantsVisible = true;
     } else {
-      dispatch('emoji', event.detail.e)
-      saveRecent(event.detail)
+      dispatch('emoji', event.detail.e);
+      saveRecent(event.detail);
     }
   }
 
   function onVariantClick(event) {
-    dispatch('emoji', event.detail)
+    dispatch('emoji', event.detail);
     saveRecent({
       e: event.detail,
-    })
-    hideVariants()
+    });
+    hideVariants();
 
     if (autoClose) {
       // hidePicker();
@@ -78,8 +78,8 @@
   }
 
   function saveRecent(emoji) {
-    recentEmojis = [emoji, ...recentEmojis.filter((recent) => recent.e !== emoji.e)].slice(0, maxRecents)
-    localStorage.setItem('recent-emojis', JSON.stringify(recentEmojis))
+    recentEmojis = [emoji, ...recentEmojis.filter((recent) => recent.e !== emoji.e)].slice(0, maxRecents);
+    localStorage.setItem('recent-emojis', JSON.stringify(recentEmojis));
   }
 
   function hideVariants() {
@@ -88,12 +88,12 @@
     // happens, and the target will have a `null` parent, which
     // means it will not be excluded and the clickoutside event will fire.
     setTimeout(() => {
-      variantsVisible = false
-    })
+      variantsVisible = false;
+    });
   }
 
-  let selectedIndex = 1
-  let selectedCategory = 'People'
+  let selectedIndex = 1;
+  let selectedCategory = 'People';
 </script>
 
 <svelte:body on:keydown={onKeyDown} />
@@ -109,8 +109,8 @@
           label: '⏰',
           active: selectedIndex == 0,
           click() {
-            selectedIndex = 0
-            selectedCategory = undefined
+            selectedIndex = 0;
+            selectedCategory = undefined;
           },
         },
       ],
@@ -119,10 +119,10 @@
           active: selectedIndex == index + 1,
           label: categoryIcons[category],
           click() {
-            selectedIndex = index + 1
-            selectedCategory = category
+            selectedIndex = index + 1;
+            selectedCategory = category;
           },
-        }
+        };
       }),
     ]}
   />

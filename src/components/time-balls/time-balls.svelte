@@ -1,6 +1,6 @@
 <script lang="ts">
-  export let hours = []
-  export let color = undefined
+  export let hours = [];
+  export let color = undefined;
 </script>
 
 <div class="time-balls">

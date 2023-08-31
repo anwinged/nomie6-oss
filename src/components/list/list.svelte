@@ -1,21 +1,21 @@
 <script lang="ts">
-  import Text from '../text/text.svelte'
+  import Text from '../text/text.svelte';
 
-  export let style: string = ''
-  export let solo: boolean = false
-  export let transparent: boolean = false
-  export let className: string = ''
-  export let title: string = undefined
-  export let disabled: boolean = false
-  export let id: string = ''
-  export let outside: boolean = false
-  export let role: string | undefined = 'menu'
+  export let style: string = '';
+  export let solo: boolean = false;
+  export let transparent: boolean = false;
+  export let className: string = '';
+  export let title: string = undefined;
+  export let disabled: boolean = false;
+  export let id: string = '';
+  export let outside: boolean = false;
+  export let role: string | undefined = 'menu';
 </script>
 
 {#if title && outside}
   <header>
     <div class="outside-title flex items-end lg:mt-4 mb-1 lg:mb-2">
-      <h2 class="text-lg lg:text-2xl pl-1  font-bold leading-tight">{title}</h2>
+      <h2 class="text-lg lg:text-2xl pl-1 font-bold leading-tight">{title}</h2>
       <slot name="header-left" />
       <slot name="header-right" />
     </div>
@@ -108,9 +108,8 @@
     @apply rounded-b-2xl;
   }
 
-
   .n-list.solo.w-full {
-    width:100%;
+    width: 100%;
   }
   .n-list.solo .n-item:first-child {
     @apply rounded-t-xl;

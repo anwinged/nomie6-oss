@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { wait } from '../../../../utils/tick/tick'
+  import { wait } from '../../../../utils/tick/tick';
 
   /**
    * Welcome to the Editor - this is a mess... but I'm trying to simplify the whole process
@@ -8,69 +8,69 @@
    *
    * God speed.
    */
-  import ListItem from '../../../../components/list-item/list-item.svelte'
+  import ListItem from '../../../../components/list-item/list-item.svelte';
 
-  import NToggle from '../../../../components/toggle-switch/toggle-switch.svelte'
-  import NInput from '../../../../components/input/input.svelte'
-  import AutoComplete from '../../../../components/auto-complete/auto-complete.svelte'
-  import PickerListEditor from '../../../../components/picker-list/picker-editor.svelte'
+  import NToggle from '../../../../components/toggle-switch/toggle-switch.svelte';
+  import NInput from '../../../../components/input/input.svelte';
+  import AutoComplete from '../../../../components/auto-complete/auto-complete.svelte';
+  import PickerListEditor from '../../../../components/picker-list/picker-editor.svelte';
 
   // Utils
 
-  import '../tracker/editor.css'
+  import '../tracker/editor.css';
 
   // modules
-  import { toTag } from '../../../../modules/tracker/TrackerClass'
-  import type { ITrackerType } from '../../../../modules/tracker/TrackerClass'
-  import { getTypeDetails } from '../../../../modules/tracker-types/tracker-types'
+  import { toTag } from '../../../../modules/tracker/TrackerClass';
+  import type { ITrackerType } from '../../../../modules/tracker/TrackerClass';
+  import { getTypeDetails } from '../../../../modules/tracker-types/tracker-types';
 
   // containers
 
   // Stores
-  import { Interact } from '../../../../store/interact'
+  import { Interact } from '../../../../store/interact';
 
-  import { Lang } from '../../../../store/lang'
-  import Text from '../../../../components/text/text.svelte'
+  import { Lang } from '../../../../store/lang';
+  import Text from '../../../../components/text/text.svelte';
 
-  import Button from '../../../../components/button/button.svelte'
+  import Button from '../../../../components/button/button.svelte';
 
-  import trackerTypes from '../../../../modules/tracker-types/tracker-types'
+  import trackerTypes from '../../../../modules/tracker-types/tracker-types';
 
-  import { TrackableStore } from '../../../trackable/TrackableStore'
-  import List from '../../../../components/list/list.svelte'
-  import Divider from '../../../../components/divider/divider.svelte'
+  import { TrackableStore } from '../../../trackable/TrackableStore';
+  import List from '../../../../components/list/list.svelte';
+  import Divider from '../../../../components/divider/divider.svelte';
 
-  import { getGroupedUoms, uomPlural, uomSymbol } from '../../../uom/uom-utils'
+  import { getGroupedUoms, uomPlural, uomSymbol } from '../../../uom/uom-utils';
 
-  import { focusTypes } from '../../../focus/focus-utils'
+  import { focusTypes } from '../../../focus/focus-utils';
 
-  import IonIcon from '../../../../components/icon/ion-icon.svelte'
-  import { AddCircleOutline, ChevronDownOutline, ChevronUpOutline } from '../../../../components/icon/nicons'
+  import IonIcon from '../../../../components/icon/ion-icon.svelte';
+  import { AddCircleOutline, ChevronDownOutline, ChevronUpOutline } from '../../../../components/icon/nicons';
 
-  import type { Trackable } from '../../Trackable.class'
-  import { getTrackerInputAsString, useTrackerInputModal } from '../../../tracker/input/TrackerInputStore'
-  import type TrackerClass from '../../../../modules/tracker/TrackerClass'
-  import PositivityEditor from '../../positivity-editor/positivity-editor.svelte'
-  import TrackableListBuilder from '../../TrackableListBuilder.svelte'
+  import type { Trackable } from '../../Trackable.class';
+  import { getTrackerInputAsString, useTrackerInputModal } from '../../../tracker/input/TrackerInputStore';
+  import type TrackerClass from '../../../../modules/tracker/TrackerClass';
+  import PositivityEditor from '../../positivity-editor/positivity-editor.svelte';
+  import TrackableListBuilder from '../../TrackableListBuilder.svelte';
 
-  export let trackable: Trackable
-  let tracker: TrackerClass
+  export let trackable: Trackable;
+  let tracker: TrackerClass;
   $: if (trackable) {
-    tracker = trackable.tracker
+    tracker = trackable.tracker;
   }
 
-  const groupedUOM = getGroupedUoms()
+  const groupedUOM = getGroupedUoms();
 
-  let advanced = false
-  let forceAdvancedView = false
-  let advancedCanToggle = true
-  let tagHardcoded = false
-  let alsoInclude: boolean = false
+  let advanced = false;
+  let forceAdvancedView = false;
+  let advancedCanToggle = true;
+  let tagHardcoded = false;
+  let alsoInclude: boolean = false;
 
   // Watch for Tracker Changed while NOT Forced Advanced
   $: if (tracker && !forceAdvancedView) {
     if (tracker.include) {
-      alsoInclude = true
+      alsoInclude = true;
     }
     if (
       tracker.include ||
@@ -80,30 +80,30 @@
       tracker.step ||
       tracker.one_tap
     ) {
-      advanced = true
-      advancedCanToggle = false
+      advanced = true;
+      advancedCanToggle = false;
     } else {
-      advancedCanToggle = true
-      advanced = false
+      advancedCanToggle = true;
+      advanced = false;
     }
   } else if (forceAdvancedView) {
-    advanced = true
+    advanced = true;
   }
 
   //Catch if the UPM is timer and not a timer tracker
   $: if (tracker.type === 'timer') {
-    tracker.uom = 'timer'
-    tracker.min = null
-    tracker.max = null
+    tracker.uom = 'timer';
+    tracker.min = null;
+    tracker.max = null;
   } else if (tracker.uom == 'timer') {
-    tracker.uom = 'num'
+    tracker.uom = 'num';
   } else if (tracker.type === 'range' && isNaN(tracker.min)) {
-    tracker.min = 1
-    tracker.max = 10
+    tracker.min = 1;
+    tracker.max = 10;
   }
 
   $: if (tracker.label && tracker._dirty && !tagHardcoded) {
-    tracker.tag = toTag(tracker.label)
+    tracker.tag = toTag(tracker.label);
   }
 
   /**
@@ -118,9 +118,9 @@
       tracker: tracker,
       allowSave: false,
       nextLabel: Lang.t('general.set', 'Set'),
-    })
+    });
     if (str) {
-      tracker[target] = str.value
+      tracker[target] = str.value;
     }
     // const [open, close] = useTrackerInputModal()
     // open({
@@ -149,11 +149,11 @@
     // if (response && response.value) {
     //   tracker[target] = response.value
     // }
-  }
+  };
 
   async function setType(type: ITrackerType) {
-    await wait(200)
-    tracker.type = type
+    await wait(200);
+    tracker.type = type;
   }
 
   const methods = {
@@ -167,7 +167,7 @@
      */
     selectType() {
       const buttons = Object.keys(trackerTypes).map((typeKey: ITrackerType) => {
-        let type = trackerTypes[typeKey]
+        let type = trackerTypes[typeKey];
 
         return {
           emoji: type.emoji,
@@ -176,16 +176,16 @@
           description: `${type.description}`,
           id: type.id,
           click: () => setType(typeKey),
-        }
-      })
+        };
+      });
 
       Interact.popmenu({
         id: `tracker-type`,
         title: Lang.t('tracker.type', 'Type'),
         buttons,
-      })
+      });
     },
-  }
+  };
 </script>
 
 <!-- Tracker Label input -->
@@ -197,7 +197,7 @@
       id="tracker-type-selector"
       clickable
       on:click={() => {
-        methods.selectType()
+        methods.selectType();
       }}
       className="tracker-type py-2"
     >
@@ -218,7 +218,7 @@
         className="tracker-picker"
         itemClass=""
         on:change={(evt) => {
-          tracker.picks = (evt.detail || []).filter((d) => d.length)
+          tracker.picks = (evt.detail || []).filter((d) => d.length);
         }}
       />
     </List>
@@ -237,7 +237,7 @@
           placeholder={Lang.t('tracker.min', 'Min Value')}
           label={Lang.t('tracker.min', 'Min Value')}
           on:focus={(e) => {
-            e.detail.target.select()
+            e.detail.target.select();
           }}
           bind:value={tracker.min}
         >
@@ -245,7 +245,7 @@
             <Button
               icon
               on:click={() => {
-                getTrackerInput('min')
+                getTrackerInput('min');
               }}
             >
               <IonIcon icon={AddCircleOutline} className="text-gray-500" />
@@ -268,7 +268,7 @@
             <Button
               icon
               on:click={() => {
-                getTrackerInput('max')
+                getTrackerInput('max');
               }}
             >
               <IonIcon icon={AddCircleOutline} className="text-gray-500" />
@@ -286,7 +286,7 @@
           placeholder={Lang.t('tracker.min-label', 'Min Label')}
           label={Lang.t('tracker.min-label', 'Min Label')}
           on:focus={(e) => {
-            e.detail.target.select()
+            e.detail.target.select();
           }}
           bind:value={tracker.minLabel}
         />
@@ -406,7 +406,7 @@
             <Button
               icon
               on:click={() => {
-                getTrackerInput('step')
+                getTrackerInput('step');
               }}
             >
               <IonIcon icon={AddCircleOutline} className="text-gray-500" />
@@ -450,7 +450,7 @@
             className="pr-1"
             icon
             on:click={() => {
-              getTrackerInput('default')
+              getTrackerInput('default');
             }}
           >
             <IonIcon icon={AddCircleOutline} className="text-gray-500" />
@@ -493,7 +493,7 @@
             input={tracker.include}
             scroller
             on:select={async (evt) => {
-              tracker.include = evt.detail.note + ''
+              tracker.include = evt.detail.note + '';
             }}
           />
         {/if}
@@ -516,13 +516,13 @@
           {#each focusTypes as focus}
             <button
               on:click={() => {
-                let foundIndex = tracker.focus.indexOf(focus.id)
+                let foundIndex = tracker.focus.indexOf(focus.id);
                 if (foundIndex > -1) {
-                  tracker.focus = tracker.focus.filter((f) => f !== focus.id)
+                  tracker.focus = tracker.focus.filter((f) => f !== focus.id);
                 } else {
-                  tracker.focus.push(focus.id)
+                  tracker.focus.push(focus.id);
                 }
-                tracker.focus = tracker.focus
+                tracker.focus = tracker.focus;
               }}
               class=" flex text-center justify-center py-1 px-2 rounded-md items-center {tracker.focus.indexOf(
                 focus.id

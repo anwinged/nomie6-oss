@@ -1,16 +1,16 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
+  import { onMount } from 'svelte';
   // import Chart from 'chart.js/auto'
-  import nid from '../../modules/nid/nid'
+  import nid from '../../modules/nid/nid';
 
-  export let data: Array<IPieData> = []
+  export let data: Array<IPieData> = [];
 
-  const chartId = `chart-${nid()}`
+  const chartId = `chart-${nid()}`;
 
   interface IPieData {
-    label: string
-    value: number
-    color: string
+    label: string;
+    value: number;
+    color: string;
   }
 
   function createDoughnut() {
@@ -40,7 +40,7 @@
     //   },
     // })
   }
-  onMount(createDoughnut)
+  onMount(createDoughnut);
 </script>
 
 <canvas id={chartId} width="150" height="150" />

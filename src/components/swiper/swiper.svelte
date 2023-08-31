@@ -1,31 +1,31 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte'
+  import { createEventDispatcher, onMount } from 'svelte';
 
-  import nid from '../../modules/nid/nid'
-  import HScroller from '../h-scroller/h-scroller.svelte'
+  import nid from '../../modules/nid/nid';
+  import HScroller from '../h-scroller/h-scroller.svelte';
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  export let id: string = `sw-${nid()}`
-  export let className: string = ''
+  export let id: string = `sw-${nid()}`;
+  export let className: string = '';
 
   export const scrollTo: Function = (index: number) => {
     if (index > -1) {
-      const ele: any = document.querySelector(`#${id} [data-child-id='${index}']`)
+      const ele: any = document.querySelector(`#${id} [data-child-id='${index}']`);
       if (ele) {
-        ele.scrollIntoView()
+        ele.scrollIntoView();
       }
     }
-  }
+  };
 
   onMount(() => {
     setTimeout(() => {
-      const first = document.querySelector('.n-swiper [data-index]')
+      const first = document.querySelector('.n-swiper [data-index]');
       if (first) {
-        first.classList.add('active-slide')
+        first.classList.add('active-slide');
       }
-    }, 100)
-  })
+    }, 100);
+  });
 </script>
 
 <div class="n-swiper {className}" {id}>
@@ -33,9 +33,9 @@
     wrapperClass="swiper-wrapper"
     captureCenter
     on:centerElement={(evt) => {
-      const index = evt.detail.ele.dataset.childId
+      const index = evt.detail.ele.dataset.childId;
       if (!isNaN(index)) {
-        dispatch('index', index)
+        dispatch('index', index);
       }
     }}
   >

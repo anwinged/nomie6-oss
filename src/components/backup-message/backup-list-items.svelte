@@ -1,18 +1,17 @@
 <script lang="ts">
-  import { generateBackup } from '../../domains/backup/BackupStore'
-  import SelectPop from '../../select-pop/select-pop.svelte'
-  import { Lang } from '../../store/lang'
-  import ListItem from '../list-item/list-item.svelte'
-  import List from '../list/list.svelte'
-  import { Prefs } from './../../domains/preferences/Preferences'
+  import { generateBackup } from '../../domains/backup/BackupStore';
+  import SelectPop from '../../select-pop/select-pop.svelte';
+  import { Lang } from '../../store/lang';
+  import ListItem from '../list-item/list-item.svelte';
+  import List from '../list/list.svelte';
+  import { Prefs } from './../../domains/preferences/Preferences';
 
-
-  let backupOptions: Array<any> = []
-  let selectedBackupLabel: string = ''
-  let daysToBackup = $Prefs.backupDays || 7
+  let backupOptions: Array<any> = [];
+  let selectedBackupLabel: string = '';
+  let daysToBackup = $Prefs.backupDays || 7;
 
   $: if ($Prefs.backupDays) {
-    daysToBackup = $Prefs.backupDays
+    daysToBackup = $Prefs.backupDays;
   }
 
   $: {
@@ -42,8 +41,8 @@
         value: 'Every Other Week',
         selected: `${daysToBackup}` == '14',
       },
-    ]
-    selectedBackupLabel = (backupOptions.find((s) => s.selected) || {}).value
+    ];
+    selectedBackupLabel = (backupOptions.find((s) => s.selected) || {}).value;
   }
 </script>
 
@@ -53,7 +52,7 @@
     detail
     title={Lang.t('general.backup-now', 'Backup Data')}
     on:click={() => {
-      generateBackup()
+      generateBackup();
     }}
   />
   <ListItem bottomLine={16} title={Lang.t('settings.backup-reminder', 'Backup Reminder')}>
@@ -62,7 +61,7 @@
         id="start-page"
         value={selectedBackupLabel}
         on:change={(evt) => {
-          $Prefs.backupDays = evt.detail.key
+          $Prefs.backupDays = evt.detail.key;
         }}
         options={backupOptions}
       />

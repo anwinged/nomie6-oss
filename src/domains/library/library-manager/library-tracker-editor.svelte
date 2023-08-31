@@ -1,60 +1,60 @@
 <script lang="ts">
-  import Modal2 from '../../../components/modal/modal2.svelte'
-  import Panel from '../../../components/panel/panel.svelte'
-  import ToolbarGrid from '../../../components/toolbar/toolbar-grid.svelte'
-  import { LibraryManagerStore, saveLibraryTracker } from './LibraryManagerStore'
-  import type { LibraryTrackerType } from './LibraryManagerStore'
-  import Button from '../../../components/button/button.svelte'
-  import IonIcon from '../../../components/icon/ion-icon.svelte'
-  import { CloseOutline, CopyOutline, PencilOutline, TrashOutline } from '../../../components/icon/nicons'
-  import List from '../../../components/list/list.svelte'
-  import Input from '../../../components/input/input.svelte'
-  import Divider from '../../../components/divider/divider.svelte'
+  import Modal2 from '../../../components/modal/modal2.svelte';
+  import Panel from '../../../components/panel/panel.svelte';
+  import ToolbarGrid from '../../../components/toolbar/toolbar-grid.svelte';
+  import { LibraryManagerStore, saveLibraryTracker } from './LibraryManagerStore';
+  import type { LibraryTrackerType } from './LibraryManagerStore';
+  import Button from '../../../components/button/button.svelte';
+  import IonIcon from '../../../components/icon/ion-icon.svelte';
+  import { CloseOutline, CopyOutline, PencilOutline, TrashOutline } from '../../../components/icon/nicons';
+  import List from '../../../components/list/list.svelte';
+  import Input from '../../../components/input/input.svelte';
+  import Divider from '../../../components/divider/divider.svelte';
 
-  import TrackerClass from '../../../modules/tracker/TrackerClass'
-  import { Lang } from '../../../store/lang'
-  import { objectHash } from '../../../modules/object-hash/object-hash'
+  import TrackerClass from '../../../modules/tracker/TrackerClass';
+  import { Lang } from '../../../store/lang';
+  import { objectHash } from '../../../modules/object-hash/object-hash';
 
-  import ListItem from '../../../components/list-item/list-item.svelte'
+  import ListItem from '../../../components/list-item/list-item.svelte';
 
-  import Avatar from '../../../components/avatar/avatar.svelte'
+  import Avatar from '../../../components/avatar/avatar.svelte';
 
-  import { firebaseAuth } from '../../firebase/FirebaseStore'
-  import { Interact } from '../../../store/interact'
-  import { editTracker } from '../../tracker/editor/TrackerEditorStore'
-  import { selectTrackables } from '../../trackable/trackable-selector/TrackableSelectorStore'
-  import { closeModal } from '../../../components/backdrop/BackdropStore2'
-  import { openTrackableEditor } from '../../trackable/trackable-editor/TrackableEditorStore'
-  import { Trackable } from '../../trackable/Trackable.class'
+  import { firebaseAuth } from '../../firebase/FirebaseStore';
+  import { Interact } from '../../../store/interact';
+  import { editTracker } from '../../tracker/editor/TrackerEditorStore';
+  import { selectTrackables } from '../../trackable/trackable-selector/TrackableSelectorStore';
+  import { closeModal } from '../../../components/backdrop/BackdropStore2';
+  import { openTrackableEditor } from '../../trackable/trackable-editor/TrackableEditorStore';
+  import { Trackable } from '../../trackable/Trackable.class';
 
-  let workingLibTracker: LibraryTrackerType
-  let showDom: boolean = false
-  let trackers: Array<TrackerClass> = []
+  let workingLibTracker: LibraryTrackerType;
+  let showDom: boolean = false;
+  let trackers: Array<TrackerClass> = [];
 
-  export let id: string
+  export let id: string;
 
-  let lastHash = ''
+  let lastHash = '';
   $: if (objectHash($LibraryManagerStore.libraryTracker) !== lastHash) {
-    lastHash = objectHash($LibraryManagerStore.libraryTracker)
-    workingLibTracker = Object.assign({}, $LibraryManagerStore.libraryTracker)
-    trackers = [...trackers, ...workingLibTracker.trackers.map((t) => new TrackerClass(t))]
+    lastHash = objectHash($LibraryManagerStore.libraryTracker);
+    workingLibTracker = Object.assign({}, $LibraryManagerStore.libraryTracker);
+    trackers = [...trackers, ...workingLibTracker.trackers.map((t) => new TrackerClass(t))];
 
     setTimeout(() => {
-      showDom = true
-    }, 100)
+      showDom = true;
+    }, 100);
   }
 
-  $: canSave = workingLibTracker && trackers?.length > 0 && workingLibTracker.title && workingLibTracker.tags
+  $: canSave = workingLibTracker && trackers?.length > 0 && workingLibTracker.title && workingLibTracker.tags;
 
   const selectTrackers = async () => {
-    const trks = await selectTrackables('tracker')
+    const trks = await selectTrackables('tracker');
 
-    trackers = [...trackers, ...trks.map((t) => t.tracker)]
-  }
+    trackers = [...trackers, ...trks.map((t) => t.tracker)];
+  };
 
   const remove = (tracker: TrackerClass) => {
-    trackers = trackers.filter((t) => t !== tracker)
-  }
+    trackers = trackers.filter((t) => t !== tracker);
+  };
 
   const save = async () => {
     const pack: LibraryTrackerType = {
@@ -63,26 +63,26 @@
       tags: workingLibTracker.tags,
       uid: firebaseAuth.currentUser?.uid,
       _id: workingLibTracker._id,
-    }
+    };
     try {
-      await saveLibraryTracker(pack)
-      close()
-      Interact.confetti({ timeout: 2000 })
+      await saveLibraryTracker(pack);
+      close();
+      Interact.confetti({ timeout: 2000 });
     } catch (e) {
-      Interact.error(e.message)
+      Interact.error(e.message);
     }
-  }
+  };
 
   const createTracker = () => {
     openTrackableEditor(new Trackable({ type: 'tracker', tracker: new TrackerClass({}) }), (trackable) => {
-      trackers.push(trackable.tracker)
-      trackers = trackers
-    })
-  }
+      trackers.push(trackable.tracker);
+      trackers = trackers;
+    });
+  };
 
   const close = () => {
-    closeModal(id)
-  }
+    closeModal(id);
+  };
 </script>
 
 <Modal2 visible={showDom} id="library-tracker-editor" on:close={() => close()}>
@@ -96,7 +96,7 @@
         {Lang.t('general.save', 'Save')}
       </Button>
     </ToolbarGrid>
-    <main class="p-2 space-y-6 ">
+    <main class="p-2 space-y-6">
       <List solo>
         <Input
           listItem
@@ -112,7 +112,7 @@
           label="Tags"
           value={workingLibTracker.tags.join(',')}
           on:input={(evt) => {
-            workingLibTracker.tags = evt.detail.split(',').map((t) => t.trim())
+            workingLibTracker.tags = evt.detail.split(',').map((t) => t.trim());
           }}
           placeholder="Tags. e.g: food, drink, health"
         />
@@ -138,7 +138,7 @@
                   color="danger"
                   className="mr-2 text-white bg-red-500"
                   on:click={() => {
-                    remove(tracker)
+                    remove(tracker);
                   }}
                 >
                   <IonIcon icon={TrashOutline} />
@@ -149,13 +149,13 @@
               <div slot="right" class="flex items-center space-x-2">
                 <Button
                   on:click={() => {
-                    const temp = tracker.asObject
-                    delete temp._id
-                    delete temp.tag
-                    temp._dirty = true
-                    const newTracker = new TrackerClass(temp)
-                    trackers.push(newTracker)
-                    trackers = trackers
+                    const temp = tracker.asObject;
+                    delete temp._id;
+                    delete temp.tag;
+                    temp._dirty = true;
+                    const newTracker = new TrackerClass(temp);
+                    trackers.push(newTracker);
+                    trackers = trackers;
                   }}
                   shape="round"
                   className="bg-gray-200 dark:bg-gray-800"
@@ -165,9 +165,9 @@
                   on:click={() => {
                     editTracker(tracker, {
                       onSave(updatedTracker) {
-                        tracker = updatedTracker
+                        tracker = updatedTracker;
                       },
-                    })
+                    });
                   }}
                   shape="round"
                   className="bg-gray-200 dark:bg-gray-800"

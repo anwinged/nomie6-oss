@@ -1,42 +1,42 @@
 <script lang="ts">
-  import Modal2 from '../../../components/modal/modal2.svelte'
-  import Panel from '../../../components/panel/panel.svelte'
-  import ToolbarGrid from '../../../components/toolbar/toolbar-grid.svelte'
-  import { onMount } from 'svelte'
-  import { wait } from '../../../utils/tick/tick'
-  import { closeUomEditor } from '../useUomModal'
-  import Button from '../../../components/button/button.svelte'
-  import { Lang } from '../../../store/lang'
-  import Input from '../../../components/input/input.svelte'
-  import List from '../../../components/list/list.svelte'
-  import Divider from '../../../components/divider/divider.svelte'
-  import type { UomType } from '../../../utils/nomie-uom/uoms'
+  import Modal2 from '../../../components/modal/modal2.svelte';
+  import Panel from '../../../components/panel/panel.svelte';
+  import ToolbarGrid from '../../../components/toolbar/toolbar-grid.svelte';
+  import { onMount } from 'svelte';
+  import { wait } from '../../../utils/tick/tick';
+  import { closeUomEditor } from '../useUomModal';
+  import Button from '../../../components/button/button.svelte';
+  import { Lang } from '../../../store/lang';
+  import Input from '../../../components/input/input.svelte';
+  import List from '../../../components/list/list.svelte';
+  import Divider from '../../../components/divider/divider.svelte';
+  import type { UomType } from '../../../utils/nomie-uom/uoms';
 
-  let visible: boolean = false
-  let value: number = 123
+  let visible: boolean = false;
+  let value: number = 123;
   let uom: UomType = {
     type: 'custom',
     singular: 'My Uom',
     plural: 'My Uoms',
     symbol: 'my',
     symbolAffix: 'post',
-  }
+  };
 
   // TODO: This is incomplete
 
   const mounted = async () => {
-    wait(200).then(() => (visible = true))
-  }
+    wait(200).then(() => (visible = true));
+  };
 
   // $: uomRendered = uomFormat(value, uom)
 
   const close = async () => {
-    visible = false
-    await wait(200)
-    closeUomEditor()
-  }
+    visible = false;
+    await wait(200);
+    closeUomEditor();
+  };
 
-  onMount(mounted)
+  onMount(mounted);
 </script>
 
 <Modal2 id="uom-modal" {visible}>

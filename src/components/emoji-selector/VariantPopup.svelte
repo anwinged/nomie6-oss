@@ -1,20 +1,20 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher } from 'svelte';
 
-  import IonIcon from '../icon/ion-icon.svelte'
-  import { CloseOutline } from '../icon/nicons'
-  import Emoji from './Emoji.svelte'
+  import IonIcon from '../icon/ion-icon.svelte';
+  import { CloseOutline } from '../icon/nicons';
+  import Emoji from './Emoji.svelte';
 
-  export let variants: any
+  export let variants: any;
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
   function onClickClose() {
-    dispatch('close')
+    dispatch('close');
   }
 
   function onClickContainer(event?: any) {
-    dispatch('close', event)
+    dispatch('close', event);
   }
 </script>
 

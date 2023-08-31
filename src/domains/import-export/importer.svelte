@@ -1,37 +1,37 @@
 <script lang="ts">
-  import { Prefs } from './../preferences/Preferences'
+  import { Prefs } from './../preferences/Preferences';
 
-  import { wait } from '../../utils/tick/tick'
+  import { wait } from '../../utils/tick/tick';
 
   // Modules
-  import ImportLoader from '../../modules/import/import-loader'
+  import ImportLoader from '../../modules/import/import-loader';
 
-  import NItem from '../../components/list-item/list-item.svelte'
+  import NItem from '../../components/list-item/list-item.svelte';
 
   // Stores
-  import { Interact } from '../../store/interact'
-  import { LedgerStore } from '../ledger/LedgerStore'
-  import { Lang } from '../../store/lang'
-  import Button from '../../components/button/button.svelte'
-  import ImporterItem from './importer-item.svelte'
-  import ProgressBar from '../../components/progress-bar/progress-bar.svelte'
-  import ListItem from '../../components/list-item/list-item.svelte'
-  import Empty from '../../components/empty/empty.svelte'
+  import { Interact } from '../../store/interact';
+  import { LedgerStore } from '../ledger/LedgerStore';
+  import { Lang } from '../../store/lang';
+  import Button from '../../components/button/button.svelte';
+  import ImporterItem from './importer-item.svelte';
+  import ProgressBar from '../../components/progress-bar/progress-bar.svelte';
+  import ListItem from '../../components/list-item/list-item.svelte';
+  import Empty from '../../components/empty/empty.svelte';
 
-  import { closeModal } from '../../components/backdrop/BackdropStore2'
-  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte'
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
-  import { showToast } from '../../components/toast/ToastStore'
-  import { importStorage } from '../storage/import-export'
-  import DownloadOutline from '../../n-icons/DownloadOutline.svelte'
+  import { closeModal } from '../../components/backdrop/BackdropStore2';
+  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte';
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
+  import { showToast } from '../../components/toast/ToastStore';
+  import { importStorage } from '../storage/import-export';
+  import DownloadOutline from '../../n-icons/DownloadOutline.svelte';
 
-  export let id: string
-  export let fileData: any = undefined
+  export let id: string;
+  export let fileData: any = undefined;
 
   // let fileInput // holder of dom element self
 
-  let version = undefined // version we're dealing with
-  let importingAll = false
+  let version = undefined; // version we're dealing with
+  let importingAll = false;
 
   // Status of imports
   let importing = {
@@ -44,112 +44,112 @@
     dashboards: { running: false, done: false },
     context: { running: false, done: false },
     all: { running: false, done: false },
-  }
+  };
 
-  const importLoader = new ImportLoader()
+  const importLoader = new ImportLoader();
 
-  let initialized = false
+  let initialized = false;
   $: if (fileData && !initialized) {
-    methods.init()
+    methods.init();
   }
 
   const methods = {
     // Initialze once we have data.
     init() {
-      initialized = true
+      initialized = true;
       if (fileData.hasOwnProperty('nomie')) {
         // const importer = new Importer(fileData);
         try {
-          importLoader.openPayload(fileData)
-          version = importLoader.importer.version
+          importLoader.openPayload(fileData);
+          version = importLoader.importer.version;
         } catch (e) {
-          console.error(e.message)
-          Interact.alert('Error', e.message)
+          console.error(e.message);
+          Interact.alert('Error', e.message);
         }
       }
     },
     async finish() {
       // Get a new latest book
-      await LedgerStore.getFirstDate(true)
-      let confirmed = await Interact.confirm('Import Complete. Restart?', `It's best to reload Nomie after an import`)
+      await LedgerStore.getFirstDate(true);
+      let confirmed = await Interact.confirm('Import Complete. Restart?', `It's best to reload Nomie after an import`);
       if (confirmed) {
-        document.location.href = '/'
+        document.location.href = '/';
       }
     },
     // On Import File
     // Process the file - see if we can do anything with it.
     onImportFile(event) {
       // set reader and file
-      let reader = new FileReader()
-      let file = event.target.files[0]
+      let reader = new FileReader();
+      let file = event.target.files[0];
       // file on loaded
       reader.onload = (theFile: any) => {
         try {
-          fileData = JSON.parse(theFile.target.result)
-          methods.init()
+          fileData = JSON.parse(theFile.target.result);
+          methods.init();
         } catch (e) {
-          console.error(e)
-          Interact.alert('Error', e.message)
+          console.error(e);
+          Interact.alert('Error', e.message);
         }
-      }
+      };
       // Read the file
-      reader.readAsText(file)
+      reader.readAsText(file);
     },
 
     // Confirm Import Trackers
 
     async run(type: string, func: Function, prompt: boolean = false) {
-      importing[type].running = true
+      importing[type].running = true;
       try {
-        let proceed = true
+        let proceed = true;
         if (prompt) {
-          proceed = await Interact.confirm(`Import ${type}?`, 'This action cannot be undone')
-          await wait(200)
+          proceed = await Interact.confirm(`Import ${type}?`, 'This action cannot be undone');
+          await wait(200);
           if (proceed !== true) {
-            importing[type].running = false
-            importing[type].done = false
+            importing[type].running = false;
+            importing[type].done = false;
           }
         }
         if (proceed) {
-          await func()
-          importing[type].running = false
-          importing[type].done = true
+          await func();
+          importing[type].running = false;
+          importing[type].done = true;
         }
       } catch (e) {
-        console.error(type, e.message)
-        Interact.alert('Error', e.message)
-        importing[type].running = false
-        importing[type].done = false
+        console.error(type, e.message);
+        Interact.alert('Error', e.message);
+        importing[type].running = false;
+        importing[type].done = false;
       }
     },
     async importTrackers(confirmation: boolean = false) {
       return await methods.run(
         'trackers',
         async () => {
-          return await importLoader.importTrackers()
+          return await importLoader.importTrackers();
         },
         confirmation
-      )
+      );
     },
     // Confirm Import Trackers
     async importDashboards(confirmation: boolean = false) {
       return await methods.run(
         'dashboards',
         async () => {
-          return await importLoader.importDashboards()
+          return await importLoader.importDashboards();
         },
         confirmation
-      )
+      );
     },
 
     async importPeople(confirmation: boolean = false) {
       return await methods.run(
         'people',
         async () => {
-          return await importLoader.importPeople()
+          return await importLoader.importPeople();
         },
         confirmation
-      )
+      );
     },
 
     // Confirm Import Boards
@@ -157,10 +157,10 @@
       return await methods.run(
         'boards',
         async () => {
-          return await importLoader.importBoards()
+          return await importLoader.importBoards();
         },
         confirmation
-      )
+      );
     },
 
     // Confirm Import logs
@@ -168,104 +168,104 @@
       return await methods.run(
         'logs',
         async () => {
-          importing.logs.running = true
+          importing.logs.running = true;
           return await importLoader.importLogs((progress) => {
-            importing.logs.progress = progress.progress
+            importing.logs.progress = progress.progress;
             if (progress.step == progress.total) {
-              importing.logs.done = true
-              importing.logs.running = false
+              importing.logs.done = true;
+              importing.logs.running = false;
             }
-          })
+          });
         },
         confirmation
-      )
+      );
     },
 
     async importContext(confirmation: boolean = false) {
       return await methods.run(
         'context',
         async () => {
-          return await importLoader.importContext()
+          return await importLoader.importContext();
         },
         confirmation
-      )
+      );
     },
 
     async importLocations(confirmation: boolean = false) {
       return await methods.run(
         'locations',
         async () => {
-          return await importLoader.importLocations()
+          return await importLoader.importLocations();
         },
         confirmation
-      )
+      );
     },
     // Confirm Import All
     async importAll() {
-      let confirmed = await Interact.confirm('Confirm', 'Are you sure? Importing cannot be undone.')
+      let confirmed = await Interact.confirm('Confirm', 'Are you sure? Importing cannot be undone.');
       if (confirmed === true) {
-        await wait(300)
-        importingAll = true
-        importing.all.running = true
-        let statusMonitor = []
+        await wait(300);
+        importingAll = true;
+        importing.all.running = true;
+        let statusMonitor = [];
         try {
           // Let the importer Importer all
           await importLoader.importAll((status) => {
             // While importing each item (other than logs)
             if (status.importing) {
-              importing[status.importing] = importing[status.importing] || {}
-              importing[status.importing].running = true
-              statusMonitor.push(status.importing)
+              importing[status.importing] = importing[status.importing] || {};
+              importing[status.importing].running = true;
+              statusMonitor.push(status.importing);
               // Make sure other things are not in the running state.
               Object.keys(importing).forEach((item) => {
                 if (status.importing !== item) {
-                  importing[item].running = false
+                  importing[item].running = false;
                   if (statusMonitor.indexOf(item) > -1) {
-                    importing[item].done = true
+                    importing[item].done = true;
                   }
                 }
-              })
+              });
             } else {
               // We're importing Logs
               if (status.progress) {
-                importing.logs.progress = status.progress
+                importing.logs.progress = status.progress;
               }
             }
-          })
+          });
           Object.keys(importing).forEach((item) => {
-            importing[item].done = true
-          })
-          importing.all.running = false
-          importing.all.done = true
-          importing.logs.done = true
-          importing.logs.running = false
-          importingAll = false
-          showToast({ message: 'Import Finishing...' })
-          await LedgerStore.getFirstDate(true)
-          methods.finish()
+            importing[item].done = true;
+          });
+          importing.all.running = false;
+          importing.all.done = true;
+          importing.logs.done = true;
+          importing.logs.running = false;
+          importingAll = false;
+          showToast({ message: 'Import Finishing...' });
+          await LedgerStore.getFirstDate(true);
+          methods.finish();
         } catch (e) {
-          console.error(e.message)
-          Interact.alert('Error', e.message)
+          console.error(e.message);
+          Interact.alert('Error', e.message);
         }
 
-        return true
+        return true;
       }
-      return false
+      return false;
     },
 
     // Get Percentage between two numbers
-  }
+  };
 
   const close = async () => {
     if (importing.logs.running) {
-      const confirm = await Interact.confirm('Stop the import?')
+      const confirm = await Interact.confirm('Stop the import?');
       if (confirm) {
-        window.location.reload()
+        window.location.reload();
       }
     } else {
-      closeModal(id)
+      closeModal(id);
     }
-  }
+  };
 </script>
 
 <BackdropModal>
@@ -299,7 +299,7 @@
       title={`Import a file`}
       buttonLabel={Lang.t('settings.select-nomie-file', 'Select File...')}
       buttonClick={() => {
-        importStorage()
+        importStorage();
       }}
     >
       <!-- <input
@@ -316,7 +316,7 @@
       <NItem
         title="Unknown/Invalid File"
         on:click={() => {
-          fileData = null
+          fileData = null;
         }}
       />
     {:else if fileData}
@@ -331,7 +331,7 @@
           count={(importLoader.normalized.logs || []).length.toLocaleString()}
           bind:status={importing.logs}
           on:import={() => {
-            methods.importLogs(true)
+            methods.importLogs(true);
           }}
         >
           {#if importing.logs.running}
@@ -353,7 +353,7 @@
           count={Object.keys(importLoader.normalized.trackers).length.toLocaleString()}
           bind:status={importing.trackers}
           on:import={() => {
-            methods.importTrackers(true)
+            methods.importTrackers(true);
           }}
         />
       {:else}
@@ -394,7 +394,7 @@
           count={(importLoader.normalized.locations || []).length.toLocaleString()}
           bind:status={importing.locations}
           on:import={() => {
-            methods.importLocations(true)
+            methods.importLocations(true);
           }}
         />
       {:else}
@@ -412,7 +412,7 @@
           count={(importLoader.normalized.boards || []).length.toLocaleString()}
           bind:status={importing.boards}
           on:import={() => {
-            methods.importBoards(true)
+            methods.importBoards(true);
           }}
         />
       {:else}
@@ -430,7 +430,7 @@
           count={(Object.keys(importLoader.normalized.people) || []).length.toLocaleString()}
           bind:status={importing.people}
           on:import={() => {
-            methods.importPeople(true)
+            methods.importPeople(true);
           }}
         />
       {:else}
@@ -448,7 +448,7 @@
           count={(importLoader.normalized.context || []).length.toLocaleString()}
           bind:status={importing.context}
           on:import={() => {
-            methods.importContext(true)
+            methods.importContext(true);
           }}
         />
       {:else}
@@ -466,7 +466,7 @@
           count={(importLoader.normalized.dashboards || []).length.toLocaleString()}
           bind:status={importing.dashboards}
           on:import={() => {
-            methods.importDashboards(true)
+            methods.importDashboards(true);
           }}
         />
       {:else}

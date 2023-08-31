@@ -1,26 +1,26 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher } from 'svelte';
 
-  import appConfig from '../../config/appConfig'
-  import tick from '../../utils/tick/tick'
-  import Button from '../button/button.svelte'
-  import IonIcon from '../icon/ion-icon.svelte'
-  import { CloseOutline } from '../icon/nicons'
+  import appConfig from '../../config/appConfig';
+  import tick from '../../utils/tick/tick';
+  import Button from '../button/button.svelte';
+  import IonIcon from '../icon/ion-icon.svelte';
+  import { CloseOutline } from '../icon/nicons';
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  export let score = 0
-  export let className = ''
-  export let style = ''
-  export let size = 'md'
-  export let transparent = false
-  export let id = undefined
-  export let showClose: boolean = false
+  export let score = 0;
+  export let className = '';
+  export let style = '';
+  export let size = 'md';
+  export let transparent = false;
+  export let id = undefined;
+  export let showClose: boolean = false;
 
   async function onChange(sc) {
-    score = sc
-    await tick(200)
-    dispatch('change', score)
+    score = sc;
+    await tick(200);
+    dispatch('change', score);
   }
 </script>
 
@@ -35,7 +35,7 @@
       color="transparent"
       shape="rounded"
       on:click={() => {
-        dispatch('close')
+        dispatch('close');
       }}
     >
       <IonIcon icon={CloseOutline} />
@@ -44,7 +44,7 @@
   {#each appConfig.positivity as posEmoji}
     <Button
       on:click={() => {
-        onChange(posEmoji.score)
+        onChange(posEmoji.score);
       }}
       {size}
       style="padding:0"

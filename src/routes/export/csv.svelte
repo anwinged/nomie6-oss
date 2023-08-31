@@ -1,39 +1,39 @@
 <script lang="ts">
-  import { CheckmarkCircle, CircleOutline } from '../../components/icon/nicons'
-  import { dedupArray } from '../../utils/array/array_utils'
-  import { Interact } from '../../store/interact'
-  import { Lang } from '../../store/lang'
-  import { LedgerStore } from '../../domains/ledger/LedgerStore'
-  import { logsToCSV, logsToDetailedCSV } from '../../modules/export/csv'
-  import { onMount } from 'svelte'
-  import { selectTrackables } from '../../domains/trackable/trackable-selector/TrackableSelectorStore'
-  import { TrackableStore, AllTrackablesAsArray } from '../../domains/trackable/TrackableStore'
+  import { CheckmarkCircle, CircleOutline } from '../../components/icon/nicons';
+  import { dedupArray } from '../../utils/array/array_utils';
+  import { Interact } from '../../store/interact';
+  import { Lang } from '../../store/lang';
+  import { LedgerStore } from '../../domains/ledger/LedgerStore';
+  import { logsToCSV, logsToDetailedCSV } from '../../modules/export/csv';
+  import { onMount } from 'svelte';
+  import { selectTrackables } from '../../domains/trackable/trackable-selector/TrackableSelectorStore';
+  import { TrackableStore, AllTrackablesAsArray } from '../../domains/trackable/TrackableStore';
 
-  import Button from '../../components/button/button.svelte'
-  import Container from '../../components/container/container.svelte'
-  import dayjs from 'dayjs'
-  import download from '../../modules/download/download'
-  import DownloadOutline from '../../n-icons/DownloadOutline.svelte'
-  import Input from '../../components/input/input.svelte'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import List from '../../components/list/list.svelte'
-  import NBackButton from '../../components/back-button/back-button.svelte'
-  import nid from '../../modules/nid/nid'
-  import NItem from '../../components/list-item/list-item.svelte'
-  import NLayout from '../../domains/layout/layout.svelte'
-  import RemoveCircleOutline from '../../n-icons/RemoveCircleOutline.svelte'
-  import Spinner from '../../components/spinner/spinner.svelte'
-  import tick from '../../utils/tick/tick'
-  import ToggleSwitch from '../../components/toggle-switch/toggle-switch.svelte'
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
-  import TrackablePill from '../../domains/trackable/trackable-pill.svelte'
+  import Button from '../../components/button/button.svelte';
+  import Container from '../../components/container/container.svelte';
+  import dayjs from 'dayjs';
+  import download from '../../modules/download/download';
+  import DownloadOutline from '../../n-icons/DownloadOutline.svelte';
+  import Input from '../../components/input/input.svelte';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import List from '../../components/list/list.svelte';
+  import NBackButton from '../../components/back-button/back-button.svelte';
+  import nid from '../../modules/nid/nid';
+  import NItem from '../../components/list-item/list-item.svelte';
+  import NLayout from '../../domains/layout/layout.svelte';
+  import RemoveCircleOutline from '../../n-icons/RemoveCircleOutline.svelte';
+  import Spinner from '../../components/spinner/spinner.svelte';
+  import tick from '../../utils/tick/tick';
+  import ToggleSwitch from '../../components/toggle-switch/toggle-switch.svelte';
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
+  import TrackablePill from '../../domains/trackable/trackable-pill.svelte';
 
   type CSVExportType = {
-    type: 'column' | 'detailed'
-    label: string
-    description: string
-    required: Array<string>
-  }
+    type: 'column' | 'detailed';
+    label: string;
+    description: string;
+    required: Array<string>;
+  };
 
   let csvTypes: Array<CSVExportType> = [
     {
@@ -48,97 +48,97 @@
       label: 'Note View',
       description: `Each Note containing any matching trackables`,
     },
-  ]
+  ];
 
-  let csvType: CSVExportType = csvTypes[0]
-  let generating = false
-  let canSave: boolean = false
-  let useAllTrackables: boolean = true
+  let csvType: CSVExportType = csvTypes[0];
+  let generating = false;
+  let canSave: boolean = false;
+  let useAllTrackables: boolean = true;
 
   // Set state
   let state = {
     trackables: [],
     start: dayjs().subtract(1, 'month').format('YYYY-MM-DD'),
     end: dayjs().format('YYYY-MM-DD'),
-  }
+  };
 
   // Prepare Dynamic values
-  let startDate, endDate
+  let startDate, endDate;
 
   // If start Changes, make sure end date is the same year
   // Searching only works year by year.
   $: if (state.start && dayjs(state.start, 'YYYY-MM-DD') !== startDate) {
-    startDate = dayjs(state.start, 'YYYY-MM-DD')
-    doc = []
+    startDate = dayjs(state.start, 'YYYY-MM-DD');
+    doc = [];
   }
 
   $: if (state.end && dayjs(state.end, 'YYYY-MM-DD') !== endDate) {
-    endDate = dayjs(state.end, 'YYYY-MM-DD')
-    doc = []
+    endDate = dayjs(state.end, 'YYYY-MM-DD');
+    doc = [];
   }
 
   $: {
-    let needsTrackables = csvType.required.indexOf('trackables') > -1 ? true : false
-    let meetsNeeds = needsTrackables ? state.trackables.length > 0 : true
-    canSave = !generating && meetsNeeds
+    let needsTrackables = csvType.required.indexOf('trackables') > -1 ? true : false;
+    let meetsNeeds = needsTrackables ? state.trackables.length > 0 : true;
+    canSave = !generating && meetsNeeds;
   }
 
   // Monitor if the user needs all known trackables or not
-  let lastUseAllTrackables = !useAllTrackables
+  let lastUseAllTrackables = !useAllTrackables;
   $: if (useAllTrackables !== lastUseAllTrackables) {
-    lastUseAllTrackables = useAllTrackables
+    lastUseAllTrackables = useAllTrackables;
 
     if (useAllTrackables) {
-      state.trackables = $AllTrackablesAsArray
+      state.trackables = $AllTrackablesAsArray;
     } else {
-      state.trackables = []
+      state.trackables = [];
     }
   }
 
-  let doc: Array<any> = []
+  let doc: Array<any> = [];
 
   const methods = {
     async generateCSV(): Promise<Array<any>> {
-      generating = true
-      const logs = await LedgerStore.query({ start: startDate, end: endDate, fresh: true, caller: 'csv' })
+      generating = true;
+      const logs = await LedgerStore.query({ start: startDate, end: endDate, fresh: true, caller: 'csv' });
       if (csvType.type === 'column') {
-        generating = true
-        doc = await logsToCSV(logs, state.trackables, $TrackableStore.trackables)
-        generating = false
+        generating = true;
+        doc = await logsToCSV(logs, state.trackables, $TrackableStore.trackables);
+        generating = false;
       } else {
-        doc = logsToDetailedCSV(logs, state.trackables)
+        doc = logsToDetailedCSV(logs, state.trackables);
       }
-      generating = false
+      generating = false;
 
       setTimeout(() => {
-        const previewDom = document.querySelector('.csv-preview')
-        if (previewDom) previewDom.scrollIntoView({ behavior: 'smooth' })
-      }, 400)
+        const previewDom = document.querySelector('.csv-preview');
+        if (previewDom) previewDom.scrollIntoView({ behavior: 'smooth' });
+      }, 400);
 
-      return doc
+      return doc;
     },
 
     async download() {
       let filename = `export-${startDate.format('YYYY-M-D')}-${endDate.format('YYYY-M-D')}.${nid(6)}.${
         import.meta.env.PACKAGE_VERSION
-      }.csv`
+      }.csv`;
 
-      download.csv(filename, doc.join('\r\n'))
-      await tick(120)
-      Interact.stopBlocker()
-      generating = false
+      download.csv(filename, doc.join('\r\n'));
+      await tick(120);
+      Interact.stopBlocker();
+      generating = false;
     },
     async selectTrackers() {
-      const selected = await selectTrackables()
-      state.trackables = dedupArray([...state.trackables, ...selected], 'tag')
-      doc = []
+      const selected = await selectTrackables();
+      state.trackables = dedupArray([...state.trackables, ...selected], 'tag');
+      doc = [];
     },
     export() {
       // Exporter()
     },
-  }
+  };
 
-  onMount(() => {})
+  onMount(() => {});
 </script>
 
 <NLayout pageTitle="Export your Data" className="Export">
@@ -155,8 +155,8 @@
           <NItem
             clickable
             on:click={() => {
-              csvType = csvTypeLoop
-              doc = []
+              csvType = csvTypeLoop;
+              doc = [];
             }}
           >
             <IonIcon
@@ -194,7 +194,7 @@
               <TrackablePill {trackable} hideValue />
               <Button
                 on:click={(evt) => {
-                  state.trackables = state.trackables.filter((t) => t.tag !== trackable.tag)
+                  state.trackables = state.trackables.filter((t) => t.tag !== trackable.tag);
                 }}
                 size="sm"
                 type="clear"
@@ -235,7 +235,7 @@
 
       <div class="csv-preview overflow-y-auto py-4 px-2">
         {#if doc.length > 1}
-          <table class="border border-gray-500 p-2 w-full rounded-lg ">
+          <table class="border border-gray-500 p-2 w-full rounded-lg">
             {#each doc.filter((d, i) => i < 10) as row}
               <tr>
                 {#each row as cell}

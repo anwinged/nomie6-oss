@@ -1,21 +1,21 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
+  import { onMount } from 'svelte';
 
-  export let className = ''
-  export let center = false
-  export let inset = false
-  export let pad = false
-  export let style = ''
-  export let hideLine: boolean = false
-  export let left: number | undefined = undefined
+  export let className = '';
+  export let center = false;
+  export let inset = false;
+  export let pad = false;
+  export let style = '';
+  export let hideLine: boolean = false;
+  export let left: number | undefined = undefined;
 
-  let hasContent: boolean = false
+  let hasContent: boolean = false;
 
   onMount(() => {
     if (arguments[1].$$slots) {
-      hasContent = true
+      hasContent = true;
     }
-  })
+  });
 </script>
 
 <div

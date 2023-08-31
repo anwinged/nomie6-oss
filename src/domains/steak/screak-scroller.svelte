@@ -1,70 +1,68 @@
 <script lang="ts">
-  import dayjs from 'dayjs'
-  import { createEventDispatcher, onDestroy, onMount } from 'svelte'
+  import dayjs from 'dayjs';
+  import { createEventDispatcher, onDestroy, onMount } from 'svelte';
 
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import { CaretDown, ChevronForwardOutline } from '../../components/icon/nicons'
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import { CaretDown, ChevronForwardOutline } from '../../components/icon/nicons';
 
-  import { LedgerStore } from '../ledger/LedgerStore'
-  import type { Trackable } from '../trackable/Trackable.class'
-  import { TrackableStore } from '../trackable/TrackableStore'
-  import { TrackableUsage } from '../usage/trackable-usage.class'
-  import logsToTrackableUsage from '../usage/usage-utils'
-  import { openOnThisDayModal } from '../on-this-day/useOnThisDayModal'
-  import { trackOnThisDay } from './StreakStore'
+  import { LedgerStore } from '../ledger/LedgerStore';
+  import type { Trackable } from '../trackable/Trackable.class';
+  import { TrackableStore } from '../trackable/TrackableStore';
+  import { TrackableUsage } from '../usage/trackable-usage.class';
+  import logsToTrackableUsage from '../usage/usage-utils';
+  import { openOnThisDayModal } from '../on-this-day/useOnThisDayModal';
+  import { trackOnThisDay } from './StreakStore';
 
-  import type { LastUsedStoreState } from '../usage/UsageStore'
+  import type { LastUsedStoreState } from '../usage/UsageStore';
 
-  import math from '../../utils/math/math'
-  import { UsageStore } from '../usage/UsageStore'
-  import Scroller from '../../components/scroller/scroller.svelte'
-  import { getDateFormats } from '../preferences/Preferences'
-  import { openDateOptionPopMenu } from '../../components/pop-menu/usePopmenu'
-  import LetterTicker from '../../components/letter-ticker/letter-ticker.svelte'
+  import math from '../../utils/math/math';
+  import { UsageStore } from '../usage/UsageStore';
+  import Scroller from '../../components/scroller/scroller.svelte';
+  import { getDateFormats } from '../preferences/Preferences';
+  import { openDateOptionPopMenu } from '../../components/pop-menu/usePopmenu';
+  import LetterTicker from '../../components/letter-ticker/letter-ticker.svelte';
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
   // TODO: See why it's not adding all the them .
 
-  let selectedIndex
-  let selectedLabel: string | undefined = undefined
-  let unsubLastUsedStore: Function
-  let lastUsedState: LastUsedStoreState
+  let selectedIndex;
+  let selectedLabel: string | undefined = undefined;
+  let unsubLastUsedStore: Function;
+  let lastUsedState: LastUsedStoreState;
 
-  export let endDate: Date = new Date()
-  export let trackable: undefined | Trackable = undefined
-  export let loading: boolean = true
+  export let endDate: Date = new Date();
+  export let trackable: undefined | Trackable = undefined;
+  export let loading: boolean = true;
 
-  let trackableUsage: TrackableUsage
+  let trackableUsage: TrackableUsage;
 
-  let trackableMaxUsed: number = 10
+  let trackableMaxUsed: number = 10;
   $: if (lastUsedState && (trackable || endDate)) {
-    getData()
+    getData();
   }
 
-  let getDataTimeout
+  let getDataTimeout;
   const getData = async () => {
-    clearTimeout(getDataTimeout)
+    clearTimeout(getDataTimeout);
     getDataTimeout = setTimeout(() => {
-      loadLogs()
-    }, 200)
-  }
+      loadLogs();
+    }, 200);
+  };
 
   let dateFormats = getDateFormats();
 
   onMount(async () => {
-    await loadLogs()
+    await loadLogs();
 
     unsubLastUsedStore = UsageStore.subscribe((lus) => {
-      lastUsedState = lus
-    })
-  })
+      lastUsedState = lus;
+    });
+  });
 
   onDestroy(() => {
-    unsubLastUsedStore()
-  })
-
-  
+    unsubLastUsedStore();
+  });
 
   /**
    * Track an event on a given day
@@ -78,12 +76,12 @@
    */
 
   const loadLogs = async () => {
-    loading = true
-    const endDayjs = dayjs(endDate).endOf('day')
-    const startDayjs = dayjs(endDayjs).subtract(30, 'days').startOf('day')
+    loading = true;
+    const endDayjs = dayjs(endDate).endOf('day');
+    const startDayjs = dayjs(endDayjs).subtract(30, 'days').startOf('day');
 
-    let usage = new TrackableUsage({ trackable, values: [], dates: [] })
-    trackableUsage = usage.byDay.backfill(startDayjs.toDate(), endDayjs.toDate())
+    let usage = new TrackableUsage({ trackable, values: [], dates: [] });
+    trackableUsage = usage.byDay.backfill(startDayjs.toDate(), endDayjs.toDate());
 
     const queryOptions = {
       end: endDayjs,
@@ -91,30 +89,32 @@
       search: trackable.tag,
       fuzzy: true,
       caller: 'streak2.svelte',
-    }
+    };
 
-    const items = await LedgerStore.query(queryOptions)
+    const items = await LedgerStore.query(queryOptions);
 
-    const allUsage = logsToTrackableUsage(items, { trackables: $TrackableStore.trackables })
+    const allUsage = logsToTrackableUsage(items, { trackables: $TrackableStore.trackables });
     if (allUsage[trackable.tag]) {
-      usage = allUsage[trackable.tag]
+      usage = allUsage[trackable.tag];
     } else {
-      usage = new TrackableUsage({ trackable, values: [], dates: [] })
+      usage = new TrackableUsage({ trackable, values: [], dates: [] });
     }
-    trackableUsage = usage.byDay.backfill(startDayjs.toDate(), endDayjs.toDate())
-    trackableMaxUsed = math.max(trackableUsage.values)
-    loading = false
-    return true
-  }
+    trackableUsage = usage.byDay.backfill(startDayjs.toDate(), endDayjs.toDate());
+    trackableMaxUsed = math.max(trackableUsage.values);
+    loading = false;
+    return true;
+  };
 
-  const showDateOptions = (date:Date, trackable:Trackable)=>{
-    openDateOptionPopMenu(date, [{
-      title: 'Track on this Day',
-      click() {
-        trackOnThisDay(trackable, dayjs(date).hour(dayjs().hour()).toDate(), $TrackableStore.trackables)
-      }
-    }])
-  }
+  const showDateOptions = (date: Date, trackable: Trackable) => {
+    openDateOptionPopMenu(date, [
+      {
+        title: 'Track on this Day',
+        click() {
+          trackOnThisDay(trackable, dayjs(date).hour(dayjs().hour()).toDate(), $TrackableStore.trackables);
+        },
+      },
+    ]);
+  };
 </script>
 
 <div class="streak-2 bg-white dark:bg-black py-1">
@@ -147,8 +147,8 @@
     itemsClass="streak-scroller px-2 py-2 space-x-2"
     on:change={(evt) => {
       if (evt.detail.centerPosItem && evt.detail.centerPosItem.item) {
-        selectedIndex = evt.detail.centerPosItem?.details?.index
-        selectedLabel = evt.detail.centerPosItem?.item.format(`ddd ${dateFormats.mmm_d_yyyy}`)
+        selectedIndex = evt.detail.centerPosItem?.details?.index;
+        selectedLabel = evt.detail.centerPosItem?.item.format(`ddd ${dateFormats.mmm_d_yyyy}`);
       }
     }}
   >
@@ -163,17 +163,17 @@
           // openDateOptionPopMenu(item.toDate())
           showDateOptions(item.toDate(), trackableUsage.trackable);
         }}
-        class="mb-1 text-solid border-dotted border-b border-gray-200 dark:border-gray-800 
+        class="mb-1 text-solid border-dotted border-b border-gray-200 dark:border-gray-800
         "
       >
         <div class="text-xs opacity-70 leading-none">{item.format('ddd')}</div>
         <div class="leading-tight">{item.format(dateFormats.tinyNumber)}</div>
       </button>
-      
+
       <button
-      on:click={() => {
-        showDateOptions(item.toDate(), trackableUsage.trackable);
-      }}
+        on:click={() => {
+          showDateOptions(item.toDate(), trackableUsage.trackable);
+        }}
         class="day-wrapper"
       >
         {#if !isNaN(trackableUsage.values[index])}
@@ -193,9 +193,12 @@
           )}`}%;background-color:{trackableUsage.trackable.color}"
         />
       </button>
-      <button class="track-button" on:click={() => {
-        trackOnThisDay(trackableUsage.trackable, item.hour(dayjs().hour()).toDate(), $TrackableStore.trackables)
-      }}>
+      <button
+        class="track-button"
+        on:click={() => {
+          trackOnThisDay(trackableUsage.trackable, item.hour(dayjs().hour()).toDate(), $TrackableStore.trackables);
+        }}
+      >
         +
       </button>
     </div>

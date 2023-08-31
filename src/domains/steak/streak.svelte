@@ -1,48 +1,48 @@
 <script lang="ts">
-  import dayjs from 'dayjs'
-  import type { Dayjs } from 'dayjs'
+  import dayjs from 'dayjs';
+  import type { Dayjs } from 'dayjs';
 
-  import TrackerClass from '../../modules/tracker/TrackerClass'
+  import TrackerClass from '../../modules/tracker/TrackerClass';
 
-  import Calendar from '../../components/calendar/calendar.svelte'
-  import Spinner from '../../components/spinner/spinner.svelte'
+  import Calendar from '../../components/calendar/calendar.svelte';
+  import Spinner from '../../components/spinner/spinner.svelte';
 
-  import StreakHelper from './streak-helper'
-  import type { StreakViewTypes } from './streak-helper'
-  import type { CalendarLog } from './streak-helper'
+  import StreakHelper from './streak-helper';
+  import type { StreakViewTypes } from './streak-helper';
+  import type { CalendarLog } from './streak-helper';
   // import StreakDays from './streak-days.svelte'
 
-  import type { Trackable } from '../trackable/Trackable.class'
-  import { strToTrackable } from '../trackable/trackable-utils'
-  import { TrackableStore } from '../trackable/TrackableStore'
+  import type { Trackable } from '../trackable/Trackable.class';
+  import { strToTrackable } from '../trackable/trackable-utils';
+  import { TrackableStore } from '../trackable/TrackableStore';
 
-  export let term: string
-  export let selectedDate: Dayjs = dayjs()
-  export let view: StreakViewTypes = 'month'
-  export let trackable: Trackable
-  export let className: string = ''
-  export let showDetail: boolean = true
+  export let term: string;
+  export let selectedDate: Dayjs = dayjs();
+  export let view: StreakViewTypes = 'month';
+  export let trackable: Trackable;
+  export let className: string = '';
+  export let showDetail: boolean = true;
 
-  let calendarLogs: Array<CalendarLog>
-  let mockTracker: TrackerClass
-  let lastTerm: string
-  let lastElement: Trackable
+  let calendarLogs: Array<CalendarLog>;
+  let mockTracker: TrackerClass;
+  let lastTerm: string;
+  let lastElement: Trackable;
 
   $: if (term && lastTerm !== term && !trackable) {
-    lastTerm = term
-    trackable = strToTrackable(term, $TrackableStore.trackables)
-    main()
+    lastTerm = term;
+    trackable = strToTrackable(term, $TrackableStore.trackables);
+    main();
   } else if (trackable && lastElement !== trackable) {
-    lastElement = trackable
-    main()
+    lastElement = trackable;
+    main();
   }
 
   async function main() {
     if (trackable) {
-      mockTracker = trackable.type == 'tracker' ? trackable.tracker : new TrackerClass({ tag: `${trackable.id}-mock` })
+      mockTracker = trackable.type == 'tracker' ? trackable.tracker : new TrackerClass({ tag: `${trackable.id}-mock` });
       // let logs = await StreakHelper.getLogs(trackable, selectedDate, view, $Prefs.weekStarts)
-      let logs = []
-      calendarLogs = StreakHelper.logsToCalendar(logs)
+      let logs = [];
+      calendarLogs = StreakHelper.logsToCalendar(logs);
     }
   }
 </script>

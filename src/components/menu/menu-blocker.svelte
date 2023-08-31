@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { onDestroy, onMount } from 'svelte'
-  import { hideMenuBlocker, showMenuBlocker } from './useDropmenu'
+  import { onDestroy, onMount } from 'svelte';
+  import { hideMenuBlocker, showMenuBlocker } from './useDropmenu';
 
   onMount(() => {
-    showMenuBlocker()
-  })
+    showMenuBlocker();
+  });
   onDestroy(() => {
-    hideMenuBlocker()
-  })
+    hideMenuBlocker();
+  });
 </script>

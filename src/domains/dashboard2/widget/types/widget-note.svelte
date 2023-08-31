@@ -1,46 +1,46 @@
 <script lang="ts">
-  import { Lang } from '../../../../store/lang'
+  import { Lang } from '../../../../store/lang';
 
-  import type { TrackableUsage } from '../../../usage/trackable-usage.class'
+  import type { TrackableUsage } from '../../../usage/trackable-usage.class';
   // import type { Trackable } from '../../../trackable/Trackable.class'
-  import type { WidgetClass } from '../widget-class'
-  import NoteTextualizer from '../../../../components/note-textualizer/note-textualizer.svelte'
-  import Button from '../../../../components/button/button.svelte'
-  import IonIcon from '../../../../components/icon/ion-icon.svelte'
-  import { ChevronBackCircleOutline, ChevronForwardCircleOutline } from '../../../../components/icon/nicons'
-  import { getDateFormats } from '../../../preferences/Preferences'
-import { onLogNoteChange } from '../../../ledger/LedgerStore';
-import type NLog from '../../../nomie-log/nomie-log';
+  import type { WidgetClass } from '../widget-class';
+  import NoteTextualizer from '../../../../components/note-textualizer/note-textualizer.svelte';
+  import Button from '../../../../components/button/button.svelte';
+  import IonIcon from '../../../../components/icon/ion-icon.svelte';
+  import { ChevronBackCircleOutline, ChevronForwardCircleOutline } from '../../../../components/icon/nicons';
+  import { getDateFormats } from '../../../preferences/Preferences';
+  import { onLogNoteChange } from '../../../ledger/LedgerStore';
+  import type NLog from '../../../nomie-log/nomie-log';
 
-  export let widget: WidgetClass
+  export let widget: WidgetClass;
   // export let trackable: Trackable
-  export let usage: TrackableUsage
+  export let usage: TrackableUsage;
 
-  let activeIndex: number = -1
-  let dateFormats = getDateFormats()
-  let sortedLogs:Array<NLog> = []
+  let activeIndex: number = -1;
+  let dateFormats = getDateFormats();
+  let sortedLogs: Array<NLog> = [];
   $: if (usage && usage.logs.length > 0) {
-    activeIndex = 0
-    sortedLogs = usage.logs.sort((a,b)=>{
+    activeIndex = 0;
+    sortedLogs = usage.logs.sort((a, b) => {
       return a.end < b.end ? 1 : -1;
-    })
+    });
   }
 
   const previousNote = () => {
     if (activeIndex == 0) {
-      activeIndex = sortedLogs.length - 1
+      activeIndex = sortedLogs.length - 1;
     } else {
-      activeIndex = activeIndex - 1
+      activeIndex = activeIndex - 1;
     }
-  }
+  };
 
   const nextNote = () => {
     if (activeIndex >= sortedLogs.length - 1) {
-      activeIndex = 0
+      activeIndex = 0;
     } else {
-      activeIndex = activeIndex + 1
+      activeIndex = activeIndex + 1;
     }
-  }
+  };
 </script>
 
 {#if !usage}
@@ -56,12 +56,12 @@ import type NLog from '../../../nomie-log/nomie-log';
     {/if}
     {#if activeIndex > -1}
       <div
-        class="note-wrapper flex flex-col h-full w-full max-h-full items-center justify-center "
+        class="note-wrapper flex flex-col h-full w-full max-h-full items-center justify-center"
         style="font-size:12px;"
       >
         <div class="text-center overflow-y-auto max-h-36">
           <NoteTextualizer
-            on:noteChange={(evt)=>{
+            on:noteChange={(evt) => {
               onLogNoteChange(evt.detail, sortedLogs[activeIndex]);
             }}
             className="{widget.size === 'sm' ? 'text-xs' : 'text-sm'} leading-tight"

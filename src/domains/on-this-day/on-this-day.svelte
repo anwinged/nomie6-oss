@@ -1,31 +1,31 @@
 <script lang="ts">
-  import { LedgerStore } from '../ledger/LedgerStore'
-  import dayjs from 'dayjs'
-  import Button from '../../components/button/button.svelte'
-  import ButtonGroup from '../../components/button-group/button-group.svelte'
-  import Toolbar from '../../components/toolbar/toolbar.svelte'
+  import { LedgerStore } from '../ledger/LedgerStore';
+  import dayjs from 'dayjs';
+  import Button from '../../components/button/button.svelte';
+  import ButtonGroup from '../../components/button-group/button-group.svelte';
+  import Toolbar from '../../components/toolbar/toolbar.svelte';
 
-  import { getContext, getNotes, getPeople, OTDViews, processTrackers } from './on-this-day-helpers'
+  import { getContext, getNotes, getPeople, OTDViews, processTrackers } from './on-this-day-helpers';
 
-  import type { OTDViewOption } from './on-this-day-helpers'
-  import OnThisDayViews from './on-this-day-views.svelte'
+  import type { OTDViewOption } from './on-this-day-helpers';
+  import OnThisDayViews from './on-this-day-views.svelte';
 
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import { CalendarOutline } from '../../components/icon/nicons'
-  import NextPrevCal from '../../components/next-prev-cal/next-prev-cal.svelte'
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import { CalendarOutline } from '../../components/icon/nicons';
+  import NextPrevCal from '../../components/next-prev-cal/next-prev-cal.svelte';
 
-  import { onMount } from 'svelte'
-  import { changeOnThisDay, OnThisDayModalStore } from './useOnThisDayModal'
-  import { Lang } from '../../store/lang'
-  import { selectFuzzyDate } from '../timeline/select-date-fuzzy'
-  import Empty from '../../components/empty/empty.svelte'
-  import Spinner from '../../components/spinner/spinner.svelte'
-  import { PeopleStore } from '../people/PeopleStore'
-  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte'
-  import { closeModal } from '../../components/backdrop/BackdropStore2'
+  import { onMount } from 'svelte';
+  import { changeOnThisDay, OnThisDayModalStore } from './useOnThisDayModal';
+  import { Lang } from '../../store/lang';
+  import { selectFuzzyDate } from '../timeline/select-date-fuzzy';
+  import Empty from '../../components/empty/empty.svelte';
+  import Spinner from '../../components/spinner/spinner.svelte';
+  import { PeopleStore } from '../people/PeopleStore';
+  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte';
+  import { closeModal } from '../../components/backdrop/BackdropStore2';
 
-  export let id: string
+  export let id: string;
 
   const state = {
     notes: [],
@@ -36,66 +36,66 @@
     people: [],
     context: [],
     locations: [],
-  }
+  };
 
-  let loading = true
+  let loading = true;
 
-  let views: typeof OTDViews = OTDViews
+  let views: typeof OTDViews = OTDViews;
 
-  let view: OTDViewOption = 'all'
+  let view: OTDViewOption = 'all';
 
   function setView(v: OTDViewOption) {
-    view = v
+    view = v;
   }
 
   async function loadDay() {
-    loading = true
-    let day = await LedgerStore.getDay($OnThisDayModalStore)
-    let trackersUsed = LedgerStore.extractTrackerTagAndValues(day)
-    state.people = getPeople(day, $PeopleStore)
-    state.context = getContext(day)
-    state.notes = getNotes(day)
-    state.trackers = processTrackers(trackersUsed)
+    loading = true;
+    let day = await LedgerStore.getDay($OnThisDayModalStore);
+    let trackersUsed = LedgerStore.extractTrackerTagAndValues(day);
+    state.people = getPeople(day, $PeopleStore);
+    state.context = getContext(day);
+    state.notes = getNotes(day);
+    state.trackers = processTrackers(trackersUsed);
 
-    state.records = day
-    loading = false
+    state.records = day;
+    loading = false;
   }
 
   function nextDay() {
-    let date = dayjs($OnThisDayModalStore).add(1, 'day').toDate()
-    changeOnThisDay(date)
-    loadDay()
+    let date = dayjs($OnThisDayModalStore).add(1, 'day').toDate();
+    changeOnThisDay(date);
+    loadDay();
   }
 
   function previousDay() {
-    let date = dayjs($OnThisDayModalStore).subtract(1, 'day').toDate()
-    changeOnThisDay(date)
-    loadDay()
+    let date = dayjs($OnThisDayModalStore).subtract(1, 'day').toDate();
+    changeOnThisDay(date);
+    loadDay();
   }
 
   const close = () => {
-    closeModal(id)
-  }
+    closeModal(id);
+  };
 
-  const gotoDate = (date:Date)=>{
+  const gotoDate = (date: Date) => {
     if (date) {
-      changeOnThisDay(date)
-      loadDay()
+      changeOnThisDay(date);
+      loadDay();
     }
-  }
+  };
 
   const jumpTo = async () => {
-    let date = await selectFuzzyDate(dayjs($OnThisDayModalStore), false)
+    let date = await selectFuzzyDate(dayjs($OnThisDayModalStore), false);
     gotoDate(date.toDate());
-  }
+  };
 
   const mounted = async () => {
-    loadDay()
-  }
+    loadDay();
+  };
 
   onMount(() => {
-    mounted()
-  })
+    mounted();
+  });
 </script>
 
 <BackdropModal>
@@ -117,10 +117,10 @@
       <div class="-mr-2" slot="right">
         <NextPrevCal
           on:previous={() => {
-            previousDay()
+            previousDay();
           }}
           on:next={() => {
-            nextDay()
+            nextDay();
           }}
           hideCal={true}
         >
@@ -139,7 +139,7 @@
             className={view === loopView.view ? 'active' : ''}
             icon
             on:click={() => {
-              setView(loopView.view)
+              setView(loopView.view);
             }}
           >
             <IonIcon icon={loopView.icon} size={20} />
@@ -152,9 +152,13 @@
 
   <main class="h-full relative min-h-full h-50vh pt-3">
     {#if !loading}
-      <OnThisDayViews {view} on:date={(evt)=>{
-        gotoDate(evt.detail);
-      }} logs={state.records} />
+      <OnThisDayViews
+        {view}
+        on:date={(evt) => {
+          gotoDate(evt.detail);
+        }}
+        logs={state.records}
+      />
     {:else if loading}
       <Empty>
         <Spinner />

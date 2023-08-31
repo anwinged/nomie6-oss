@@ -1,25 +1,25 @@
 <script lang="ts">
-  import { Lang } from '../../store/lang'
+  import { Lang } from '../../store/lang';
 
-  import { Prefs } from '../../domains/preferences/Preferences'
-  import { LaunchCount } from '../../domains/preferences/LaunchCount'
+  import { Prefs } from '../../domains/preferences/Preferences';
+  import { LaunchCount } from '../../domains/preferences/LaunchCount';
   // import { onMount } from 'svelte'
-  import { backupConfirmed, BackupDaysAgo, generateBackup } from '../../domains/backup/BackupStore'
-  import { onMount } from 'svelte'
+  import { backupConfirmed, BackupDaysAgo, generateBackup } from '../../domains/backup/BackupStore';
+  import { onMount } from 'svelte';
 
-  let visible: boolean = false
-  let mounted: boolean = false
-  let dayWarning = $Prefs.backupDays
-  let lastBackupDaysBack = 0
+  let visible: boolean = false;
+  let mounted: boolean = false;
+  let dayWarning = $Prefs.backupDays;
+  let lastBackupDaysBack = 0;
 
   $: if (isNaN($BackupDaysAgo)) {
-    lastBackupDaysBack = 1001
+    lastBackupDaysBack = 1001;
   } else {
-    lastBackupDaysBack = $BackupDaysAgo
+    lastBackupDaysBack = $BackupDaysAgo;
   }
 
   $: {
-    dayWarning = $Prefs.backupDays
+    dayWarning = $Prefs.backupDays;
     if (
       mounted &&
       lastBackupDaysBack &&
@@ -28,17 +28,17 @@
       lastBackupDaysBack >= dayWarning &&
       !$Prefs.hideBackupMessage
     ) {
-      visible = true
+      visible = true;
     } else {
-      visible = false
+      visible = false;
     }
   }
 
   onMount(() => {
     setTimeout(() => {
-      mounted = true
-    }, 4000)
-  })
+      mounted = true;
+    }, 4000);
+  });
 </script>
 
 {#if mounted && visible === true}
@@ -66,7 +66,7 @@
     <button
       class="ml-2 font-bold"
       on:click={() => {
-        backupConfirmed()
+        backupConfirmed();
       }}>Skip</button
     >
   </div>

@@ -1,56 +1,56 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte'
+  import { createEventDispatcher, onMount } from 'svelte';
 
-  import LetterTicker from '../../../components/letter-ticker/letter-ticker.svelte'
-  import ListItem from '../../../components/list-item/list-item.svelte'
+  import LetterTicker from '../../../components/letter-ticker/letter-ticker.svelte';
+  import ListItem from '../../../components/list-item/list-item.svelte';
 
-  import ToggleSwitch from '../../../components/toggle-switch/toggle-switch.svelte'
-  import ManualTime from '../../../components/counter/manual-time.svelte'
-  import { TrackableStore } from '../../trackable/TrackableStore'
-  import type { Trackable } from '../../trackable/Trackable.class'
-  import TrackableAvatar from '../../../components/avatar/trackable-avatar.svelte'
-  import type TrackerClass from '../../../modules/tracker/TrackerClass'
+  import ToggleSwitch from '../../../components/toggle-switch/toggle-switch.svelte';
+  import ManualTime from '../../../components/counter/manual-time.svelte';
+  import { TrackableStore } from '../../trackable/TrackableStore';
+  import type { Trackable } from '../../trackable/Trackable.class';
+  import TrackableAvatar from '../../../components/avatar/trackable-avatar.svelte';
+  import type TrackerClass from '../../../modules/tracker/TrackerClass';
   // import InputSlider from '../../../components/input-slider/input-slider.svelte'
-  import InputSlider2 from '../../../components/input-slider/input-slider2.svelte'
-  import { Token, tokenizeLite } from '../../../modules/tokenizer/lite'
-  import { tokenToTrackable } from '../../../modules/tokenizer/tokenToTrackable'
-  import IonIcon from '../../../components/icon/ion-icon.svelte'
-  import Button from '../../../components/button/button.svelte'
-  import AddCircleOutline from '../../../n-icons/AddCircleOutline.svelte'
-  import { getTrackableInputValue } from './TrackerInputStore'
+  import InputSlider2 from '../../../components/input-slider/input-slider2.svelte';
+  import { Token, tokenizeLite } from '../../../modules/tokenizer/lite';
+  import { tokenToTrackable } from '../../../modules/tokenizer/tokenToTrackable';
+  import IonIcon from '../../../components/icon/ion-icon.svelte';
+  import Button from '../../../components/button/button.svelte';
+  import AddCircleOutline from '../../../n-icons/AddCircleOutline.svelte';
+  import { getTrackableInputValue } from './TrackerInputStore';
 
-  import { isTruthy } from '../../../utils/truthy/truthy'
-  import List from '../../../components/list/list.svelte'
-  import Title from '../../../components/title/title.svelte'
+  import { isTruthy } from '../../../utils/truthy/truthy';
+  import List from '../../../components/list/list.svelte';
+  import Title from '../../../components/title/title.svelte';
 
-  export let value = '5'
-  export let tracker: TrackerClass = undefined
+  export let value = '5';
+  export let tracker: TrackerClass = undefined;
 
-  let tempValue
-  $: tempValue = value
+  let tempValue;
+  $: tempValue = value;
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  let trackables: Array<Trackable> = []
+  let trackables: Array<Trackable> = [];
 
   async function main() {
-    const noteElements: Array<Token> = tokenizeLite(tracker.note)
+    const noteElements: Array<Token> = tokenizeLite(tracker.note);
     trackables = noteElements.map((token) => {
-      const trackable = tokenToTrackable(token, $TrackableStore.trackables)
-      if (trackable.person) trackable.value = 0
+      const trackable = tokenToTrackable(token, $TrackableStore.trackables);
+      if (trackable.person) trackable.value = 0;
       if (trackable.tracker?.type == 'value' && trackable.value == 1) {
-        trackable.value = 0
+        trackable.value = 0;
       }
       if (trackable.tracker?.type == 'tick' && trackable.value == 1) {
-        trackable.value = 0
+        trackable.value = 0;
       }
 
-      return trackable
-    })
+      return trackable;
+    });
 
     // Trigger the change so the parent catches it.
     if (tempValue) {
-      dispatch('change', parseInt(tempValue))
+      dispatch('change', parseInt(tempValue));
     }
   }
 
@@ -62,30 +62,30 @@
         // }
         //@ts-ignore
         if (f.value === true) {
-          return true
+          return true;
         } else if (f.value > 0 || f.value < 0) {
-          return true
+          return true;
         }
-        return false
+        return false;
       })
       .map((trackable) => {
         //@ts-ignore
         if (trackable.value === true) {
-          trackable.value = 1
+          trackable.value = 1;
         }
-        return trackable.getNoteValue()
+        return trackable.getNoteValue();
       })
-      .join(' ')
-  }
+      .join(' ');
+  };
 
   const fireChange = () => {
-    const note = getNote()
+    const note = getNote();
 
-    dispatch('note', note)
-    dispatch('change', 1)
-  }
+    dispatch('note', note);
+    dispatch('change', 1);
+  };
 
-  onMount(main)
+  onMount(main);
 </script>
 
 <div class="h-full tracker-input-combo">
@@ -102,7 +102,7 @@
             {/if}
           </header>
           {#if trackable.tracker?.type === 'note'}
-            <div class="dark:text-white filler  py-1 text-sm ">Nested Combos are currently not supported</div>
+            <div class="dark:text-white filler py-1 text-sm">Nested Combos are currently not supported</div>
           {/if}
           {#if trackable.tracker?.type === 'range'}
             <div class="">
@@ -113,15 +113,15 @@
                 min={parseFloat(`${trackable.tracker.min}`)}
                 max={parseFloat(`${trackable.tracker.max}`) || 100}
                 on:input={(evt) => {
-                  trackable.value = evt.detail
-                  fireChange()
+                  trackable.value = evt.detail;
+                  fireChange();
                 }}
                 className="w-full"
               />
             </div>
           {/if}
         </main>
-        <div slot="right" class="pr-2 text-right ">
+        <div slot="right" class="pr-2 text-right">
           {#if trackable.tracker?.type === 'value'}
             <div class="flex items-center">
               <input
@@ -129,12 +129,12 @@
                 on:change={(evt) => {
                   // trackable.value = evt.target?.value;
 
-                  fireChange()
+                  fireChange();
                 }}
                 on:focus={(evt) => {
-                  const target = evt.target
+                  const target = evt.target;
                   //@ts-ignore
-                  target.select()
+                  target.select();
                 }}
                 class="bg-gray-100 pr-10 stiff mr-2 dark:bg-gray-800 text-black dark:text-white text-lg rounded-md p-2 flex-shrink text-right w-24 font-bold"
                 type="number"
@@ -143,9 +143,9 @@
               <Button
                 className="-ml-8"
                 on:click={async () => {
-                  const res = await getTrackableInputValue(trackable, $TrackableStore.trackables, 'Next')
-                  trackable.value = res.value
-                  fireChange()
+                  const res = await getTrackableInputValue(trackable, $TrackableStore.trackables, 'Next');
+                  trackable.value = res.value;
+                  fireChange();
                 }}
                 icon
                 primary
@@ -156,8 +156,8 @@
             <ToggleSwitch
               title={`input`}
               on:change={(evt) => {
-                trackable.value = evt.detail ? 1 : 0
-                fireChange()
+                trackable.value = evt.detail ? 1 : 0;
+                fireChange();
               }}
             />
           {:else if trackable.tracker?.type === 'timer'}
@@ -167,8 +167,8 @@
             <ToggleSwitch
               title="value"
               on:change={(evt) => {
-                trackable.value = evt.detail ? 1 : 0
-                fireChange()
+                trackable.value = evt.detail ? 1 : 0;
+                fireChange();
               }}
             />
           {/if}

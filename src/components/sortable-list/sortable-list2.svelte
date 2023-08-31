@@ -1,45 +1,45 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte'
-  import Muuri from 'muuri'
-  import type { GridOptions } from 'muuri'
-  import nid from '../../modules/nid/nid'
+  import { createEventDispatcher, onMount } from 'svelte';
+  import Muuri from 'muuri';
+  import type { GridOptions } from 'muuri';
+  import nid from '../../modules/nid/nid';
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  export let items: Array<any> = []
-  export let sortable: boolean = true
-  export let direction: 'x' | 'y' | 'xy' = 'xy'
+  export let items: Array<any> = [];
+  export let sortable: boolean = true;
+  export let direction: 'x' | 'y' | 'xy' = 'xy';
   // export let gap = 0
   // export let itemWidth = '120px'
-  export let className = ''
-  export let containerClass = ''
-  export let handleClass: undefined | string = undefined
-  export let key: string
-  export let id: string = `sl2-${nid()}`
+  export let className = '';
+  export let containerClass = '';
+  export let handleClass: undefined | string = undefined;
+  export let key: string;
+  export let id: string = `sl2-${nid()}`;
 
-  export let enabled: boolean = true
+  export let enabled: boolean = true;
 
-  let cleanItems: Array<any> = []
+  let cleanItems: Array<any> = [];
   $: if (items && items.length) {
     // cleanItems = dedupArray(items, key)
-    cleanItems = [...items]
+    cleanItems = [...items];
   }
 
-  let grid: Muuri
+  let grid: Muuri;
 
-  let gridEle: HTMLElement
+  let gridEle: HTMLElement;
   // let sortableItems: HTMLElement
-  let ready: boolean = false
+  let ready: boolean = false;
 
-  let lastItemCount: number
+  let lastItemCount: number;
   $: if (ready && grid && cleanItems.length !== lastItemCount && sortable) {
     try {
-      lastItemCount = cleanItems.length
+      lastItemCount = cleanItems.length;
       // const children = sortableItems.children
       // grid.add(children)
-      grid.refreshItems(grid.getItems(), true).layout()
+      grid.refreshItems(grid.getItems(), true).layout();
     } catch (e) {
-      console.error(`${e.message}`)
+      console.error(`${e.message}`);
     }
   }
 
@@ -152,41 +152,41 @@
       itemDraggingClass: 'muuri-item-dragging',
       itemReleasingClass: 'muuri-item-releasing',
       itemPlaceholderClass: 'muuri-item-placeholder',
-    }
-  }
+    };
+  };
 
-  let fireDebounce: any
-  let firstFire: boolean = false
+  let fireDebounce: any;
+  let firstFire: boolean = false;
   const fireSorted = (items: Array<any>) => {
     if (!firstFire) {
-      firstFire = true
+      firstFire = true;
     } else {
-      clearTimeout(fireDebounce)
+      clearTimeout(fireDebounce);
       fireDebounce = setTimeout(() => {
-        dispatch('update', items)
-      }, 1000)
+        dispatch('update', items);
+      }, 1000);
     }
-  }
+  };
 
   function main() {
     // let isFirst = true
-    grid = new Muuri(`#${id} .sl2-grid`, getMurriConfig())
+    grid = new Muuri(`#${id} .sl2-grid`, getMurriConfig());
 
     grid.on('layoutEnd', function (updatedItems) {
       let final = updatedItems.map((item: any) => {
-        return JSON.parse(item._element.getAttribute('data-item'))
-      })
-      fireSorted(final)
+        return JSON.parse(item._element.getAttribute('data-item'));
+      });
+      fireSorted(final);
       // if (!isFirst)
       // isFirst = false
-    })
+    });
 
-    ready = true
+    ready = true;
   }
 
   onMount(() => {
-    main()
-  })
+    main();
+  });
 </script>
 
 <div {id} class="sortable-list2 {containerClass} h-full w-full" bind:this={gridEle}>

@@ -6,33 +6,33 @@
    * it's now used for positivity displays and FocusScores
    */
 
-  import math from '../../utils/math/math'
+  import math from '../../utils/math/math';
 
   type ScoreType = {
-    label: string
-    score: number
-    className?: string
-    color?: string
-  }
-  export let scores: Array<ScoreType>
-  export let barClass: string = 'h-2'
-  export let className: string = ''
-  export let style: string = ''
-  export let total: number | undefined = undefined
+    label: string;
+    score: number;
+    className?: string;
+    color?: string;
+  };
+  export let scores: Array<ScoreType>;
+  export let barClass: string = 'h-2';
+  export let className: string = '';
+  export let style: string = '';
+  export let total: number | undefined = undefined;
 
-  export let expanded: boolean = false
+  export let expanded: boolean = false;
 
-  let localScores: Array<ScoreType> = []
+  let localScores: Array<ScoreType> = [];
   $: {
-    const percentages = math.percentile(scores.map((s) => s.score))
+    const percentages = math.percentile(scores.map((s) => s.score));
     localScores = scores.map((s, index) => {
       return {
         score: percentages[index],
         label: s.label,
         className: s.className,
         color: s.color,
-      }
-    })
+      };
+    });
   }
 </script>
 

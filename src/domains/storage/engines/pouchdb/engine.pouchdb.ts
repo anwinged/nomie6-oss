@@ -2,6 +2,7 @@ import PouchDB from 'pouchdb';
 import Remote from '../../../../modules/remote/remote';
 import type { StorageEngine } from '../../storage-engine';
 import LocalStorage from '../../storage-local';
+
 /**
  * Svelte is throwing errors when importing pouch
  * instead i've moved those packages into the build_tools/move-resources
@@ -14,7 +15,7 @@ import LocalStorage from '../../storage-local';
 class PouchDBEngineClass implements StorageEngine {
   remote: Remote; // object to store username, password, host
 
-  dbKey = 'nomie6-pouch'; // database key
+  dbName = 'nomie6-pouch'; // database key
   db: PouchDB.Database;
 
   syncValid: boolean = false;
@@ -27,7 +28,7 @@ class PouchDBEngineClass implements StorageEngine {
 
   constructor(remote: Remote) {
     this.remote = remote;
-    this.db = new PouchDB(this.dbKey, {
+    this.db = new PouchDB(this.dbName, {
       auto_compaction: true,
     });
   }
@@ -93,7 +94,7 @@ class PouchDBEngineClass implements StorageEngine {
         password: remote.password,
       };
     }
-    this.syncer = PouchDB.sync(this.dbKey, syncURL, syncOptions);
+    this.syncer = PouchDB.sync(this.dbName, syncURL, syncOptions);
     this.syncer
       .catch((e) => {
         console.error(`Catch error in syncer ${e.message}`);

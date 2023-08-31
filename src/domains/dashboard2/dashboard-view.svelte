@@ -1,24 +1,24 @@
 <script lang="ts">
-  import { Prefs } from './../preferences/Preferences'
-  import Button from '../../components/button/button.svelte'
+  import { Prefs } from './../preferences/Preferences';
+  import Button from '../../components/button/button.svelte';
 
-  import Container from '../../components/container/container.svelte'
+  import Container from '../../components/container/container.svelte';
 
-  import IonIcon from '../../components/icon/ion-icon.svelte'
+  import IonIcon from '../../components/icon/ion-icon.svelte';
 
-  import type { PopMenuButton } from '../../components/pop-menu/usePopmenu'
+  import type { PopMenuButton } from '../../components/pop-menu/usePopmenu';
 
-  import Toolbar from '../../components/toolbar/toolbar.svelte'
+  import Toolbar from '../../components/toolbar/toolbar.svelte';
 
-  import { Interact } from '../../store/interact'
+  import { Interact } from '../../store/interact';
 
-  import Layout from '../layout/layout.svelte'
-  import { TrackableStore } from '../trackable/TrackableStore'
-  import DashbardEditView from './dashbard-edit-view.svelte'
-  import type { DashboardClass } from './dashboard-class'
-  import DashboardEmptyView from './dashboard-empty-view.svelte'
-  import DashboardTabs from './dashboard-tabs.svelte'
-  import DashboardWidgetGrid from './dashboard-widget-grid.svelte'
+  import Layout from '../layout/layout.svelte';
+  import { TrackableStore } from '../trackable/TrackableStore';
+  import DashbardEditView from './dashbard-edit-view.svelte';
+  import type { DashboardClass } from './dashboard-class';
+  import DashboardEmptyView from './dashboard-empty-view.svelte';
+  import DashboardTabs from './dashboard-tabs.svelte';
+  import DashboardWidgetGrid from './dashboard-widget-grid.svelte';
   import {
     createNewDashboard,
     DashStore,
@@ -27,35 +27,35 @@
     saveDashboard,
     selectDashboardByIndex,
     toggleDashboardEditMode,
-  } from './DashStore'
+  } from './DashStore';
 
-  import { createNewWidget } from './widget/widget-editor/useWidgetEditorModal'
+  import { createNewWidget } from './widget/widget-editor/useWidgetEditorModal';
 
-  import MenuInline from '../../components/menu/menu-inline.svelte'
+  import MenuInline from '../../components/menu/menu-inline.svelte';
 
-  import AddCircleOutline from '../../n-icons/AddCircleOutline.svelte'
-  import EaselOutline from '../../n-icons/EaselOutline.svelte'
+  import AddCircleOutline from '../../n-icons/AddCircleOutline.svelte';
+  import EaselOutline from '../../n-icons/EaselOutline.svelte';
 
-  import CreateOutline from '../../n-icons/CreateOutline.svelte'
-  import CaretDownCircle from '../../n-icons/CaretDownCircle.svelte'
-  import Empty from '../../components/empty/empty.svelte'
-  import List from '../../components/list/list.svelte'
-  import ListItem from '../../components/list-item/list-item.svelte'
-  import { toBlob } from 'html-to-image'
-  import shareOptions from '../../modules/share/share'
-  import { wait } from '../../utils/tick/tick'
-  import TrashOutline from '../../n-icons/TrashOutline.svelte'
-  import PencilOutline from '../../n-icons/PencilOutline.svelte'
-  import ShareOutline from '../../n-icons/ShareOutline.svelte'
-  import UpgradeMessage from '../../components/upgrade-message/upgrade-message.svelte'
+  import CreateOutline from '../../n-icons/CreateOutline.svelte';
+  import CaretDownCircle from '../../n-icons/CaretDownCircle.svelte';
+  import Empty from '../../components/empty/empty.svelte';
+  import List from '../../components/list/list.svelte';
+  import ListItem from '../../components/list-item/list-item.svelte';
+  import { toBlob } from 'html-to-image';
+  import shareOptions from '../../modules/share/share';
+  import { wait } from '../../utils/tick/tick';
+  import TrashOutline from '../../n-icons/TrashOutline.svelte';
+  import PencilOutline from '../../n-icons/PencilOutline.svelte';
+  import ShareOutline from '../../n-icons/ShareOutline.svelte';
+  import UpgradeMessage from '../../components/upgrade-message/upgrade-message.svelte';
 
   $: if (Object.keys($TrackableStore.trackables)) {
-    initializeDashStore()
+    initializeDashStore();
   }
 
-  let mainMenu: Array<PopMenuButton> = []
+  let mainMenu: Array<PopMenuButton> = [];
   $: if ($DashStore) {
-    mainMenu = getMainActionMenu()
+    mainMenu = getMainActionMenu();
   }
 
   const getMainActionMenu = (): Array<PopMenuButton> => {
@@ -64,14 +64,14 @@
         title: 'Add New Widget',
         icon: AddCircleOutline,
         click() {
-          createNewWidget()
+          createNewWidget();
         },
       },
       {
         title: 'Add New Dashboard',
         icon: EaselOutline,
         click() {
-          createNewDashboard()
+          createNewDashboard();
         },
       },
       {
@@ -80,47 +80,47 @@
         icon: CreateOutline,
         divider: true,
         click() {
-          toggleDashboardEditMode()
+          toggleDashboardEditMode();
         },
       },
-    ]
-  }
+    ];
+  };
 
   const confirmDashboardDelete = async () => {
-    const confirmed = await Interact.confirm('Delete this dashboard?', 'This cannot be undone')
+    const confirmed = await Interact.confirm('Delete this dashboard?', 'This cannot be undone');
     if (confirmed) {
       try {
-        const deleted = await deleteDashboard($DashStore.activeDashboard)
+        const deleted = await deleteDashboard($DashStore.activeDashboard);
 
-        selectDashboardByIndex(0)
-        $DashStore.editMode = false
+        selectDashboardByIndex(0);
+        $DashStore.editMode = false;
       } catch (e) {
-        Interact.error(e.message)
+        Interact.error(e.message);
       }
     }
-  }
+  };
 
   // let previewImage: string | undefined = undefined
-  let showDate: boolean = false
+  let showDate: boolean = false;
   // let screenshotImage:File | undefined;
 
   const getSharedImageFile = async (): Promise<File | undefined> => {
-    Interact.blocker('Generating...')
-    showDate = true
+    Interact.blocker('Generating...');
+    showDate = true;
     try {
-      await wait(600)
-      const node = document.getElementById('widgets-frame')
+      await wait(600);
+      const node = document.getElementById('widgets-frame');
       let blob = await toBlob(node, {
         pixelRatio: 1,
-      })
+      });
       blob = await toBlob(node, {
         pixelRatio: 1,
-      })
+      });
       const screenshotImage = new File([blob], `${$DashStore.activeDashboard.id.substring(0, 5)}-dashboard.png`, {
         type: 'image/png',
-      })
-      showDate = false
-      Interact.stopBlocker()
+      });
+      showDate = false;
+      Interact.stopBlocker();
 
       Interact.popmenu({
         title: 'Dashboard Report Generated',
@@ -130,31 +130,31 @@
           {
             title: navigator.share ? 'Share...' : 'Download...',
             click() {
-              shareOptions($DashStore.activeDashboard.label, undefined, screenshotImage)
+              shareOptions($DashStore.activeDashboard.label, undefined, screenshotImage);
             },
           },
         ],
-      })
+      });
 
-      return screenshotImage
+      return screenshotImage;
     } catch (e) {
-      Interact.error(e.message)
-      showDate = false
-      Interact.stopBlocker()
-      return undefined
+      Interact.error(e.message);
+      showDate = false;
+      Interact.stopBlocker();
+      return undefined;
     }
-  }
+  };
 
   const saveChanges = (edittedDashboard: DashboardClass, silent: boolean = false) => {
     try {
-      saveDashboard(edittedDashboard)
+      saveDashboard(edittedDashboard);
       if (!silent) {
-        toggleDashboardEditMode()
+        toggleDashboardEditMode();
       }
     } catch (e) {
-      Interact.error(e.message)
+      Interact.error(e.message);
     }
-  }
+  };
 </script>
 
 <Layout className="h-full">
@@ -171,7 +171,7 @@
         size="sm"
         className="ml-2 bg-primary-500 text-white w-32"
         on:click={() => {
-          toggleDashboardEditMode()
+          toggleDashboardEditMode();
         }}
         >Done
       </Button>
@@ -186,10 +186,10 @@
         <DashbardEditView
           dashboard={$DashStore.activeDashboard}
           on:save={(evt) => {
-            saveChanges(evt.detail)
+            saveChanges(evt.detail);
           }}
           on:update={(evt) => {
-            saveChanges(evt.detail, true)
+            saveChanges(evt.detail, true);
           }}
         />
       {:else}
@@ -207,7 +207,7 @@
         <ListItem
           clickable
           on:click={async () => {
-            await getSharedImageFile()
+            await getSharedImageFile();
           }}
           bottomLine={24}
         >
@@ -218,7 +218,7 @@
           bottomLine={24}
           clickable
           on:click={() => {
-            toggleDashboardEditMode()
+            toggleDashboardEditMode();
           }}
         >
           <IonIcon icon={PencilOutline} slot="left" />
@@ -228,7 +228,7 @@
       <ListItem
         clickable
         on:click={() => {
-          confirmDashboardDelete()
+          confirmDashboardDelete();
         }}
       >
         <IonIcon icon={TrashOutline} slot="left" />
@@ -241,7 +241,7 @@
       description="Create custom dashboards to highlight your data"
       buttonLabel="Create a Dashboard"
       buttonClick={() => {
-        createNewDashboard()
+        createNewDashboard();
       }}
     />
   {/if}

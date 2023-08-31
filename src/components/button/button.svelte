@@ -1,56 +1,56 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
-  import { press } from 'svelte-hammer'
+  import { createEventDispatcher } from 'svelte';
+  import { press } from 'svelte-hammer';
 
-  import './button.css'
+  import './button.css';
 
-  import { md5 } from '../../utils/hash/hash'
+  import { md5 } from '../../utils/hash/hash';
 
-  const dispatch = createEventDispatcher()
-  export let id = undefined
-  export let size = 'md'
-  export let type = ''
-  export let shape: 'round' | 'rounded' = 'rounded'
-  export let color = ''
-  export let className = ''
-  export let mainClass = ''
-  export let block = false
-  export let style = ''
-  export let disabled = false
-  export let delay = 300
-  export let icon = false
-  export let title = undefined
-  export let ariaLabel = undefined
-  export let prevent = false
-  export let inline = false
-  export let text = false
-  export let confirm = false
-  export let role = ''
-  export let autofocus = false
-  export let primary = false
-  export let clear = false
+  const dispatch = createEventDispatcher();
+  export let id = undefined;
+  export let size = 'md';
+  export let type = '';
+  export let shape: 'round' | 'rounded' = 'rounded';
+  export let color = '';
+  export let className = '';
+  export let mainClass = '';
+  export let block = false;
+  export let style = '';
+  export let disabled = false;
+  export let delay = 300;
+  export let icon = false;
+  export let title = undefined;
+  export let ariaLabel = undefined;
+  export let prevent = false;
+  export let inline = false;
+  export let text = false;
+  export let confirm = false;
+  export let role = '';
+  export let autofocus = false;
+  export let primary = false;
+  export let clear = false;
 
-  let confirming = false
-  let confirmTimeout
+  let confirming = false;
+  let confirmTimeout;
 
-  $: id = id || `auto-${md5(`${title}${className}${text}`)}`
+  $: id = id || `auto-${md5(`${title}${className}${text}`)}`;
 
   const onClick = async (evt) => {
     if (confirm) {
-      clearTimeout(confirmTimeout)
+      clearTimeout(confirmTimeout);
       if (confirming) {
-        dispatch('click', evt)
-        confirming = false
+        dispatch('click', evt);
+        confirming = false;
       } else {
-        confirming = true
+        confirming = true;
         confirmTimeout = setTimeout(() => {
-          confirming = false
-        }, 3000)
+          confirming = false;
+        }, 3000);
       }
     } else {
-      dispatch('click', evt)
+      dispatch('click', evt);
     }
-  }
+  };
 </script>
 
 <!-- svelte-ignore a11y-autofocus -->
@@ -70,22 +70,22 @@
   {title}
   use:press
   on:press={(e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    dispatch('longpress', e)
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch('longpress', e);
   }}
   aria-label={ariaLabel || title}
   on:click|nonpassive|preventDefault|stopPropagation={(evt) => {
     if (prevent) {
-      evt.stopPropagation()
-      evt.preventDefault()
+      evt.stopPropagation();
+      evt.preventDefault();
     }
     if (delay) {
       setTimeout(() => {
-        onClick(evt)
-      }, delay)
+        onClick(evt);
+      }, delay);
     } else {
-      onClick(evt)
+      onClick(evt);
     }
   }}
 >
@@ -94,7 +94,7 @@
     <div
       class="flex items-center justify-center"
       on:click|preventDefault|stopPropagation={() => {
-        confirming = false
+        confirming = false;
       }}
     />
   {/if}

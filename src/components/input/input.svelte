@@ -1,80 +1,79 @@
 <script lang="ts">
+  import { createEventDispatcher, onMount } from 'svelte';
+  import is from '../../utils/is/is';
 
-  import { createEventDispatcher, onMount } from 'svelte'
-import is from '../../utils/is/is';
+  const dispatch = createEventDispatcher();
 
-  const dispatch = createEventDispatcher()
+  export let label = null;
+  export let placeholder = null;
+  export let inputmode = undefined;
+  export let value = null;
+  export let type = 'text';
+  export let help = null;
+  export let className = '';
+  export let id = '';
+  export let style = '';
+  export let inputStyle = '';
+  export let inputClass = '';
+  export let pattern = '';
+  export let width = '';
+  export let disabled = undefined;
+  export let solo = undefined;
+  export let listItem = undefined;
+  export let compact = undefined;
+  export let rows = 2;
+  export let accept = 'png,jpeg,jpg,csv';
+  export let name = undefined;
 
-  export let label = null
-  export let placeholder = null
-  export let inputmode = undefined
-  export let value = null
-  export let type = 'text'
-  export let help = null
-  export let className = ''
-  export let id = ''
-  export let style = ''
-  export let inputStyle = ''
-  export let inputClass = ''
-  export let pattern = ''
-  export let width = ''
-  export let disabled = undefined
-  export let solo = undefined
-  export let listItem = undefined
-  export let compact = undefined
-  export let rows = 2
-  export let accept = 'png,jpeg,jpg,csv'
-  export let name = undefined
+  export let autocomplete = undefined;
+  export let autocorrect = undefined;
+  export let autocapitalize = undefined;
+  export let autofocus = undefined;
 
-  export let autocomplete = undefined
-  export let autocorrect = undefined
-  export let autocapitalize = undefined
-  export let autofocus = undefined
+  const SLOTS = $$props.$$slots;
 
-  const SLOTS = $$props.$$slots
+  let focused = false;
+  let hasInput = false;
 
-  let focused = false
-  let hasInput = false
-
-  let _elInput
+  let _elInput;
 
   export function doFocus() {
-    _elInput.focus()
+    _elInput.focus();
   }
 
   export function getValue() {
-    return _elInput.value
+    return _elInput.value;
   }
 
   let blur = () => {
-    focused = false
-  }
+    focused = false;
+  };
   let focus = (event) => {
-    focused = true
-    dispatch('focus', event)
-  }
+    focused = true;
+    dispatch('focus', event);
+  };
 
   let onInput = (evt) => {
     if (evt.key == 'Enter') {
-      dispatch('enter', value)
+      dispatch('enter', value);
     }
-    dispatch('input', evt.target.value)
-  }
+    dispatch('input', evt.target.value);
+  };
 
-  $: if (value !== "" && (value === 0 || is.truthy(value))) {
-    hasInput = true
+  $: if (value !== '' && (value === 0 || is.truthy(value))) {
+    hasInput = true;
   } else {
-    hasInput = false
+    hasInput = false;
   }
 
   onMount(() => {
     if (type == 'select') {
-      hasInput = true
+      hasInput = true;
     }
     if (value && `${value}`.length) {
-      hasInput = true
+      hasInput = true;
     }
-  })
+  });
 </script>
 
 <div
@@ -115,7 +114,7 @@ import is from '../../utils/is/is';
           {placeholder}
           on:input={onInput}
           on:change={(evt) => {
-            dispatch('change', evt)
+            dispatch('change', evt);
           }}
           on:focus={focus}
           on:blur={blur}
@@ -137,7 +136,7 @@ import is from '../../utils/is/is';
           bind:value
           {placeholder}
           on:change={(evt) => {
-            dispatch('change', evt)
+            dispatch('change', evt);
           }}
           on:input={onInput}
           on:focus={focus}
@@ -230,7 +229,7 @@ import is from '../../utils/is/is';
             {disabled}
             on:input={(evt) => {
               //@ts-ignore
-              dispatch('change', evt.target.value)
+              dispatch('change', evt.target.value);
             }}
             bind:value
           >
@@ -277,9 +276,9 @@ import is from '../../utils/is/is';
           {placeholder}
           on:keyup={(evt) => {
             if (evt.key === 'Enter') {
-              dispatch('enter', value)
+              dispatch('enter', value);
             }
-            dispatch('keyup', evt)
+            dispatch('keyup', evt);
           }}
           on:input={onInput}
           on:focus={focus}
@@ -316,15 +315,14 @@ import is from '../../utils/is/is';
     @apply w-full;
     @apply flex flex-col flex-grow flex-shrink;
     @apply mb-px;
-    
+
     @apply rounded-md;
     @apply focus-within:ring-2 ring-opacity-50 ring-inset ring-primary-500;
   }
 
   .n-input-container input:invalid {
-      border-color: red !important;
+    border-color: red !important;
   }
-
 
   .n-input-container .helper {
     font-size: 0.65em;
@@ -451,7 +449,6 @@ import is from '../../utils/is/is';
   .n-input-container .n-input-wrapper textarea,
   .n-input-container .n-input-wrapper input {
     border: none;
-
   }
   .n-input-container .n-input-wrapper .n-input {
     transition: all 0.2s ease-in-out;

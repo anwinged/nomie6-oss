@@ -1,34 +1,34 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte'
-  import dayjs from 'dayjs'
-  import type { Dayjs } from 'dayjs'
+  import { createEventDispatcher, onMount } from 'svelte';
+  import dayjs from 'dayjs';
+  import type { Dayjs } from 'dayjs';
 
-  import type { TrackableUsage } from '../usage/trackable-usage.class'
-  import type { Trackable } from '../trackable/Trackable.class'
-  import { TrackableStore } from '../trackable/TrackableStore'
-  import { getContextOn } from './context-utils'
+  import type { TrackableUsage } from '../usage/trackable-usage.class';
+  import type { Trackable } from '../trackable/Trackable.class';
+  import { TrackableStore } from '../trackable/TrackableStore';
+  import { getContextOn } from './context-utils';
 
-  import TrackableAvatar from '../../components/avatar/trackable-avatar.svelte'
-  import { hex2rgb } from '../../modules/colors/colors'
+  import TrackableAvatar from '../../components/avatar/trackable-avatar.svelte';
+  import { hex2rgb } from '../../modules/colors/colors';
 
-  import { showTrackablePopmenu } from '../board/boardActions'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import ExpandOutline from '../../n-icons/ExpandOutline.svelte'
-  import { Interact } from '../../store/interact'
+  import { showTrackablePopmenu } from '../board/boardActions';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import ExpandOutline from '../../n-icons/ExpandOutline.svelte';
+  import { Interact } from '../../store/interact';
   import {
     addDividerToFirst,
     getDatePopButtons,
     getLogPopButtons,
     getTrackableDetailPopButton,
-  } from '../../modules/pop-buttons/pop-buttons'
+  } from '../../modules/pop-buttons/pop-buttons';
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  export let date: Date = new Date()
-  export let height: number = 320
-  export let className: string = ''
+  export let date: Date = new Date();
+  export let height: number = 320;
+  export let className: string = '';
 
-  export let size: 'sm' | 'md' | 'lg' | 'auto' = 'sm'
+  export let size: 'sm' | 'md' | 'lg' | 'auto' = 'sm';
 
   // type ContextDetails = {
   //   date: Date
@@ -36,24 +36,24 @@
   //   value?: number
   // }
 
-  let boundingBox: HTMLElement
+  let boundingBox: HTMLElement;
   // let focused: ContextDetails
 
   interface ContextMapWrapper {
-    usage: TrackableUsage
-    startDate: Date
-    endDate: Date
-    startIndex: number
-    endIndex: number
-    value: number
+    usage: TrackableUsage;
+    startDate: Date;
+    endDate: Date;
+    startIndex: number;
+    endIndex: number;
+    value: number;
   }
 
   interface ContextTrackableUsage {
-    trackable: Trackable
-    marks: Array<ContextMapWrapper>
+    trackable: Trackable;
+    marks: Array<ContextMapWrapper>;
   }
 
-  let contextItems: Array<TrackableUsage> = []
+  let contextItems: Array<TrackableUsage> = [];
 
   // function focus(_context: any) {
   //   focused = _context
@@ -63,56 +63,56 @@
   //   focused = undefined;
   // }
 
-  let width: number = 320
+  let width: number = 320;
 
-  let start: Date
-  let end: Date
+  let start: Date;
+  let end: Date;
 
-  let rowHeight: number = 0
+  let rowHeight: number = 0;
 
-  let contextMap: Array<ContextTrackableUsage> = []
+  let contextMap: Array<ContextTrackableUsage> = [];
 
   /**
    * Grid of 60
    * [ ]  [ ]  [ ]  [ ]  [ ]  [ ]
    */
-  let lastDate: Date
+  let lastDate: Date;
   $: if (date && date !== lastDate) {
     // days = []
-    lastDate = date
-    start = dayjs(date).subtract(30, 'day').toDate()
-    end = dayjs(date).add(30, 'day').toDate()
-    generateContextMap()
+    lastDate = date;
+    start = dayjs(date).subtract(30, 'day').toDate();
+    end = dayjs(date).add(30, 'day').toDate();
+    generateContextMap();
   }
 
   /**
    * Generate the Needed Context Chart - should this be in a store?
    */
   async function generateContextMap() {
-    const trackables = $TrackableStore.trackables
-    const frameStart = dayjs(start)
-    const frameEnd = dayjs(end)
+    const trackables = $TrackableStore.trackables;
+    const frameStart = dayjs(start);
+    const frameEnd = dayjs(end);
 
-    const res: any = await getContextOn(date, trackables)
+    const res: any = await getContextOn(date, trackables);
 
     contextItems = res
       ? Object.keys(res).map((id: string) => {
-          return res[id]
+          return res[id];
         })
-      : []
+      : [];
 
-    const final: Array<ContextTrackableUsage> = []
+    const final: Array<ContextTrackableUsage> = [];
     // Loop over context items  (1 per trackable)
     contextItems.forEach((contextUsage: TrackableUsage) => {
       const node: ContextTrackableUsage = {
         trackable: contextUsage.trackable,
         marks: [],
-      }
-      const trackable = contextUsage.trackable
-      ;(contextUsage.dates || []).forEach((loopDate, index) => {
+      };
+      const trackable = contextUsage.trackable;
+      (contextUsage.dates || []).forEach((loopDate, index) => {
         // Get Reverb Days
         let parsedValue =
-          trackable.ctx.duration > trackable.value ? trackable.ctx.duration : trackable.value || trackable.ctx.duration
+          trackable.ctx.duration > trackable.value ? trackable.ctx.duration : trackable.value || trackable.ctx.duration;
 
         let contextItem: ContextMapWrapper = {
           startDate: loopDate.toDate(),
@@ -123,30 +123,30 @@
           startIndex: dayjs(loopDate).diff(frameStart, 'day'),
           endIndex: frameEnd.diff(dayjs(loopDate), 'day'),
           value: parsedValue,
-        }
-        node.marks.push(contextItem)
-      })
-      final.push(node)
-    })
+        };
+        node.marks.push(contextItem);
+      });
+      final.push(node);
+    });
 
     contextMap = final.sort((a, b) => {
-      const avalue = a.marks[0].endDate.getTime() + a.marks[0].value
-      const bvalue = b.marks[0].endDate.getTime() + b.marks[0].value
-      return avalue < bvalue ? 1 : -1
-    })
-    rowHeight = height / final.length
-    rowHeight = rowHeight < 1 ? 10 : rowHeight
+      const avalue = a.marks[0].endDate.getTime() + a.marks[0].value;
+      const bvalue = b.marks[0].endDate.getTime() + b.marks[0].value;
+      return avalue < bvalue ? 1 : -1;
+    });
+    rowHeight = height / final.length;
+    rowHeight = rowHeight < 1 ? 10 : rowHeight;
     if (contextMap.length === 0) {
-      size = 'sm'
+      size = 'sm';
     }
   }
 
   onMount(() => {
     if (boundingBox) {
-      width = boundingBox.offsetWidth
-      height = boundingBox.offsetHeight
+      width = boundingBox.offsetWidth;
+      height = boundingBox.offsetHeight;
     }
-  })
+  });
 </script>
 
 <div class="relative context-wrapper size-{size} {className}">
@@ -166,7 +166,7 @@
       <div
         class="text-white cc-item-holder"
         on:click={() => {
-          dispatch('click', contextItem.trackable)
+          dispatch('click', contextItem.trackable);
         }}
         style="--trackable-color:{contextItem.trackable.color}; --trackable-color-rgb:{hex2rgb(
           contextItem.trackable.color
@@ -175,7 +175,7 @@
       >
         <button
           on:click={() => {
-            showTrackablePopmenu(contextItem.trackable)
+            showTrackablePopmenu(contextItem.trackable);
           }}
           class="mr-1 bar-trackable-label flex items-center"
         >
@@ -186,7 +186,7 @@
           <div
             class="cc-bar"
             on:click={() => {
-              dispatch('item-click', mark)
+              dispatch('item-click', mark);
               Interact.popmenu({
                 id: `context-item-${mark.usage.trackable.tag}`,
                 buttons: [
@@ -194,7 +194,7 @@
                   ...addDividerToFirst(getTrackableDetailPopButton(mark.usage.trackable)),
                   ...addDividerToFirst(getDatePopButtons(mark.startDate)),
                 ],
-              })
+              });
             }}
             style="--cc-start-index:{mark.startIndex}; --cc-bar-parts:{mark.value};"
           >
@@ -211,7 +211,7 @@
         ? 'bg-white bg-opacity-10 text-white'
         : 'bg-white bg-opacity-30 text-white'} "
       on:click={() => {
-        size = size == 'sm' ? 'lg' : 'sm'
+        size = size == 'sm' ? 'lg' : 'sm';
       }}
     >
       <IonIcon size={16} icon={ExpandOutline} />

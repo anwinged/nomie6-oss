@@ -1,69 +1,69 @@
 <script lang="ts">
-  import dayjs from 'dayjs'
-  import { createEventDispatcher } from 'svelte'
+  import dayjs from 'dayjs';
+  import { createEventDispatcher } from 'svelte';
 
-  import { Prefs } from '../../domains/preferences/Preferences'
+  import { Prefs } from '../../domains/preferences/Preferences';
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  export let value = dayjs()
-  export let className = ''
-  export let style = ''
+  export let value = dayjs();
+  export let className = '';
+  export let style = '';
 
-  let lastValue // Value to hold last reaction
-  let hour // local hour
-  let minute // local minute
-  let ampm // local ampm
+  let lastValue; // Value to hold last reaction
+  let hour; // local hour
+  let minute; // local minute
+  let ampm; // local ampm
 
-  $: is24Hour = $Prefs.use24hour
+  $: is24Hour = $Prefs.use24hour;
 
   // 24 Hour Array
   let hours24 = Array(24)
     .fill(0)
     .map((t, i) => {
-      return i
-    })
+      return i;
+    });
   // 12 Hour Array
   let hours12 = Array(12)
     .fill(0)
     .map((t, i) => {
-      return i + 1
-    })
+      return i + 1;
+    });
   // 60 minute Array
   let minutes = Array(60)
     .fill(0)
     .map((t, i) => {
-      return i
-    })
+      return i;
+    });
 
   // Reactively Set Hours
-  $: hours = is24Hour ? hours24 : hours12
+  $: hours = is24Hour ? hours24 : hours12;
 
   $: if (value && value.format('hh:mm a') !== dayjs(lastValue || '2010-01-01T01:01:01').format('hh:mm a')) {
-    lastValue = value
-    hour = parseInt(value.format('HH'))
+    lastValue = value;
+    hour = parseInt(value.format('HH'));
     // hour12 = ((hour + 11) % 12) + 1
-    minute = parseInt(value.format('mm'))
-    ampm = value.format('a')
+    minute = parseInt(value.format('mm'));
+    ampm = value.format('a');
     // lastAMPM = ampm
   }
 
   function onChange(evt) {
-    let ogDate = dayjs(value)
-    let ogDay = ogDate.get('day')
-    let newHour = hour
+    let ogDate = dayjs(value);
+    let ogDay = ogDate.get('day');
+    let newHour = hour;
 
     if (!is24Hour) {
       if (newHour == 12 && ampm == 'am') {
-        newHour = 0
+        newHour = 0;
       } else if (ampm == 'am' && newHour > 12) {
-        newHour = newHour - 12
+        newHour = newHour - 12;
       } else if (ampm == 'pm' && newHour < 12) {
-        newHour = newHour + 12
+        newHour = newHour + 12;
       }
     }
-    const updatedDate = ogDate.set('hour', newHour).set('minute', minute).set('day', ogDay)
-    dispatch('change', updatedDate)
+    const updatedDate = ogDate.set('hour', newHour).set('minute', minute).set('day', ogDay);
+    dispatch('change', updatedDate);
   }
 </script>
 

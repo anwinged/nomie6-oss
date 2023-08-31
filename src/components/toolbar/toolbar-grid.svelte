@@ -1,12 +1,12 @@
 <script lang="ts">
-  export let className = ''
-  export let style = ''
-  import './toolbar.css'
-  export let mainClass = ''
-  export let shadow:boolean = false;
+  export let className = '';
+  export let style = '';
+  import './toolbar.css';
+  export let mainClass = '';
+  export let shadow: boolean = false;
 </script>
 
-<div  class="n-toolbar-grid {shadow ? 'shadow' : ''} {className}" {style}>
+<div class="n-toolbar-grid {shadow ? 'shadow' : ''} {className}" {style}>
   <div class="left">
     <slot name="left" />
   </div>

@@ -1,8 +1,8 @@
 <script lang="ts">
-  export let title: string = 'Tab'
-  export let className: string = ''
-  export let style: string = ''
-  export let isActive: boolean = false
+  export let title: string = 'Tab';
+  export let className: string = '';
+  export let style: string = '';
+  export let isActive: boolean = false;
 </script>
 
 <div class="tab-panel filler {className}" data-title={title} {style}>

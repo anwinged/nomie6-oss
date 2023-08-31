@@ -1,22 +1,22 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
-  import KeyDown from '../../modules/keyDown/keyDown.svelte'
+  import { createEventDispatcher } from 'svelte';
+  import KeyDown from '../../modules/keyDown/keyDown.svelte';
 
-  import Backdrop from '../backdrop/backdrop.svelte'
+  import Backdrop from '../backdrop/backdrop.svelte';
 
-  export let className: string = ''
-  export let style: string = ''
-  export let tappable: boolean = false
-  export let visible: boolean = false
-  export let position: 'center' | 'bottom' | 'top' = 'center'
-  export let id: string
-  export let title: undefined | string = undefined
+  export let className: string = '';
+  export let style: string = '';
+  export let tappable: boolean = false;
+  export let visible: boolean = false;
+  export let position: 'center' | 'bottom' | 'top' = 'center';
+  export let id: string;
+  export let title: undefined | string = undefined;
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
   function backgroundTapped() {
     if (tappable) {
-      dispatch('close')
+      dispatch('close');
     }
   }
 </script>
@@ -30,7 +30,7 @@
 {#if visible}
   <KeyDown
     on:Escape={() => {
-      backgroundTapped()
+      backgroundTapped();
     }}
   />
 {/if}

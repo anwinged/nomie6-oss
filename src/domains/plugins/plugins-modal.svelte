@@ -1,75 +1,75 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
-  import Avatar from '../../components/avatar/avatar.svelte'
+  import { onMount } from 'svelte';
+  import Avatar from '../../components/avatar/avatar.svelte';
 
-  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte'
-  import ButtonGroup from '../../components/button-group/button-group.svelte'
-  import Button from '../../components/button/button.svelte'
-  import Empty from '../../components/empty/empty.svelte'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import ListItem from '../../components/list-item/list-item.svelte'
-  import List from '../../components/list/list.svelte'
-  import Title from '../../components/title/title.svelte'
-  import { showToast } from '../../components/toast/ToastStore'
-  import ToggleSwitch from '../../components/toggle-switch/toggle-switch.svelte'
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
-  import Toolbar from '../../components/toolbar/toolbar.svelte'
-  import PlusIcon from '../../n-icons/PlusIcon.svelte'
-  import TrashOutline from '../../n-icons/TrashOutline.svelte'
-  import { Interact } from '../../store/interact'
-  import { Lang } from '../../store/lang'
-  import { showNomieConnectPopup } from '../settings/settings-helpers'
-  import type { PluginClass } from './plugin-helpers'
-  import PluginInstaller from './plugin-installer.svelte'
-  import { closePluginsModal, openPluginInstaller, PluginStore } from './PluginStore'
+  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte';
+  import ButtonGroup from '../../components/button-group/button-group.svelte';
+  import Button from '../../components/button/button.svelte';
+  import Empty from '../../components/empty/empty.svelte';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import ListItem from '../../components/list-item/list-item.svelte';
+  import List from '../../components/list/list.svelte';
+  import Title from '../../components/title/title.svelte';
+  import { showToast } from '../../components/toast/ToastStore';
+  import ToggleSwitch from '../../components/toggle-switch/toggle-switch.svelte';
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
+  import Toolbar from '../../components/toolbar/toolbar.svelte';
+  import PlusIcon from '../../n-icons/PlusIcon.svelte';
+  import TrashOutline from '../../n-icons/TrashOutline.svelte';
+  import { Interact } from '../../store/interact';
+  import { Lang } from '../../store/lang';
+  import { showNomieConnectPopup } from '../settings/settings-helpers';
+  import type { PluginClass } from './plugin-helpers';
+  import PluginInstaller from './plugin-installer.svelte';
+  import { closePluginsModal, openPluginInstaller, PluginStore } from './PluginStore';
 
-  import Badge from '../../components/badge/badge.svelte'
+  import Badge from '../../components/badge/badge.svelte';
 
-  export let tab: 'installed' | 'avail' = 'installed'
-  export let showAdd: boolean = false
+  export let tab: 'installed' | 'avail' = 'installed';
+  export let showAdd: boolean = false;
 
-  let officialPlugins = []
+  let officialPlugins = [];
   onMount(async () => {
-    officialPlugins = []
-  })
+    officialPlugins = [];
+  });
 
-  let editMode: boolean = false
-  let hasLocked: boolean = false
+  let editMode: boolean = false;
+  let hasLocked: boolean = false;
 
   const toggleEditMode = () => {
-    editMode = !editMode
-  }
+    editMode = !editMode;
+  };
 
   const togglePlugin = (plugin: PluginClass) => {
-    plugin.active = !plugin.active
-    PluginStore.upsert(plugin)
-  }
+    plugin.active = !plugin.active;
+    PluginStore.upsert(plugin);
+  };
 
   const deletePlugin = async (plugin: PluginClass) => {
-    const confirmed = await Interact.confirm(`Uninstall ${plugin.name} from Nomie?`)
+    const confirmed = await Interact.confirm(`Uninstall ${plugin.name} from Nomie?`);
     if (confirmed) {
       try {
-        await PluginStore.remove(plugin)
-        showToast({ message: 'Removed' })
+        await PluginStore.remove(plugin);
+        showToast({ message: 'Removed' });
       } catch (e) {
-        Interact.error(e.message)
+        Interact.error(e.message);
       }
     }
-  }
+  };
 
   const getDomain = (_url: string) => {
     if (_url) {
-      let url = new URL(_url)
-      if (url.origin) return url.origin
+      let url = new URL(_url);
+      if (url.origin) return url.origin;
     }
-    return ''
-  }
+    return '';
+  };
 
-  let pluginUrl: undefined | string
+  let pluginUrl: undefined | string;
   const installPlugin = (url?: string) => {
     // pluginUrl = url
-    openPluginInstaller(url)
-  }
+    openPluginInstaller(url);
+  };
 </script>
 
 <BackdropModal>
@@ -111,7 +111,7 @@
       <PluginInstaller
         bind:url={pluginUrl}
         on:cancel={() => {
-          showAdd = false
+          showAdd = false;
         }}
       />
     {/if}
@@ -188,7 +188,7 @@
           <ListItem
             clickable
             on:click={() => {
-              openPluginInstaller()
+              openPluginInstaller();
             }}
             titleClass="text-center text-primary"
             title="Add a Custom Plugin"
@@ -206,7 +206,7 @@
             detail
             on:click={() => {
               if (!$PluginStore.find((p) => p.url == plugin.url)) {
-                installPlugin(plugin.url)
+                installPlugin(plugin.url);
               }
             }}
           >

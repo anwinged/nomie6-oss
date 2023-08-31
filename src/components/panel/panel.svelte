@@ -1,12 +1,12 @@
 <script lang="ts">
-  export let style = ''
-  export let rounded: boolean = false
-  export let relative: boolean = true
-  export let absolute: boolean = false
-  export let className: string = ''
-  export let mainClass: string = ''
-  export let clear: boolean = false
-  export let id: string | undefined = undefined
+  export let style = '';
+  export let rounded: boolean = false;
+  export let relative: boolean = true;
+  export let absolute: boolean = false;
+  export let className: string = '';
+  export let mainClass: string = '';
+  export let clear: boolean = false;
+  export let id: string | undefined = undefined;
 </script>
 
 <div

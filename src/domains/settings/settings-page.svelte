@@ -1,73 +1,73 @@
 <script lang="ts">
-  import { navigate } from 'svelte-navigator'
+  import { navigate } from 'svelte-navigator';
 
-  import IonIcon from '../../components/icon/ion-icon.svelte'
+  import IonIcon from '../../components/icon/ion-icon.svelte';
 
-  import SettingsTweakList from './settings-tweak-list.svelte'
+  import SettingsTweakList from './settings-tweak-list.svelte';
 
-  import Container from '../../components/container/container.svelte'
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
+  import Container from '../../components/container/container.svelte';
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
 
   //Vendors
 
-  import { onMount } from 'svelte'
+  import { onMount } from 'svelte';
 
-  import SocialShare from '../../modules/share/share'
+  import SocialShare from '../../modules/share/share';
 
   // Components
-  import ListItem from '../../components/list-item/list-item.svelte'
-  import Spacer from '../../components/spacer/spacer.svelte'
-  import List from '../../components/list/list.svelte'
+  import ListItem from '../../components/list-item/list-item.svelte';
+  import Spacer from '../../components/spacer/spacer.svelte';
+  import List from '../../components/list/list.svelte';
 
   // // Containers
 
-  import NLayout from '../../domains/layout/layout.svelte'
+  import NLayout from '../../domains/layout/layout.svelte';
 
   // Vendors
-  import dayjs from 'dayjs'
+  import dayjs from 'dayjs';
 
   // Stores
 
-  import { Interact } from '../../store/interact'
+  import { Interact } from '../../store/interact';
 
-  import { Lang } from '../../store/lang'
-  import { Device } from '../../store/device-store'
+  import { Lang } from '../../store/lang';
+  import { Device } from '../../store/device-store';
 
   // Config
-  import config from '../../config/appConfig'
+  import config from '../../config/appConfig';
   // Comtainers
 
   // Components
-  import Text from '../../components/text/text.svelte'
-  import Button from '../../components/button/button.svelte'
+  import Text from '../../components/text/text.svelte';
+  import Button from '../../components/button/button.svelte';
 
-  import SettingsDataList from './settings-data-list.svelte'
-  import SettingsAboutList from './settings-about-list.svelte'
-  import SettingsFeaturesList from './settings-features-list.svelte'
-  import { AppVersion } from '../../modules/app-version/app-version'
+  import SettingsDataList from './settings-data-list.svelte';
+  import SettingsAboutList from './settings-about-list.svelte';
+  import SettingsFeaturesList from './settings-features-list.svelte';
+  import { AppVersion } from '../../modules/app-version/app-version';
 
-  import AwardsPreviewList from '../awards/components/awards-preview-list.svelte'
-  import { enabledBetaFeatures, Prefs } from '../preferences/Preferences'
-  import { showImportModal } from '../import-export/ImporterStore'
-  import { MailOutline, MailUnreadOutline } from '../../components/icon/nicons'
-  import { deleteEverything } from './settings-functions'
+  import AwardsPreviewList from '../awards/components/awards-preview-list.svelte';
+  import { enabledBetaFeatures, Prefs } from '../preferences/Preferences';
+  import { showImportModal } from '../import-export/ImporterStore';
+  import { MailOutline, MailUnreadOutline } from '../../components/icon/nicons';
+  import { deleteEverything } from './settings-functions';
   // import Logo from '../../components/logo/logo.svelte'
-  import { showToast } from '../../components/toast/ToastStore'
+  import { showToast } from '../../components/toast/ToastStore';
 
-  import ChatboxOutline from '../../n-icons/ChatboxOutline.svelte'
-  import Badge from '../../components/badge/badge.svelte'
-  import { openTemplateManager } from '../templates/templates-svelte-helpers'
-  import { openPluginsModal } from '../plugins/PluginStore'
-  import PluginsMoreMenu from '../plugins/plugins-more-menu.svelte'
+  import ChatboxOutline from '../../n-icons/ChatboxOutline.svelte';
+  import Badge from '../../components/badge/badge.svelte';
+  import { openTemplateManager } from '../templates/templates-svelte-helpers';
+  import { openPluginsModal } from '../plugins/PluginStore';
+  import PluginsMoreMenu from '../plugins/plugins-more-menu.svelte';
 
-  export const location = undefined
-  export const style = undefined
+  export const location = undefined;
+  export const style = undefined;
 
-  let st = 0
+  let st = 0;
   async function specialTap() {
-    st = st + 1
+    st = st + 1;
     if (st > 9) {
-      methods.unlockFeatures()
+      methods.unlockFeatures();
     }
   }
 
@@ -76,37 +76,37 @@
       SocialShare(
         `I track my life with Nomie! It's free, private, and you get to design what you track. @nomieapp`,
         'https://nomie.app'
-      )
+      );
     },
     async unlockFeatures() {
-      enabledBetaFeatures()
+      enabledBetaFeatures();
       Interact.confetti({
         show: true,
-      })
+      });
       showToast({
         type: 'success',
         message: '🎁  Secret Beta Features Unlocked',
-      })
+      });
     },
     locations() {
-      Interact.pickLocation()
+      Interact.pickLocation();
     },
 
     bookAge(date) {
-      return dayjs(`${date}-01`).fromNow()
+      return dayjs(`${date}-01`).fromNow();
     },
     faq() {
-      navigate('/faq')
+      navigate('/faq');
     },
     shop() {
-      navigate('/shop')
+      navigate('/shop');
     },
-  }
+  };
 
   // const setTimeout = setTimeout;
   onMount(() => {
-    Device.scrollToTop()
-  })
+    Device.scrollToTop();
+  });
 </script>
 
 <NLayout pageTitle="Settings" showCapture={false}>
@@ -148,7 +148,7 @@
     </Container>
   </div>
 
-  <div slot="content" class="pt-2 z-10 relative  lg:px-4">
+  <div slot="content" class="pt-2 z-10 relative lg:px-4">
     <Container>
       {#if $Prefs}
         <div class="page page-settings">
@@ -200,7 +200,7 @@
             <div id="data-marker" />
             <SettingsDataList
               on:showImporter={() => {
-                showImportModal()
+                showImportModal();
               }}
             />
 
@@ -225,7 +225,7 @@
 
             <Spacer gap={1} />
 
-            <button class="w-full px-4 mt-4 mb-3 text-sm text-center " on:click={specialTap}>
+            <button class="w-full px-4 mt-4 mb-3 text-sm text-center" on:click={specialTap}>
               <div class="text-sm text-black dark:text-white">
                 Version v{import.meta.env.PACKAGE_VERSION}
               </div>

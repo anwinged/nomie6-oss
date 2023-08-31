@@ -1,38 +1,38 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
-  import CheckmarkCircle from '../../n-icons/CheckmarkCircle.svelte'
-  import Avatar from '../avatar/avatar.svelte'
+  import { createEventDispatcher } from 'svelte';
+  import CheckmarkCircle from '../../n-icons/CheckmarkCircle.svelte';
+  import Avatar from '../avatar/avatar.svelte';
 
-  import { fly } from 'svelte/transition'
-  import Button from '../button/button.svelte'
+  import { fly } from 'svelte/transition';
+  import Button from '../button/button.svelte';
 
-  import IonIcon from '../icon/ion-icon.svelte'
+  import IonIcon from '../icon/ion-icon.svelte';
 
-  import List from '../list/list.svelte'
+  import List from '../list/list.svelte';
 
-  import type { PopMenuButton } from './usePopmenu'
-  import { wait } from '../../utils/tick/tick'
-  import { AwardStore } from '../../domains/awards/AwardsStore'
-  import { Interact } from '../../store/interact'
-  import { getAwardById } from '../../domains/awards/helpers/usage-awards'
+  import type { PopMenuButton } from './usePopmenu';
+  import { wait } from '../../utils/tick/tick';
+  import { AwardStore } from '../../domains/awards/AwardsStore';
+  import { Interact } from '../../store/interact';
+  import { getAwardById } from '../../domains/awards/helpers/usage-awards';
 
-  export let buttons: Array<PopMenuButton> = []
-  export let listType: 'grid' | 'list' = 'list'
+  export let buttons: Array<PopMenuButton> = [];
+  export let listType: 'grid' | 'list' = 'list';
 
-  let dispatch = createEventDispatcher()
+  let dispatch = createEventDispatcher();
 
-  let buttonGroup: Array<Array<PopMenuButton>> = []
+  let buttonGroup: Array<Array<PopMenuButton>> = [];
 
   $: if (buttons) {
-    buttonGroup = [[]]
-    let current: number = buttonGroup.length - 1
+    buttonGroup = [[]];
+    let current: number = buttonGroup.length - 1;
     buttons.forEach((button: PopMenuButton) => {
       if (button.divider) {
-        buttonGroup.push([])
-        current = buttonGroup.length - 1
+        buttonGroup.push([]);
+        current = buttonGroup.length - 1;
       }
-      buttonGroup[current].push(button)
-    })
+      buttonGroup[current].push(button);
+    });
   }
 </script>
 
@@ -52,13 +52,13 @@
             } else if (button.awardRequired && !$AwardStore.awards.find((a) => a.id == button.awardRequired)) {
               Interact.alert(
                 `You need the ${getAwardById(button.awardRequired).name} Award before you can use this feature`
-              )
+              );
             } else {
-              await wait(200)
-              button.click()
-              dispatch('clicked', evt)
+              await wait(200);
+              button.click();
+              dispatch('clicked', evt);
               if (!button.skipClosing) {
-                dispatch('close')
+                dispatch('close');
               }
             }
           }}

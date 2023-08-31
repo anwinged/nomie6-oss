@@ -1,16 +1,16 @@
 <script lang="ts">
-  export let positivity = 0
-  export let score = 0
+  export let positivity = 0;
+  export let score = 0;
 
-  let changed = false
+  let changed = false;
 
-  let lastScore
+  let lastScore;
   $: if (score !== lastScore) {
-    lastScore = score
-    changed = true
+    lastScore = score;
+    changed = true;
     setTimeout(() => {
-      changed = false
-    }, 200)
+      changed = false;
+    }, 200);
   }
 </script>
 

@@ -1,55 +1,55 @@
 <script lang="ts">
-  import type NLog from '../nomie-log/nomie-log'
-  import { logsToTimeline, TimelineItemType } from './timeline-utils'
+  import type NLog from '../nomie-log/nomie-log';
+  import { logsToTimeline, TimelineItemType } from './timeline-utils';
 
-  import { TrackableStore } from '../trackable/TrackableStore'
-  import TrackablePill from '../trackable/trackable-pill.svelte'
-  import NoteTextualizer from '../../components/note-textualizer/note-textualizer.svelte'
-  import { getDateFormats, Prefs } from '../preferences/Preferences'
-  import VirtualList from '@sveltejs/svelte-virtual-list'
-  import { createEventDispatcher } from 'svelte'
-  import LocationBadge from '../../components/location-badge/location-badge.svelte'
-  import { openLocationViewer } from '../map/LocationModalStore'
-  import { showTrackablePopmenu } from '../board/boardActions'
-  import { tokenToTrackable } from '../../modules/tokenizer/tokenToTrackable'
+  import { TrackableStore } from '../trackable/TrackableStore';
+  import TrackablePill from '../trackable/trackable-pill.svelte';
+  import NoteTextualizer from '../../components/note-textualizer/note-textualizer.svelte';
+  import { getDateFormats, Prefs } from '../preferences/Preferences';
+  import VirtualList from '@sveltejs/svelte-virtual-list';
+  import { createEventDispatcher } from 'svelte';
+  import LocationBadge from '../../components/location-badge/location-badge.svelte';
+  import { openLocationViewer } from '../map/LocationModalStore';
+  import { showTrackablePopmenu } from '../board/boardActions';
+  import { tokenToTrackable } from '../../modules/tokenizer/tokenToTrackable';
 
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import { ChevronForwardOutline, More } from '../../components/icon/nicons'
-  import { Interact } from '../../store/interact'
-  import Container from '../../components/container/container.svelte'
-  import { openOnThisDayModal } from '../on-this-day/useOnThisDayModal'
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import { ChevronForwardOutline, More } from '../../components/icon/nicons';
+  import { Interact } from '../../store/interact';
+  import Container from '../../components/container/container.svelte';
+  import { openOnThisDayModal } from '../on-this-day/useOnThisDayModal';
 
-  import type { PopMenuButton } from '../../components/pop-menu/usePopmenu'
-  import { openDropMenu } from '../../components/menu/useDropmenu'
+  import type { PopMenuButton } from '../../components/pop-menu/usePopmenu';
+  import { openDropMenu } from '../../components/menu/useDropmenu';
 
-  export let logs: Array<NLog> = []
+  export let logs: Array<NLog> = [];
 
-  const dispatch = createEventDispatcher()
-  let timeline: Array<TimelineItemType> = []
-  let dateFormats = getDateFormats()
+  const dispatch = createEventDispatcher();
+  let timeline: Array<TimelineItemType> = [];
+  let dateFormats = getDateFormats();
 
-  let listStartIndex: number
-  let listEndIndex: number
+  let listStartIndex: number;
+  let listEndIndex: number;
 
   $: if ($TrackableStore) {
-    timeline = logsToTimeline(logs, $TrackableStore.trackables)
+    timeline = logsToTimeline(logs, $TrackableStore.trackables);
   }
 
-  let topItem: TimelineItemType | undefined = undefined
+  let topItem: TimelineItemType | undefined = undefined;
 
   $: if (listStartIndex && timeline) {
-    topItem = timeline[listStartIndex]
-    dispatch('scrollItem', topItem)
+    topItem = timeline[listStartIndex];
+    dispatch('scrollItem', topItem);
   } else if (listStartIndex === 0 && timeline) {
-    topItem = timeline[listStartIndex]
-    dispatch('scrollItem', topItem)
+    topItem = timeline[listStartIndex];
+    dispatch('scrollItem', topItem);
   }
 
-  let lastEndIndex = 0
+  let lastEndIndex = 0;
   $: if (lastEndIndex !== listEndIndex && listEndIndex === timeline.length && timeline.length > 0) {
-    lastEndIndex = listEndIndex
+    lastEndIndex = listEndIndex;
 
-    dispatch('endOfItems')
+    dispatch('endOfItems');
   }
 
   const showNoteSelectMenu = (evt: any, logs: Array<NLog> = []) => {
@@ -58,16 +58,16 @@
         title: log.note,
 
         click() {
-          Interact.logOptions(log, { description: log.note })
+          Interact.logOptions(log, { description: log.note });
         },
-      }
-    })
+      };
+    });
 
-    openDropMenu(evt.target, menu)
-  }
+    openDropMenu(evt.target, menu);
+  };
 </script>
 
-<div class="timeline dark:text-gray-300 ">
+<div class="timeline dark:text-gray-300">
   <!-- <div class="fixed top-12 bg-black w-full p-4 flex z-50">
     {listStartIndex} /
     {listEndIndex} /
@@ -83,7 +83,7 @@
             type="button"
             class="col-span-8 flex-col items-center font-bold hover:text-primary-500 justify-center"
             on:click={() => {
-              openOnThisDayModal(item.logs[0].end)
+              openOnThisDayModal(item.logs[0].end);
             }}
           >
             <span
@@ -97,7 +97,7 @@
               <IonIcon icon={ChevronForwardOutline} className="opacity-50" size={14} />
             </span>
 
-            <span class="text-sm block font-normal  leading-none text-gray-500">
+            <span class="text-sm block font-normal leading-none text-gray-500">
               {item.logs[0].endDayjs().format(`${$Prefs.use24hour ? 'HH:mm' : 'h:mm a'}`)}
             </span>
           </button>
@@ -109,7 +109,7 @@
                   openLocationViewer(
                     [{ name: item.logs[0].location, lat: item.logs[0].lat, lng: item.logs[0].lng }],
                     item.logs
-                  )
+                  );
                 }}
                 location={{ name: item.logs[0].location, lat: item.logs[0].lat, lng: item.logs[0].lng }}
               />
@@ -130,12 +130,12 @@
                 if (item.logs.filter((l) => !l.hasNote).length === 1) {
                   Interact.logOptions(item.logs.filter((l) => !l.hasNote)[0], {
                     description: item.logs[0].note,
-                  })
+                  });
                 } else {
                   showNoteSelectMenu(
                     evt,
                     item.logs.filter((l) => !l.hasNote)
-                  )
+                  );
                 }
               }}><IonIcon size={22} icon={More} /></button
             >
@@ -168,18 +168,18 @@
                   on:click={() => {
                     Interact.logOptions(log, {
                       description: item.logs[0].note,
-                    })
+                    });
                   }}><IonIcon size={22} icon={More} /></button
                 >
               </div>
-              <p class="text-base   leading-tight">
+              <p class="text-base leading-tight">
                 <NoteTextualizer
                   note={log.note}
                   className=" leading-snug dark:text-gray-300 text-gray-700"
                   tokenClass="timeline-token"
                   on:textClick={(evt) => {
-                    const trackable = tokenToTrackable(evt.detail, $TrackableStore.trackables)
-                    showTrackablePopmenu(trackable)
+                    const trackable = tokenToTrackable(evt.detail, $TrackableStore.trackables);
+                    showTrackablePopmenu(trackable);
                   }}
                 />
               </p>

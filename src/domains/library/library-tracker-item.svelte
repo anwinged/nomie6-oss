@@ -1,26 +1,26 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher } from 'svelte';
 
-  import Button from '../../components/button/button.svelte'
-  import Emoji from '../../components/emoji-selector/Emoji.svelte'
-  import ManyEmoji from '../../components/emoji-selector/many-emoji/many-emoji.svelte'
+  import Button from '../../components/button/button.svelte';
+  import Emoji from '../../components/emoji-selector/Emoji.svelte';
+  import ManyEmoji from '../../components/emoji-selector/many-emoji/many-emoji.svelte';
 
-  import ListItem from '../../components/list-item/list-item.svelte'
-  import List from '../../components/list/list.svelte'
-  import { Lang } from '../../store/lang'
+  import ListItem from '../../components/list-item/list-item.svelte';
+  import List from '../../components/list/list.svelte';
+  import { Lang } from '../../store/lang';
 
-  import type { LibraryTrackerType } from './library-manager/LibraryManagerStore'
+  import type { LibraryTrackerType } from './library-manager/LibraryManagerStore';
 
-  export let libraryTracker: LibraryTrackerType
-  let expand: boolean = false
-  const dispatch = createEventDispatcher()
+  export let libraryTracker: LibraryTrackerType;
+  let expand: boolean = false;
+  const dispatch = createEventDispatcher();
 </script>
 
 <ListItem
   detail
   clickable={libraryTracker.trackers.length > 1}
   on:click={(evt) => {
-    dispatch('click', evt)
+    dispatch('click', evt);
   }}
 >
   <div slot="left">

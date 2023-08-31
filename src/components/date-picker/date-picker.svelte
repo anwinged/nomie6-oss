@@ -1,43 +1,43 @@
 <script lang="ts">
   // vendors
-  import dayjs from 'dayjs'
+  import dayjs from 'dayjs';
   // utils
-  import { createEventDispatcher } from 'svelte'
-  import { Device } from '../../store/device-store'
-  import DateTimeBar from '../date-time-bar/date-time-bar.svelte'
+  import { createEventDispatcher } from 'svelte';
+  import { Device } from '../../store/device-store';
+  import DateTimeBar from '../date-time-bar/date-time-bar.svelte';
 
-  import { Prefs } from '../../domains/preferences/Preferences'
+  import { Prefs } from '../../domains/preferences/Preferences';
 
   // data
-  export let date: Date | undefined
-  export let time: any = undefined
-  export let className: string = ''
-  export let style: string = ''
-  export let size: 'sm' | 'lg' = 'sm'
+  export let date: Date | undefined;
+  export let time: any = undefined;
+  export let className: string = '';
+  export let style: string = '';
+  export let size: 'sm' | 'lg' = 'sm';
 
   //consts
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  let inputEle: HTMLInputElement
-  let localDate: any
-  let lastTime: number
-  const dtlFormat = 'YYYY-MM-DDTHH:mm'
-  let dateTimeFormat: string
+  let inputEle: HTMLInputElement;
+  let localDate: any;
+  let lastTime: number;
+  const dtlFormat = 'YYYY-MM-DDTHH:mm';
+  let dateTimeFormat: string;
 
-  $: dateTimeFormat = $Prefs.use24hour ? 'dd/mm/yyyy HH:mm' : 'mm/dd/yyyy hh:mm a'
+  $: dateTimeFormat = $Prefs.use24hour ? 'dd/mm/yyyy HH:mm' : 'mm/dd/yyyy hh:mm a';
 
   $: if (time) {
     if (time !== lastTime) {
-      lastTime = time
-      localDate = dayjs(new Date(time)).format(dtlFormat)
+      lastTime = time;
+      localDate = dayjs(new Date(time)).format(dtlFormat);
     }
   } else {
-    localDate = dayjs(new Date()).format(dtlFormat)
+    localDate = dayjs(new Date()).format(dtlFormat);
   }
 
   function fireChange(evt: any) {
-    date = new Date(evt.target.value)
-    time = date.getTime()
+    date = new Date(evt.target.value);
+    time = date.getTime();
     dispatch('change', date);
   }
 </script>
@@ -48,8 +48,7 @@
       {style}
       bind:date={time}
       on:change={(event) => {
-        
-        fireChange({ target: { value: event.detail }})
+        fireChange({ target: { value: event.detail } });
       }}
     />
   {:else}

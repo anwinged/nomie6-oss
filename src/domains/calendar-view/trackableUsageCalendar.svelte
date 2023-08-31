@@ -1,29 +1,29 @@
 <script lang="ts">
-  import dayjs from 'dayjs'
+  import dayjs from 'dayjs';
 
-  import { createEventDispatcher, onMount } from 'svelte'
-  import Spinner from '../../components/spinner/spinner.svelte'
+  import { createEventDispatcher, onMount } from 'svelte';
+  import Spinner from '../../components/spinner/spinner.svelte';
 
-  import { LedgerStore, queryToTrackableUsage } from '../ledger/LedgerStore'
+  import { LedgerStore, queryToTrackableUsage } from '../ledger/LedgerStore';
 
-  import type { Trackable } from '../trackable/Trackable.class'
-  import { TrackableStore } from '../trackable/TrackableStore'
-  import type { TrackableUsage } from '../usage/trackable-usage.class'
+  import type { Trackable } from '../trackable/Trackable.class';
+  import { TrackableStore } from '../trackable/TrackableStore';
+  import type { TrackableUsage } from '../usage/trackable-usage.class';
 
-  import Calendar3 from './calendar3.svelte'
+  import Calendar3 from './calendar3.svelte';
 
-  export let trackable: Trackable
-  export let date: Date = new Date()
+  export let trackable: Trackable;
+  export let date: Date = new Date();
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  let loading = true
-  let tu: TrackableUsage
+  let loading = true;
+  let tu: TrackableUsage;
 
-  let loadClearTimeout
+  let loadClearTimeout;
   const loadData = async () => {
-    loading = true
-    clearTimeout(loadClearTimeout)
+    loading = true;
+    clearTimeout(loadClearTimeout);
     loadClearTimeout = setTimeout(async () => {
       tu = await queryToTrackableUsage(
         trackable,
@@ -32,21 +32,21 @@
           end: dayjs(date).endOf('month'),
         },
         $TrackableStore.trackables
-      )
+      );
 
-      dispatch('usage', tu)
-      loading = false
-    }, 100)
-  }
+      dispatch('usage', tu);
+      loading = false;
+    }, 100);
+  };
 
-  let lastHash = ''
+  let lastHash = '';
   $: if (date && trackable && $LedgerStore.hash && `${date?.toDateString()}${trackable.tag}` !== lastHash) {
-    lastHash = `${date.toDateString()}${trackable.tag}`
-    loadData()
+    lastHash = `${date.toDateString()}${trackable.tag}`;
+    loadData();
   }
   onMount(() => {
-    loadData()
-  })
+    loadData();
+  });
 </script>
 
 {#if tu}
@@ -54,12 +54,12 @@
     bind:trackableUsage={tu}
     bind:loading
     on:input={(evt) => {
-      dispatch('input', evt.detail)
+      dispatch('input', evt.detail);
     }}
     on:dateChange={(evt) => {
-      date = evt.detail
-      dispatch('change', date)
-      loadData()
+      date = evt.detail;
+      dispatch('change', date);
+      loadData();
     }}
   />
 {/if}

@@ -1,20 +1,20 @@
 <script lang="ts">
-  import dayjs, { Dayjs } from 'dayjs'
-  import { getDateFormats } from '../../domains/preferences/Preferences'
+  import dayjs, { Dayjs } from 'dayjs';
+  import { getDateFormats } from '../../domains/preferences/Preferences';
 
-  export let date: Date
-  export let seconds: number
-  export let className: string = ''
-  export let style: string = ''
+  export let date: Date;
+  export let seconds: number;
+  export let className: string = '';
+  export let style: string = '';
 
-  let end: Dayjs
-  let start: Dayjs
-  let daysDiff: number
-  const dateFormats = getDateFormats()
+  let end: Dayjs;
+  let start: Dayjs;
+  let daysDiff: number;
+  const dateFormats = getDateFormats();
   $: if (date || seconds) {
-    end = dayjs(date)
-    start = dayjs(date).subtract(seconds, 'seconds')
-    daysDiff = Math.floor(seconds / (3600 * 24))
+    end = dayjs(date);
+    start = dayjs(date).subtract(seconds, 'seconds');
+    daysDiff = Math.floor(seconds / (3600 * 24));
   }
 </script>
 

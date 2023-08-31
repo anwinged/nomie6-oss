@@ -5,58 +5,58 @@
   // Utils
 
   // Stores
-  import { Lang } from '../../store/lang'
+  import { Lang } from '../../store/lang';
 
-  import Button from '../../components/button/button.svelte'
-  import { SearchStore, SearchTerm } from './search-store'
+  import Button from '../../components/button/button.svelte';
+  import { SearchStore, SearchTerm } from './search-store';
 
-  import SearchHistory from './search-history.svelte'
-  import SearchRecent from './search-recent.svelte'
-  import Toolbar from '../../components/toolbar/toolbar.svelte'
-  import SearchBar from '../../components/search-bar/search-bar.svelte'
-  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte'
-  import { ActiveBackdropId, closeModal } from '../../components/backdrop/BackdropStore2'
-  import KeyDown from '../../modules/keyDown/keyDown.svelte'
+  import SearchHistory from './search-history.svelte';
+  import SearchRecent from './search-recent.svelte';
+  import Toolbar from '../../components/toolbar/toolbar.svelte';
+  import SearchBar from '../../components/search-bar/search-bar.svelte';
+  import BackdropModal from '../../components/backdrop/backdrop-modal.svelte';
+  import { ActiveBackdropId, closeModal } from '../../components/backdrop/BackdropStore2';
+  import KeyDown from '../../modules/keyDown/keyDown.svelte';
 
-  export const location = undefined
-  export const style = undefined
+  export const location = undefined;
+  export const style = undefined;
 
-  export const className = ''
+  export const className = '';
 
-  export let id: string
-  export let term: string
+  export let id: string;
+  export let term: string;
 
-  let searchTerm: string
+  let searchTerm: string;
 
   function back() {
-    SearchStore.clear()
-    term = undefined
-    closeModal(id)
+    SearchStore.clear();
+    term = undefined;
+    closeModal(id);
   }
 
   $: if ($SearchStore && $SearchStore.active?.term) {
-    searchTerm = $SearchStore.active.term
+    searchTerm = $SearchStore.active.term;
   }
 
   $: if ($SearchStore.active?.term) {
-    term = $SearchStore.active.term
+    term = $SearchStore.active.term;
   }
 
-  let searchInitalized = false
+  let searchInitalized = false;
   $: if (searchTerm && !searchInitalized) {
-    searchInitalized = true
-    SearchStore.setActiveTerm(new SearchTerm({ searchTerm, type: 'history' }))
+    searchInitalized = true;
+    SearchStore.setActiveTerm(new SearchTerm({ searchTerm, type: 'history' }));
   }
 
   function clear() {
-    SearchStore.clear()
-    term = undefined
+    SearchStore.clear();
+    term = undefined;
   }
 
   function search(evt: CustomEvent) {
-    term = evt.detail
+    term = evt.detail;
     if (term) {
-      SearchStore.setActiveTerm(new SearchTerm({ term, type: 'history' }))
+      SearchStore.setActiveTerm(new SearchTerm({ term, type: 'history' }));
     }
   }
 </script>
@@ -70,7 +70,7 @@
     {#if $ActiveBackdropId === id}
       <KeyDown
         on:Escape={() => {
-          closeModal(id)
+          closeModal(id);
         }}
       />
     {/if}

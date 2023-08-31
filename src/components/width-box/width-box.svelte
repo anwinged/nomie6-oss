@@ -1,34 +1,34 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte'
-  import { getElementPosition } from '../../modules/html-elements/position'
-  import { Device } from '../../store/device-store'
+  import { createEventDispatcher, onMount } from 'svelte';
+  import { getElementPosition } from '../../modules/html-elements/position';
+  import { Device } from '../../store/device-store';
 
-  export let className: string = ''
-  export let style: string = ''
+  export let className: string = '';
+  export let style: string = '';
 
-  let box: HTMLElement
-  export let width: number = 0
-  export let height: number = 0
+  let box: HTMLElement;
+  export let width: number = 0;
+  export let height: number = 0;
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
   const refresh = () => {
     if (box) {
-      const dems = getElementPosition(box)
-      width = dems.eleWidth
-      height = dems.eleHeight
-      dispatch('width', width)
-      dispatch('height', height)
+      const dems = getElementPosition(box);
+      width = dems.eleWidth;
+      height = dems.eleHeight;
+      dispatch('width', width);
+      dispatch('height', height);
     }
-  }
+  };
 
   $: if ($Device.width) {
-    refresh()
+    refresh();
   }
 
   onMount(() => {
-    refresh()
-  })
+    refresh();
+  });
 </script>
 
 <div bind:this={box} class="width-box {className}" {style}><slot {width} {height} /></div>

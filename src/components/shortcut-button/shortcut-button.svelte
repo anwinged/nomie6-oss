@@ -1,51 +1,51 @@
 <script lang="ts">
-  import IonIcon from './../icon/ion-icon.svelte'
-  import { createEventDispatcher } from 'svelte'
-  import is from '../../utils/is/is'
-  import Avatar from '../avatar/avatar.svelte'
-  import Button from '../button/button.svelte'
-  import TimeBalls from '../time-balls/time-balls.svelte'
+  import IonIcon from './../icon/ion-icon.svelte';
+  import { createEventDispatcher } from 'svelte';
+  import is from '../../utils/is/is';
+  import Avatar from '../avatar/avatar.svelte';
+  import Button from '../button/button.svelte';
+  import TimeBalls from '../time-balls/time-balls.svelte';
 
-  import { MoreVertical } from '../icon/nicons'
+  import { MoreVertical } from '../icon/nicons';
 
-  export let title: string | undefined = undefined
-  export let subtitle: string | undefined = undefined
-  export let value: any = undefined
-  export let color: string | number | undefined = undefined
-  export let emoji: string | undefined = undefined
-  export let avatar: string | undefined = undefined
-  export let style: string = ''
-  export let id: string | undefined = undefined
+  export let title: string | undefined = undefined;
+  export let subtitle: string | undefined = undefined;
+  export let value: any = undefined;
+  export let color: string | number | undefined = undefined;
+  export let emoji: string | undefined = undefined;
+  export let avatar: string | undefined = undefined;
+  export let style: string = '';
+  export let id: string | undefined = undefined;
 
-  export let hideMore: boolean = false
-  export let hideValue: boolean = false
-  export let className: string = ''
-  export let compact: boolean = false
-  export let moreIcon: any = MoreVertical
-  export let oneTap: boolean = false
-  export let hoursUsed = []
+  export let hideMore: boolean = false;
+  export let hideValue: boolean = false;
+  export let className: string = '';
+  export let compact: boolean = false;
+  export let moreIcon: any = MoreVertical;
+  export let oneTap: boolean = false;
+  export let hoursUsed = [];
 
-  let clickSkip
+  let clickSkip;
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  $: emojiSize = compact ? 30 : 40
+  $: emojiSize = compact ? 30 : 40;
 
   async function more() {
-    dispatch('more')
+    dispatch('more');
   }
 </script>
 
-<div class="button-wrapper relative w-full flex-grow flex-shrink  {compact ? 'compact' : 'normal'}">
+<div class="button-wrapper relative w-full flex-grow flex-shrink {compact ? 'compact' : 'normal'}">
   {#if !hideMore}
     <button
       type="button"
       aria-label="More about this Trackable"
       class="more {is.truthy(value) ? 'has-value text-white' : 'no-value text-gray-500 dark:text-white'}"
       on:click={(evt) => {
-        evt.preventDefault()
-        evt.stopPropagation()
-        more()
+        evt.preventDefault();
+        evt.stopPropagation();
+        more();
       }}
     >
       <IonIcon icon={moreIcon} size={20} />
@@ -63,14 +63,14 @@
   {compact ? 'compact' : ''}"
     style={[style, `--tracker-color:${color};`, value ? `background-color:${color};` : ``].join('')}
     on:longpress={() => {
-      dispatch('longpress')
-      clickSkip = true
+      dispatch('longpress');
+      clickSkip = true;
     }}
     on:click={() => {
       if (!clickSkip) {
-        dispatch('click')
+        dispatch('click');
       }
-      clickSkip = undefined
+      clickSkip = undefined;
     }}
   >
     <div class="emoji-holder" style={is.truthy(value) ? 'color:#FFF' : `color:${color}`}>
@@ -111,7 +111,7 @@
     @apply shadow-md;
     @apply overflow-visible;
     @apply text-black dark:text-white;
-    overflow:hidden;
+    overflow: hidden;
   }
   .shortcut-button.normal {
     @apply h-28 lg:h-32;
@@ -136,7 +136,7 @@
     @apply leading-tight;
   }
   .shortcut-button .title.long {
-    font-size: .825rem;
+    font-size: 0.825rem;
   }
   .shortcut-button.normal .emoji-holder {
     @apply absolute top-2 left-2;

@@ -1,107 +1,104 @@
 <script lang="ts">
-  import dayjs from 'dayjs'
+  import dayjs from 'dayjs';
 
-  import Empty from '../../../components/empty/empty.svelte'
-  import NvirtualList from '../../../components/nvirtual-list/nvirtual-list.svelte'
-  import ProgressBar from '../../../components/progress-bar/progress-bar.svelte'
-  import Spinner from '../../../components/spinner/spinner.svelte'
-  import { getDatePopButtons } from '../../../modules/pop-buttons/pop-buttons'
-  
-  import { Interact } from '../../../store/interact'
-  import math from '../../../utils/math/math'
-  import { wait } from '../../../utils/tick/tick'
-  import { getTrackableUsage } from '../../ledger/LedgerStore'
-  import { getDateFormats } from '../../preferences/Preferences'
-  import type { Trackable } from '../../trackable/Trackable.class'
-  import { TrackableStore } from '../../trackable/TrackableStore'
-  import type { TrackableUsage } from '../../usage/trackable-usage.class'
-  import type { GoalClass, GoalScoreType } from '../goal-class'
-  import { getGoalComparisonSymbol } from '../goal-utils'
+  import Empty from '../../../components/empty/empty.svelte';
+  import NvirtualList from '../../../components/nvirtual-list/nvirtual-list.svelte';
+  import ProgressBar from '../../../components/progress-bar/progress-bar.svelte';
+  import Spinner from '../../../components/spinner/spinner.svelte';
+  import { getDatePopButtons } from '../../../modules/pop-buttons/pop-buttons';
 
-  export let goal: GoalClass
+  import { Interact } from '../../../store/interact';
+  import math from '../../../utils/math/math';
+  import { wait } from '../../../utils/tick/tick';
+  import { getTrackableUsage } from '../../ledger/LedgerStore';
+  import { getDateFormats } from '../../preferences/Preferences';
+  import type { Trackable } from '../../trackable/Trackable.class';
+  import { TrackableStore } from '../../trackable/TrackableStore';
+  import type { TrackableUsage } from '../../usage/trackable-usage.class';
+  import type { GoalClass, GoalScoreType } from '../goal-class';
+  import { getGoalComparisonSymbol } from '../goal-utils';
 
-  let usage: TrackableUsage
+  export let goal: GoalClass;
 
-  let scores: Array<GoalScoreType> = []
-  let loading: boolean = true
-  let showLoading: boolean = true
+  let usage: TrackableUsage;
 
-  let weeks: Array<Array<GoalScoreType>> = []
+  let scores: Array<GoalScoreType> = [];
+  let loading: boolean = true;
+  let showLoading: boolean = true;
 
-  let totalDays: number
-  let totalSuccess: number
+  let weeks: Array<Array<GoalScoreType>> = [];
 
-  let startDate: Date = new Date()
+  let totalDays: number;
+  let totalSuccess: number;
 
-  let trackable: Trackable
+  let startDate: Date = new Date();
+
+  let trackable: Trackable;
 
   $: if (goal && goal.tag) {
-    trackable = $TrackableStore.trackables[goal.tag]
+    trackable = $TrackableStore.trackables[goal.tag];
   }
 
   const generateWeeksFromScores = () => {
-    
-    let weekMap: any = {}
+    let weekMap: any = {};
     scores
       .sort((a, b) => {
-        return a.date.toDate() < b.date.toDate() ? -1 : 1
+        return a.date.toDate() < b.date.toDate() ? -1 : 1;
       })
       .filter((score, index) => {
-        let found = scores.findIndex((s) => s.date.format('YYYY-MM-DD') === score.date.format('YYYY-MM-DD'))
+        let found = scores.findIndex((s) => s.date.format('YYYY-MM-DD') === score.date.format('YYYY-MM-DD'));
         if (found && found !== index) {
-          return false
+          return false;
         }
-        return true
+        return true;
       })
       .forEach((score) => {
-        let startOfWeek = `${score.date.startOf('isoWeek').format('YYYY-MM-DD')}`
-        weekMap[startOfWeek] = weekMap[startOfWeek] || []
-        weekMap[startOfWeek].push(score)
-      })
-    
+        let startOfWeek = `${score.date.startOf('isoWeek').format('YYYY-MM-DD')}`;
+        weekMap[startOfWeek] = weekMap[startOfWeek] || [];
+        weekMap[startOfWeek].push(score);
+      });
+
     return Object.keys(weekMap)
       .map((id) => {
-        return weekMap[id]
+        return weekMap[id];
       })
       .sort((a, b) => {
-        return a[0].date.toDate() > b[0].date.toDate() ? -1 : 1
-      })
-  }
+        return a[0].date.toDate() > b[0].date.toDate() ? -1 : 1;
+      });
+  };
 
   const getPast = async () => {
-    
-    showLoading = true
-    const start = dayjs(startDate).subtract(2, 'month')
-    const end = dayjs(startDate).endOf('day')
+    showLoading = true;
+    const start = dayjs(startDate).subtract(2, 'month');
+    const end = dayjs(startDate).endOf('day');
 
-    usage = await getTrackableUsage(trackable, start, end, $TrackableStore.trackables)
-    let backFilled = usage.byDay.backfill(start.toDate(), end.toDate())
-    scores = [...scores, ...goal.calculateScores(backFilled)]
+    usage = await getTrackableUsage(trackable, start, end, $TrackableStore.trackables);
+    let backFilled = usage.byDay.backfill(start.toDate(), end.toDate());
+    scores = [...scores, ...goal.calculateScores(backFilled)];
 
-    totalDays = scores.length
-    totalSuccess = scores.filter((s) => s.success).length
+    totalDays = scores.length;
+    totalSuccess = scores.filter((s) => s.success).length;
 
-    weeks = generateWeeksFromScores()
-    loading = false
+    weeks = generateWeeksFromScores();
+    loading = false;
     wait(200).then(() => {
-      showLoading = false
-    })
-  }
+      showLoading = false;
+    });
+  };
 
   const openDateOptions = (date: Date) => {
-    const dateButtons = getDatePopButtons(date)
+    const dateButtons = getDatePopButtons(date);
     Interact.popmenu({
       id: `date-options-${date.toDateString()}`,
       buttons: dateButtons,
-    })
-  }
+    });
+  };
 
-  const dateFormats = getDateFormats()
-  let lastDate: any
+  const dateFormats = getDateFormats();
+  let lastDate: any;
   $: if (startDate && startDate !== lastDate) {
-    
-    lastDate = startDate
-    getPast()
+    lastDate = startDate;
+    getPast();
   }
 
   const getPad = (num: number): number => {
@@ -112,12 +109,12 @@
     //   fixed = 55
     // }
     // return fixed / 100
-    return 1
-  }
+    return 1;
+  };
 </script>
 
 {#if goal && totalDays}
-  <div class="bg-white  dark:bg-black px-4 pb-4  flex flex-col space-y-2">
+  <div class="bg-white dark:bg-black px-4 pb-4 flex flex-col space-y-2">
     <h1 class="text-xl font-bold text-black dark:text-white leading-tight mt-4 pb-">
       {trackable.label}
       {getGoalComparisonSymbol(goal.comparison)}
@@ -153,7 +150,7 @@
     items={weeks}
     let:item
     on:end={() => {
-      startDate = dayjs(startDate).subtract(2, 'month').toDate()
+      startDate = dayjs(startDate).subtract(2, 'month').toDate();
     }}
   >
     {#if item[0]}
@@ -167,7 +164,7 @@
             <button
               on:click={() => openDateOptions(day.date.toDate())}
               style="transform: scale({getPad(day.percent)})"
-              class="goal-ball transition-all  {day.success == true ? 'bg-green-500' : ''} {day.failure == true
+              class="goal-ball transition-all {day.success == true ? 'bg-green-500' : ''} {day.failure == true
                 ? 'bg-red-500'
                 : ''}"
             >
@@ -222,7 +219,6 @@
     @apply leading-tight;
     @apply w-full;
     @apply max-w-md;
-
   }
   .goal-ball {
     @apply rounded-full;

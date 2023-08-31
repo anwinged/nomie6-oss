@@ -1,32 +1,32 @@
 <script lang="ts">
-  import Avatar from '../../components/avatar/avatar.svelte'
+  import Avatar from '../../components/avatar/avatar.svelte';
 
-  import Button from '../../components/button/button.svelte'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import { CheckmarkCircle } from '../../components/icon/nicons'
-  import ListItem from '../../components/list-item/list-item.svelte'
+  import Button from '../../components/button/button.svelte';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import { CheckmarkCircle } from '../../components/icon/nicons';
+  import ListItem from '../../components/list-item/list-item.svelte';
 
-  import List from '../../components/list/list.svelte'
-  import type { ITrackables } from '../ledger/ledger-tools'
-  import { TrackableStore } from '../trackable/TrackableStore'
-  import type { LibraryTrackerType } from './library-manager/LibraryManagerStore'
-  import TrackerTypes from '../../modules/tracker-types/tracker-types'
-  import { createEventDispatcher } from 'svelte'
+  import List from '../../components/list/list.svelte';
+  import type { ITrackables } from '../ledger/ledger-tools';
+  import { TrackableStore } from '../trackable/TrackableStore';
+  import type { LibraryTrackerType } from './library-manager/LibraryManagerStore';
+  import TrackerTypes from '../../modules/tracker-types/tracker-types';
+  import { createEventDispatcher } from 'svelte';
 
-  export let libraryTracker: LibraryTrackerType
+  export let libraryTracker: LibraryTrackerType;
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
   function getTypeLabel(id: string) {
     if (TrackerTypes.hasOwnProperty(id)) {
-      return TrackerTypes[id].label
+      return TrackerTypes[id].label;
     } else {
-      return id
+      return id;
     }
   }
 
-  let trackables: ITrackables = {}
-  $: trackables = $TrackableStore.trackables
+  let trackables: ITrackables = {};
+  $: trackables = $TrackableStore.trackables;
 </script>
 
 <List solo className="">
@@ -35,7 +35,7 @@
       <h1 class="font-medium text-gray-500">{libraryTracker.title}</h1>
       <Button
         on:click={() => {
-          dispatch('addAll', libraryTracker.trackers)
+          dispatch('addAll', libraryTracker.trackers);
         }}
         size="sm"
         slot="right"
@@ -58,7 +58,7 @@
         {#if !trackables.hasOwnProperty(`#${tracker.tag}`)}
           <Button
             on:click={() => {
-              dispatch('add', tracker)
+              dispatch('add', tracker);
             }}
             primary
             clear>Add</Button

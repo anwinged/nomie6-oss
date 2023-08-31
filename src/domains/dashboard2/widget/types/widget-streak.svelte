@@ -1,16 +1,16 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
+  import { onMount } from 'svelte';
   // import type { TrackableUsage } from '../../../usage/trackable-usage.class'
   // import type { Trackable } from '../../../trackable/Trackable.class'
-  import type { WidgetClass } from '../widget-class'
+  import type { WidgetClass } from '../widget-class';
 
   // let _elCalendar
 
-  export let widget: WidgetClass
+  export let widget: WidgetClass;
   // export let trackable: Trackable
   // export let usage: TrackableUsage
 
-  let streakCount: number = 0
+  let streakCount: number = 0;
 
   // function countDays(): number {
   //   let count = 0
@@ -20,11 +20,11 @@
   async function main() {
     // let days = 0
     // let count = 0
-    let streakData: any = widget.stats._stats.getStreakData()
-    streakCount = streakData.streak
+    let streakData: any = widget.stats._stats.getStreakData();
+    streakCount = streakData.streak;
   }
 
-  onMount(main)
+  onMount(main);
 </script>
 
 {#if widget && widget.token.type == 'tracker'}

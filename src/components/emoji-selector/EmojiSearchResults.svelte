@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
-  import EmojiList from './EmojiList.svelte'
-  import emojiData from './data/emoji-light'
+  import { createEventDispatcher } from 'svelte';
+  import EmojiList from './EmojiList.svelte';
+  import emojiData from './data/emoji-light';
 
-  import Empty from '../empty/empty.svelte'
-  export let searchText = ''
+  import Empty from '../empty/empty.svelte';
+  export let searchText = '';
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  $: searchResults = emojiData.filter((emoji) => emoji.n.indexOf((searchText || '').toLowerCase()) >= 0)
+  $: searchResults = emojiData.filter((emoji) => emoji.n.indexOf((searchText || '').toLowerCase()) >= 0);
 </script>
 
 <div class="">

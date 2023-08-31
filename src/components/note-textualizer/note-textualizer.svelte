@@ -1,85 +1,81 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher } from 'svelte';
   // Components
-  
+
   //Utils
-  import extractor from '../../utils/extract/extract'
-  
+  import extractor from '../../utils/extract/extract';
+
   // Modules
-  import Tracker from '../../modules/tracker/TrackerClass'
+  import Tracker from '../../modules/tracker/TrackerClass';
 
-  
   // Props
-  export let note: string = ''
-  export let trackers = {}
-  export let className: string | undefined = undefined
-  export let tokenClass: undefined | string = undefined
-  
+  export let note: string = '';
+  export let trackers = {};
+  export let className: string | undefined = undefined;
+  export let tokenClass: undefined | string = undefined;
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
   const state = {
     words: [],
-    note: ``
-  }
+    note: ``,
+  };
 
-  let actual = 0
+  let actual = 0;
 
   const toggleCheckbox = (index) => {
-     const check = state.words[index];
-     if(check.raw == '[x]') {
+    const check = state.words[index];
+    if (check.raw == '[x]') {
       state.words[index].raw = '[]';
       state.words[index].id = '[]';
     } else {
-       state.words[index].raw = '[x]';
-       state.words[index].id = '[x]';
-     }
-     state.words = state.words;
-     dispatch('noteChange', state.words.map((s=>s.raw)).join(' '))
-  }
+      state.words[index].raw = '[x]';
+      state.words[index].id = '[x]';
+    }
+    state.words = state.words;
+    dispatch('noteChange', state.words.map((s) => s.raw).join(' '));
+  };
 
   const methods = {
     split(str) {
-      return str.split(' ')
+      return str.split(' ');
     },
     tracker_get(tag) {
-      return (trackers || {})[tag] || new Tracker({ tag: tag })
+      return (trackers || {})[tag] || new Tracker({ tag: tag });
     },
     textElementClick(element) {
-      dispatch('textClick', element)
+      dispatch('textClick', element);
     },
-   
+
     linkClick(link) {
-      window.open(link, '_system')
+      window.open(link, '_system');
     },
     note_to_array(str) {
       let parsed = extractor.parse(str, { includeGeneric: true }) || [];
       let matches = parsed.filter((trackableElement) => {
-        return ['person', 'context', 'generic'].indexOf(trackableElement.type) > -1
-      })
-      actual = matches.length
-      return parsed
+        return ['person', 'context', 'generic'].indexOf(trackableElement.type) > -1;
+      });
+      actual = matches.length;
+      return parsed;
     },
-  }
+  };
 
-  $: state.words = methods.note_to_array(note)
-  
+  $: state.words = methods.note_to_array(note);
 </script>
 
 {#if actual}
   <div
-    class="n-note-textualized  {className || 'leading-snug text-black dark:text-white'}
+    class="n-note-textualized {className || 'leading-snug text-black dark:text-white'}
     {state.words.length > 20 ? 'text-size-sm' : ''}
     {state.words.length < 20 ? 'text-size-big' : ''}"
   >
     {#each state.words as word, index}
-      
       {#if word.type === 'tracker'}
         <button
           type="button"
           class="token {tokenClass || 'default-token-class'}"
           on:click={() => {
-            methods.textElementClick(word)
+            methods.textElementClick(word);
           }}
         >
           {` #${word.id} `}
@@ -89,7 +85,7 @@
           type="button"
           class="person token {tokenClass || 'default-token-class'}"
           on:click={() => {
-            methods.textElementClick(word)
+            methods.textElementClick(word);
           }}
         >
           {` ${word.raw} `}
@@ -99,7 +95,7 @@
           type="button"
           class="context token {tokenClass || 'default-token-class'}"
           on:click={() => {
-            methods.textElementClick(word)
+            methods.textElementClick(word);
           }}
         >
           {` ${word.raw} `}
@@ -109,7 +105,7 @@
           type="button"
           class="token link {tokenClass || 'default-token-class'}"
           on:click={() => {
-            methods.linkClick(word.raw)
+            methods.linkClick(word.raw);
           }}
         >
           {` ${word.id} `}
@@ -117,13 +113,22 @@
       {:else if word.type == 'line-break'}
         <br />
       {:else if word.raw == '[]'}
-        <input type="checkbox" on:change={(evt)=>{
-          toggleCheckbox(index);
-        }} data-index={`${index}`} />
+        <input
+          type="checkbox"
+          on:change={(evt) => {
+            toggleCheckbox(index);
+          }}
+          data-index={`${index}`}
+        />
       {:else if word.raw == '[x]'}
-        <input type="checkbox" on:change={(evt)=>{
-          toggleCheckbox(index);
-        }} data-index={`${index}`} checked />
+        <input
+          type="checkbox"
+          on:change={(evt) => {
+            toggleCheckbox(index);
+          }}
+          data-index={`${index}`}
+          checked
+        />
       {:else if word.raw}
         <span>{word.raw + ' '}</span>
       {/if}
@@ -135,17 +140,15 @@
   {state.note}
 {/if}
 
-<style lang="postcss" global> 
-
-
-  .n-note-textualized input[type=checkbox] {
+<style lang="postcss" global>
+  .n-note-textualized input[type='checkbox'] {
     @apply cursor-pointer;
     /* @apply appearance-none; */
     @apply h-4 w-4 rounded-sm;
     @apply border border-gray-500;
     @apply mx-px;
     @apply text-center;
-    font-size:10px;
+    font-size: 10px;
   }
 
   .n-note-textualized.inherit {

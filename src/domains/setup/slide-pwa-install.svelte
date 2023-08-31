@@ -1,9 +1,9 @@
 <script lang="ts">
-  import ListItem from '../../components/list-item/list-item.svelte'
-  import List from '../../components/list/list.svelte'
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import { AddSquareOutline, ShareOutline } from '../../components/icon/nicons'
-  import Container from '../../components/container/container.svelte'
+  import ListItem from '../../components/list-item/list-item.svelte';
+  import List from '../../components/list/list.svelte';
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import { AddSquareOutline, ShareOutline } from '../../components/icon/nicons';
+  import Container from '../../components/container/container.svelte';
 </script>
 
 <Container className="filler  flex items-center justify-center  flex-col px-2 slide-location -mt-14">

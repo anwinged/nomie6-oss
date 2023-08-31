@@ -21,7 +21,7 @@
   // Containers
 
   // Store
-  import { Interact } from '../../store/interact'
+  import { Interact } from '../../store/interact';
 
   // import LocationViewerModal from '../map/location-viewer-modal.svelte'
 

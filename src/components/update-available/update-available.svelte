@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { useRegisterSW } from 'virtual:pwa-register/svelte'
+  import { useRegisterSW } from 'virtual:pwa-register/svelte';
 
   const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW({
     onRegistered(swr: ServiceWorkerRegistration) {
@@ -7,19 +7,19 @@
         installing: swr.installing,
         active: swr.active,
         scope: swr.scope,
-      })
+      });
     },
     onRegisterError(error) {
-      console.error('Nomie Service Worker registration error', error)
+      console.error('Nomie Service Worker registration error', error);
     },
-  })
+  });
 
   function close() {
-    offlineReady.set(false)
-    needRefresh.set(false)
+    offlineReady.set(false);
+    needRefresh.set(false);
   }
 
-  $: toast = $needRefresh
+  $: toast = $needRefresh;
   // let toast = true
 </script>
 

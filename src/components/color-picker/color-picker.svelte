@@ -1,15 +1,15 @@
 <script lang="ts">
-  import NHScroller from '../h-scroller/h-scroller.svelte'
-  import { base } from '../../modules/colors/colors'
-  import { createEventDispatcher } from 'svelte'
+  import NHScroller from '../h-scroller/h-scroller.svelte';
+  import { base } from '../../modules/colors/colors';
+  import { createEventDispatcher } from 'svelte';
 
-  export let value = '#20699d'
-  export let grid = false
-  export let colors = base.reverse()
-  export let className = ''
+  export let value = '#20699d';
+  export let grid = false;
+  export let colors = base.reverse();
+  export let className = '';
 
-  $: selectedIndex = colors.indexOf(value) || 0
-  const dispatch = createEventDispatcher()
+  $: selectedIndex = colors.indexOf(value) || 0;
+  const dispatch = createEventDispatcher();
 </script>
 
 {#if grid}
@@ -19,8 +19,8 @@
         class="color-btn {color == value ? 'selected' : ''}"
         style="background-color:{color}"
         on:click={() => {
-          value = color
-          dispatch('color', color)
+          value = color;
+          dispatch('color', color);
         }}
       />
     {/each}
@@ -31,7 +31,7 @@
       <button
         class="color-btn {color == value ? 'selected' : ''}"
         on:click={() => {
-          value = color
+          value = color;
         }}
         style="background-color:{color}"
       />

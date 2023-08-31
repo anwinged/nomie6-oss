@@ -1,16 +1,16 @@
 <script lang="ts">
-  import Container from '../../components/container/container.svelte'
-  import ListItem from '../../components/list-item/list-item.svelte'
-  import List from '../../components/list/list.svelte'
+  import Container from '../../components/container/container.svelte';
+  import ListItem from '../../components/list-item/list-item.svelte';
+  import List from '../../components/list/list.svelte';
 
-  import type { PopMenuButton } from '../../components/pop-menu/usePopmenu'
+  import type { PopMenuButton } from '../../components/pop-menu/usePopmenu';
 
   // import { showImportModal } from '../import-export/ImporterStore'
 
-  import { openExternalTemplate, openTemplateRef } from '../templates/templates-svelte-helpers'
-  import { templateRefs } from '../templates/templates-utils'
+  import { openExternalTemplate, openTemplateRef } from '../templates/templates-svelte-helpers';
+  import { templateRefs } from '../templates/templates-utils';
 
-  let showAdvanced: boolean = false
+  let showAdvanced: boolean = false;
 
   let advancedButtons = [
     {
@@ -23,8 +23,8 @@
     //     showImportModal()
     //   },
     // },
-  ]
-  let buttons: Array<PopMenuButton> = []
+  ];
+  let buttons: Array<PopMenuButton> = [];
 
   $: {
     buttons = [
@@ -32,14 +32,14 @@
         return {
           ...tr,
           click() {
-            openTemplateRef(tr.url)
+            openTemplateRef(tr.url);
           },
-        }
+        };
       }),
       ...[],
-    ]
+    ];
     if (showAdvanced) {
-      buttons = [...buttons, ...advancedButtons]
+      buttons = [...buttons, ...advancedButtons];
     }
   }
 </script>

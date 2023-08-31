@@ -1,16 +1,16 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher } from 'svelte';
 
-  import Button from '../button/button.svelte'
-  import IonIcon from '../icon/ion-icon.svelte'
-  import { CalendarOutline, ChevronBackOutline, ChevronForwardOutline } from '../icon/nicons'
+  import Button from '../button/button.svelte';
+  import IonIcon from '../icon/ion-icon.svelte';
+  import { CalendarOutline, ChevronBackOutline, ChevronForwardOutline } from '../icon/nicons';
 
-  export let isToday = true
-  export let hideCal = false
-  export let style = ''
-  export let className = ''
+  export let isToday = true;
+  export let hideCal = false;
+  export let style = '';
+  export let className = '';
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 </script>
 
 <div class="flex items-center flex-grow-0 flex-shrink-0 next-prev-cal {className}" {style}>
@@ -19,7 +19,7 @@
     icon
     delay={0}
     on:click={() => {
-      dispatch('previous')
+      dispatch('previous');
     }}
   >
     <IonIcon icon={ChevronBackOutline} size={24} className="text-primary-500" />
@@ -32,7 +32,7 @@
       color="transparent"
       shape="round"
       on:click={() => {
-        dispatch('calendar')
+        dispatch('calendar');
       }}
     >
       <IonIcon icon={CalendarOutline} size={24} />
@@ -44,7 +44,7 @@
     delay={0}
     icon
     on:click={() => {
-      dispatch('next')
+      dispatch('next');
     }}
   >
     <IonIcon icon={ChevronForwardOutline} size={24} className="text-primary-500" />

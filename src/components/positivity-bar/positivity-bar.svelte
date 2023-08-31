@@ -1,44 +1,44 @@
 <script lang="ts">
-  import { Interact } from '../../store/interact'
+  import { Interact } from '../../store/interact';
 
-  import math from '../../utils/math/math'
+  import math from '../../utils/math/math';
 
-  export let positive: number
-  export let negative: number
-  export let neutral: number
-  export let className: string = ''
-  export let style: string = ''
-  export let height: string = '8pt'
+  export let positive: number;
+  export let negative: number;
+  export let neutral: number;
+  export let className: string = '';
+  export let style: string = '';
+  export let height: string = '8pt';
 
-  let score = 0
-  let neuCount = { type: 'neutral', count: 0, percent: 0 }
+  let score = 0;
+  let neuCount = { type: 'neutral', count: 0, percent: 0 };
 
-  let counts = []
+  let counts = [];
 
   $: if (neutral | positive | negative) {
-    main()
+    main();
   }
 
   function whatsThis() {
     let message = `Using your total negative (red), positive (green), and neutral (gray) events for the day, Nomie calculates your Positivity Score. 
       ${counts.map((c) => `${math.round(c.count)} ${c.type}`).join(', ')}
-    `
-    Interact.alert('What is this?', message)
+    `;
+    Interact.alert('What is this?', message);
   }
 
   function main() {
-    let total = math.sum([negative, neutral, positive])
-    let negPer = math.percentage(total, negative)
-    let neuPer = math.percentage(total, neutral)
-    let posPer = math.percentage(total, positive)
+    let total = math.sum([negative, neutral, positive]);
+    let negPer = math.percentage(total, negative);
+    let neuPer = math.percentage(total, neutral);
+    let posPer = math.percentage(total, positive);
 
-    neuCount = { type: 'neutral', percent: neuPer, count: neutral }
+    neuCount = { type: 'neutral', percent: neuPer, count: neutral };
     counts = [
       { type: 'negative', percent: negPer, count: negative },
       { type: 'positive', percent: posPer, count: positive },
       { type: 'neutral', percent: neuPer, count: neutral },
-    ]
-    score = positive - negative
+    ];
+    score = positive - negative;
   }
 </script>
 

@@ -1,28 +1,28 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
-  import { navigate } from 'svelte-navigator'
+  import { createEventDispatcher } from 'svelte';
+  import { navigate } from 'svelte-navigator';
 
-  import { Device } from '../../store/device-store'
-  import { Lang } from '../../store/lang'
+  import { Device } from '../../store/device-store';
+  import { Lang } from '../../store/lang';
 
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import { ArrowBack } from '../icon/nicons'
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import { ArrowBack } from '../icon/nicons';
 
-  export let to: string | undefined = undefined
-  export let back: Function | undefined = undefined
-  export let label: string | undefined = undefined
+  export let to: string | undefined = undefined;
+  export let back: Function | undefined = undefined;
+  export let label: string | undefined = undefined;
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
   const onClick = (event) => {
     if (document.referrer.match(document.location.origin)) {
-      history.back()
+      history.back();
     } else if (back) {
-      back(event)
+      back(event);
     } else if (to) {
-      navigate(to)
+      navigate(to);
     }
-    dispatch('click', event)
-  }
+    dispatch('click', event);
+  };
 </script>
 
 <button

@@ -1,12 +1,12 @@
 <script lang="ts">
-  import type { Trackable } from '../../domains/trackable/Trackable.class'
+  import type { Trackable } from '../../domains/trackable/Trackable.class';
 
-  import Avatar from './avatar.svelte'
+  import Avatar from './avatar.svelte';
 
-  export let trackable: Trackable
-  export let className: string = ''
-  export let style: string = ''
-  export let size: number = 32
+  export let trackable: Trackable;
+  export let className: string = '';
+  export let style: string = '';
+  export let size: number = 32;
 </script>
 
 {#if trackable}

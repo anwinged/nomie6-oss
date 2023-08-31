@@ -1,12 +1,12 @@
 <script lang="ts">
-  import ListItem from '../../components/list-item/list-item.svelte'
-  import type { PluginClass } from './plugin-helpers'
-  import { openPluginModal, PluginStore } from './PluginStore'
+  import ListItem from '../../components/list-item/list-item.svelte';
+  import type { PluginClass } from './plugin-helpers';
+  import { openPluginModal, PluginStore } from './PluginStore';
 
-  let list: Array<PluginClass> = []
+  let list: Array<PluginClass> = [];
 
   $: if ($PluginStore) {
-    list = $PluginStore.filter((p) => p.addToMoreMenu && p.active)
+    list = $PluginStore.filter((p) => p.addToMoreMenu && p.active);
   }
 </script>
 

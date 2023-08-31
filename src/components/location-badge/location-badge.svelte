@@ -1,29 +1,29 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher } from 'svelte';
 
-  import IonIcon from '../icon/ion-icon.svelte'
-  import { NavigateCircleSolid } from '../icon/nicons'
-  import { findNearestLocation, LocationStore } from '../../domains/locations/LocationStore'
-  export let location
+  import IonIcon from '../icon/ion-icon.svelte';
+  import { NavigateCircleSolid } from '../icon/nicons';
+  import { findNearestLocation, LocationStore } from '../../domains/locations/LocationStore';
+  export let location;
 
-  export let className = undefined
+  export let className = undefined;
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  let name = null
-  let lat = null
-  let lng = null
+  let name = null;
+  let lat = null;
+  let lng = null;
 
   $: if (location) {
-    lat = location.lat
-    lng = location.lng
-    name = location.location
+    lat = location.lat;
+    lng = location.lng;
+    name = location.location;
     if (!name) {
-      let nearest = findNearestLocation({ lat, lng }, $LocationStore)
+      let nearest = findNearestLocation({ lat, lng }, $LocationStore);
       if (nearest && nearest.name) {
-        name = nearest.name
+        name = nearest.name;
       } else if (lat) {
-        name = `${lat.toFixed(2)},${lng.toFixed(2)}`
+        name = `${lat.toFixed(2)},${lng.toFixed(2)}`;
       }
     }
   }
@@ -33,7 +33,7 @@
   <button
     class={className || 'flex items-center text-xs text-left location-badge'}
     on:click={(evt) => {
-      dispatch('click', evt)
+      dispatch('click', evt);
     }}
   >
     <IonIcon icon={NavigateCircleSolid} size={18} className="text-primary-600 mr-1" />

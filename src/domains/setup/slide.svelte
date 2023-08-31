@@ -1,17 +1,17 @@
 <script lang="ts">
-  import { createEventDispatcher, SvelteComponentDev } from 'svelte/internal'
-  import Button from '../../components/button/button.svelte'
-  import Stepper from '../../components/stepper/stepper.svelte'
-  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte'
+  import { createEventDispatcher, SvelteComponentDev } from 'svelte/internal';
+  import Button from '../../components/button/button.svelte';
+  import Stepper from '../../components/stepper/stepper.svelte';
+  import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
 
-  export let activeIndex: number = 0
-  export let totalSlides: number = 0
-  export let nextTitle: string = 'Next'
-  export let nextDisabled: boolean = false
-  export let hideBack: boolean = false
-  export let component: SvelteComponentDev
+  export let activeIndex: number = 0;
+  export let totalSlides: number = 0;
+  export let nextTitle: string = 'Next';
+  export let nextDisabled: boolean = false;
+  export let hideBack: boolean = false;
+  export let component: SvelteComponentDev;
 
-  const emit = createEventDispatcher()
+  const emit = createEventDispatcher();
 </script>
 
 <div class="min-h-fill flex flex-col w-full z-50">
@@ -19,7 +19,7 @@
   <svelte:component
     this={component}
     on:next={() => {
-      console.log(' On Next')
+      console.log(' On Next');
     }}
   />
   <div class="fixed bottom-0 w-full">

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { TimelineItemType } from './timeline-utils'
+  import type { TimelineItemType } from './timeline-utils';
 
-  export let item: TimelineItemType
+  export let item: TimelineItemType;
 </script>
 
 <div class="timeline-item">

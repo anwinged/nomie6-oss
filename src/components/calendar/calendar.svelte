@@ -3,53 +3,53 @@
   // https://github.com/maryayi/vue-sweet-calendar/blob/master/src/components/Calendar.vue
 
   // svelte
-  import { onMount, onDestroy } from 'svelte'
-  import { createEventDispatcher } from 'svelte'
+  import { onMount, onDestroy } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
 
   // Local
-  import math from '../../utils/math/math'
+  import math from '../../utils/math/math';
 
   // vendors
-  import dayjs from 'dayjs'
+  import dayjs from 'dayjs';
 
   // Utils & modules
-  import Logger from '../../utils/log/logger'
-  import calcTrackerScore from '../../modules/scoring/score-tracker'
+  import Logger from '../../utils/log/logger';
+  import calcTrackerScore from '../../modules/scoring/score-tracker';
 
   // Components
-  import NPositivityBar from '../../components/positivity-bar/positivity-bar.svelte'
-  import Spinner from '../../components/spinner/spinner.svelte'
+  import NPositivityBar from '../../components/positivity-bar/positivity-bar.svelte';
+  import Spinner from '../../components/spinner/spinner.svelte';
 
-  import NextPrevCal from '../../components/next-prev-cal/next-prev-cal.svelte'
-  import appConfig from '../../config/appConfig'
-  import { Prefs, PrefsWeekStartTypes } from '../../domains/preferences/Preferences'
+  import NextPrevCal from '../../components/next-prev-cal/next-prev-cal.svelte';
+  import appConfig from '../../config/appConfig';
+  import { Prefs, PrefsWeekStartTypes } from '../../domains/preferences/Preferences';
 
-  const console = new Logger('📅 calendar/calendar')
-  const dispatch = createEventDispatcher()
+  const console = new Logger('📅 calendar/calendar');
+  const dispatch = createEventDispatcher();
 
   // Props
-  export let initialDate = dayjs()
-  export let size = 'md'
-  export let className = ''
-  export let style = ''
-  export let height: any = undefined
-  export let width: any = undefined
+  export let initialDate = dayjs();
+  export let size = 'md';
+  export let className = '';
+  export let style = '';
+  export let height: any = undefined;
+  export let width: any = undefined;
 
-  let firstDayOfWeek: 'sunday' | 'monday' = 'sunday'
+  let firstDayOfWeek: 'sunday' | 'monday' = 'sunday';
 
   // Updating to be react...
-  $: firstDayOfWeek = $Prefs.weekStarts
+  $: firstDayOfWeek = $Prefs.weekStarts;
 
   // export let eventCategories = [];
-  export let events = []
-  export let offDays = [[1, 7]]
-  export let showHeader = true
-  export let showControls = true
-  export let showCalControl = true
-  export let showDetails = true
-  export let tracker = null
-  export const color: string = appConfig.primary_color
-  export let compact: boolean = false
+  export let events = [];
+  export let offDays = [[1, 7]];
+  export let showHeader = true;
+  export let showControls = true;
+  export let showCalControl = true;
+  export let showDetails = true;
+  export let tracker = null;
+  export const color: string = appConfig.primary_color;
+  export let compact: boolean = false;
 
   // Data
   export let state = {
@@ -63,90 +63,90 @@
       negative: 0,
       neutral: 0,
     },
-  }
+  };
 
-  let mounted = false
+  let mounted = false;
 
   onMount(() => {
-    mounted = true
-  })
+    mounted = true;
+  });
 
   onDestroy(() => {
-    mounted = false
-  })
+    mounted = false;
+  });
 
-  let days: Array<any>
+  let days: Array<any>;
 
-  let displayMonthFormat = 'MMMM'
+  let displayMonthFormat = 'MMMM';
 
   $: if (compact) {
-    displayMonthFormat = 'MMM'
+    displayMonthFormat = 'MMM';
   } else {
-    displayMonthFormat = 'MMMM'
+    displayMonthFormat = 'MMMM';
   }
 
-  let startWeekDayOfMonth = state.date.startOf('month').toDate().getDay() + 1
-  let numberOfDays = state.date.daysInMonth()
+  let startWeekDayOfMonth = state.date.startOf('month').toDate().getDay() + 1;
+  let numberOfDays = state.date.daysInMonth();
 
-  let selectedMonthName = state.date.format(displayMonthFormat)
-  let selectedYear = state.date.format('YYYY')
-  let monthStartDate = dayjs(state.date).startOf('month')
+  let selectedMonthName = state.date.format(displayMonthFormat);
+  let selectedYear = state.date.format('YYYY');
+  let monthStartDate = dayjs(state.date).startOf('month');
 
   // If the initial date is set, convert to dayjs date
   $: if (initialDate) {
-    state.date = dayjs(initialDate)
-    state.weekdays = methods.generateWeekdayNames(firstDayOfWeek)
+    state.date = dayjs(initialDate);
+    state.weekdays = methods.generateWeekdayNames(firstDayOfWeek);
   }
 
   function init() {
-    lastDate = state.date
+    lastDate = state.date;
 
-    state.totals.neutral = 0
-    state.totals.positive = 0
-    state.totals.negative = 0
+    state.totals.neutral = 0;
+    state.totals.positive = 0;
+    state.totals.negative = 0;
 
-    startWeekDayOfMonth = state.date.startOf('month').toDate().getDay() + 1
+    startWeekDayOfMonth = state.date.startOf('month').toDate().getDay() + 1;
 
-    numberOfDays = state.date.daysInMonth()
+    numberOfDays = state.date.daysInMonth();
     // selectedMonth = state.date.month()
-    selectedMonthName = state.date.format(displayMonthFormat)
-    selectedYear = state.date.format('YYYY')
-    monthStartDate = dayjs(state.date).startOf('month')
+    selectedMonthName = state.date.format(displayMonthFormat);
+    selectedYear = state.date.format('YYYY');
+    monthStartDate = dayjs(state.date).startOf('month');
 
     // Create array of empty days previous month calendar bleed over
-    const daySub = firstDayOfWeek === 'sunday' ? 1 : 2
-    let emptyDays = Array((startWeekDayOfMonth - daySub + 7) % 7).fill(null)
+    const daySub = firstDayOfWeek === 'sunday' ? 1 : 2;
+    let emptyDays = Array((startWeekDayOfMonth - daySub + 7) % 7).fill(null);
     // Create array of days for this month
     let nonEmptyDays = Array(numberOfDays)
       .fill(0)
-      .map((item, index) => dayjs(monthStartDate).add(index, 'day'))
+      .map((item, index) => dayjs(monthStartDate).add(index, 'day'));
     // Merge the arrays
-    days = emptyDays.concat(nonEmptyDays)
-    state.percentage = nonEmptyDays.length / (emptyDays.length + nonEmptyDays.length)
+    days = emptyDays.concat(nonEmptyDays);
+    state.percentage = nonEmptyDays.length / (emptyDays.length + nonEmptyDays.length);
   }
 
   // If date change - do the magic.
 
-  let lastDate = null
+  let lastDate = null;
   $: if (state.date && state.date != lastDate) {
-    init()
+    init();
   }
 
   // Methods
   const methods = {
     prevMonth() {
-      state.date = state.date.subtract(1, 'month')
+      state.date = state.date.subtract(1, 'month');
     },
     nextMonth() {
-      state.date = state.date.add(1, 'month')
+      state.date = state.date.add(1, 'month');
     },
     generateWeekdayNames(firstDayOfWeek: PrefsWeekStartTypes) {
-      let weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+      let weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
       if (firstDayOfWeek === 'monday') {
-        let first = weekdays.shift()
-        weekdays.push(first)
+        let first = weekdays.shift();
+        weekdays.push(first);
       }
-      return weekdays
+      return weekdays;
     },
     // Refresh the view
     refresh() {
@@ -157,85 +157,85 @@
     },
     // Go to Today
     goToday(withClick: boolean = true) {
-      state.date = dayjs()
+      state.date = dayjs();
       if (withClick) {
-        dispatch('dayClick', state.date)
+        dispatch('dayClick', state.date);
       }
     },
     /**
      * Generate the Style for the Provided Day
      */
     getDayStyle(day) {
-      let total = 0
-      let score = undefined
+      let total = 0;
+      let score = undefined;
       // Filter values, get only this days
       let values = events
         .filter((row) => {
-          return day.toDate().toDateString() === new Date(row.end).toDateString()
+          return day.toDate().toDateString() === new Date(row.end).toDateString();
         })
         // Map the tracker - and return the sum or avg values
         .map((row) => {
           if (!row.trackers) {
-            row.getMeta()
+            row.getMeta();
           }
           if (tracker.math == 'sum') {
-            return math.sum(row.getTrackerValues(tracker.tag))
+            return math.sum(row.getTrackerValues(tracker.tag));
           } else {
-            return math.average(row.getTrackerValues(tracker.tag))
+            return math.average(row.getTrackerValues(tracker.tag));
           }
-        })
+        });
       // If we have values
       if (values.length) {
         // If it's a sum
         if (tracker.math == 'sum') {
-          total = math.sum(values)
+          total = math.sum(values);
         } else {
-          total = math.average(values)
+          total = math.average(values);
         }
       }
       // If we have a total - figure the score
       if (total) {
-        score = calcTrackerScore(total, tracker)
+        score = calcTrackerScore(total, tracker);
       }
       // Lets extract the score for this tracker
       if (values.length) {
         // Did we pass in a tracker?
         if (score == 0) {
-          state.totals.neutral = state.totals.neutral + 1
+          state.totals.neutral = state.totals.neutral + 1;
         } else if (score > 0) {
-          state.totals.positive = state.totals.positive + 1
+          state.totals.positive = state.totals.positive + 1;
         } else if (score < 0) {
-          state.totals.negative = state.totals.negative + 1
+          state.totals.negative = state.totals.negative + 1;
         }
-        return methods.getDayBorder(score)
+        return methods.getDayBorder(score);
       } else {
-        return ``
+        return ``;
       }
     },
     getDayBorder(score) {
       if (score) {
         if (score > 0) {
-          return `font-weight:bold; border:solid 2px var(--color-green); color:#FFF; background-color:var(--color-green)`
+          return `font-weight:bold; border:solid 2px var(--color-green); color:#FFF; background-color:var(--color-green)`;
         } else {
-          return `font-weight:bold; border:solid 2px var(--color-red); color:#FFF; background-color:var(--color-red)`
+          return `font-weight:bold; border:solid 2px var(--color-red); color:#FFF; background-color:var(--color-red)`;
         }
       } else {
-        return `font-weight:bold; border:solid 2px var(--color-primary-bright); color:#FFF; background-color:var(--color-primary-bright);`
+        return `font-weight:bold; border:solid 2px var(--color-primary-bright); color:#FFF; background-color:var(--color-primary-bright);`;
       }
     },
     getDayClass(day) {
       try {
-        const dayFormat = day.format('YYYY-MM-DD')
-        const stateDateFormat = state.date.format('YYYY-MM-DD')
-        const selectedDateFormat = (state.selectedDate || dayjs()).format('YYYY-MM-DD')
-        const todayFormat = dayjs().format('YYYY-MM-DD')
+        const dayFormat = day.format('YYYY-MM-DD');
+        const stateDateFormat = state.date.format('YYYY-MM-DD');
+        const selectedDateFormat = (state.selectedDate || dayjs()).format('YYYY-MM-DD');
+        const todayFormat = dayjs().format('YYYY-MM-DD');
         const activeToday = events.find((row) => {
           if (dayFormat === stateDateFormat) {
-            return true
+            return true;
           } else {
-            return false
+            return false;
           }
-        })
+        });
         let classes = [
           'day',
           `day-${day.format('D')}`,
@@ -245,14 +245,14 @@
           dayFormat === todayFormat ? `today` : null,
           // Todo figure out how to deal with this
           dayFormat === selectedDateFormat ? 'active' : 'inactive',
-        ]
-        return classes.join(' ')
+        ];
+        return classes.join(' ');
       } catch (e) {
-        console.error(e)
-        return 'error-generating-classes'
+        console.error(e);
+        return 'error-generating-classes';
       }
     },
-  }
+  };
 </script>
 
 {#if state.date && mounted}
@@ -274,7 +274,7 @@
               on:previous={methods.prevMonth}
               on:next={methods.nextMonth}
               on:calendar={() => {
-                methods.goToday(false)
+                methods.goToday(false);
               }}
             />
           {/if}
@@ -292,8 +292,8 @@
                 data-date={day.format('YYYY-MM-DD')}
                 data-day={day.format('DD')}
                 on:click={(event) => {
-                  state.selectedDate = day
-                  dispatch('dayClick', day)
+                  state.selectedDate = day;
+                  dispatch('dayClick', day);
                 }}
                 class={methods.getDayClass(day)}
                 style={methods.getDayStyle(day)}

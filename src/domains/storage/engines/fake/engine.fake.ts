@@ -11,18 +11,17 @@ import type { Promise } from 'cypress/types/cy-bluebird';
 class FakeEngine implements StorageEngine {
   data = {};
 
-  async get(key) {
+  async get(key: string) {
     await wait(100);
     return this.data.hasOwnProperty(key) ? this.data[key] : null;
   }
 
-  async put(key, value) {
+  async put(key: string, value: any) {
     await wait(100);
     this.data[key] = value;
-    return this.data;
   }
 
-  async delete(key) {
+  async delete(key: string) {
     await wait(100);
     delete this.data[key];
   }

@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { Link } from 'svelte-navigator'
-  import Button from '../button/button.svelte'
+  import { Link } from 'svelte-navigator';
+  import Button from '../button/button.svelte';
 
-  export let label: string
-  export let id: string
-  export let link: string
-  export let className: string = ''
-  export let notify: any = false
+  export let label: string;
+  export let id: string;
+  export let link: string;
+  export let className: string = '';
+  export let notify: any = false;
 </script>
 
 <Button className="tab-wrap tab-{id} {className}" ariaLabel={label}>

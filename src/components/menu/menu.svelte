@@ -1,51 +1,50 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher } from 'svelte';
 
-  
-  import { AwardStore } from '../../domains/awards/AwardsStore'
-  import CheckmarkCircle from '../../n-icons/CheckmarkCircle.svelte'
-  import { wait } from '../../utils/tick/tick'
-  import Avatar from '../avatar/avatar.svelte'
+  import { AwardStore } from '../../domains/awards/AwardsStore';
+  import CheckmarkCircle from '../../n-icons/CheckmarkCircle.svelte';
+  import { wait } from '../../utils/tick/tick';
+  import Avatar from '../avatar/avatar.svelte';
 
-  import IonIcon from '../icon/ion-icon.svelte'
-  import type { PopMenuButton } from '../pop-menu/usePopmenu'
-  import './n-menu.css'
+  import IonIcon from '../icon/ion-icon.svelte';
+  import type { PopMenuButton } from '../pop-menu/usePopmenu';
+  import './n-menu.css';
 
-  type Sizes = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  type Sizes = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
-  export let buttons: Array<PopMenuButton> = []
-  export let size: Sizes = 'lg'
-  export let className: string = ''
-  export let style: string = ''
-  export let id: string = ''
+  export let buttons: Array<PopMenuButton> = [];
+  export let size: Sizes = 'lg';
+  export let className: string = '';
+  export let style: string = '';
+  export let id: string = '';
 
-  const dispatch = createEventDispatcher()
-  let buttonGroup: Array<Array<PopMenuButton>> = []
-  let accessorySize: number = 24
+  const dispatch = createEventDispatcher();
+  let buttonGroup: Array<Array<PopMenuButton>> = [];
+  let accessorySize: number = 24;
 
   $: if (buttons) {
-    buttonGroup = [[]]
-    let current: number = buttonGroup.length - 1
+    buttonGroup = [[]];
+    let current: number = buttonGroup.length - 1;
     buttons.forEach((button: PopMenuButton) => {
       if (button.divider) {
-        buttonGroup.push([])
-        current = buttonGroup.length - 1
+        buttonGroup.push([]);
+        current = buttonGroup.length - 1;
       }
-      buttonGroup[current].push(button)
-    })
+      buttonGroup[current].push(button);
+    });
   }
 
   $: if (size) {
     if (size == 'xs') {
-      accessorySize = 14
+      accessorySize = 14;
     } else if (size == 'sm') {
-      accessorySize = 18
+      accessorySize = 18;
     } else if (size == 'md') {
-      accessorySize = 22
+      accessorySize = 22;
     } else if (size == 'lg') {
-      accessorySize = 26
+      accessorySize = 26;
     } else if (size == 'xl') {
-      accessorySize = 32
+      accessorySize = 32;
     }
   }
 </script>
@@ -57,7 +56,7 @@
       data-award-required={button.awardRequired}
       aria-label={button.title}
       disabled={button.disabled}
-      class="pop-button  {button.checked
+      class="pop-button {button.checked
         ? 'active'
         : ''} bg-white dark:bg-black bg-opacity-80 dark:bg-opacity-80 nbtn-left pop-button-{index} {button.awardRequired
         ? $AwardStore.awards.find((a) => a.id == button.awardRequired)
@@ -66,9 +65,9 @@
         : ''}
             {button.description ? 'nbtn-desc' : ''}"
       on:click={async () => {
-        await wait(200)
-        button.click()
-        dispatch('click', button)
+        await wait(200);
+        button.click();
+        dispatch('click', button);
       }}
     >
       {#if button.checked}
@@ -77,11 +76,7 @@
         </div>
       {/if}
       <main class="flex-fill w-full transition-all">
-        <h1
-          class="{button.title.length > 25 || size == 'sm'
-            ? 'text-sm'
-            : 'text-lg'} leading-tight title"
-        >
+        <h1 class="{button.title.length > 25 || size == 'sm' ? 'text-sm' : 'text-lg'} leading-tight title">
           {button.title}
         </h1>
         {#if button.description}

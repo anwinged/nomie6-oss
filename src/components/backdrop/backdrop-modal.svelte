@@ -1,8 +1,8 @@
 <script lang="ts">
-  export let className: string = ''
-  export let mainClass: string = ''
-  export let headerClass: string = ''
-  export let style: string = ''
+  export let className: string = '';
+  export let mainClass: string = '';
+  export let headerClass: string = '';
+  export let style: string = '';
 </script>
 
 <div class="bd-modal {className}" {style}>
@@ -35,12 +35,10 @@
   }
   .bd-modal > main {
     @apply overflow-y-auto;
-    @apply z-0; 
+    @apply z-0;
     @apply relative;
     max-height: calc(100vh - 50px);
     @apply flex-grow flex-shrink;
-
-
   }
 
   .bd-modal > header,

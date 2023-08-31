@@ -1,15 +1,15 @@
 <script lang="ts">
-  import ListItem from '../../components/list-item/list-item.svelte'
+  import ListItem from '../../components/list-item/list-item.svelte';
 
-  import NToggle from '../../components/toggle-switch/toggle-switch.svelte'
-  import { Lang } from '../../store/lang'
+  import NToggle from '../../components/toggle-switch/toggle-switch.svelte';
+  import { Lang } from '../../store/lang';
 
-  import ButtonGroup from '../../components/button-group/button-group.svelte'
+  import ButtonGroup from '../../components/button-group/button-group.svelte';
 
-  import List from '../../components/list/list.svelte'
+  import List from '../../components/list/list.svelte';
 
-  import { Prefs } from '../preferences/Preferences'
-  import Avatar from '../../components/avatar/avatar.svelte'
+  import { Prefs } from '../preferences/Preferences';
+  import Avatar from '../../components/avatar/avatar.svelte';
 </script>
 
 <!--
@@ -55,14 +55,14 @@
             label: Lang.t('settings.imperial', 'Imperial'),
             active: $Prefs.useMetric == false,
             click() {
-              $Prefs.useMetric = false
+              $Prefs.useMetric = false;
             },
           },
           {
             label: Lang.t('settings.metric', 'Metric'),
             active: $Prefs.useMetric == true,
             click() {
-              $Prefs.useMetric = true
+              $Prefs.useMetric = true;
             },
           },
         ]}
@@ -105,7 +105,7 @@
         class="nselect clear"
         bind:value={$Lang.lang}
         on:change={(event) => {
-          Lang.setLang($Lang.lang)
+          Lang.setLang($Lang.lang);
         }}
       >
         {#each Lang.getLangs() as lang}

@@ -1,25 +1,25 @@
 <script lang="ts">
-  import Button from '../../../components/button/button.svelte'
-  import ToolbarGrid from '../../../components/toolbar/toolbar-grid.svelte'
-  import { createEventDispatcher } from 'svelte'
-  import IonIcon from '../../../components/icon/ion-icon.svelte'
-  import { StopSolid } from '../../../components/icon/nicons'
-  import { Lang } from '../../../store/lang'
-  import type { ITracker } from '../../../modules/tracker/TrackerClass'
-  import Spinner from '../../../components/spinner/spinner.svelte'
-  import type TrackerClass from '../../../modules/tracker/TrackerClass'
+  import Button from '../../../components/button/button.svelte';
+  import ToolbarGrid from '../../../components/toolbar/toolbar-grid.svelte';
+  import { createEventDispatcher } from 'svelte';
+  import IonIcon from '../../../components/icon/ion-icon.svelte';
+  import { StopSolid } from '../../../components/icon/nicons';
+  import { Lang } from '../../../store/lang';
+  import type { ITracker } from '../../../modules/tracker/TrackerClass';
+  import Spinner from '../../../components/spinner/spinner.svelte';
+  import type TrackerClass from '../../../modules/tracker/TrackerClass';
 
-  export let tracker: ITracker | TrackerClass
-  export let value: number | undefined
-  export let allowSave: boolean
-  export let saving: boolean
-  export let saveLabel: string = Lang.t('general.save', 'Save')
-  export let nextLabel: string = Lang.t('general.next', 'Next')
+  export let tracker: ITracker | TrackerClass;
+  export let value: number | undefined;
+  export let allowSave: boolean;
+  export let saving: boolean;
+  export let saveLabel: string = Lang.t('general.save', 'Save');
+  export let nextLabel: string = Lang.t('general.next', 'Next');
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 </script>
 
-<footer class=" tracker-input-footer py-3 stiff  glass-lite z-50 w-full rounded-b-2xl">
+<footer class=" tracker-input-footer py-3 stiff glass-lite z-50 w-full rounded-b-2xl">
   <ToolbarGrid>
     <div slot="left" class="pr-2">
       <Button
@@ -27,7 +27,7 @@
         size="lg"
         className="px-2 -ml-2 text-lg md:text-xl text-gray-900 dark:text-white"
         on:click={() => {
-          dispatch('cancel')
+          dispatch('cancel');
         }}
       >
         {Lang.t('general.close', 'Close')}
@@ -55,7 +55,7 @@
               aria-label="Start Timer"
               type="button"
               on:click={() => {
-                dispatch('startTimer')
+                dispatch('startTimer');
               }}
               autofocus
               class="action-button bg-primary-500 text-white"
@@ -68,7 +68,7 @@
               autofocus
               type="button"
               on:click={() => {
-                dispatch('save')
+                dispatch('save');
               }}
               class="action-button bg-primary-500 text-white"
             >
@@ -80,7 +80,7 @@
             aria-label="Save"
             type="button"
             on:click={() => {
-              dispatch('save')
+              dispatch('save');
             }}
             class="action-button bg-primary-500 text-white"
           >
@@ -107,7 +107,7 @@
                 {!allowSave ? '' : 'text-gray-900 dark:text-white'}
                 {tracker.started ? 'hidden' : ''}"
           on:click={() => {
-            dispatch('add')
+            dispatch('add');
           }}
         >
           {#if !allowSave}

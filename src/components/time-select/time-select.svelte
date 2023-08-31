@@ -1,81 +1,79 @@
 <script lang="ts">
-  import dayjs from 'dayjs'
-  import type { Dayjs } from 'dayjs'
-  import { createEventDispatcher } from 'svelte'
-import { getDateFormats } from '../../domains/preferences/Preferences';
-  
+  import dayjs from 'dayjs';
+  import type { Dayjs } from 'dayjs';
+  import { createEventDispatcher } from 'svelte';
+  import { getDateFormats } from '../../domains/preferences/Preferences';
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  export let time: number = new Date().getTime()
-  export let className: string = ''
-  export let style: string = ''
-  export let is24Hour: boolean
+  export let time: number = new Date().getTime();
+  export let className: string = '';
+  export let style: string = '';
+  export let is24Hour: boolean;
   export let showDateButton: boolean = false;
-  export let dateButtonClass: string = "";
+  export let dateButtonClass: string = '';
   export let value: Dayjs | undefined = undefined;
 
-  let lastValue: any // Value to hold last reaction
-  let hour: number // local hour
-  let minute: number // local minute
-  let ampm: any // local ampm
+  let lastValue: any; // Value to hold last reaction
+  let hour: number; // local hour
+  let minute: number; // local minute
+  let ampm: any; // local ampm
 
-  let hour12: number
-
+  let hour12: number;
 
   $: if (time) {
-    value = dayjs(new Date(time))
+    value = dayjs(new Date(time));
   }
 
   // 24 Hour Array
   let hours24 = Array(24)
     .fill(0)
     .map(({}, i) => {
-      return i
-    })
+      return i;
+    });
   // 12 Hour Array
   let hours12 = Array(12)
     .fill(0)
     .map(({}, i) => {
-      return i + 1
-    })
+      return i + 1;
+    });
   // 60 minute Array
   let minutes = Array(60)
     .fill(0)
     .map(({}, i) => {
-      return i
-    })
+      return i;
+    });
 
   // Reactively Set Hours
-  $: hours = is24Hour ? hours24 : hours12
+  $: hours = is24Hour ? hours24 : hours12;
 
   $: if (value && value.format('hh:mm a') !== dayjs(lastValue || '2010-01-01T01:01:01').format('hh:mm a')) {
-    lastValue = value
-    hour = parseInt(value.format('HH'))
-    hour12 = ((hour + 11) % 12) + 1
-    minute = parseInt(value.format('mm'))
-    ampm = value.format('a')
+    lastValue = value;
+    hour = parseInt(value.format('HH'));
+    hour12 = ((hour + 11) % 12) + 1;
+    minute = parseInt(value.format('mm'));
+    ampm = value.format('a');
   }
 
   const dateFormats = getDateFormats();
 
   function onChange(evt?: Event) {
-    let ogDate = value
+    let ogDate = value;
 
-    let ogDay = ogDate.get('day')
-    let newHour = hour
+    let ogDay = ogDate.get('day');
+    let newHour = hour;
     if (!is24Hour) {
-      newHour = hour12
+      newHour = hour12;
       if (newHour == 12 && ampm == 'am') {
-        newHour = 0
+        newHour = 0;
       } else if (ampm == 'am' && newHour > 12) {
-        newHour = newHour - 12
+        newHour = newHour - 12;
       } else if (ampm == 'pm' && newHour < 12) {
-        newHour = newHour + 12
+        newHour = newHour + 12;
       }
     }
-    const updatedDate = ogDate.set('hour', newHour).set('minute', minute).set('day', ogDay)
-    dispatch('change', updatedDate.toDate())
+    const updatedDate = ogDate.set('hour', newHour).set('minute', minute).set('day', ogDay);
+    dispatch('change', updatedDate.toDate());
   }
 </script>
 
@@ -86,9 +84,12 @@ import { getDateFormats } from '../../domains/preferences/Preferences';
       <div class="flex items-center time-parts">
         {#if showDateButton}
           <div class="section {dateButtonClass} border-r border-gray-500 border-opacity-30 mr-1">
-            <button on:click={()=>{
-              dispatch('dateClick');
-            }} class="text-sm font-bold px-2 uppercase">{value.format(dateFormats.tinyDate)}</button>
+            <button
+              on:click={() => {
+                dispatch('dateClick');
+              }}
+              class="text-sm font-bold px-2 uppercase">{value.format(dateFormats.tinyDate)}</button
+            >
           </div>
         {/if}
         {#if is24Hour}
@@ -180,7 +181,7 @@ import { getDateFormats } from '../../domains/preferences/Preferences';
     @apply h-7;
     @apply text-sm;
     @apply font-semibold;
-    padding-left:4px; 
+    padding-left: 4px;
     padding-right: 4px;
     @apply bg-transparent;
     @apply appearance-none;

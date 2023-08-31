@@ -1,10 +1,10 @@
 <script lang="ts">
-  import BulbSolid from './../../n-icons/BulbSolid.svelte'
+  import BulbSolid from './../../n-icons/BulbSolid.svelte';
 
-  import IonIcon from '../../components/icon/ion-icon.svelte'
-  import Container from '../../components/container/container.svelte'
-  import { slide } from 'svelte/transition'
-  import { quintOut } from 'svelte/easing'
+  import IonIcon from '../../components/icon/ion-icon.svelte';
+  import Container from '../../components/container/container.svelte';
+  import { slide } from 'svelte/transition';
+  import { quintOut } from 'svelte/easing';
   /**
    * Capture Log
    *
@@ -16,70 +16,70 @@
 
   // import { slide } from "svelte/transition";
 
-  import './capture-log.css'
+  import './capture-log.css';
   //Components
 
-  import dayjs from 'dayjs'
+  import dayjs from 'dayjs';
 
-  import { wait } from '../../utils/tick/tick'
+  import { wait } from '../../utils/tick/tick';
 
   // Stores
-  import { Interact } from '../../store/interact'
+  import { Interact } from '../../store/interact';
 
-  import { LedgerStore, LedgerStoreSaving, saveLog } from '../../domains/ledger/LedgerStore'
-  import { ActiveLogStore, clearHighlightedTrackers, setCaptureLogDate } from './CaptureLogStore'
+  import { LedgerStore, LedgerStoreSaving, saveLog } from '../../domains/ledger/LedgerStore';
+  import { ActiveLogStore, clearHighlightedTrackers, setCaptureLogDate } from './CaptureLogStore';
 
-  import { Lang } from '../../store/lang'
+  import { Lang } from '../../store/lang';
 
-  import extract from '../../utils/extract/extract'
-  import { getEmojiFromScore } from '../../utils/positivity/positivity'
+  import extract from '../../utils/extract/extract';
+  import { getEmojiFromScore } from '../../utils/positivity/positivity';
 
-  import { ExpandOutline } from '../../components/icon/nicons'
+  import { ExpandOutline } from '../../components/icon/nicons';
 
-  import CaptureDatePicker from './capture-date-picker.svelte'
+  import CaptureDatePicker from './capture-date-picker.svelte';
 
-  import { Prefs } from '../preferences/Preferences'
-  import type { Token } from '../../modules/tokenizer/lite'
-  import { loadToday, TodayStore } from '../usage/today/TodayStore'
+  import { Prefs } from '../preferences/Preferences';
+  import type { Token } from '../../modules/tokenizer/lite';
+  import { loadToday, TodayStore } from '../usage/today/TodayStore';
 
-  import { TrackerStore } from '../tracker/TrackerStore'
+  import { TrackerStore } from '../tracker/TrackerStore';
 
-  import { openLogEditor } from '../nomie-log/LogEditorStore'
-  import ScoreNote from '../../modules/scoring/score-note'
-  import MenuInline from '../../components/menu/menu-inline.svelte'
-  import { getPositivityButtons } from '../board/boardActions'
-  import NLog from '../nomie-log/nomie-log'
-  import throttle from 'lodash/throttle'
-  import { Device } from '../../store/device-store'
+  import { openLogEditor } from '../nomie-log/LogEditorStore';
+  import ScoreNote from '../../modules/scoring/score-note';
+  import MenuInline from '../../components/menu/menu-inline.svelte';
+  import { getPositivityButtons } from '../board/boardActions';
+  import NLog from '../nomie-log/nomie-log';
+  import throttle from 'lodash/throttle';
+  import { Device } from '../../store/device-store';
 
-  import { getPromptMenu, WritingPromptStore } from '../writing-prompts/useWritingPrompts'
+  import { getPromptMenu, WritingPromptStore } from '../writing-prompts/useWritingPrompts';
 
-  import type { PopMenuButton } from '../../components/pop-menu/usePopmenu'
-  import CaptureTextarea from './capture-textarea.svelte'
-  import { TrackableStore } from '../trackable/TrackableStore'
-  import Button from '../../components/button/button.svelte'
-  import { openPluginModal, PluginStore } from '../plugins/PluginStore'
+  import type { PopMenuButton } from '../../components/pop-menu/usePopmenu';
+  import CaptureTextarea from './capture-textarea.svelte';
+  import { TrackableStore } from '../trackable/TrackableStore';
+  import Button from '../../components/button/button.svelte';
+  import { openPluginModal, PluginStore } from '../plugins/PluginStore';
 
-  import TimeSelect from '../../components/time-select/time-select.svelte'
-  import CaptureAddonMenuController from './capture-addon-menu-controller.svelte'
+  import TimeSelect from '../../components/time-select/time-select.svelte';
+  import CaptureAddonMenuController from './capture-addon-menu-controller.svelte';
 
   // Consts
 
-  let textarea: any
-  let saving = false
-  let saved = false
-  let showDateSelector = false
-  let isFocused = false
-  let isPopulated = false
-  export let className = ''
+  let textarea: any;
+  let saving = false;
+  let saved = false;
+  let showDateSelector = false;
+  let isFocused = false;
+  let isPopulated = false;
+  export let className = '';
 
-  let promptMenu: Array<PopMenuButton> = []
+  let promptMenu: Array<PopMenuButton> = [];
   // let activeLogDayjs: Dayjs;
 
   $: if ($LedgerStoreSaving) {
-    saving = true
+    saving = true;
   } else {
-    saving = false
+    saving = false;
   }
 
   /**
@@ -88,28 +88,28 @@
    */
 
   $: if ($TodayStore.date.format('YYYY-MM-DD') !== dayjs().format('YYYY-MM-DD')) {
-    $ActiveLogStore.end = $TodayStore.date.toDate()
+    $ActiveLogStore.end = $TodayStore.date.toDate();
   }
 
   /**
    * Is the Form Populated?
    */
-  $: isPopulated = $ActiveLogStore.note?.trim().length > 0
+  $: isPopulated = $ActiveLogStore.note?.trim().length > 0;
 
   /**
    * Active Dates Formatted
    */
-  $: selectedDateFormated = dayjs(new Date($ActiveLogStore.end || new Date().getTime())).format(dateTimeFormat)
+  $: selectedDateFormated = dayjs(new Date($ActiveLogStore.end || new Date().getTime())).format(dateTimeFormat);
 
   const setFocused = () => {
-    showCaptureTextarea = true
+    showCaptureTextarea = true;
     if (!$ActiveLogStore.end || !isFocused) {
-      setCaptureLogDate(new Date().getTime())
+      setCaptureLogDate(new Date().getTime());
     }
-    isFocused = true
-  }
+    isFocused = true;
+  };
 
-  let dateTimeFormat = $Prefs.use24hour ? 'HH:mm' : 'h:mm a'
+  let dateTimeFormat = $Prefs.use24hour ? 'HH:mm' : 'h:mm a';
 
   // $: if(!showCaptureTextarea && $ActiveLogStore.note?.length) {
   //   showCaptureTextarea = true;
@@ -127,23 +127,23 @@
         return {
           ...s,
           ...{ lat: undefined, lng: undefined, location: undefined },
-        }
-      })
+        };
+      });
     } else {
-      let location: any = await Interact.pickLocation()
+      let location: any = await Interact.pickLocation();
       if (location) {
         ActiveLogStore.update((s) => {
-          s.lat = location.lat
-          s.lng = location.lng
-          s.location = location.name
-          return s
-        })
+          s.lat = location.lat;
+          s.lng = location.lng;
+          s.location = location.name;
+          return s;
+        });
       }
     }
-  }
+  };
 
   $: if ($WritingPromptStore) {
-    promptMenu = getPromptMenu()
+    promptMenu = getPromptMenu();
     if ($PluginStore && $PluginStore.length) {
       $PluginStore
         .filter((p) => p.addToCaptureMenu && p.active)
@@ -154,16 +154,16 @@
             divider: index === 0,
             emoji: p.emoji,
             click() {
-              openPluginModal(p)
+              openPluginModal(p);
             },
-          })
-        })
+          });
+        });
     }
     promptMenu.push({
       divider: true,
       click() {},
       component: CaptureAddonMenuController,
-    })
+    });
   }
 
   /**
@@ -173,22 +173,22 @@
    * Throttle this call so it doesn't get
    * triggered too often
    * */
-  let clearMonitor: any
+  let clearMonitor: any;
   const monitorNoteChange = (evt) => {
-    clearTimeout(clearMonitor)
+    clearTimeout(clearMonitor);
     clearMonitor = setTimeout(() => {
-      showCaptureTextarea = true
+      showCaptureTextarea = true;
       let parsed: Array<Token>;
       ActiveLogStore.update((s) => {
-        parsed = extract.parse(s.note)
+        parsed = extract.parse(s.note);
         // Calculate Score
-        s.score = ScoreNote(s.note, new Date(), $TrackerStore)
-        return s
+        s.score = ScoreNote(s.note, new Date(), $TrackerStore);
+        return s;
       });
       // Highligh any visuble tracker buttons
-      highlightSelectedTrackers(parsed || [])
-    }, 500)
-  }
+      highlightSelectedTrackers(parsed || []);
+    }, 500);
+  };
 
   /**
    * Highlight Any Trackables
@@ -196,15 +196,15 @@
    * @param items
    */
   const highlightSelectedTrackers = (items: Array<Token>) => {
-    clearHighlightedTrackers()
+    clearHighlightedTrackers();
     for (let i = 0; i < items.length; i++) {
-      const token = items[i]
+      const token = items[i];
       try {
-        const button = document.querySelector(`button#${token.type}-${token.id}`)
-        if (button) button.classList.add('in-note')
+        const button = document.querySelector(`button#${token.type}-${token.id}`);
+        if (button) button.classList.add('in-note');
       } catch (e) {}
     }
-  }
+  };
 
   const methods = {
     /**
@@ -213,16 +213,16 @@
      * This is important!
      */
     async logSave() {
-      saving = true
+      saving = true;
 
       try {
-        await saveLog(new NLog($ActiveLogStore))
-        saving = false
-        await wait(300)
-        methods.clear()
+        await saveLog(new NLog($ActiveLogStore));
+        saving = false;
+        await wait(300);
+        methods.clear();
       } catch (e) {
-        console.error(`Error in capture-log logSave ${e.message}`)
-        saving = false
+        console.error(`Error in capture-log logSave ${e.message}`);
+        saving = false;
       }
     },
 
@@ -233,51 +233,51 @@
      * - look for +,#,@ to give auto complete
      */
     keyPress(evt) {
-      let event = evt.detail
+      let event = evt.detail;
       // If enter + shift
       if (event.key === 'Enter' && event.getModifierState('Shift')) {
-        event.preventDefault()
+        event.preventDefault();
         // If enter + modify er
       } else if (event.key === 'Enter' && (event.getModifierState('Control') || event.getModifierState('Meta'))) {
-        methods.logSave()
+        methods.logSave();
         // All other keyboard events
       } else if (event.key === 'Escape') {
-        confirmClear()
-        event.preventDefault()
-        event.stopPropagation()
+        confirmClear();
+        event.preventDefault();
+        event.stopPropagation();
         // All other keyboard events
       }
     },
     async clear(scroll: boolean = false) {
-      await wait(100)
-      ActiveLogStore.clear()
-      showDateSelector = false
-      isFocused = false
-      showCaptureTextarea = false
+      await wait(100);
+      ActiveLogStore.clear();
+      showDateSelector = false;
+      isFocused = false;
+      showCaptureTextarea = false;
       setTimeout(() => {
-        showDateSelector = false
+        showDateSelector = false;
         loadToday({
           knownTrackables: $TrackableStore.trackables,
           date: dayjs(),
-        })
+        });
         // console.log("Scrolling to Top capture log")
         if (scroll) {
-          Device.scrollToTop()
+          Device.scrollToTop();
         }
-      }, 120)
+      }, 120);
     },
-  }
+  };
 
   // Clear the settings when saved
   LedgerStore.hook('onLogSaved', (res) => {
     setTimeout(() => {
-      methods.clear()
-    }, 100)
-  })
+      methods.clear();
+    }, 100);
+  });
 
   ActiveLogStore.hook('onAddElement', (element) => {
-    monitorNoteChange({})
-  })
+    monitorNoteChange({});
+  });
 
   // When a tag is added by a button or other service
   // ActiveLogStore.hook('onAddTag', (res) => {
@@ -293,24 +293,24 @@
   // })
   const confirmClear = async () => {
     if ($ActiveLogStore.note?.length > 0) {
-      const confirmed = await Interact.confirm('Discard this note?')
+      const confirmed = await Interact.confirm('Discard this note?');
       if (confirmed) {
-        methods.clear(true)
+        methods.clear(true);
       }
     } else {
-      methods.clear()
+      methods.clear();
     }
-  }
+  };
 
   const eventDateChange = (e: CustomEvent) => {
-    $ActiveLogStore.end = dayjs(e.detail).toDate()
+    $ActiveLogStore.end = dayjs(e.detail).toDate();
     loadToday({
       knownTrackables: $TrackableStore.trackables,
       date: dayjs(e.detail),
-    })
-  }
+    });
+  };
 
-  let showCaptureTextarea: boolean = false
+  let showCaptureTextarea: boolean = false;
 </script>
 
 <div class="capture-wrapper {className} relative" id="note-capture">
@@ -327,7 +327,7 @@
     <div class="capture-log" class:negative={$ActiveLogStore.score < 0} class:positive={$ActiveLogStore.score > 0}>
       <div class="p-0 relative">
         {#if !isPopulated}
-          <div class="absolute right-1 top-1 flex items-center ">
+          <div class="absolute right-1 top-1 flex items-center">
             <MenuInline
               compact
               buttonStyle="width:40px !important;"
@@ -344,14 +344,14 @@
 
         <!-- Note Input -->
         <div
-          class="mask-textarea min-h-10  {isFocused ? 'focused' : 'blurred'}
+          class="mask-textarea min-h-10 {isFocused ? 'focused' : 'blurred'}
           {isPopulated ? 'populated' : 'empty'}"
         >
           <!-- Date Time Selection -->
 
           <div
             data-placeholder={Lang.t('general.whats-up', "What's up?")}
-            class=" mask-textarea-wrapper  top-section mock-textarea"
+            class=" mask-textarea-wrapper top-section mock-textarea"
           >
             <CaptureTextarea
               bind:value={$ActiveLogStore.note}
@@ -364,7 +364,7 @@
               on:input={monitorNoteChange}
               on:keydown={methods.keyPress}
               on:focus={() => {
-                setFocused()
+                setFocused();
               }}
               on:blur={() => {
                 // isFocused = false
@@ -384,7 +384,7 @@
                     id="pos-menu"
                     buttonClass="text-xl rounded-full flex-shrink-0 focus:bg-gray-500 focus:bg-opacity-20 rounded-md flex items-center justify-center"
                     menuButtons={getPositivityButtons($ActiveLogStore.score, (score) => {
-                      $ActiveLogStore.score = score.score
+                      $ActiveLogStore.score = score.score;
                     })}
                     y="bottom"
                   >
@@ -407,9 +407,9 @@
                   aria-label="Expand Note"
                   class="clear-button flex items-center"
                   on:click={async (evt) => {
-                    evt.preventDefault()
-                    evt.stopPropagation()
-                    openLogEditor($ActiveLogStore)
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    openLogEditor($ActiveLogStore);
                     // confirmClear()
                   }}
                 >
@@ -424,7 +424,7 @@
                 showDateButton={true}
                 dateButtonClass={showDateSelector ? 'dark:text-primary-400 text-primary-600' : ''}
                 on:dateClick={() => {
-                  showDateSelector = !showDateSelector
+                  showDateSelector = !showDateSelector;
                 }}
                 on:change={(evt) => eventDateChange(evt)}
               />
