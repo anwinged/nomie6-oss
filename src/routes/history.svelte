@@ -49,7 +49,7 @@
   import { OTDViews } from '../domains/on-this-day/on-this-day-helpers';
   import OnThisDayViews from '../domains/on-this-day/on-this-day-views.svelte';
 
-  import { getDateFormats, Prefs } from '../domains/preferences/Preferences';
+  import { getDateFormats, Prefs } from '../domains/preferences/preferences';
   import { tokenToTrackable } from '../modules/tokenizer/tokenToTrackable';
   import { TrackableStore } from '../domains/trackable/TrackableStore';
   import { showTrackablePopmenu } from '../domains/board/boardActions';

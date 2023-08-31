@@ -38,7 +38,7 @@
   import { openTrackableVisuals } from './TrackableVisualStore';
   import TrackableEditorTracker from './tracker/trackable-editor-tracker.svelte';
 
-  import { Prefs } from '../../preferences/Preferences';
+  import { Prefs } from '../../preferences/preferences';
   import { Device } from '../../../store/device-store';
   import CopyOutline from '../../../n-icons/CopyOutline.svelte';
   import { openTrackableEditor } from './TrackableEditorStore';

@@ -23,7 +23,7 @@
   import { queryToTrackableUsage } from '../ledger/LedgerStore';
   import NLog from '../nomie-log/nomie-log';
 
-  import { getDateFormats } from '../preferences/Preferences';
+  import { getDateFormats } from '../preferences/preferences';
 
   import type { Trackable } from '../trackable/Trackable.class';
   import { TrackableStore } from '../trackable/TrackableStore';

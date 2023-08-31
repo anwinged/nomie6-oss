@@ -18,7 +18,7 @@
   import { onMount } from 'svelte';
   import Spinner from '../../components/spinner/spinner.svelte';
   import { wait } from '../../utils/tick/tick';
-  import { getDateFormats } from '../preferences/Preferences';
+  import { getDateFormats } from '../preferences/preferences';
 
   export let results: Array<NLog> = [];
   export let className: string = '';

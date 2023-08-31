@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Prefs } from './../../preferences/Preferences';
+  import { Prefs } from '../../preferences/preferences';
   import MagnetSolid from './../../../n-icons/MagnetSolid.svelte';
   // Utils
 

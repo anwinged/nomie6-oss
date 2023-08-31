@@ -14,7 +14,7 @@
   import { parseNumber } from '../../utils/parseNumber/parseNumber';
   import { wait } from '../../utils/tick/tick';
   import { queryToTrackableUsage } from '../ledger/LedgerStore';
-  import { getDateFormats } from '../preferences/Preferences';
+  import { getDateFormats } from '../preferences/preferences';
   import { selectTrackable } from '../trackable/trackable-selector/TrackableSelectorStore';
 
   import type { Trackable } from '../trackable/Trackable.class';

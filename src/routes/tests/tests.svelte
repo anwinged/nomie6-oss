@@ -8,7 +8,7 @@
   import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
 
   import Layout from '../../domains/layout/layout.svelte';
-  import { Prefs } from '../../domains/preferences/Preferences';
+  import { Prefs } from '../../domains/preferences/preferences';
   import Input from '../../components/input/input.svelte';
   import Divider from '../../components/divider/divider.svelte';
   import Button from '../../components/button/button.svelte';

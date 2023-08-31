@@ -5,7 +5,7 @@
   import UsageChart from '../../../usage/usage-chart.svelte';
 
   import nid from '../../../../modules/nid/nid';
-  import { Prefs } from '../../../preferences/Preferences';
+  import { Prefs } from '../../../preferences/preferences';
   export let widget: WidgetClass;
   // export let trackable: Trackable | undefined = undefined
   export let usage: TrackableUsage;

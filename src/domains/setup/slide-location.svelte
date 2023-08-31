@@ -2,7 +2,7 @@
   import { Lang } from '../../store/lang';
 
   import Container from '../../components/container/container.svelte';
-  import { Prefs } from '../../domains/preferences/Preferences';
+  import { Prefs } from '../preferences/preferences';
 
   import Button from '../../components/button/button.svelte';
 </script>

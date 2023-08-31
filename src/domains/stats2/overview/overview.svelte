@@ -20,7 +20,7 @@
   import { LedgerStore } from '../../ledger/LedgerStore';
   import { openLogDisplay } from '../../nomie-log/log-display-modal/LogDisplayStore';
 
-  import { getDateFormats } from '../../preferences/Preferences';
+  import { getDateFormats } from '../../preferences/preferences';
 
   import type { Trackable } from '../../trackable/Trackable.class';
   import { TrackerStore } from '../../tracker/TrackerStore';

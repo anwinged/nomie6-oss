@@ -19,7 +19,7 @@
   import Spinner from '../../components/spinner/spinner.svelte';
   import Swiper from '../../components/swiper/swiper.svelte';
   import Menu from '../../components/menu/menu.svelte';
-  import { Prefs } from '../preferences/Preferences';
+  import { Prefs } from '../preferences/preferences';
   import { objectHash } from '../../modules/object-hash/object-hash';
 
   import { ArchiveOutline } from '../../components/icon/nicons';

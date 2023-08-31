@@ -8,7 +8,7 @@
   import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
 
   import { Lang } from '../../store/lang';
-  import { getDateFormats } from '../preferences/Preferences';
+  import { getDateFormats } from '../preferences/preferences';
   import TimelineLoader from './timeline-loader.svelte';
   import type { TimelineFilterProps } from './timeline-utils';
 

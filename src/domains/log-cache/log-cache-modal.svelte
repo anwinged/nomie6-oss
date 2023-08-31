@@ -24,7 +24,7 @@
   } from '../ledger/ledger-cache';
   import { LedgerStore } from '../ledger/LedgerStore';
   import type NLog from '../nomie-log/nomie-log';
-  import { getDateFormats } from '../preferences/Preferences';
+  import { getDateFormats } from '../preferences/preferences';
 
   export let id: string;
 

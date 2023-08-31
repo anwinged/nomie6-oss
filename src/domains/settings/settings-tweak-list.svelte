@@ -8,7 +8,7 @@
 
   import List from '../../components/list/list.svelte';
 
-  import { Prefs } from '../preferences/Preferences';
+  import { Prefs } from '../preferences/preferences';
   import Avatar from '../../components/avatar/avatar.svelte';
 </script>
 

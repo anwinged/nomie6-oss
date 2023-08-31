@@ -14,7 +14,7 @@ import { parseNumber } from '../../../utils/parseNumber/parseNumber';
 import { timeFrames, WidgetTimeFrame } from './widget-timeframe';
 import type { WidgetTimeFrameConfig } from './widget-timeframe';
 import type { TimeFramesType } from './widget-timeframe';
-import type { PrefsWeekStartTypes } from '../../preferences/Preferences';
+import type { PrefsWeekStartTypes } from '../../preferences/preferences';
 
 /**
  * Widget

@@ -1,7 +1,7 @@
 <script lang="ts">
   import dayjs from 'dayjs';
   import type { Dayjs } from 'dayjs';
-  import { getDateFormats } from '../../domains/preferences/Preferences';
+  import { getDateFormats } from '../../domains/preferences/preferences';
 
   export let date: Dayjs = dayjs();
   export let timeClass: string = '';

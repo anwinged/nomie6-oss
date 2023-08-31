@@ -14,7 +14,7 @@
   import Ball from './ball.svelte';
   import Text from '../text/text.svelte';
   import Button from '../button/button.svelte';
-  import { Prefs } from '../../domains/preferences/Preferences';
+  import { Prefs } from '../../domains/preferences/preferences';
   import IonIcon from '../icon/ion-icon.svelte';
   import { MoreVertical } from '../icon/nicons';
 

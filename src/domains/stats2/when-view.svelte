@@ -6,7 +6,7 @@
   import { wait } from '../../utils/tick/tick';
 
   import type NLog from '../nomie-log/nomie-log';
-  import { Prefs } from '../preferences/Preferences';
+  import { Prefs } from '../preferences/preferences';
   import DayOfWeek, { IDow } from './day-of-week';
   import type { Trackable } from '../trackable/Trackable.class';
   import type { TrackableUsage } from '../usage/trackable-usage.class';

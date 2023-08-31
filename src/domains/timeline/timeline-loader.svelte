@@ -16,7 +16,7 @@
   import type NLog from '../../domains/nomie-log/nomie-log';
 
   import TimelineView from '../../domains/timeline/timeline-view.svelte';
-  import { getDateFormats } from '../../domains/preferences/Preferences';
+  import { getDateFormats } from '../preferences/preferences';
 
   import { createEventDispatcher, onDestroy, onMount } from 'svelte/internal';
 

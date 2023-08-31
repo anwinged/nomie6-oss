@@ -9,7 +9,7 @@
 
   import ToolbarGrid from '../../../components/toolbar/toolbar-grid.svelte';
   import Map from '../../map/map.svelte';
-  import { getDateFormats } from '../../preferences/Preferences';
+  import { getDateFormats } from '../../preferences/preferences';
   import type NLog from '../nomie-log';
 
   export let id: string;

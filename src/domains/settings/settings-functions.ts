@@ -8,7 +8,7 @@ import { Lang } from '../../store/lang';
 import { wait } from '../../utils/tick/tick';
 import { deleteAllFromCache } from '../ledger/ledger-cache';
 
-import { getRawPrefs, saveStorageType } from '../preferences/Preferences';
+import { getRawPrefs, saveStorageEngineType } from '../preferences/preferences';
 import { trackEvent } from '../usage/stat-ping';
 import { StorageEngineDescriptions } from '../storage/storage-description';
 
@@ -23,7 +23,7 @@ export const switchToLocal = async () => {
     'You can always switch back later. Note that data is not shared between storage types.'
   );
   if (confirmed) {
-    saveStorageType('local');
+    saveStorageEngineType('local');
     window.location.href = '/';
   }
 };
@@ -41,7 +41,7 @@ export const switchStorage = async (type, ignoreConfirm: boolean = false) => {
 
   if (conf === true) {
     if (['local', 'firebase'].indexOf(to) > -1) {
-      saveStorageType(to);
+      saveStorageEngineType(to);
       Interact.reload();
     } else {
       alert(`Error: ${to} is not valid`);

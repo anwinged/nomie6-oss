@@ -1,7 +1,7 @@
 <script lang="ts">
   import { broadcastPluginMessage } from './PluginStore';
 
-  import { Prefs } from '../preferences/Preferences';
+  import { Prefs } from '../preferences/preferences';
   import type { PluginClass, PluginUseTypes } from './plugin-helpers';
   import { onMount } from 'svelte';
   import { wait } from '../../utils/tick/tick';

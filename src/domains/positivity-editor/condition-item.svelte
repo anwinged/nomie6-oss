@@ -8,7 +8,7 @@
   import { ConditionIs } from '../../modules/scoring/score-tracker';
   import Ordinal from '../../utils/ordinal/ordinal';
   import { parseNumber } from '../../utils/parseNumber/parseNumber';
-  import { Prefs } from '../preferences/Preferences';
+  import { Prefs } from '../preferences/preferences';
   import type { Trackable } from '../trackable/Trackable.class';
   import { TrackableStore } from '../trackable/TrackableStore';
   import { getTrackableInputValue } from '../tracker/input/TrackerInputStore';

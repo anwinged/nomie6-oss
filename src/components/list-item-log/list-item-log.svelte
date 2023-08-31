@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getDateFormats } from '../../domains/preferences/Preferences';
+  import { getDateFormats } from '../../domains/preferences/preferences';
   import { getEmojiFromScore, selectPositivity, selectPositivityPopmenu } from '../../utils/positivity/positivity';
   import { getTrackerInputAsString } from '../../domains/tracker/input/TrackerInputStore';
   import { Interact } from '../../store/interact';

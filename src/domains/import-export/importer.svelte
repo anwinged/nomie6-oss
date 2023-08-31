@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Prefs } from './../preferences/Preferences';
+  import { Prefs } from '../preferences/preferences';
 
   import { wait } from '../../utils/tick/tick';
 

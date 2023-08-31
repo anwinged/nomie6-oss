@@ -24,7 +24,7 @@
   import List from '../list/list.svelte';
 
   import ToolbarGrid from '../../components/toolbar/toolbar-grid.svelte';
-  import { Prefs } from '../../domains/preferences/Preferences';
+  import { Prefs } from '../../domains/preferences/preferences';
   import IonIcon from '../icon/ion-icon.svelte';
   import { DownloadOutline, TrashOutline } from '../icon/nicons';
   import { showToast } from '../toast/ToastStore';

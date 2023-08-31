@@ -3,7 +3,7 @@
 
   import dayjs from 'dayjs';
   import Button from '../../components/button/button.svelte';
-  import { Prefs } from '../preferences/Preferences';
+  import { Prefs } from '../preferences/preferences';
   import { onMount } from 'svelte';
   import Container from '../../components/container/container.svelte';
   import Badge from '../../components/badge/badge.svelte';

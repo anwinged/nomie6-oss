@@ -1,7 +1,7 @@
 // 1: Sunday, 2: Monday, etc.
 
 import dayjs, { Dayjs } from 'dayjs';
-import type { PrefsWeekStartTypes } from '../../domains/preferences/Preferences';
+import type { PrefsWeekStartTypes } from '../../domains/preferences/preferences';
 
 export type NDateType = {
   firstDayOfWeek: PrefsWeekStartTypes;

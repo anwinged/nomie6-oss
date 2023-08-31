@@ -22,7 +22,7 @@
 
   import NextPrevCal from '../../components/next-prev-cal/next-prev-cal.svelte';
   import appConfig from '../../config/appConfig';
-  import { Prefs, PrefsWeekStartTypes } from '../../domains/preferences/Preferences';
+  import { Prefs, PrefsWeekStartTypes } from '../../domains/preferences/preferences';
 
   const console = new Logger('📅 calendar/calendar');
   const dispatch = createEventDispatcher();

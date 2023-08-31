@@ -4,7 +4,7 @@
   import Menu from '../../components/menu/menu.svelte';
   import type { PopMenuButton } from '../../components/pop-menu/usePopmenu';
 
-  import { Prefs } from '../preferences/Preferences';
+  import { Prefs } from '../preferences/preferences';
 
   import { StorageEngineType } from '../storage/storage';
   import { StorageEngineDescriptions } from '../storage/storage-description';

@@ -7,7 +7,7 @@
   import HScroller from '../../components/h-scroller/h-scroller.svelte';
   import Scroller from '../../components/scroller/scroller.svelte';
   import { Device } from '../../store/device-store';
-  import { getDateFormats } from '../preferences/Preferences';
+  import { getDateFormats } from '../preferences/preferences';
   import { TrackableStore } from '../trackable/TrackableStore';
   import { loadToday, TodayStore } from './today/TodayStore';
 

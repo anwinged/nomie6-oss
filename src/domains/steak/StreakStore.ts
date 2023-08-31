@@ -5,7 +5,7 @@ import type { ITrackables } from '../trackable/trackable-utils';
 import NLog from '../nomie-log/nomie-log';
 import type { Trackable } from '../trackable/Trackable.class';
 import dayjs from 'dayjs';
-import { getDateFormats } from '../preferences/Preferences';
+import { getDateFormats } from '../preferences/preferences';
 
 import { saveLog } from '../ledger/LedgerStore';
 

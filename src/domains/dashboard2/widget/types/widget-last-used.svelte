@@ -7,7 +7,7 @@
 
   import type { WidgetClass } from '../widget-class';
 
-  import { getDateFormats } from '../../../preferences/Preferences';
+  import { getDateFormats } from '../../../preferences/preferences';
   import { UsageStore } from '../../../usage/UsageStore';
 
   export let widget: WidgetClass;

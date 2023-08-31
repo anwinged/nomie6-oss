@@ -1,4 +1,4 @@
-import { Prefs, setDocumentTheme } from '../preferences/Preferences';
+import { Prefs, setDocumentTheme } from '../preferences/preferences';
 
 import { ActiveLogStore } from '../capture-log/CaptureLogStore';
 import CreateOutline from '../../n-icons/CreateOutline.svelte';

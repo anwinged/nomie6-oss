@@ -4,7 +4,7 @@
   import { Lang } from '../../store/lang';
   import ListItem from '../list-item/list-item.svelte';
   import List from '../list/list.svelte';
-  import { Prefs } from './../../domains/preferences/Preferences';
+  import { Prefs } from '../../domains/preferences/preferences';
 
   let backupOptions: Array<any> = [];
   let selectedBackupLabel: string = '';

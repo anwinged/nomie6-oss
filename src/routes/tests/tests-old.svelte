@@ -43,7 +43,7 @@
 
   import TrackableUsageCalendar from '../../domains/calendar-view/trackableUsageCalendar.svelte';
   import Calendar4 from '../../domains/calendar-view/Calendar4.svelte';
-  import { Prefs } from '../../domains/preferences/Preferences';
+  import { Prefs } from '../../domains/preferences/preferences';
   import { TrackerStore } from '../../domains/tracker/TrackerStore';
 
   const fakeNotes = [

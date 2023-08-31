@@ -33,7 +33,8 @@ export type PreferencesStateType = {
 };
 
 const sideStorage = new SideStorage('preferences');
-const InitialState: PreferencesStateType = sideStorage.get('state') || {
+
+const preferencesInitialState: PreferencesStateType = sideStorage.get('state') || {
   use24hour: false,
   useMetric: false,
   usePin: undefined,
@@ -57,8 +58,9 @@ const InitialState: PreferencesStateType = sideStorage.get('state') || {
   alwaysLocate: true,
 };
 
-export const Prefs = writable(InitialState);
-let localPrefs = InitialState;
+export const Prefs = writable(preferencesInitialState);
+
+let localPrefs = preferencesInitialState;
 
 Prefs.subscribe((s: PreferencesStateType) => {
   localPrefs = s;
@@ -84,9 +86,9 @@ export const enabledBetaFeatures = async (): Promise<void> => {
  * @param theme
  */
 export const setDocumentTheme = (theme: ThemeTypes) => {
-  const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
   let themeToSet = theme;
   if (theme === 'auto') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
     themeToSet = isDarkMode ? 'dark' : 'light';
   }
   document.documentElement.className = '';
@@ -146,11 +148,11 @@ export const getDateFormats = (): {
   return format;
 };
 
-export const getStorageType = (): StorageEngineType => {
+export const getStorageEngineType = (): StorageEngineType => {
   return localPrefs.storageType;
 };
 
-export const saveStorageType = (type: StorageEngineType) => {
+export const saveStorageEngineType = (type: StorageEngineType) => {
   Prefs.update((s) => {
     s.storageType = type;
     return s;

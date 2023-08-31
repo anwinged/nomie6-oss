@@ -4,7 +4,7 @@ import { InitTrackableStore } from './domains/trackable/TrackableStore';
 import { Interact } from './store/interact';
 import { LedgerStore } from './domains/ledger/LedgerStore';
 import { LocationStore } from './domains/locations/LocationStore';
-import type { PreferencesStateType } from './domains/preferences/Preferences';
+import type { PreferencesStateType } from './domains/preferences/preferences';
 import { SearchStore } from './domains/search/search-store';
 import Storage from './domains/storage/storage';
 import { UsageStore } from './domains/usage/UsageStore';

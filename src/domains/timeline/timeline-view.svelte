@@ -5,7 +5,7 @@
   import { TrackableStore } from '../trackable/TrackableStore';
   import TrackablePill from '../trackable/trackable-pill.svelte';
 
-  import { getDateFormats } from '../preferences/Preferences';
+  import { getDateFormats } from '../preferences/preferences';
   import { createEventDispatcher } from 'svelte';
 
   import { showTrackablePopmenu } from '../board/boardActions';

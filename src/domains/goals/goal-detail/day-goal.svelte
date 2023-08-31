@@ -11,7 +11,7 @@
   import math from '../../../utils/math/math';
   import { wait } from '../../../utils/tick/tick';
   import { getTrackableUsage } from '../../ledger/LedgerStore';
-  import { getDateFormats } from '../../preferences/Preferences';
+  import { getDateFormats } from '../../preferences/preferences';
   import type { Trackable } from '../../trackable/Trackable.class';
   import { TrackableStore } from '../../trackable/TrackableStore';
   import type { TrackableUsage } from '../../usage/trackable-usage.class';

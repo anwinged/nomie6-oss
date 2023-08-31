@@ -2,7 +2,7 @@
   import dayjs from 'dayjs';
 
   import { createEventDispatcher } from 'svelte';
-  import { Prefs } from '../../domains/preferences/Preferences';
+  import { Prefs } from '../../domains/preferences/preferences';
   import IonIcon from '../icon/ion-icon.svelte';
   import { ChevronBackOutline, ChevronForwardOutline } from '../icon/nicons';
 

@@ -7,7 +7,7 @@
   import NextPrevCal from '../components/next-prev-cal/next-prev-cal.svelte';
 
   import Toolbar from '../components/toolbar/toolbar.svelte';
-  import { getDateFormats } from '../domains/preferences/Preferences';
+  import { getDateFormats } from '../domains/preferences/preferences';
 
   let endDate: Dayjs = dayjs();
   let startDate: Dayjs = dayjs().subtract(90, 'days');

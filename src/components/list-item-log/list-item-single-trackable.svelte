@@ -2,7 +2,7 @@
   import { createEventDispatcher } from 'svelte';
 
   import type NLog from '../../domains/nomie-log/nomie-log';
-  import { getDateFormats } from '../../domains/preferences/Preferences';
+  import { getDateFormats } from '../../domains/preferences/preferences';
   import type { Trackable } from '../../domains/trackable/Trackable.class';
   import math from '../../utils/math/math';
   import TrackableAvatar from '../avatar/trackable-avatar.svelte';

@@ -2,7 +2,7 @@
   import dayjs from 'dayjs';
   import type { Dayjs } from 'dayjs';
   import { createEventDispatcher } from 'svelte';
-  import { getDateFormats } from '../../domains/preferences/Preferences';
+  import { getDateFormats } from '../../domains/preferences/preferences';
 
   const dispatch = createEventDispatcher();
 

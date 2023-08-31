@@ -21,7 +21,7 @@
 
   import Divider from '../../../components/divider/divider.svelte';
   import appConfig from '../../../config/appConfig';
-  import { Prefs } from '../../../domains/preferences/Preferences';
+  import { Prefs } from '../../preferences/preferences';
   import { saveTrackable, TrackableStore } from '../../trackable/TrackableStore';
   import { openScoreEditor } from '../../positivity-editor/PositivityEditorStore';
   import type TrackerClass from '../../../modules/tracker/TrackerClass';

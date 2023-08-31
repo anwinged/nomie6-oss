@@ -1,6 +1,6 @@
 <script lang="ts">
   import dayjs, { Dayjs } from 'dayjs';
-  import { getDateFormats } from '../../domains/preferences/Preferences';
+  import { getDateFormats } from '../../domains/preferences/preferences';
 
   export let date: Date;
   export let seconds: number;

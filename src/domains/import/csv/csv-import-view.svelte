@@ -3,7 +3,7 @@
 
   import { wait } from './../../../utils/tick/tick';
   import { Interact } from './../../../store/interact';
-  import { getDateFormats } from './../../preferences/Preferences';
+  import { getDateFormats } from '../../preferences/preferences';
   import NextPrevCal from './../../../components/next-prev-cal/next-prev-cal.svelte';
   import ToggleSwitch from './../../../components/toggle-switch/toggle-switch.svelte';
   import FileUploader from './../../../components/file-uploader/file-uploader.svelte';

@@ -21,7 +21,7 @@
   import { Device } from '../store/device-store';
   import { getBoardAddOptions, getBoardMenu, saveBoard } from '../domains/board/boardActions';
   import { openUnisearch } from '../domains/search/UnisearchStore';
-  import { Prefs } from '../domains/preferences/Preferences';
+  import { Prefs } from '../domains/preferences/preferences';
   import { quintOut } from 'svelte/easing';
   import { RunningTimers } from '../domains/tracker/TrackerStore';
   import { showRunningTimersModal } from '../domains/tracker/timers/useTimersModal';

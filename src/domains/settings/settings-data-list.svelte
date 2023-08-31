@@ -4,13 +4,11 @@
   import ListItem from '../../components/list-item/list-item.svelte';
   import { Lang } from '../../store/lang';
 
-  // import PouchDBOptions from '@/components/storage/pouchdb.svelte'
-
   import List from '../../components/list/list.svelte';
 
   import { navigate } from 'svelte-navigator';
 
-  import { Prefs, saveStorageType } from '../preferences/Preferences';
+  import { Prefs, saveStorageEngineType } from '../preferences/preferences';
   import { wait } from '../../utils/tick/tick';
   import { Device } from '../../store/device-store';
   import { Interact } from '../../store/interact';
@@ -57,7 +55,7 @@
         );
 
         if (confirmed) {
-          saveStorageType(storage);
+          saveStorageEngineType(storage);
           await wait(500);
           Device.reload();
         }

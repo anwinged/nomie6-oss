@@ -17,7 +17,7 @@
   import { wait } from '../../utils/tick/tick';
 
   import { queryToUsageMap } from '../ledger/LedgerStore';
-  import { getDateFormats } from '../preferences/Preferences';
+  import { getDateFormats } from '../preferences/preferences';
   import { TrackableStore } from '../trackable/TrackableStore';
   import { trackEvent } from '../usage/stat-ping';
 

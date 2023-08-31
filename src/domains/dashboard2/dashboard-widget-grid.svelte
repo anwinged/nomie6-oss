@@ -1,6 +1,6 @@
 <script lang="ts">
   import { dedupArray } from '../../utils/array/array_utils';
-  import { getDateFormats, Prefs } from '../preferences/Preferences';
+  import { getDateFormats, Prefs } from '../preferences/preferences';
   import { LedgerStore } from '../ledger/LedgerStore';
   import { tokenToTrackable } from '../../modules/tokenizer/tokenToTrackable';
   import { TrackableStore } from '../trackable/TrackableStore';

@@ -5,7 +5,7 @@ import type { PopMenuButton } from '../../components/pop-menu/usePopmenu';
 import type { Trackable } from '../../domains/trackable/Trackable.class';
 import capitalize from 'lodash/capitalize';
 import dayjs from 'dayjs';
-import { getDateFormats } from '../../domains/preferences/Preferences';
+import { getDateFormats } from '../../domains/preferences/preferences';
 import { openLogDisplay } from '../../domains/nomie-log/log-display-modal/LogDisplayStore';
 import { openLogEditor } from '../../domains/nomie-log/LogEditorStore';
 import { openOnThisDayModal } from '../../domains/on-this-day/useOnThisDayModal';

@@ -8,7 +8,7 @@
   import Button from '../../../../components/button/button.svelte';
   import IonIcon from '../../../../components/icon/ion-icon.svelte';
   import { ChevronBackCircleOutline, ChevronForwardCircleOutline } from '../../../../components/icon/nicons';
-  import { getDateFormats } from '../../../preferences/Preferences';
+  import { getDateFormats } from '../../../preferences/preferences';
   import { onLogNoteChange } from '../../../ledger/LedgerStore';
   import type NLog from '../../../nomie-log/nomie-log';
 

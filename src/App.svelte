@@ -22,7 +22,7 @@
   // Domains
   import Interactions from './domains/interactions/interactions.svelte';
 
-  import { Prefs, setDocumentTheme } from './domains/preferences/Preferences';
+  import { Prefs, setDocumentTheme } from './domains/preferences/preferences';
 
   // Utils
 
@@ -52,7 +52,7 @@
   import { LedgerStore } from './domains/ledger/LedgerStore';
   import { loadToday } from './domains/usage/today/TodayStore';
 
-  import { trackLaunch } from './domains/preferences/LaunchCount';
+  import { trackLaunch } from './domains/preferences/launch-count';
   import PluginLoader from './domains/plugins/plugin-loader.svelte';
   import { PluginStore } from './domains/plugins/PluginStore';
   import Setup from './domains/setup/setup.svelte';

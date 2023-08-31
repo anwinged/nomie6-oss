@@ -47,7 +47,7 @@
   import { AppVersion } from '../../modules/app-version/app-version';
 
   import AwardsPreviewList from '../awards/components/awards-preview-list.svelte';
-  import { enabledBetaFeatures, Prefs } from '../preferences/Preferences';
+  import { enabledBetaFeatures, Prefs } from '../preferences/preferences';
   import { showImportModal } from '../import-export/ImporterStore';
   import { MailOutline, MailUnreadOutline } from '../../components/icon/nicons';
   import { deleteEverything } from './settings-functions';

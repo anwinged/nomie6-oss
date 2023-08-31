@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Prefs } from './../preferences/Preferences';
+  import { Prefs } from '../preferences/preferences';
   import Title from './../../components/title/title.svelte';
   import Button from '../../components/button/button.svelte';
 

@@ -1,8 +1,8 @@
 <script lang="ts">
   import { Lang } from '../../store/lang';
 
-  import { Prefs } from '../../domains/preferences/Preferences';
-  import { LaunchCount } from '../../domains/preferences/LaunchCount';
+  import { Prefs } from '../../domains/preferences/preferences';
+  import { LaunchCount } from '../../domains/preferences/launch-count';
   // import { onMount } from 'svelte'
   import { backupConfirmed, BackupDaysAgo, generateBackup } from '../../domains/backup/BackupStore';
   import { onMount } from 'svelte';

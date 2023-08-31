@@ -7,7 +7,7 @@
   import IonIcon from '../../components/icon/ion-icon.svelte';
   import { ChevronBackOutline, ChevronForwardOutline } from '../../components/icon/nicons';
 
-  import { getDateFormats } from '../../domains/preferences/Preferences';
+  import { getDateFormats } from '../../domains/preferences/preferences';
 
   $: dateFormats = getDateFormats();
   export let start: Dayjs | undefined = undefined;

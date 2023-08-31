@@ -13,7 +13,7 @@
 
   import { showLogTrackablePopmenu, showTrackablePopmenu } from '../board/boardActions';
 
-  import { getDateFormats } from '../preferences/Preferences';
+  import { getDateFormats } from '../preferences/preferences';
   import { trackOnThisDay } from '../steak/StreakStore';
   import TrackablePill from '../trackable/trackable-pill.svelte';
 

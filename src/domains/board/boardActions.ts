@@ -45,7 +45,7 @@ import type { UniboardType } from './UniboardStore';
 import { addTrackablesToBoard } from './UniboardStore';
 import appConfig from '../../config/appConfig';
 import { deleteTrackableFromNomie } from '../trackable/TrackableStore';
-import { getDateFormats } from '../preferences/Preferences';
+import { getDateFormats } from '../preferences/preferences';
 import { goBackInTime } from '../usage/today/TodayStore';
 import { objectHash } from '../../modules/object-hash/object-hash';
 import { openBoardSorter } from './useBoardSortModal';

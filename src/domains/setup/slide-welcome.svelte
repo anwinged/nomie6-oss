@@ -1,7 +1,7 @@
 <script lang="ts">
   import Logo from '../../components/logo/logo.svelte';
   import { openPrivacyPolicy, openTermsOfService } from '../../components/markdown-modal/MarkdownModalStore';
-  import { Prefs } from '../preferences/Preferences';
+  import { Prefs } from '../preferences/preferences';
 </script>
 
 <div class="flex flex-col px-6 py-4 min-h-fill justify-center items-center -mt-4">

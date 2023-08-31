@@ -5,7 +5,7 @@
   import { TrackableStore } from '../trackable/TrackableStore';
   import TrackablePill from '../trackable/trackable-pill.svelte';
   import NoteTextualizer from '../../components/note-textualizer/note-textualizer.svelte';
-  import { getDateFormats, Prefs } from '../preferences/Preferences';
+  import { getDateFormats, Prefs } from '../preferences/preferences';
   import VirtualList from '@sveltejs/svelte-virtual-list';
   import { createEventDispatcher } from 'svelte';
   import LocationBadge from '../../components/location-badge/location-badge.svelte';

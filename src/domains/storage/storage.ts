@@ -6,7 +6,7 @@
 
 // Vendors
 
-import { getStorageType, saveStorageType } from '../preferences/Preferences';
+import { getStorageEngineType } from '../preferences/preferences';
 import { Interact } from '../../store/interact';
 import { switchToLocal } from '../settings/settings-functions';
 
@@ -17,29 +17,20 @@ import { PouchDBEngine } from './engines/pouchdb/engine.pouchdb';
 export type StorageEngineType = 'local' | 'dumb' | 'pouchdb';
 
 export class StorageManager implements StorageEngine {
-  readonly engines: { [id in StorageEngineType]?: StorageEngine };
   engineType: StorageEngineType;
 
+  readonly engines = {
+    local: LocalForageEngine,
+    pouchdb: PouchDBEngine,
+  };
+
   constructor() {
-    this.engines = {
-      local: LocalForageEngine,
-      pouchdb: PouchDBEngine,
-    };
-    this.engineType = getStorageType() || 'local';
-  }
-
-  // Get user storage type
-  storageType(): StorageEngineType {
-    return this.engineType;
-  }
-
-  setType(type: StorageEngineType) {
-    saveStorageType(type);
+    this.engineType = getStorageEngineType() || 'local';
   }
 
   getEngine(): StorageEngine {
     try {
-      return this.engines[this.storageType()];
+      return this.engines[this.engineType];
     } catch (e) {
       console.error('Error getting Engine');
       console.error('e', e.message);

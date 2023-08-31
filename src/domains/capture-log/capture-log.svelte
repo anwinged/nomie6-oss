@@ -38,7 +38,7 @@
 
   import CaptureDatePicker from './capture-date-picker.svelte';
 
-  import { Prefs } from '../preferences/Preferences';
+  import { Prefs } from '../preferences/preferences';
   import type { Token } from '../../modules/tokenizer/lite';
   import { loadToday, TodayStore } from '../usage/today/TodayStore';
 

@@ -13,7 +13,7 @@
 
   import { Interact } from '../../store/interact';
   import { showToast } from '../toast/ToastStore';
-  import { Prefs } from '../../domains/preferences/Preferences';
+  import { Prefs } from '../../domains/preferences/preferences';
 
   export let boards: Array<UniboardType> = [];
 

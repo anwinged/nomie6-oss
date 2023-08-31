@@ -17,7 +17,7 @@
 
   import { Device } from '../../store/device-store';
 
-  import { Prefs } from '../../domains/preferences/Preferences';
+  import { Prefs } from '../preferences/preferences';
 
   import SlideTemplate from './slide-template.svelte';
 

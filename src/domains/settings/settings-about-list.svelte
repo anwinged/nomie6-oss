@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { LaunchCount } from './../preferences/LaunchCount.ts';
+  import { LaunchCount } from '../preferences/launch-count.ts';
   import { navigate } from 'svelte-navigator';
 
   import { Device } from '../../store/device-store';

@@ -18,7 +18,7 @@
   import math from '../../utils/math/math';
   import { UsageStore } from '../usage/UsageStore';
   import Scroller from '../../components/scroller/scroller.svelte';
-  import { getDateFormats } from '../preferences/Preferences';
+  import { getDateFormats } from '../preferences/preferences';
   import { openDateOptionPopMenu } from '../../components/pop-menu/usePopmenu';
   import LetterTicker from '../../components/letter-ticker/letter-ticker.svelte';
 

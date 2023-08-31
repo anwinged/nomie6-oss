@@ -12,7 +12,7 @@
 
   import { ActiveBoard, addTrackablesToBoard, UniboardStore } from '../board/UniboardStore';
 
-  import { Prefs } from '../preferences/Preferences';
+  import { Prefs } from '../preferences/preferences';
 
   import { onMount } from 'svelte';
   import type { LibraryTrackerType } from './library-manager/LibraryManagerStore';

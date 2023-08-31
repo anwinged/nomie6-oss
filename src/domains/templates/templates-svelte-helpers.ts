@@ -9,7 +9,7 @@ import { TemplateToImport } from '../storage/storage-export.helper';
 import templatePreviewModalSvelte from './template-preview-modal.svelte';
 import { importStorageArchive } from '../storage/import-export';
 import { showToast } from '../../components/toast/ToastStore';
-import { getRawPrefs } from '../preferences/Preferences';
+import { getRawPrefs } from '../preferences/preferences';
 import { InitTrackableStore } from '../trackable/TrackableStore';
 import { initializeDashStore } from '../dashboard2/DashStore';
 import { initUniboardStore } from '../board/UniboardStore';

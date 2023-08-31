@@ -32,7 +32,7 @@
   import { LedgerStore, saveLog } from '../ledger/LedgerStore';
   import { openLogDisplay } from '../nomie-log/log-display-modal/LogDisplayStore';
   import NLog from '../nomie-log/nomie-log';
-  import { getDateFormats } from '../preferences/Preferences';
+  import { getDateFormats } from '../preferences/preferences';
   import { openStats2 } from '../stats2/Stats2Store';
   import { openTrackableEditor } from '../trackable/trackable-editor/TrackableEditorStore';
   import { TrackableStore } from '../trackable/TrackableStore';

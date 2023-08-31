@@ -6,7 +6,7 @@
   import { Device } from '../../store/device-store';
   import DateTimeBar from '../date-time-bar/date-time-bar.svelte';
 
-  import { Prefs } from '../../domains/preferences/Preferences';
+  import { Prefs } from '../../domains/preferences/preferences';
 
   // data
   export let date: Date | undefined;

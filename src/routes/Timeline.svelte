@@ -10,7 +10,7 @@
 
   import Layout from '../domains/layout/layout.svelte';
 
-  import { getDateFormats } from '../domains/preferences/Preferences';
+  import { getDateFormats } from '../domains/preferences/preferences';
   import LetterTicker from '../components/letter-ticker/letter-ticker.svelte';
   import { TrackableStore } from '../domains/trackable/TrackableStore';
   import { onMount } from 'svelte/internal';

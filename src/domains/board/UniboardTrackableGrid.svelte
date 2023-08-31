@@ -10,7 +10,7 @@
   import time from '../../utils/time/time';
 
   import type { Trackable } from '../trackable/Trackable.class';
-  import { Prefs } from '../preferences/Preferences';
+  import { Prefs } from '../preferences/preferences';
   import { loadToday, TodayStore } from '../usage/today/TodayStore';
   import { TrackableStore } from '../trackable/TrackableStore';
 

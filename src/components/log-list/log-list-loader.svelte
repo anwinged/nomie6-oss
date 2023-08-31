@@ -15,7 +15,7 @@
   import Spinner from '../spinner/spinner.svelte';
   import Button from '../button/button.svelte';
   import { Lang } from '../../store/lang';
-  import { getDateFormats } from '../../domains/preferences/Preferences';
+  import { getDateFormats } from '../../domains/preferences/preferences';
 
   export let term = null;
   export let limit = 20;

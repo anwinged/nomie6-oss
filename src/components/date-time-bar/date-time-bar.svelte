@@ -6,7 +6,7 @@
   import { onMount, createEventDispatcher } from 'svelte';
 
   import tick from '../../utils/tick/tick';
-  import { Prefs } from '../../domains/preferences/Preferences';
+  import { Prefs } from '../../domains/preferences/preferences';
 
   import TimeSelect from '../time-select/time-select.svelte';
   import Calendar from '../calendar/calendar.svelte';

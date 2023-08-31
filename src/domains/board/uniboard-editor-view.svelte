@@ -14,7 +14,7 @@
 
   import time from '../../utils/time/time';
 
-  import { Prefs } from '../preferences/Preferences';
+  import { Prefs } from '../preferences/preferences';
   import { toTrackableArray } from '../trackable/trackable-utils';
   import { Trackable } from '../trackable/Trackable.class';
   import { TrackableStore } from '../trackable/TrackableStore';

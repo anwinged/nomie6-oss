@@ -22,7 +22,7 @@
   import Dot from '../../components/dot/dot.svelte';
   import { RunningTimers } from '../tracker/TrackerStore';
 
-  import { Prefs } from '../preferences/Preferences';
+  import { Prefs } from '../preferences/preferences';
 
   import { GoalScoreStore } from '../goals/GoalStore';
 

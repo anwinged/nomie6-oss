@@ -3,7 +3,7 @@ import type NLog from '../nomie-log/nomie-log';
 
 import { findNearestLocationHeavy } from '../locations/LocationStore';
 import locate from '../../modules/locate/locate';
-import { getRawPrefs } from '../preferences/Preferences';
+import { getRawPrefs } from '../preferences/preferences';
 
 /**
  * If the user has enabled location tracking, and we can get a location, then we'll add the location to

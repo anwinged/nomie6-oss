@@ -4,7 +4,7 @@
   import type { Trackable } from '../../../trackable/Trackable.class';
   // import type { WidgetClass } from '../widget-class'
   import { openOnThisDayModal } from '../../../on-this-day/useOnThisDayModal';
-  import { getDateFormats } from '../../../preferences/Preferences';
+  import { getDateFormats } from '../../../preferences/preferences';
   import { openDateOptionPopMenu } from '../../../../components/pop-menu/usePopmenu';
 
   export let trackable: Trackable;

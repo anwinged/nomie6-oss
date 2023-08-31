@@ -1,7 +1,7 @@
 <script lang="ts">
   import dayjs from 'dayjs';
 
-  import { Prefs } from '../../domains/preferences/Preferences';
+  import { Prefs } from '../../domains/preferences/preferences';
   import type { Trackable } from '../../domains/trackable/Trackable.class';
   import type { TrackableUsage } from '../../domains/usage/trackable-usage.class';
   import { Device } from '../../store/device-store';

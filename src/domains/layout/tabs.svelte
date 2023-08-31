@@ -24,7 +24,7 @@
     RibbonOutline,
     RibbonSolid,
   } from '../../components/icon/nicons';
-  import { Prefs } from '../../domains/preferences/Preferences';
+  import { Prefs } from '../preferences/preferences';
   import { Device } from '../../store/device-store';
   import { RunningTimers } from '../tracker/TrackerStore';
   import { GoalScoreStore } from '../../domains/goals/GoalStore';

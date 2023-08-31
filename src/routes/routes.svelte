@@ -7,7 +7,7 @@
 
   // import Goals from './Goals.svelte'
   // import Track from './track.svelte'
-  import { Prefs } from '../domains/preferences/Preferences';
+  import { Prefs } from '../domains/preferences/preferences';
   import RouteControl from './RouteControl.svelte';
   import Dashboard from './dashboard.svelte';
   import Track from './track.svelte';
