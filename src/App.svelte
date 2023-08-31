@@ -168,7 +168,6 @@
     }
 
     Storage.init().then(async () => {
-      // await initGoals()
       wait(2000).then(() => {
         checkGoals('storage-init')
         trackLaunch()

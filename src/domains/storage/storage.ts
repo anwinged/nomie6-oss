@@ -10,31 +10,25 @@ import { getStorageType, saveStorageType } from '../preferences/Preferences';
 import { Interact } from '../../store/interact';
 import { switchToLocal } from '../settings/settings-functions';
 
+import type { StorageEngine } from './storage-engine';
 import { LocalForageEngine } from './engines/localforage/engine.localforage';
 import { PouchDBEngine } from './engines/pouchdb/engine.pouchdb';
-import { SideStore } from './side-storage';
 
-const STORAGE_TYPE_PATH = 'n6/storage-type';
+export type StorageEngineType = 'local' | 'dumb' | 'pouchdb';
 
-export type StorageTypes = 'local' | 'dumb' | 'pouchdb' | any;
-
-export function setStorage(type: StorageTypes) {
-  localStorage.setItem(STORAGE_TYPE_PATH, type);
-}
-
-export type StorageEngineType = {
-  id: string;
+export interface StorageEngineDescription {
+  id: StorageEngineType;
   name: string;
   shortName: string;
   description: string;
   price?: string;
   accountRequired?: boolean;
   multipleDevices?: boolean;
-  engine: IStorage | Storage;
+  engine: StorageEngine;
   advanced?: boolean;
-};
+}
 
-export const StorageEngines: Array<StorageEngineType> = [
+export const StorageEngines: Array<StorageEngineDescription> = [
   {
     id: 'local',
     name: 'Local Only',
@@ -56,73 +50,34 @@ export const StorageEngines: Array<StorageEngineType> = [
   },
 ];
 
-export const getStorageEngineDetails = (id: string): StorageEngineType => {
-  return StorageEngines.find((se) => se.id == id);
-};
-
-export interface IStorage {
-  id?: StorageTypes;
-  ready?: boolean;
-  authRequired?: boolean;
-  engines?: {
-    [key: string]: IStorage;
-    // blockstack: BlockStackEngine;
-    // local: typeof LocalForageEngine
-    // firebase: typeof FirebaseEngine
-    // pouchdb: typeof PouchDBEngine
-    // dumb: typeof DumbStorage
-  };
-  onReady?(func: Function): any;
-  fireReady?(func: Function): any;
-  engine?: StorageTypes;
-  storageType?(): string;
-  _storageType?(): string;
-  getEngine?(): IStorage;
-  get(path: string): Promise<any>;
-  put(path: string, content: any): Promise<any>;
-  delete(path: string): Promise<any>;
-  convertPath?(path: string): string;
-  basePath?(path: string): string;
-  setType?(type: StorageEngineType): string;
-  list(): Promise<any>;
-  init?(): Promise<any>;
-  getProfile?(): Promise<any>;
-  local?: {
-    get(path: string): any;
-    put(path: string, content: any): any;
-    remove(path: string): void;
-  };
+export function getStorageEngineDescription(id: StorageEngineType): StorageEngineDescription {
+  return StorageEngines.find((engine) => engine.id === id);
 }
 
-const engines = {};
+const engines: { [id in StorageEngineType]?: StorageEngine } = {};
 StorageEngines.map((e) => {
   engines[e.id] = e.engine;
 });
 
-const Storage: IStorage = {
-  engines: engines,
-  engine: getStorageType(),
+export class StorageManager implements StorageEngine {
+  engines: { [id in StorageEngineType]?: StorageEngine };
+  engineType: StorageEngineType;
+
+  constructor() {
+    this.engines = engines;
+    this.engineType = getStorageType() || 'local';
+  }
+
   // Get user storage type
-  storageType(): string {
-    return this.engine || this._storageType() || 'local';
-    // return "pouchdb";
-  },
-  convertPath(path: string) {
-    const engine = this.getEngine();
-    if (engine.convertPath) {
-      return engine.convertPath(path);
-    } else {
-      return path;
-    }
-  },
-  _storageType() {
-    return getStorageType();
-  },
-  // @ts-ignore
-  setType(type: StorageTypes) {
+  storageType(): StorageEngineType {
+    return this.engineType;
+  }
+
+  setType(type: StorageEngineType) {
     saveStorageType(type);
-  },
-  getEngine() {
+  }
+
+  getEngine(): StorageEngine {
     try {
       return this.engines[this.storageType()];
     } catch (e) {
@@ -130,18 +85,15 @@ const Storage: IStorage = {
       console.error('e', e.message);
       return null;
     }
-  },
-  getProfile() {
-    const engine = this.getEngine();
-    return engine.getProfile();
-  },
+  }
+
   onReady(func) {
     return this.getEngine().onReady(func);
-  },
-  async init() {
+  }
+
+  async init(): Promise<void> {
     try {
-      let engineProfile = this.getEngine().init();
-      return engineProfile;
+      return await this.getEngine().init();
     } catch (e) {
       const loadLocal = await Interact.confirm(
         'Error loading this storage engine',
@@ -151,44 +103,28 @@ const Storage: IStorage = {
         switchToLocal();
       }
     }
-  },
+  }
+
   // Get a file
-  async get(path, onChange = null) {
-    return await this.getEngine().get(path, onChange);
-  },
+  async get(path: string) {
+    return await this.getEngine().get(path);
+  }
+
   // Put a file
-  async put(path, content) {
-    return await this.getEngine()
-      .put(path, content)
-      .catch((e) => {
-        throw e;
-      });
-  },
-  async putBinary(path, content) {
-    return await this.getEngine().putBinary(path, content);
-  },
+  async put(path: string, content) {
+    return await this.getEngine().put(path, content);
+  }
 
   // Delete a file
-  async delete(path) {
+  async delete(path: string): Promise<void> {
     return await this.getEngine().delete(path);
-  },
-  async list() {
+  }
+
+  async list(): Promise<string[]> {
     return await this.getEngine().list();
-  },
-  local: {
-    get(path) {
-      return JSON.parse(localStorage.getItem(`storage/${path}`) || 'null');
-    },
-    put(path, value) {
-      return localStorage.setItem(`storage/${path}`, JSON.stringify(value));
-    },
-    remove(path) {
-      return localStorage.removeItem(`storage/${path}`);
-    },
-  },
-  SideStore: SideStore,
-};
+  }
+}
+
+const Storage = new StorageManager();
 
 export default Storage;
-
-window['NStorage'] = Storage;

@@ -6,10 +6,10 @@
 
   import { Prefs } from '../preferences/Preferences'
 
-  import { StorageEngines, StorageTypes } from '../storage/storage'
+  import { StorageEngines, StorageEngineType } from '../storage/storage'
 
   const engines = StorageEngines
-  let selected: StorageTypes = 'local'
+  let selected: StorageEngineType = 'local'
   selected = $Prefs.storageType
   let showAdvanced: boolean = false
 

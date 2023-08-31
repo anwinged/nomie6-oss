@@ -1,17 +1,16 @@
-import type { IStorage } from '../storage/storage';
 import NLog from '../nomie-log/nomie-log';
-import { wait } from '../../utils/tick/tick';
 import type LedgerTools from './ledger-tools';
+import type { StorageManager } from '../storage/storage';
 
 export class LedgerImporter {
-  storage: IStorage;
+  storage: StorageManager;
   status: Function;
   rows: Array<NLog>;
   ledgerTools: LedgerTools;
   // putBook: Function
   // getBook: Function
 
-  constructor(storage: any, rows: Array<NLog>, statusCallback: Function, ledgerTools: LedgerTools) {
+  constructor(storage: StorageManager, rows: Array<NLog>, statusCallback: Function, ledgerTools: LedgerTools) {
     this.storage = storage;
     this.rows = rows;
     this.status = statusCallback;
@@ -82,9 +81,6 @@ export class LedgerImporter {
         console.error('Error importing', e.message);
         failures.push(row.date);
       });
-      if (this.storage.engine.id === 'firebase') {
-        await wait(20);
-      }
       // Show console if duplicates were found
 
       // Update Status Function

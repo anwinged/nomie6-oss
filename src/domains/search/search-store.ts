@@ -6,7 +6,7 @@
 // utils
 import NPaths from '../../paths';
 import SearchModal from './search-modal.svelte';
-import { SideStore } from '../../domains/storage/side-storage';
+import { SideStorage } from '../storage/side-storage';
 import { openModal } from '../../components/backdrop/BackdropStore2';
 // Svelte
 import { writable } from 'svelte/store';
@@ -33,7 +33,7 @@ export class SearchTerm {
 
 // Nomie API Store
 
-let SearchStorage: SideStore;
+let SearchStorage: SideStorage;
 export type SearchModes = 'trackers' | 'history' | 'people';
 interface ISearchStoreState {
   saved: Array<SearchTerm>;
@@ -60,7 +60,7 @@ const SearchStoreInit = () => {
   // Search Methods
   const methods = {
     init() {
-      SearchStorage = new SideStore('search');
+      SearchStorage = new SideStorage('search');
       update((state) => {
         state.saved = SearchStorage.get(NPaths.storage.search()) || [];
         state.saved = state.saved

@@ -39,7 +39,7 @@ export const exportStorage = async (props?: exportPropsType) => {
   for (let i = 0; i < chunks.length; i++) {
     let chunk = chunks[i];
     for (let c = 0; c < chunk.length; c++) {
-      let path = Storage.convertPath(chunk[c]);
+      let path = chunk[c];
       Interact.blocker(`${path}`, math.percentage(chunks.length - 1, i));
       let content = await Storage.get(path);
       if (content) {

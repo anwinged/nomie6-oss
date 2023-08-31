@@ -1,11 +1,12 @@
 class Remote {
-  url: any;
+  url: URL | null = null;
   syncEnabled: boolean;
   username: any;
   password: any;
   dbPrefix: any;
   database: any;
   _dirty: boolean;
+
   constructor(starter) {
     starter = starter || {};
     this.url = starter.url ? new URL(starter.url) : null;
@@ -21,7 +22,8 @@ class Remote {
     this.database = starter.database || 'nomie';
     this.syncEnabled = starter.syncEnabled || false;
   }
-  setURL(url) {
+
+  setURL(url: string | URL) {
     try {
       this.url = new URL(url);
       this._dirty = false;
@@ -30,14 +32,29 @@ class Remote {
     }
     return this;
   }
-  isValid() {
+
+  isValid(): boolean {
+    return this.url !== null;
+  }
+
+  getURL(): URL {
     return this.url;
   }
-  getURL() {
-    this.url;
-  }
+
   auth() {
     return btoa(`${this.username}:${this.password}`);
+  }
+
+  // Convert a remote object to CouchURL
+  makeConnectionUrl(): string | null {
+    if (!this.isValid()) {
+      return null;
+    }
+    let parsed = this.url;
+    // parsed.username = this.username ? this.username || "".length : null;
+    // parsed.password = this.password ? this.password || "".length : null;
+    parsed.pathname = `/${this.database}`;
+    return parsed.toString();
   }
 }
 

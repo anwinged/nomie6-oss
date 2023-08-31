@@ -6,7 +6,6 @@ import NLog from '../nomie-log/nomie-log';
 import dayjs from 'dayjs';
 
 import type { Dayjs } from 'dayjs';
-import type { IStorage } from '../storage/storage';
 
 import type { LedgerImporter } from './ledger-importer';
 import type { Trackable } from '../trackable/Trackable.class';
@@ -14,6 +13,8 @@ import { parseNumber } from '../../utils/parseNumber/parseNumber';
 import type { Token } from '../../modules/tokenizer/lite';
 import { isLongFormat } from '../nomie-log/nomie-log-utils';
 import { ledgerBooksToGet } from './ledger-books-to-get';
+import type { StorageInterop } from '../storage/storage-engine';
+import LocalStorage from '../storage/storage-local';
 
 export type IBooks = Array<ILedgerBook>;
 export type ILedgerBook = Array<NLog>;
@@ -159,11 +160,11 @@ export function getTrackersAndValuesFromLogs(logs: Array<NLog>): ITrackersSummar
 }
 
 export default class LedgerTools {
-  storage: IStorage;
+  storage: StorageInterop;
   importer: LedgerImporter;
   bookPathLookup: Function;
 
-  constructor(storage: any, bookPathLookup: (id: string) => void) {
+  constructor(storage: StorageInterop, bookPathLookup: (id: string) => void) {
     this.storage = storage;
     this.bookPathLookup = bookPathLookup;
   }
@@ -238,7 +239,7 @@ export default class LedgerTools {
   async getFirstDate(fresh: boolean = false): Promise<Dayjs> {
     // Let's get the cache if one exists
     let defaultPayload = { date: null, lastChecked: null };
-    let bookDetails = this.storage.local.get(`firstBook`) || defaultPayload;
+    let bookDetails = LocalStorage.get('firstBook') || defaultPayload;
     // If the cache is older than 2 days - let's refresh
     let age = bookDetails.lastChecked ? Math.abs(dayjs(bookDetails.lastChecked).diff(dayjs(), 'day')) : 100;
     if (age > 2 || fresh) {
@@ -271,7 +272,7 @@ export default class LedgerTools {
 
         let date = parsedBooks[0];
         if (date) {
-          this.storage.local.put('firstBook', {
+          LocalStorage.put('firstBook', {
             date: date.toDate().getTime(),
             lastChecked: new Date().getTime(),
           });

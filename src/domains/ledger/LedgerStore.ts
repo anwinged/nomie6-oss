@@ -14,7 +14,6 @@
 
 import { UsageStore, updateLastUsed } from '../usage/UsageStore';
 import dayjs, { Dayjs } from 'dayjs';
-import { deleteLogFromCache } from './ledger-cache';
 
 // Hooks for firing off hooks
 import Hooky from '../../modules/hooks/hooks';
@@ -65,9 +64,11 @@ export interface IToday {
 }
 
 export type IBooks = Array<ILedgerBook>;
+
 export type IBooksMap = {
   [key: string]: ILedgerBook;
 };
+
 export type ILedgerBook = Array<NLog>;
 
 export interface ILedgerState {
@@ -279,18 +280,13 @@ const ledgerInit = () => {
      * Get a Book - with syncing
      * This will pull it from storage first, to ensure we don't overwrite
      * anything in the remote storage engine
-     * @param {String} date
      */
     async getBookWithSync(bookDateId: string) {
       try {
         // The sync part - get book first
         const book = await Storage.get(NPaths.storage.book(bookDateId));
         // If no book and on blockstack
-        if (!book && Storage.storageType() == 'firebase') {
-          // Its blockstack, let's how this is for a new week.
-          showToast({ message: `Creating ${getBookIdFromDate(new Date())} in Nomie Cloud` });
-          return [];
-        } else if (!book) {
+        if (!book) {
           // It's local - so we will assume they're creating a new book
           return [];
         } else {
@@ -431,11 +427,6 @@ const ledgerInit = () => {
       logs.forEach((log) => {
         // Determin the book it's from by the date
         let book = getBookIdFromDate(log.end);
-
-        // If we're on firebase - delete the
-        if (Storage.storageType() == 'firebase') {
-          deleteLogFromCache(log);
-        }
 
         // Set book if not set
         targets[book] = targets[book] || [];

@@ -1,24 +1,11 @@
 import localforage from 'localforage';
-import type { IStorage } from '../../storage';
+import type { StorageEngine } from '../../storage-engine';
 
-let listeners = [];
+class LocalForageEngineClass implements StorageEngine {
+  readyListeners: any = [];
 
-export const LocalForageEngine: IStorage = {
-  onReady(func) {
-    // No need to setup just call the function
-    if (listeners.indexOf(func) == -1) {
-      listeners.push(func);
-    }
-  },
-  basePath(path) {
-    return path;
-  },
-  fireReady() {
-    listeners.forEach((func) => {
-      func();
-    });
-    listeners = [];
-  },
+  constructor() {}
+
   async init() {
     /**
      * Request the browser persist the data
@@ -29,27 +16,39 @@ export const LocalForageEngine: IStorage = {
         await navigator.storage.persist();
       }
     }
-    return this.fireReady();
-  },
-  async getProfile() {
-    return {
-      username: 'Local User',
-    };
-  },
-  async put(path, content) {
-    return localforage.setItem(path, JSON.stringify(content));
-  },
-  async get(path) {
-    return localforage.getItem(path).then((content: any) => {
-      return content ? JSON.parse(content) : null;
+    this.fireReady();
+  }
+
+  onReady(func: Function): void {
+    // No need to setup just call the function
+    if (this.readyListeners.indexOf(func) == -1) {
+      this.readyListeners.push(func);
+    }
+  }
+
+  private fireReady() {
+    this.readyListeners.forEach((func) => {
+      func();
     });
-  },
-  async list() {
-    return localforage.keys().then((keys) => {
-      return keys;
-    });
-  },
-  async delete(path) {
-    return localforage.removeItem(path);
-  },
-};
+    this.readyListeners = [];
+  }
+
+  async get(path: string): Promise<any> {
+    const content = await localforage.getItem(path);
+    return typeof content === 'string' ? JSON.parse(content) : null;
+  }
+
+  async put(path: string, content): Promise<void> {
+    await localforage.setItem(path, JSON.stringify(content));
+  }
+
+  async list(): Promise<string[]> {
+    return await localforage.keys();
+  }
+
+  async delete(path: string): Promise<void> {
+    await localforage.removeItem(path);
+  }
+}
+
+export const LocalForageEngine = new LocalForageEngineClass();

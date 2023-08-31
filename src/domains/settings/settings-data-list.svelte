@@ -20,7 +20,7 @@
 
   import { updateAllLastUsed } from '../usage/UsageStore'
   import PouchdbSettings from '../storage/engines/pouchdb/pouchdb.svelte'
-  import { getStorageEngineDetails, StorageEngineType } from '../storage/storage'
+  import { getStorageEngineDescription, StorageEngineDescription } from '../storage/storage'
 
   import { showImportModal } from '../import-export/ImporterStore'
   import { showToast } from '../../components/toast/ToastStore'
@@ -64,9 +64,9 @@
     })
   }
 
-  let storageDetails: StorageEngineType
+  let storageDetails: StorageEngineDescription
   $: {
-    storageDetails = getStorageEngineDetails($Prefs.storageType)
+    storageDetails = getStorageEngineDescription($Prefs.storageType)
   }
 </script>
 

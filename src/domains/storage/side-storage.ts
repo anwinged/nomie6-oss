@@ -1,23 +1,28 @@
-import appConfig from '../../config/appConfig';
+import NPaths from '../../paths';
 
-/* SideStore is a class that allows you to store data in the browser's localStorage, and it's a lot
-easier to use than localStorage directly. */
-export class SideStore {
-  dbPath: string;
+/**
+ * SideStorage is a class that allows you to store data in the browser's localStorage,
+ * and it's a lot easier to use than localStorage directly.
+ */
+export class SideStorage {
+  fullDbPath: string;
   data: any;
-  constructor(path) {
-    this.dbPath = `${appConfig.data_root}/localDB/${path}`;
+
+  constructor(path: string) {
+    this.fullDbPath = NPaths.local.sideStorage(path);
     try {
-      this.data = JSON.parse(localStorage.getItem(this.dbPath) || '{}');
+      this.data = JSON.parse(localStorage.getItem(this.fullDbPath) || '{}') || {};
     } catch (e) {
       console.error('SideStorage could not parse the JSON data');
     }
   }
-  get(key) {
+
+  get(key: string): any {
     return this.data.hasOwnProperty(key) ? this.data[key] : null;
   }
-  put(key, value) {
+
+  put(key: string, value: any) {
     this.data[key] = value;
-    localStorage.setItem(this.dbPath, JSON.stringify(this.data));
+    localStorage.setItem(this.fullDbPath, JSON.stringify(this.data));
   }
 }

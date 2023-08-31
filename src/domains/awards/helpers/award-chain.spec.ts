@@ -1,4 +1,4 @@
-import DumbStorage from '../../storage/engines/storage.dumb';
+import DumbStorage from '../../storage/engines/fake/engine.fake';
 import AwardChain from './award-chain.class';
 import Award from './award.class';
 import { it, describe, expect } from 'vitest';

@@ -1,11 +1,12 @@
-import { DumbStorage } from '../storage/engines/storage.dumb';
+import FakeEngineInstance from '../storage/engines/fake/engine.fake';
 import LedgerTools from './ledger-tools';
 import NLog from '../nomie-log/nomie-log';
 import dayjs from 'dayjs';
 import { getBookIdFromDate } from './ledger-books-to-get';
 import { it, describe, expect } from 'vitest';
+
 describe('Ledger Tools test sweeeeet', () => {
-  let ledgerTools = new LedgerTools(DumbStorage, (date: string) => {
+  let ledgerTools = new LedgerTools(FakeEngineInstance, (date: string) => {
     return `data/books/${getBookIdFromDate(dayjs(date))}`;
   });
   let baseDate = dayjs();

@@ -1,5 +1,5 @@
-import { SideStore } from '../storage/side-storage';
-import type { StorageTypes } from '../storage/storage';
+import { SideStorage } from '../storage/side-storage';
+import type { StorageEngineType } from '../storage/storage';
 import { writable } from 'svelte/store';
 
 import { showToast } from '../../components/toast/ToastStore';
@@ -11,7 +11,7 @@ export type PreferencesStateType = {
   use24hour?: boolean;
   useMetric?: boolean;
   usePin?: string;
-  storageType?: StorageTypes;
+  storageType?: StorageEngineType;
   betaFeatures?: boolean;
   peopleBoard?: boolean;
   contextBoard?: boolean;
@@ -32,7 +32,7 @@ export type PreferencesStateType = {
   startPage?: 'track' | 'timeline' | 'history' | 'goals' | 'dashboard';
 };
 
-const sideStorage = new SideStore('preferences');
+const sideStorage = new SideStorage('preferences');
 const InitialState: PreferencesStateType = sideStorage.get('state') || {
   use24hour: false,
   useMetric: false,
@@ -146,11 +146,11 @@ export const getDateFormats = (): {
   return format;
 };
 
-export const getStorageType = (): StorageTypes => {
+export const getStorageType = (): StorageEngineType => {
   return localPrefs.storageType;
 };
 
-export const saveStorageType = (type: StorageTypes) => {
+export const saveStorageType = (type: StorageEngineType) => {
   Prefs.update((s) => {
     s.storageType = type;
     return s;

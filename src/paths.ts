@@ -99,7 +99,7 @@ const NPaths = {
     storageType() {
       return NPaths.local.storage(`root/storage_type`);
     },
-    sidestore(path: string) {
+    sideStorage(path: string) {
       return `${config.data_root}/localDB/${path}`;
     },
   },
