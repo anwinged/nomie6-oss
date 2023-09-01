@@ -9,6 +9,7 @@ import clipboard from '../utils/clipboard/clipboard';
 import { showToast } from '../components/toast/ToastStore';
 // Svelte
 import { writable } from 'svelte/store';
+import { SideStorage, SideStorageKey } from '../domains/side-storage/side-storage';
 
 declare let window: any;
 
@@ -57,6 +58,8 @@ const fontSizes = {
   xl: '1.4em',
 };
 
+const fontSizeStorage = new SideStorage(SideStorageKey.FontSize);
+
 const DeviceStoreInit = () => {
   let deviceMatches = DeviceInfoString.match(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i);
   let device = deviceMatches ? deviceMatches[0] : 'browser';
@@ -71,7 +74,7 @@ const DeviceStoreInit = () => {
     pwa: window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches,
     info: DeviceInfo,
     size: getDeviceSize(window.innerWidth),
-    fontSize: localStorage.getItem('fontSize') || 'md',
+    fontSize: fontSizeStorage.get() || 'md',
   };
 
   const { update, subscribe, set } = writable(baseState);
@@ -185,7 +188,7 @@ export const Device = DeviceStoreInit();
 
 export const setFontSize = (size: 'sm' | 'md' | 'lg' | 'xl' | 'xs' | string) => {
   const pixels = fontSizes[size] || '16px';
-  localStorage.setItem('fontSize', size);
+  fontSizeStorage.put(size);
   document.documentElement.style.fontSize = pixels;
   Device.update((s) => {
     s.fontSize = size;

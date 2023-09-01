@@ -1,16 +1,16 @@
 import { getDurationFromGoals, getTimespanFromGoal } from './goal-utils';
 
 import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
+import type { GoalScoreType } from './goal-class';
 import { GoalClass } from './goal-class';
 import GoalDetailModal from './goal-details-modal.svelte';
 import GoalEditorModal from './goal-editor-modal.svelte';
-import type { GoalScoreType } from './goal-class';
 import type { ITrackables } from '../trackable/trackable-utils';
 import NPaths from '../../paths';
 import type { TrackableUsage } from '../usage/trackable-usage.class';
 import { createArrayStore } from '../../store/ArrayStore';
-import { createLSStore } from '../../store/LSStore';
-import dayjs from 'dayjs';
+import { createSideStorageStore } from '../../store/side-storage-store';
 import { openModal } from '../../components/backdrop/BackdropStore2';
 import { queryToUsageMap } from '../ledger/LedgerStore';
 import { showConfetti } from '../../components/confetti/ConfettiStore';
@@ -18,6 +18,7 @@ import { showToast } from '../../components/toast/ToastStore';
 import { wait } from '../../utils/tick/tick';
 import { writable } from 'svelte/store';
 import { trackEvent } from '../usage/stat-ping';
+import { SideStorageKey } from '../side-storage/side-storage';
 
 export type GoalUsageResponseType = {
   id: string;
@@ -66,7 +67,7 @@ type SavedGoalScoreType = {
 };
 
 export const GoalScoreStore = writable([0, 0]);
-export const GoalStatusStore = createLSStore('/goal-status');
+export const GoalStatusStore = createSideStorageStore(SideStorageKey.GoalStatue);
 
 /**
  * It takes a list of goals, a list of trackables, and a date, and returns a list of goal scores

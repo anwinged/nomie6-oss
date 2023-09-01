@@ -1,5 +1,6 @@
 import { writable } from 'svelte/store';
 import type { Trackable } from '../trackable/Trackable.class';
+import { SideStorage, SideStorageKey } from '../side-storage/side-storage';
 
 type ChartOptions = {
   type: 'bar' | 'line';
@@ -19,14 +20,17 @@ type ChartOptions = {
     | 'cumm';
   include: Trackable;
 };
+
 export type ChartOptionsStoreState = {
   [key: string]: ChartOptions;
 };
 
+const chartOptionsStorage = new SideStorage(SideStorageKey.ChartOptions);
+
 export const saveChartOptions = (id: string, options: ChartOptions) => {
   const existing = getChartOptions();
   existing[id] = options;
-  localStorage.setItem('chart-options', JSON.stringify(existing));
+  chartOptionsStorage.put(existing);
 };
 
 export const getChartOption = (id: string): ChartOptions | undefined => {
@@ -35,8 +39,7 @@ export const getChartOption = (id: string): ChartOptions | undefined => {
 
 export const getChartOptions = (): ChartOptionsStoreState => {
   try {
-    const base = localStorage.getItem('chart-options') || '{}';
-    return JSON.parse(base);
+    return chartOptionsStorage.get() || {};
   } catch (e) {
     return {};
   }

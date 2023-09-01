@@ -5,7 +5,7 @@ import { writable } from 'svelte/store';
 // Vendors
 import whatsNew from '../config/whatsNew';
 import { Interact } from './interact';
-import LocalStorage from '../domains/storage/storage-local';
+import { SideStorage, SideStorageKey } from '../domains/side-storage/side-storage';
 
 // Stores
 
@@ -15,14 +15,16 @@ const AppStoreState: any = {
   whatsNew: null,
 };
 
+const lastVersionStorage = new SideStorage(SideStorageKey.LastVersion);
+
 const AppStoreInit = () => {
   const { update, subscribe, set } = writable(AppStoreState);
 
   const checkForUpdate = () => {
-    let lastVersion = LocalStorage.get('last-version');
+    let lastVersion = lastVersionStorage.get();
 
     if (lastVersion !== whatsNew.version) {
-      LocalStorage.put('last-version', whatsNew.version);
+      lastVersionStorage.put(whatsNew.version);
     }
     // If they're not a brand new user - meaning they have a last Version already stored.
     if (lastVersion && lastVersion !== whatsNew.version) {

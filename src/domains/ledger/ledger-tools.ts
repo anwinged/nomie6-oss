@@ -3,9 +3,8 @@ import logFilter from '../nomie-log/log-filter/log-filter';
 import nid from '../../modules/nid/nid';
 import NLog from '../nomie-log/nomie-log';
 
-import dayjs from 'dayjs';
-
 import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 
 import type { LedgerImporter } from './ledger-importer';
 import type { Trackable } from '../trackable/Trackable.class';
@@ -14,7 +13,7 @@ import type { Token } from '../../modules/tokenizer/lite';
 import { isLongFormat } from '../nomie-log/nomie-log-utils';
 import { ledgerBooksToGet } from './ledger-books-to-get';
 import type { StorageInterop } from '../storage/storage-engine';
-import LocalStorage from '../storage/storage-local';
+import { SideStorage, SideStorageKey } from '../side-storage/side-storage';
 
 export type IBooks = Array<ILedgerBook>;
 export type ILedgerBook = Array<NLog>;
@@ -163,10 +162,12 @@ export default class LedgerTools {
   storage: StorageInterop;
   importer: LedgerImporter;
   bookPathLookup: Function;
+  firstBookStorage: SideStorage;
 
   constructor(storage: StorageInterop, bookPathLookup: (id: string) => void) {
     this.storage = storage;
     this.bookPathLookup = bookPathLookup;
+    this.firstBookStorage = new SideStorage(SideStorageKey.FirstBook);
   }
 
   public getDateOfWeek(w: number, y: number) {
@@ -239,7 +240,7 @@ export default class LedgerTools {
   async getFirstDate(fresh: boolean = false): Promise<Dayjs> {
     // Let's get the cache if one exists
     let defaultPayload = { date: null, lastChecked: null };
-    let bookDetails = LocalStorage.get('firstBook') || defaultPayload;
+    let bookDetails = this.firstBookStorage.get() || defaultPayload;
     // If the cache is older than 2 days - let's refresh
     let age = bookDetails.lastChecked ? Math.abs(dayjs(bookDetails.lastChecked).diff(dayjs(), 'day')) : 100;
     if (age > 2 || fresh) {
@@ -272,7 +273,7 @@ export default class LedgerTools {
 
         let date = parsedBooks[0];
         if (date) {
-          LocalStorage.put('firstBook', {
+          this.firstBookStorage.put({
             date: date.toDate().getTime(),
             lastChecked: new Date().getTime(),
           });

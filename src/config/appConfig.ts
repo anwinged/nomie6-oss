@@ -5,8 +5,8 @@ export default {
   storage_engine: 'local', // local or blockstack
   book_time_format: 'YYYY-w', // Careful changing this!! Its how all records are referenced. Changing it breaks everything.
   book_time_unit: 'week', // SERIOUSLY!
+  local_data_root: 'nomie6/local',
   data_root: 'data',
-  book_root: 'data/books',
   always_locate_key: 'always-locate',
   dark_mode_key: 'dark-mode',
   theme_key: 'theme',

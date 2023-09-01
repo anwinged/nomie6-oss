@@ -6,19 +6,21 @@
 import { derived, writable } from 'svelte/store';
 
 import type { ITrackables } from '../trackable/trackable-utils';
+import { toTrackableArray } from '../trackable/trackable-utils';
 import NPaths from '../../paths';
 import Storage from '../../domains/storage/storage';
 import type { Trackable } from '../trackable/Trackable.class';
 import { dedupArray } from '../../utils/array/array_utils';
 import nid from '../../modules/nid/nid';
 import { objectHash } from '../../modules/object-hash/object-hash';
-import { toTrackableArray } from '../trackable/trackable-utils';
 
 import { getRawPrefs, PreferencesStateType } from '../preferences/preferences';
 
 import AllBoardIcon from '../../n-icons/board-tab-icons/AllBoardIcon.svelte';
 import PeopleBoardIcon from '../../n-icons/board-tab-icons/PeopleBoardIcon.svelte';
 import ContextBoardIcon from '../../n-icons/board-tab-icons/ContextBoardIcon.svelte';
+import { SideStorage, SideStorageKey } from '../side-storage/side-storage';
+
 // Define the Prop Typese
 export type UniboardType = {
   id: string;
@@ -50,12 +52,15 @@ type UniboardStoreProps = {
  * Keep Last Board in LocalStorage as to avoid
  * conflict with multiple device users.
  */
-const LAST_BOARD_KEY = 'last-known-board';
+
+const lastKnownBoardStorage = new SideStorage(SideStorageKey.LastKnownBoard);
+
 export const getLastBoardId = (): string => {
-  return localStorage.getItem(LAST_BOARD_KEY) || 'main';
+  return lastKnownBoardStorage.get() || 'main';
 };
+
 export const saveLastBoardId = (id: string) => {
-  localStorage.setItem(LAST_BOARD_KEY, id);
+  lastKnownBoardStorage.put(id);
 };
 
 export const deleteUniboard = async (board: UniboardType) => {

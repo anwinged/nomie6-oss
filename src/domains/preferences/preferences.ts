@@ -1,8 +1,8 @@
-import { SideStorage } from '../storage/side-storage';
 import type { StorageEngineType } from '../storage/storage';
 import { writable } from 'svelte/store';
 
 import { showToast } from '../../components/toast/ToastStore';
+import { SideStorage, SideStorageKey } from '../side-storage/side-storage';
 
 export type ThemeTypes = 'dark' | 'light' | 'auto';
 export type PrefsWeekStartTypes = 'sunday' | 'monday';
@@ -32,9 +32,9 @@ export type PreferencesStateType = {
   startPage?: 'track' | 'timeline' | 'history' | 'goals' | 'dashboard';
 };
 
-const sideStorage = new SideStorage('preferences');
+const sideStorage = new SideStorage(SideStorageKey.Preferences);
 
-const preferencesInitialState: PreferencesStateType = sideStorage.get('state') || {
+const preferencesInitialState: PreferencesStateType = sideStorage.get() || {
   use24hour: false,
   useMetric: false,
   usePin: undefined,
@@ -64,11 +64,11 @@ let localPrefs = preferencesInitialState;
 
 Prefs.subscribe((s: PreferencesStateType) => {
   localPrefs = s;
-  sideStorage.put('state', s);
+  sideStorage.put(s);
 });
 
 export const getRawPrefs = (): PreferencesStateType => {
-  return sideStorage.get('state');
+  return sideStorage.get();
 };
 
 export const enabledBetaFeatures = async (): Promise<void> => {

@@ -4,12 +4,11 @@
  */
 
 // utils
-import NPaths from '../../paths';
 import SearchModal from './search-modal.svelte';
-import { SideStorage } from '../storage/side-storage';
 import { openModal } from '../../components/backdrop/BackdropStore2';
 // Svelte
 import { writable } from 'svelte/store';
+import { SideStorage, SideStorageKey } from '../side-storage/side-storage';
 
 // Vendors
 
@@ -55,15 +54,15 @@ const SearchStoreInit = () => {
     if (!match) {
       state.saved.push(searchTerm);
     }
-    SearchStorage.put(NPaths.storage.search(), state.saved);
+    SearchStorage.put(state.saved);
     return state;
   }
   // Search Methods
   const methods = {
     init() {
-      SearchStorage = new SideStorage('search');
+      SearchStorage = new SideStorage(SideStorageKey.Search);
       update((state) => {
-        state.saved = SearchStorage.get(NPaths.storage.search()) || [];
+        state.saved = SearchStorage.get() || [];
         state.saved = state.saved
           .filter((d) => d)
           .map((term: SearchTerm) => {
@@ -133,7 +132,7 @@ const SearchStoreInit = () => {
         state.saved = state.saved.filter((st: SearchTerm) => {
           return (st.term || '').toLowerCase().trim() != (searchTerm.term || '').toLowerCase().trim();
         });
-        SearchStorage.put(NPaths.storage.search(), state.saved);
+        SearchStorage.put(state.saved);
         return state;
       });
     },

@@ -9,16 +9,19 @@
   import emojiData from './data/emoji-light';
   import ButtonGroup from '../button-group/button-group.svelte';
   import Panel from '../panel/panel.svelte';
+  import { SideStorage, SideStorageKey } from '../../domains/side-storage/side-storage';
 
   export let maxRecents = 50;
   export let autoClose = true;
+
+  const recentEmojisStorage = new SideStorage(SideStorageKey.RecentEmojis);
 
   let variantsVisible = false;
 
   let variants;
   let currentEmoji;
   let searchText;
-  let recentEmojis = JSON.parse(localStorage.getItem('recent-emojis')) || [];
+  let recentEmojis = recentEmojisStorage.get() || [];
 
   const dispatch = createEventDispatcher();
 
@@ -79,7 +82,7 @@
 
   function saveRecent(emoji) {
     recentEmojis = [emoji, ...recentEmojis.filter((recent) => recent.e !== emoji.e)].slice(0, maxRecents);
-    localStorage.setItem('recent-emojis', JSON.stringify(recentEmojis));
+    recentEmojisStorage.put(recentEmojis);
   }
 
   function hideVariants() {

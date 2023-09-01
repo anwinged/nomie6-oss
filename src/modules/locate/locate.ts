@@ -1,11 +1,13 @@
 // consts
-const LOC_CACHE_KEY = 'loc-cache';
+import { SideStorage, SideStorageKey } from '../../domains/side-storage/side-storage';
 
 type LocationLookupResponse = {
   time: number;
   latitude: number;
   longitude: number;
 };
+
+const locationCache = new SideStorage(SideStorageKey.LocationCache);
 
 export default (): Promise<LocationLookupResponse> => {
   let getRealLocation = (): Promise<LocationLookupResponse> => {
@@ -20,7 +22,7 @@ export default (): Promise<LocationLookupResponse> => {
               longitude: pos.coords.longitude,
               lng: pos.coords.longitude,
             };
-            localStorage.setItem(LOC_CACHE_KEY, JSON.stringify(payload));
+            locationCache.put(payload);
             resolve(payload);
           },
           (e) => {
@@ -38,8 +40,7 @@ export default (): Promise<LocationLookupResponse> => {
   };
 
   return new Promise((resolve, reject) => {
-    let cachedRaw = JSON.parse(localStorage.getItem(LOC_CACHE_KEY) || 'null');
-
+    let cachedRaw = locationCache.get();
     try {
       if (cachedRaw) {
         if (new Date().getTime() - cachedRaw.time < 1000 * 60 * 2) {

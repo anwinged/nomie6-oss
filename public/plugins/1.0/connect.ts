@@ -1,5 +1,5 @@
 // const NOMIEPROMPTS = {};
-import {PluginType} from "../../../src/domains/plugins/plugin-helpers";
+import type {PluginType} from "../../../src/domains/plugins/plugin-helpers";
 
 
 type UserPrefs = {
@@ -10,6 +10,7 @@ type UserPrefs = {
   theme: 'dark' | 'light' | 'system';
 }
 
+// @ts-ignore
 class NomiePlugin {
   
   pluginDetails:PluginType

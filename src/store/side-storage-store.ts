@@ -1,4 +1,6 @@
 import { writable } from 'svelte/store';
+import type { SideStorageKey } from '../domains/side-storage/side-storage';
+import { SideStorage } from '../domains/side-storage/side-storage';
 
 type DocStorePropTypes = {
   label?: string;
@@ -7,47 +9,40 @@ type DocStorePropTypes = {
   default?: any;
 };
 
-export type LSStoreState = {
+export type SideStorageStoreState = {
   [key: string]: any;
 };
 
 /**
  * Create a Key Value Store
- * // Like People
- * @param path
- * @param props
- * @returns
  */
-export const createLSStore = (path: string, props: DocStorePropTypes = {}) => {
-  const baseState: LSStoreState = JSON.parse(localStorage.getItem(path) || JSON.stringify(props.default || {}));
+export const createSideStorageStore = (key: SideStorageKey, props: DocStorePropTypes = {}) => {
+  const sideStorage = new SideStorage(key);
+  const baseState: SideStorageStoreState = sideStorage.get() || props.default || {};
   const { update, subscribe, set } = writable(baseState);
 
   /**
    * Write to Storage
-   * @param state
-   * @returns
    */
-  const _write = (state: LSStoreState): LSStoreState => {
+  const _write = (state: SideStorageStoreState): SideStorageStoreState => {
     // Clone State
     const _state = { ...state };
 
     // Loop over keys and serialize if serializer
     Object.keys(state).map((key) => {
-      const item = props.itemSerializer ? props.itemSerializer(state[key]) : state[key];
-      _state[key] = item;
+      _state[key] = props.itemSerializer ? props.itemSerializer(state[key]) : state[key];
     });
 
     // Save to Storage
-    localStorage.setItem(path, JSON.stringify(_state));
+    sideStorage.put(_state);
+
     return _state;
   };
 
   /**
    * Upsert and Item
-   * @param item
-   * @returns  Promise KVStore
    */
-  const setItem = (key: string, item: any): LSStoreState => {
+  const setItem = (key: string, item: any): SideStorageStoreState => {
     let state;
     update((s) => {
       s[key] = props.itemInitializer ? props.itemInitializer(item) : item;
@@ -60,11 +55,9 @@ export const createLSStore = (path: string, props: DocStorePropTypes = {}) => {
   /**
    * Update Sync
    * Updates the state and writes to storage
-   * @param kvItems
-   * @returns promise LSStoreState
    */
-  const updateSync = (updateFunc: Function): LSStoreState => {
-    let state: LSStoreState;
+  const updateSync = (updateFunc: Function): SideStorageStoreState => {
+    let state: SideStorageStoreState;
     update((s) => {
       state = updateFunc(s);
       return state;
@@ -74,10 +67,8 @@ export const createLSStore = (path: string, props: DocStorePropTypes = {}) => {
 
   /**
    * Remove an Item
-   * @param item
-   * @returns
    */
-  const removeItem = (key: string): LSStoreState => {
+  const removeItem = (key: string): SideStorageStoreState => {
     let state;
     update((s) => {
       if (s[key]) {
@@ -91,10 +82,9 @@ export const createLSStore = (path: string, props: DocStorePropTypes = {}) => {
 
   /**
    * Get Raw State
-   * @returns LSStoreState
    */
-  const rawState = (): LSStoreState => {
-    let state: LSStoreState;
+  const rawState = (): SideStorageStoreState => {
+    let state: SideStorageStoreState;
     update((s) => {
       state = s;
       return s;

@@ -1,9 +1,13 @@
 import { writable } from 'svelte/store';
 import { parseNumber } from '../../utils/parseNumber/parseNumber';
+import { SideStorage, SideStorageKey } from '../side-storage/side-storage';
 
-const launchCount: number = parseNumber(localStorage.getItem('launchCount') || '1');
+const countStorage = new SideStorage(SideStorageKey.LaunchCount);
+
+const launchCount: number = parseNumber(countStorage.get() || '1');
+
 export const LaunchCount = writable(launchCount);
 
 export const trackLaunch = () => {
-  localStorage.setItem('launchCount', `${launchCount + 1}`);
+  countStorage.put(`${launchCount + 1}`);
 };

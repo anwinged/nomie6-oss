@@ -10,12 +10,15 @@ import { writable } from 'svelte/store';
 import i18next from 'i18next';
 
 import langs from '../lang/lang';
+import { SideStorage, SideStorageKey } from '../domains/side-storage/side-storage';
 
 // Nomie API Store
 
+const langStorage = new SideStorage(SideStorageKey.Language);
+
 const LangInit = () => {
   let base = {
-    lang: localStorage.getItem('n4-lang') || 'en',
+    lang: langStorage.get() || 'en',
   };
   const { update, subscribe, set } = writable(base);
 
@@ -47,7 +50,7 @@ const LangInit = () => {
         d.lang = langKey;
         return d;
       });
-      localStorage.setItem('n4-lang', langKey);
+      localStorage.put(langKey);
       setTimeout(() => {
         // window.location.reload();
         window.location.href = '/';

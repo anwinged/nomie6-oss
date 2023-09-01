@@ -9,8 +9,8 @@
 
 import { DuplicateOutline, PencilOutline, SwapOutline, TrashOutline } from '../../components/icon/nicons';
 
-import { DashboardClass } from './dashboard-class';
 import type { DashboardPayload } from './dashboard-class';
+import { DashboardClass } from './dashboard-class';
 import { Interact } from '../../store/interact';
 import { Lang } from '../../store/lang';
 import NPaths from '../../paths';
@@ -23,6 +23,7 @@ import { openWidgetEditor } from './widget/widget-editor/useWidgetEditorModal';
 import { wait } from '../../utils/tick/tick';
 import { writable } from 'svelte/store';
 import { dedupArray } from '../../utils/array/array_utils';
+import { SideStorage, SideStorageKey } from '../side-storage/side-storage';
 
 type InitialState = {
   dashboards: Array<DashboardClass>;
@@ -32,11 +33,14 @@ type InitialState = {
   dashboardHash: string | undefined;
 };
 
+const lastDashIndexStorage = new SideStorage(SideStorageKey.LastDashIndex);
+
 const getLastSelectedIndex = () => {
-  return parseInt(localStorage.getItem('last-dash-index') || '0');
+  return parseInt(lastDashIndexStorage.get() || '0');
 };
+
 const setLastSelectedIndex = (index) => {
-  localStorage.setItem('last-dash-index', index);
+  lastDashIndexStorage.put(index);
 };
 
 const dashboardInitialState: InitialState = {

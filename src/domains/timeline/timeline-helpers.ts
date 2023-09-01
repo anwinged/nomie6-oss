@@ -1,10 +1,12 @@
-import { createLSStore } from '../../store/LSStore';
+import { createSideStorageStore } from '../../store/side-storage-store';
 import type { TimelineFilterProps } from './timeline-utils';
 import TimelineModal from './timeline-modal.svelte';
 import { openModal } from '../../components/backdrop/BackdropStore2';
 
 import { md5 } from '../../utils/hash/hash';
-export const TimelineOptionsStore = createLSStore('timeline-settings', {
+import { SideStorageKey } from '../side-storage/side-storage';
+
+export const TimelineOptionsStore = createSideStorageStore(SideStorageKey.TimelineSettings, {
   default: {
     notes: true,
     maps: false,

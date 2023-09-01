@@ -1,7 +1,7 @@
 import PouchDB from 'pouchdb';
 import Remote from '../../../../modules/remote/remote';
 import type { StorageEngine } from '../../storage-engine';
-import LocalStorage from '../../storage-local';
+import { SideStorage, SideStorageKey } from '../../../side-storage/side-storage';
 
 /**
  * Svelte is throwing errors when importing pouch
@@ -11,6 +11,8 @@ import LocalStorage from '../../storage-local';
  * Not idea, but I can get svelte to compile with them.
  */
 // import pouchdb from "pouchdb";
+
+const remoteStorage = new SideStorage(SideStorageKey.PouchDbRemote);
 
 class PouchDBEngineClass implements StorageEngine {
   remote: Remote; // object to store username, password, host
@@ -133,7 +135,7 @@ class PouchDBEngineClass implements StorageEngine {
 
   saveRemote(remote: Remote) {
     this.remote = remote;
-    LocalStorage.put('pouchdb-remote', remote);
+    remoteStorage.put(remote);
   }
 
   async init() {
@@ -202,4 +204,4 @@ class PouchDBEngineClass implements StorageEngine {
   }
 }
 
-export const PouchDBEngine = new PouchDBEngineClass(new Remote(LocalStorage.get('pouchdb-remote')));
+export const PouchDBEngine = new PouchDBEngineClass(new Remote(remoteStorage.get()));

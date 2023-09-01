@@ -5,11 +5,16 @@ import { Lang } from '../../store/lang';
 import dayjs from 'dayjs';
 
 import { exportStorage } from '../storage/import-export';
+import { SideStorage, SideStorageKey } from '../side-storage/side-storage';
 
-const STORAGE_KEY = 'last-backup-date';
-export const BackupStore = writable<undefined | string>(localStorage.getItem(STORAGE_KEY));
+const lastBackupDateStorage = new SideStorage(SideStorageKey.LastBackupDate);
+
+let lastBackupDate = lastBackupDateStorage.get();
+
+export const BackupStore = writable<undefined | string>(lastBackupDate);
+
 BackupStore.subscribe((s) => {
-  localStorage.setItem(STORAGE_KEY, s);
+  lastBackupDateStorage.put(s);
 });
 
 export const BackupDaysAgo = derived(BackupStore, ($BackupStore) => {

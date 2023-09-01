@@ -37,9 +37,6 @@ const NPaths = {
     backup() {
       return `backup-settings.json`;
     },
-    search() {
-      return `searches.json`;
-    },
     book(id: string) {
       return `${config.data_root}/books/${id}`;
     },
@@ -93,14 +90,8 @@ const NPaths = {
     },
   },
   local: {
-    storage(path: string) {
-      return `storage/${path}`;
-    },
-    storageType() {
-      return NPaths.local.storage(`root/storage_type`);
-    },
     sideStorage(path: string) {
-      return `${config.data_root}/localDB/${path}`;
+      return `${config.local_data_root}/${path}`;
     },
   },
 };
